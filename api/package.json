@@ -1,0 +1,24 @@
+{
+  "name": "gmbh",
+  "version": "0.0.1",
+  "description": "Real-Time festival order system",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabsi20/gmbh.git"
+  },
+  "keywords": [
+    "order",
+    "system"
+  ],
+  "author": "Team GMBH <gmbh@example.com>",
+  "contributers": [{"name": "Daniel Trojer"}, {"email": "daniel.trojer@gmx.at"}, {"name": "Konrad Kleeberger"}, {"email": "example@example.com"}, {"name": "Josef Krabath"}, {"email": "example@example.com"}, {"name": "Alexander Gabriel"}, {"email": "example@example.com"}, {"name": "Sebastian Huber"}, {"email": "example@example.com"}]
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabsi20/gmbh/issues"
+  },
+  "homepage": "https://github.com/gabsi20/gmbh#readme"
+}
