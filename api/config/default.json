@@ -1,0 +1,13 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "mysql": "mysql://root:@localhost:3306/gmbh",
+  "public": "../public/",
+  "auth": {
+    "idField": "id",
+    "token": {
+      "secret": "yBUsMOT5JK700wSkTnrSbUFXbp0D7KpiaEl7OMekm69iHrnXAVvMMT5opHCVreKmN0EWo/tkxq6WtVfVwrCn+Q=="
+    },
+    "local": {}
+  }
+}

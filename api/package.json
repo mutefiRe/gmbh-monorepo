@@ -1,63 +1,47 @@
 {
   "name": "gmbh",
-  "version": "0.0.1",
   "description": "Real-Time festival order system",
-  "main": "server.js",
-  "scripts": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gabsi20/gmbh.git"
-  },
+  "version": "0.0.0",
+  "homepage": "",
+  "main": "src/",
   "keywords": [
-    "order",
-    "system"
+    "feathers"
   ],
-  "author": "Team GMBH <gmbh@example.com>",
-  "contributers": [
-    {
-      "name": "Daniel Trojer"
-    },
-    {
-      "email": "daniel.trojer@gmx.at"
-    },
-    {
-      "name": "Konrad Kleeberger"
-    },
-    {
-      "email": "example@example.com"
-    },
-    {
-      "name": "Josef Krabath"
-    },
-    {
-      "email": "example@example.com"
-    },
-    {
-      "name": "Alexander Gabriel"
-    },
-    {
-      "email": "example@example.com"
-    },
-    {
-      "name": "Sebastian Huber"
-    },
-    {
-      "email": "example@example.com"
-    }
-  ],
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/gabsi20/gmbh/issues"
+  "license": "MIT",
+  "repository": {},
+  "author": {},
+  "contributors": [],
+  "bugs": {},
+  "engines": {
+    "node": ">= 0.12.0"
   },
-  "homepage": "https://github.com/gabsi20/gmbh#readme",
+  "scripts": {
+    "test": "npm run jshint && npm run mocha",
+    "jshint": "jshint src/. test/. --config",
+    "start": "node src/",
+    "mocha": "mocha test/ --recursive"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "compression": "^1.6.1",
+    "cors": "^2.7.1",
+    "feathers": "^2.0.0",
+    "feathers-authentication": "^0.7.0",
+    "feathers-configuration": "^0.2.1",
+    "feathers-errors": "^2.0.1",
+    "feathers-hooks": "^1.5.0",
+    "feathers-rest": "^1.0.0",
+    "feathers-sequelize": "^1.1.4",
+    "feathers-socketio": "^1.0.0",
+    "mysql": "^2.10.2",
+    "passport": "^0.3.2",
+    "sequelize": "^3.21.0",
+    "serve-favicon": "^2.3.0",
+    "winston": "^2.2.0"
+  },
   "devDependencies": {
-    "cz-conventional-changelog": "^1.1.5"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "jshint": "^2.9.1",
+    "mocha": "^2.4.5",
+    "request": "^2.70.0"
   }
 }
