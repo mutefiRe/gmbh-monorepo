@@ -5,7 +5,41 @@
   "homepage": "",
   "main": "src/",
   "keywords": [
-    "feathers"
+    "order",
+    "system"
+  ],
+  "author": "Team GMBH <gmbh@example.com>",
+  "contributors": [
+    {
+      "name": "Daniel Trojer"
+    },
+    {
+      "email": "daniel.trojer@gmx.at"
+    },
+    {
+      "name": "Konrad Kleeberger"
+    },
+    {
+      "email": "example@example.com"
+    },
+    {
+      "name": "Josef Krabath"
+    },
+    {
+      "email": "example@example.com"
+    },
+    {
+      "name": "Alexander Gabriel"
+    },
+    {
+      "email": "example@example.com"
+    },
+    {
+      "name": "Sebastian Huber"
+    },
+    {
+      "email": "example@example.com"
+    }
   ],
   "license": "MIT",
   "repository": {},
