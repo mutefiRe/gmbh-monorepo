@@ -17,10 +17,25 @@ var sequelize = new Sequelize('gmbh', 'root', '',
 
 
 io.on('connection', function(socket){
-	console.log("someone connected")
   socket.emit("connected", true)
   
-  socket.on('disconnect', function(){});
+
+  socket.on('authenticationRequest', function(data){
+  		if (data.password == "password")
+  			authenticateUser(socket, data)
+  })
+
+
+  socket.on('disconnect', function(){
+  	console.log('disconnected')
+  });
 });
+
+
+
+function authenticateUser(socket, data){
+	socket.emit("authenticationResponse", {"password": data.password, "authenticated":true, "message": "du darfst hier rein"})
+}
+
 
 

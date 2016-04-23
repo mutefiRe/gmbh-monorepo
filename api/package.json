@@ -17,18 +17,20 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "npm run jshint && npm run mocha",
+    "test": "mocha test/server.test.js",
     "jshint": "jshint src/. test/. --config",
-    "start": "node server",
-    "mocha": "mocha test/ --recursive"
+    "start": "node server"
   },
   "dependencies": {
+    "mocha": "^2.4.5",
     "node-mysql": "^0.4.2",
     "sequelize": "^3.21.0",
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "^1.1.5"
+    "chai": "^3.5.0",
+    "cz-conventional-changelog": "^1.1.5",
+    "should": "^8.3.1"
   },
   "config": {
     "commitizen": {
