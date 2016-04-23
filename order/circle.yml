@@ -1,0 +1,19 @@
+
+machine:
+  node:
+    version: 5.7.0
+dependencies:
+  pre:
+    - npm install -g bower
+    - npm install -g ember-cli
+  override:
+    - npm i
+    - bower i
+deployment:
+  production:
+    branch: master
+    commands:
+      - ember build --environment=production 
+      - rsync -qaz --delete -e ssh dist/ gmbh@gmbh.ddns.net:~/frontend
+      
+       
