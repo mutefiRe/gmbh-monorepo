@@ -1,0 +1,38 @@
+{
+  "name": "gmbh",
+  "description": "Real-Time festival order system",
+  "version": "0.0.0",
+  "homepage": "",
+  "main": "src/",
+  "keywords": [
+    "order",
+    "system"
+  ],
+  "author": {},
+  "contributors": [],
+  "license": "MIT",
+  "repository": {},
+  "bugs": {},
+  "engines": {
+    "node": ">= 0.12.0"
+  },
+  "scripts": {
+    "test": "npm run jshint && npm run mocha",
+    "jshint": "jshint src/. test/. --config",
+    "start": "node server",
+    "mocha": "mocha test/ --recursive"
+  },
+  "dependencies": {
+    "node-mysql": "^0.4.2",
+    "sequelize": "^3.21.0",
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^1.1.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
