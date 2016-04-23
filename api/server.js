@@ -6,6 +6,7 @@ server.listen(8080, function(){
 
 
 
+
 var mysql = require('mysql');
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize('gmbh', 'root', '',
@@ -17,20 +18,9 @@ var sequelize = new Sequelize('gmbh', 'root', '',
 
 io.on('connection', function(socket){
 	console.log("someone connected")
-  socket.on('event', function(data){
-
-  })
-
-
-
-
-
+  socket.emit("connected", true)
+  
   socket.on('disconnect', function(){});
 });
 
 
-
-
-function foo() {
-  		
-  	}
