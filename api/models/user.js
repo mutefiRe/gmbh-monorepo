@@ -15,15 +15,20 @@ let User = sequelize.define('user', {
   permission: {type: Sequelize.INTEGER, allowNull:false, unique: false}
 })
 
+User.sync();
+
 function create(data){
-	User.create({	
+
+	let thisuser = User.create({	
 		username: data.username,
 		firstname: data.firstname,
 		lastname: data.lastname,
 		password: data.password,
 		permission: data.permission
 	});
+  return thisuser;
 }
+
 
 
 module.exports = {
