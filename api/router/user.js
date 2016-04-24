@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 router.use(function timeLog(req, res, next){
-	console.log('Time: ', Date.now());
+	//console.log('Time: ', Date.now());
 	next();
 })
 
@@ -15,7 +15,7 @@ router.post('/:id', function(req, res){
 })
 
 router.put('/:id', function(req, res){
-	res.send('update user '+req.params.id);
+	res.send('updated user '+req.params.id);
 })
 
 module.exports = router;
