@@ -6,6 +6,7 @@ var server = require('http').Server(app)
 var io = require('socket.io')(server);
 var Sequelize = require('sequelize');
 var mysql = require('mysql');
+var bodyParser = require('body-parser');
 
 //Import Routes
 var user = require('./router/user');
@@ -16,6 +17,7 @@ server.listen(8080, function(){
 });
 
 // Routing
+app.use(bodyParser.json())
 app.use('/user', user)
 
 // SOCKET HANDLING
