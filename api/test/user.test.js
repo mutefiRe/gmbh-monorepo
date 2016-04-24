@@ -13,7 +13,7 @@ describe('usermodel', () => {
 	 	 	lastname: "mustermann",
 	 	 	password: "password",
 	 	 	permission: 1
-	 	 })//.then( (thisUser) => thisUser.destroy({force: true}) );
+	 	 }).then( (thisUser) => thisUser.destroy({force: true}) );
 	 	 /*User.User.findOne({
 	 	 	where: {
 	 	 		username: "user1"
