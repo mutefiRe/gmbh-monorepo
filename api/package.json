@@ -19,7 +19,7 @@
   "scripts": {
     "test": "mocha test/server.test.js",
     "jshint": "jshint src/. test/. --config",
-    "start": "node server"
+    "start": "nodemon server"
   },
   "dependencies": {
     "mocha": "^2.4.5",
@@ -30,6 +30,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "cz-conventional-changelog": "^1.1.5",
+    "mocha": "^2.4.5",
+    "nodemon": "^1.9.1",
     "should": "^8.3.1"
   },
   "config": {
