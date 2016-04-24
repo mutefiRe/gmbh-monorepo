@@ -124,3 +124,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+#OS
+.DS_Store
