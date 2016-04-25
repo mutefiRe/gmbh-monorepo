@@ -12,7 +12,7 @@ module.exports = function(){
       };
     case 'test':
       return {
-        database: "gmbh-test",
+        database: "gmbh_test",
         user: "root",
         password: "",
         host: {
@@ -22,7 +22,7 @@ module.exports = function(){
       };
     case'production':
       return {
-        database: "gmbh-production",
+        database: "gmbh_production",
         user: "root",
         password: "",
         host: {

@@ -12,13 +12,16 @@ router.get('/:id', function(req, res){
 })
 
 router.post('/', function(req, res){
-	user.create(req.body)
 	console.log(req.body)
-	res.send('save user');
+	res.send('saved user '+req.body.username);
 })
 
 router.put('/:id', function(req, res){
 	res.send('updated user '+req.params.id);
+})
+
+router.delete('/:id', function(req, res){
+	res.send('deleted user '+req.params.id)
 })
 
 module.exports = router;
