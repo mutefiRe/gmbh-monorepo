@@ -18,8 +18,7 @@ let User = sequelize.define('user', {
 User.sync();
 
 function create(data){
-
-	let thisuser = User.create({	
+	let thisuser = User.create({
 		username: data.username,
 		firstname: data.firstname,
 		lastname: data.lastname,
