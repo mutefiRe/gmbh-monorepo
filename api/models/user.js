@@ -1,11 +1,9 @@
 "use strict";
 
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize('gmbh', 'root', '',
-{
-  host: "localhost",
-  port: 3306
-});
+const DB = require("../config/DBconfig");
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(DB().database, DB().user, DB().password, DB().host);
+
 
 let User = sequelize.define('user', {
   username: {type: Sequelize.STRING, allowNull: false,  unique: true},
