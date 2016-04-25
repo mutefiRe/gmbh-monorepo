@@ -1,4 +1,5 @@
-'use strict'
+module.exports = function(){
+  'use strict'
 
 const chai = require('chai');
 const mocha = require('mocha');
@@ -20,8 +21,10 @@ describe('usermodel', () => {
 	 	 	}
 	 	 }).then(
 	 	 	(a) => {
-	 	 		console.log(a); 
+	 	 		console.log(a);
 	 	 		a.destroy({force: true});
 	 	 	});*/
     });
 });
+
+}
