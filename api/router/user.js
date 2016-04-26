@@ -1,6 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var user = require('../models/user');
+'use strict'
+
+const express = require('express');
+const router = express.Router();
+const user = require('../models/user');
 
 router.use(function timeLog(req, res, next){
 	//console.log('Time: ', Date.now());
