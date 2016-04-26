@@ -20,15 +20,18 @@
     "test": "npm run jshint && npm run mocha",
     "jshint": "jshint src/. test/. --config",
     "start": "node server",
+    "dev": "nodemon server",
     "mocha": "mocha test/ --recursive"
   },
   "dependencies": {
+    "mysql": "^2.10.2",
     "node-mysql": "^0.4.2",
     "sequelize": "^3.21.0",
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "^1.1.5"
+    "cz-conventional-changelog": "^1.1.5",
+    "nodemon": "^1.9.1"
   },
   "config": {
     "commitizen": {
