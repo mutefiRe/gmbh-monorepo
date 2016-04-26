@@ -10,7 +10,8 @@ let User = sequelize.define('user', {
   firstname: {type: Sequelize.STRING, allowNull: true,  unique: false},
   lastname: {type: Sequelize.STRING, allowNull: true,  unique: false},
   password: {type: Sequelize.STRING, allowNull: false,  unique: false},
-  permission: {type: Sequelize.INTEGER, allowNull:false, unique: false}
+  permission: {type: Sequelize.INTEGER, allowNull:false, unique: false},
+  token: {type: Sequelize.STRING, allowNull:true, unique: true}
 })
 
 
@@ -27,7 +28,6 @@ function create(data){
 	});
   return thisuser;
 }
-
 
 
 module.exports = {

@@ -1,24 +1,29 @@
 'use strict'
 
 //Import Modules
-var app = require('express')();
-var server = require('http').Server(app)
-var io = require('socket.io')(server);
-var Sequelize = require('sequelize');
-var mysql = require('mysql');
-var bodyParser = require('body-parser');
+const app = require('express')();
+const server = require('http').Server(app)
+const io = require('socket.io')(server);
+const Sequelize = require('sequelize');
+const mysql = require('mysql');
+const bodyParser = require('body-parser');
 
 //Import Routes
-var user = require('./router/user');
+const api = require('./router/api');
+const authenticate = require('./router/authenticate')
 
-//Create Server, listening to 8080 -> http -> TODO CHANGE TO WSS
 server.listen(8080, function(){
 	//console.log("server listening to 8080")
 });
 
+
 // Routing
 app.use(bodyParser.json())
-app.use('/user', user)
+app.get('/', function(req, res){
+  res.send("Welcome to our API<br>Authenticate at /authenticate<br>to get Access to /api")}
+  );
+app.use('/authenticate', authenticate);
+app.use('/api', api);
 
 // SOCKET HANDLING
 io.on('connection', function(socket){
