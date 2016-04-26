@@ -11,8 +11,13 @@ router.get('/:id', function(req, res){
 	res.send('get user '+req.params.id);
 })
 
+router.get('/', function(req, res){
+  res.send('get users ');
+})
+
+
 router.post('/', function(req, res){
-	console.log(req.body)
+	user.create(req.body)
 	res.send('saved user '+req.body.username);
 })
 

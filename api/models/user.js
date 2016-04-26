@@ -13,7 +13,9 @@ let User = sequelize.define('user', {
   permission: {type: Sequelize.INTEGER, allowNull:false, unique: false}
 })
 
+
 User.sync();
+
 
 function create(data){
 	let thisuser = User.create({
