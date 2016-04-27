@@ -4,9 +4,8 @@ module.exports = function(){
   const chai = require('chai');
   const mocha = require('mocha');
   const request = require('request');
-  const should = chai.should();
   const Route = require('../router/user');
-  const User = require('../models/user');
+  const db = require('../models/index');
 
 
   describe('/user route', () => {
