@@ -54,4 +54,4 @@ function authenticateUser(data){
 }
 */
 
-exports = module.exports = app;
+exports = module.exports = server;
