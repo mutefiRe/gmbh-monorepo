@@ -19,9 +19,9 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha test/main.test.js ",
     "jshint": "jshint src/. test/. --config",
-    "dev": "cross-env NODE_ENV=development nodemon server",
-    "start": "cross-env NODE_ENV=development node server",
-    "production": "cross-env NODE_ENV=production server"
+    "start": "cross-env NODE_ENV=development nodemon server",
+    "dev": "cross-env NODE_ENV=development node server",
+    "production": "cross-env NODE_ENV=production node server"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
