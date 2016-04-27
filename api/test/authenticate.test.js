@@ -1,13 +1,18 @@
+'use strict'
+
 module.exports  = function(){
-  var chai = require('chai')
-  var mocha = require('mocha')
+
+  var mocha = require('mocha');
+  var chai = require('chai');
   var should = chai.should();
-  var request = require('request');
   var app = require('../server.js');
-  var user = require('../models/user.js')
+  var db = require('../models/index');
+  var chaiHttp = require('chai-http');
+  chai.use(chaiHttp);
+
 
   describe('/authenticate route', () => {
-    user.create({
+    db.User.create({
       username: "testUser",
       firstname: "max",
       lastname: "mustermann",
@@ -15,32 +20,29 @@ module.exports  = function(){
       permission: 1
     })
 
-    it('should response to authentication with token', () => {
-      request.post({
-        url:'http://localhost:8080/authenticate',
-        body: {
-          "username": "test",
-          "password": "testpassword",
-        },
-        json:true
-      }).then((err, res, body) => {
-       expect(res.statusCode).to.equal(200);
-       res.body.should.have.property('token');
-     })
-    });
+    it('should response to authentication with token', (done) => {
+      chai.request(app)
+      .post('/authenticate')
+      .send({ username: 'testUser', password: 'testPW' })
+      .then( res => {
+        console.log(res.body)
+        res.body.success.should.equal(true)
+        res.should.have.status(200)
+        res.body.should.have.property("token")
+        done();
+      })
+    })
 
-    it('should response to wrong authentication with success false', () => {
-      request.post({
-        url:'http://localhost:8080/authenticate',
-        body: {
-          "username": "test",
-          "password": "testpassword",
-        },
-        json:true
-      }, function (err, res, body){
-       expect(res.statusCode).to.equal(200);
-       res.body.should.have.property('token');
-     })
-    });
+    it('should response to wrong username with no token', (done) => {
+      chai.request(app)
+      .post('/authenticate')
+      .send({ username: 'wrongUser', password: 'wrongPW' })
+      .then( res => {
+        res.body.success.should.equal(false)
+        res.should.have.status(200)
+        res.body.should.not.have.property("token")
+        done();
+      })
+    })
   })
 }

@@ -53,3 +53,5 @@ function authenticateUser(data){
   else return "raus hier"
 }
 */
+
+exports = module.exports = server;

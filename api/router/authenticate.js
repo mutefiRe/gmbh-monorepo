@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const user = require('../models/user');
+const db = require('../models/index');
 const jwt    = require('jsonwebtoken');
 const config = require('../config/config.js')
 
@@ -12,7 +12,7 @@ router.use(function timeLog(req, res, next){
 })
 
 router.post('/', function(req, res){
-  user.User.findOne({where: {
+  db.User.findOne({where: {
     username: req.body.username
   }}).then( thisUser => {
 
