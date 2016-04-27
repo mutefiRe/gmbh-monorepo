@@ -1,6 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var user = require('../models/user');
+'use strict'
+
+const express = require('express');
+const router = express.Router();
+const user = require('../models/index');
 
 router.use(function timeLog(req, res, next){
 	//console.log('Time: ', Date.now());
@@ -12,7 +14,6 @@ router.get('/:id', function(req, res){
 })
 
 router.post('/', function(req, res){
-	console.log(req.body)
 	res.send('saved user '+req.body.username);
 })
 
