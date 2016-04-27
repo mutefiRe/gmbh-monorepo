@@ -5,5 +5,5 @@ module.exports = function(){
   const mocha = require('mocha');
   const db = require('../models/index.js');
 
-  db.User.sync({force: true});
+  //db.User.sync({force: true});
 }
