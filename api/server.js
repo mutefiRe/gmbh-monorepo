@@ -25,6 +25,8 @@ app.get('/', function(req, res){
 app.use('/authenticate', authenticate);
 app.use('/api', api);
 
+
+/*
 // SOCKET HANDLING
 io.on('connection', function(socket){
   socket.emit("connected", true)
@@ -50,3 +52,4 @@ function authenticateUser(data){
    return {"password": data.password, "authenticated":true, "message": "du darfst hier rein"}
   else return "raus hier"
 }
+*/
