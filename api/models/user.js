@@ -19,11 +19,3 @@ module.exports = function(sequelize, DataTypes) {
   return User;
 };
 
-
-
-
-module.exports = {
-	create: create,
-	User: User
-}
-
