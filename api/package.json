@@ -18,6 +18,7 @@
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha test/main.test.js ",
+    "circleci": "cross-env NODE_ENV=circleci mocha test/main.test.js ",
     "lint": "eslint . || true",
     "lint-commit": "eslint",
     "start": "cross-env NODE_ENV=development nodemon server",
