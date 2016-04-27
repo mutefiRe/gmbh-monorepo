@@ -6,7 +6,7 @@ module.exports = function(){
         user: "root",
         password: "",
         host: {
-          hostname: "localhost",
+          host: "localhost",
           port: 3306
         }
       };
@@ -16,7 +16,7 @@ module.exports = function(){
         user: "root",
         password: "",
         host: {
-          hostname: "localhost",
+          host: "localhost",
           port: 3306
         }
       };
@@ -26,7 +26,7 @@ module.exports = function(){
         user: "root",
         password: "",
         host: {
-          hostname: "localhost",
+          host: "localhost",
           port: 3306
         }
       }
