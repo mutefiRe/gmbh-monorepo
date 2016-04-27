@@ -2,7 +2,10 @@
 ##MMP2b
 
 ####Setup
-
+#####General
+```
+npm install -g commitizen
+```
 [Install GIT-Flow](https://github.com/nvie/gitflow/wiki/Installation)
 #####Database
 Install MySQL on your platfrom
