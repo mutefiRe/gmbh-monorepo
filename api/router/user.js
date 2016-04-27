@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const user = require('../models/index');
+const db = require('../models/index');
 
 
 router.use(function timeLog(req, res, next){
@@ -20,7 +20,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-	user.create(req.body);
+	db.User.create(req.body);
 	res.send('saved user '+req.body.username);
 })
 

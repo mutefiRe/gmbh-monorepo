@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
-const user = require('./user.js')
+const userPath = require('./user.js')
 
 // Verification of Access
 router.use(function(req, res, next) {
@@ -39,7 +39,7 @@ router.use(function(req, res, next) {
 });
 
 
-router.use('/user', user)
+router.use('/user', userPath)
 
 
 module.exports = router;
