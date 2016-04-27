@@ -6,5 +6,4 @@ module.exports = function(){
   const db = require('../models/index.js');
 
   db.User.sync({force: true});
-
 }
