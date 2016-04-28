@@ -10,8 +10,7 @@ router.use(function timeLog(req, res, next){
 })
 
 router.get('/:id', function(req, res){
-	db.User.find({where: {id: req.params.id}}).then(data =>
-  {
+	db.User.find({where: {id: req.params.id}}).then(data => {
     res.send(data);
   })
 })
@@ -26,13 +25,17 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-	db.User.create(req.body.user).then( data=>
-  {
+	db.User.create(req.body.user).then( data => {
     res.send(data);
   })
 })
 
 router.put('/:id', function(req, res){
+  db.User.find({where: {id: req.params.id}}).then(user => {
+    user.update(req.body.user).then( data => {
+      res.send(data)
+    })
+  })
 	res.send('updated user '+req.params.id);
 })
 
