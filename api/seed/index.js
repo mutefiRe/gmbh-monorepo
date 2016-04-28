@@ -142,6 +142,6 @@ db.Setting.create({
 })
 
 
-db.Unit.create({
+// db.Unit.create({
 
-})
+// })
