@@ -23,8 +23,10 @@
     "production": "cross-env NODE_ENV=production node server"
   },
   "dependencies": {
+    "body-parser": "^1.15.0",
     "chai-http": "^2.0.1",
     "cross-env": "^1.0.7",
+    "express": "^4.13.4",
     "jsonwebtoken": "^5.7.0",
     "mysql": "^2.10.2",
     "node-mysql": "^0.4.2",
