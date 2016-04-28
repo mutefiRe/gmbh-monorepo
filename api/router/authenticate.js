@@ -28,8 +28,9 @@ router.post('/', function(req, res){
 
         thisUser.update({
           token: token
+        }).then(updatedUser => {
+          res.send({success:true, message: 'Authentication successful', user: updatedUser})
         })
-        res.send({success:true, message: 'Authentication successful', token: token})
       }
     }
   })
