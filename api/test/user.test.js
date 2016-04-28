@@ -1,24 +1,9 @@
-'use strict'
+module.exports = function(){
+  'use strict'
 
-const chai = require('chai');
-const mocha = require('mocha');
-const should = chai.should();
-const User = require('../models/user');
+  const chai = require('chai');
+  const mocha = require('mocha');
+  const db = require('../models/index.js');
 
-describe('usermodel', () => {
-	it('user should be created', () => {
-	 	 User.create({
-	 	 	username: "user1",
-	 	 	firstname: "max",
-	 	 	lastname: "mustermann",
-	 	 	password: "password",
-	 	 	permission: 1
-	 	 });
-
-	 	 User.User.findOne({
-	 	 	where: {
-	 	 		username: "user1"
-	 	 	}
-	 	 }).then((data) => console.log(data));
-    });
-});
+  //db.User.sync({force: true});
+}
