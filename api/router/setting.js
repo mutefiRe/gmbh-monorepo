@@ -10,9 +10,9 @@ router.use(function timeLog(req, res, next){
 })
 
 router.get('/:id', function(req, res){
-  db.User.find({where: {id: req.params.id}}).then(data => {
+  db.Setting.find({where: {id: req.params.id}}).then(data => {
     if(data === null){
-      res.status(404).send("couldn't find user")
+      res.status(404).send("couldn't find setting")
       return
     }
     res.send(data);
@@ -20,10 +20,10 @@ router.get('/:id', function(req, res){
 })
 
 router.get('/', function(req, res){
-  db.User.findAll().then(data =>
+  db.Setting.findAll().then(data =>
   {
     if(data[0] === undefined){
-      res.status(404).send("couldn't find any users")
+      res.status(404).send("couldn't find any settings")
       return
     }
     res.send(data);
@@ -32,7 +32,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.User.create(req.body.user).then( data => {
+  db.Setting.create(req.body.setting).then( data => {
     res.send(data);
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
@@ -40,12 +40,12 @@ router.post('/', function(req, res){
 })
 
 router.put('/:id', function(req, res){
-  db.User.find({where: {id: req.params.id}}).then(user => {
-    if(user === null){
-      res.status(404).send("couldn't find user which should be updated")
+  db.Setting.find({where: {id: req.params.id}}).then(setting => {
+    if(setting === null){
+      res.status(404).send("couldn't find setting which should be updated")
       return
     }
-    user.update(req.body.user).then( data => {
+    setting.update(req.body.setting).then( data => {
       res.send(data)
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
@@ -54,13 +54,13 @@ router.put('/:id', function(req, res){
 })
 
 router.delete('/:id', function(req, res){
-  db.User.find({where: {id: req.params.id}}).then(user=>{
-    if(user === null){
-      res.status(404).send("couldn't find user which should be deleted")
+  db.Setting.find({where: {id: req.params.id}}).then(setting=>{
+    if(setting === null){
+      res.status(404).send("couldn't find setting which should be deleted")
       return
     }
-    user.destroy().then(()=>{
-      res.send('deleted user '+user.firstname)
+    setting.destroy().then(()=>{
+      res.send('deleted setting '+setting.name)
     })
   })
 })
