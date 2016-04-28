@@ -20,7 +20,6 @@ router.get('/', function(req, res){
   {
     res.send(data);
   })
-
 })
 
 
@@ -32,14 +31,16 @@ router.post('/', function(req, res){
 
 router.put('/:id', function(req, res){
   db.User.find({where: {id: req.params.id}}).then(user => {
-    user.update(req.body.user).then( data => {
+    user.update(req.body).then( data => {
       res.send(data)
     })
   })
-	res.send('updated user '+req.params.id);
 })
 
 router.delete('/:id', function(req, res){
+  db.User.find({where: {id: req.params.id}}).then(user=>{
+    user.destroy()
+  })
 	res.send('deleted user '+req.params.id)
 })
 
