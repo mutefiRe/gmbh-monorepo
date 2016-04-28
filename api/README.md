@@ -1,10 +1,9 @@
 # GmBh Backend
 ##MMP2b
 
-####Setup
+###Setup
 
-[Install GIT-Flow](https://github.com/nvie/gitflow/wiki/Installation)
-#####Database
+####Database
 Install MySQL on your platfrom
 We need to set up a Production, Development and Test Database
 ```
@@ -20,10 +19,17 @@ password: ""
 hostname: "localhost"
 port: 3306
 ```
-#####Install
+####Install
 ```
 npm install
 ```
+
+####API Testing with Postman
+Testing our API Funktionality is easy with Postman.
+
+Check it out: [get Postman](http://www.getpostman.com/)
+
+We have prepared the Requests for you: [shared Collection](https://www.getpostman.com/collections/e5f341bd489ee40b27df)
 
 ###Contributors###
 - [Alexander Gabriel](https://www.github.com/gabsi20)
@@ -41,6 +47,16 @@ npm install
 - __perf:__     A code change that improves performance
 - __test:__     Adding missing tests
 - __chore:__    Chnages to the build process or auxiliary tools and libraries such as documentation generation
+ 
+###Contributing
+
+We love structured branching
+
+[Install GIT-Flow](https://github.com/nvie/gitflow/wiki/Installation)
+
+We love consistent commiting
+
+[Install Commitizen](https://www.npmjs.com/package/commitizen)
 
 ###License###
 ===============
