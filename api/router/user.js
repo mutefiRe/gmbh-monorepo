@@ -10,17 +10,26 @@ router.use(function timeLog(req, res, next){
 })
 
 router.get('/:id', function(req, res){
-	res.send('get user '+req.params.id);
+	db.User.find({where: {id: req.params.id}}).then(data =>
+  {
+    res.send(data);
+  })
 })
 
 router.get('/', function(req, res){
-  res.send('get users ');
+  db.User.findAll().then(data =>
+  {
+    res.send(data);
+  })
+
 })
 
 
 router.post('/', function(req, res){
-	db.User.create(req.body);
-	res.send('saved user '+req.body.username);
+	db.User.create(req.body.user).then( data=>
+  {
+    res.send(data);
+  })
 })
 
 router.put('/:id', function(req, res){

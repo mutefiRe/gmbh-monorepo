@@ -10,15 +10,17 @@ module.exports  = function(){
   var chaiHttp = require('chai-http');
   chai.use(chaiHttp);
 
-
-  describe('/authenticate route', () => {
-    db.User.create({
+   db.User.create({
       username: "testUser",
       firstname: "max",
       lastname: "mustermann",
       password: "testPW",
-      permission: 1
+      permission: 1,
+      token: "abc123"
     })
+
+  describe('/authenticate route', () => {
+
 
     it('should response to authentication with token', (done) => {
       chai.request(app)
