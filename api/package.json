@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "chai-http": "^2.0.1",
+    "cross-env": "^1.0.7",
     "jsonwebtoken": "^5.7.0",
     "mysql": "^2.10.2",
     "node-mysql": "^0.4.2",
@@ -37,7 +38,6 @@
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",
     "should": "^8.3.1",
-    "supertest": "^1.2.0"
   },
   "config": {
     "commitizen": {

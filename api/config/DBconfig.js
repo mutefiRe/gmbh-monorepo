@@ -31,5 +31,15 @@ module.exports = function(){
           port: 3306
       }
     }
+    default:
+    return {
+      database: "gmbh",
+        user: "root",
+        password: "",
+        host: {
+          host: "localhost",
+          port: 3306
+        }
+    }
   }
 }
