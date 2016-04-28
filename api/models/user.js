@@ -8,13 +8,14 @@ module.exports = function(sequelize, DataTypes) {
     password: {type: DataTypes.STRING, allowNull: false,  unique: false},
     permission: {type: DataTypes.INTEGER, allowNull:false, unique: false},
     token: {type: DataTypes.TEXT, allowNull:true, unique:false}
-  }/*, {
+  })/* , {
     classMethods: {
-      associate: function(models) {
-        User.hasMany(models.Task)
+     associate: function(models) {
+        User.hasMany(models.User, {as: 'children', foreignKey: 'UserId'});
+        User.belongsTo(models.User, {as: 'parent', foreignKey: 'UserId'});
       }
-    }
-  }*/);
+    }*/
+
   User.sync();
 
   return User;

@@ -140,3 +140,79 @@ db.Setting.create({
   begin_date: "nodate",
   end_date: "nodate"
 })
+
+var stk = db.Unit.create({
+  name: "Stk."
+}).then(data => {
+db.Item.bulkCreate([{
+    name: "Schnitzel mit Pommes",
+    amount: 1,
+    price: 8.5,
+    tax: 0.1,
+    UnitId: data.id
+  },{
+    name: "Schnitzel mit Kartoffelsalat",
+    amount: 1,
+    price: 8.5,
+    tax: 0.1,
+    UnitId: data.id
+  },{
+    name: "Käsekrainer mit Semmel",
+    amount: 1,
+    price: 8.5,
+    tax: 0.1,
+    UnitId: data.id
+  }]
+  )
+})
+
+var l = db.Unit.create({
+  name: "l"
+}).then(data => {
+db.Item.bulkCreate([{
+    name: "Bier",
+    amount: 0.5,
+    price: 3.5,
+    tax: 0.2,
+    UnitId: data.id
+  },{
+    name: "Radler",
+    amount: 0.33,
+    price: 2.5,
+    tax: 0.2,
+    UnitId: data.id
+  },{
+    name: "Bier",
+    amount: 0.5,
+    price: 2.5,
+    tax: 0.2,
+    UnitId: data.id
+  }]
+  )
+})
+
+var cl = db.Unit.create({
+  name: "cl"
+}).then(data => {
+  db.Item.bulkCreate([{
+      name: "Klopfer",
+      amount: 2,
+      price: 2.5,
+      tax: 0.2,
+      UnitId: data.id
+    },{
+      name: "Jägermeister",
+      amount: 2,
+      price: 2.5,
+      tax: 0.2,
+      UnitId: data.id
+    },{
+      name: "Obstler",
+      amount: 4,
+      price: 2,
+      tax: 0.2,
+      UnitId: data.id
+    }]
+  )
+})
+
