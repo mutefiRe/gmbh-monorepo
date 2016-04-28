@@ -1,8 +1,8 @@
 'use strict'
 
-const db = require('./models/index');
+const db = require('../models/index');
 const jwt = require('jsonwebtoken');
-const config = require('./config/config.js')
+const config = require('../config/config.js')
 
 
 var user = db.User.create({
@@ -10,7 +10,7 @@ var user = db.User.create({
       firstname: "max",
       lastname: "mustermann",
       password: "testPW",
-      permission: 1,
+      permission: 3,
       token: "abc123"
 }).then(thisUser=>{
 let token = jwt.sign(thisUser.dataValues, config.secret);
@@ -26,8 +26,8 @@ user = db.User.create({
       firstname: "max",
       lastname: "mustermann",
       password: "admin",
-      permission: 1,
-      token: "abc123"
+      permission: 2,
+      token: "abc1234"
 }).then(thisUser=>{
 let token = jwt.sign(thisUser.dataValues, config.secret);
 thisUser.update({
@@ -113,14 +113,35 @@ thisUser.update({
 //var userArray = [];
 
 
-/*
+
 db.Organization.create({
-  uid: "",
-  name: {type: DataTypes.STRING, allowNull: true,  unique: false},
-  street: {type: DataTypes.STRING, allowNull: true,  unique: false},
-  street_number: {type: DataTypes.STRING, allowNull: true,  unique: false},
-  postalcode: {type: DataTypes.STRING, allowNull: true, unique: false},
-  city: {type: DataTypes.STRING, allowNull: true, unique: false},
-  telephone: {type: DataTypes.STRING, allowNull: true, unique: false}
+  uid: "blaaaah",
+  name: "GehMalBierHolen Gmbh",
+  street: "Urstein Süd",
+  street_number: "1",
+  postalcode: "5412",
+  city: "Puch bei Hallein",
+  telephone: "+43 650 12345678"
 })
-*/
+
+
+db.Organization.create({
+  uid: "puuuuh",
+  name: "Fetzgeil Gmbh",
+  street: "Urstein Nord",
+  street_number: "3",
+  postalcode: "5412",
+  city: "Puch bei Hallein",
+  telephone: "+43 650 87654321"
+})
+
+db.Setting.create({
+  name: "Zeltfest volle saufen",
+  begin_date: "nodate",
+  end_date: "nodate"
+})
+
+
+db.Unit.create({
+
+})
