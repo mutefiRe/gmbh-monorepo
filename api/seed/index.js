@@ -140,8 +140,3 @@ db.Setting.create({
   begin_date: "nodate",
   end_date: "nodate"
 })
-
-
-db.Unit.create({
-
-})
