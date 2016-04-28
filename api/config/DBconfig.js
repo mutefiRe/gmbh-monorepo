@@ -6,7 +6,7 @@ module.exports = function(){
         user: "root",
         password: "",
         host: {
-          hostname: "localhost",
+          hostname: process.env.GMBH_IP || "localhost",
           port: 3306
         }
       };
@@ -16,7 +16,7 @@ module.exports = function(){
         user: "root",
         password: "",
         host: {
-          hostname: "localhost",
+          hostname: process.env.GMBH_IP || "localhost",
           port: 3306
         }
       };
@@ -26,7 +26,17 @@ module.exports = function(){
         user: "root",
         password: "",
         host: {
-          hostname: "localhost",
+          hostname: process.env.GMBH_IP || "localhost",
+          port: 3306
+        }
+      };
+     case 'circleci':
+      return {
+        database: "circle_test",
+        user: "ubuntu",
+        password: "",
+        host: {
+          hostname: process.env.GMBH_IP || "localhost",
           port: 3306
         }
       }
