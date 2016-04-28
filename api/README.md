@@ -33,7 +33,14 @@ npm install
 - [Daniel Trojer](https://www.github.com/mutefiRe)
 
 ###Commit Conventions###
-> ToDo
+- __feat:__     new feature
+- __fix:__      a bug fix
+- __docs:__     Documentation only changes
+- __style:__    Chnages that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- __refactor:__ A code change that neither fixes a bug or adds a feature
+- __perf:__     A code change that improves performance
+- __test:__     Adding missing tests
+- __chore:__    Chnages to the build process or auxiliary tools and libraries such as documentation generation
 
 ###License###
 ===============
