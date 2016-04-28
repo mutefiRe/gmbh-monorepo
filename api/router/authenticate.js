@@ -24,13 +24,11 @@ router.post('/', function(req, res){
         res.send({success: false, message: 'Authentication failed. Wrong Password'})
       }
       else {
-        console.log(config)
         let token = jwt.sign(thisUser.dataValues, config.secret);
 
         thisUser.update({
           token: token
         })
-        console.log(token)
         res.send({success:true, message: 'Authentication successful', token: token})
       }
     }

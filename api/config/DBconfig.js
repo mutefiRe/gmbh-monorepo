@@ -17,7 +17,8 @@ module.exports = function(){
         password: "",
         host: {
           host: "localhost",
-          port: 3306
+          port: 3306,
+          logging: false
         }
       };
     case'production':
@@ -28,7 +29,7 @@ module.exports = function(){
         host: {
           host: "localhost",
           port: 3306
-        }
       }
+    }
   }
 }

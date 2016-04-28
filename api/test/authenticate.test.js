@@ -27,9 +27,8 @@ module.exports  = function(){
       .post('/authenticate')
       .send({ username: 'testUser', password: 'testPW' })
       .then( res => {
-        console.log(res.body)
-        res.body.success.should.equal(true)
-        res.should.have.status(200)
+        res.body.success.should.be.equal(true)
+        res.status.should.be.equal(200)
         res.body.should.have.property("token")
         done();
       })
@@ -40,8 +39,8 @@ module.exports  = function(){
       .post('/authenticate')
       .send({ username: 'wrongUser', password: 'wrongPW' })
       .then( res => {
-        res.body.success.should.equal(false)
-        res.should.have.status(200)
+        res.body.success.should.be.equal(false)
+        res.status.should.be.equal(200)
         res.body.should.not.have.property("token")
         done();
       })
