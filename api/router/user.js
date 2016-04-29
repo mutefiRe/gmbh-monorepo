@@ -11,7 +11,7 @@ router.use(function timeLog(req, res, next){
 
 router.get('/me', function(req, res){
   db.User.find({where: {
-    id: res.decoded.id
+    id: req.decoded.id
   }}).then(data =>
   {
     res.send(data);
