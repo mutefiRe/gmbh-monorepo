@@ -24,8 +24,9 @@ server.listen(8080, function(){
 // Routing
 app.use(bodyParser.json())
 app.get('/', function(req, res){
-  res.send("Welcome to our API<br>Authenticate at /authenticate<br>to get Access to /api")}
-  );
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); //allow acces from frontend server
+  next()
+  });
 app.use('/authenticate', authenticate);
 app.use('/api', api);
 app.use('/teapot', teapot);

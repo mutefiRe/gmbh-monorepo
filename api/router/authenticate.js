@@ -12,7 +12,6 @@ router.use(function timeLog(req, res, next){
 })
 
 router.post('/', function(req, res){
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); //allow acces from frontend server
     db.User.findOne({where: {
       username: req.body.username
     }}).then( thisUser => {
