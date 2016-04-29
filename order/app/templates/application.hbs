@@ -1,11 +1,16 @@
-<div class="menu">
-  …
-  {{#if session.isAuthenticated}}
-    <a {{action 'invalidateSession'}}>Logout</a>
-  {{else}}
-    {{#link-to 'login'}}Login{{/link-to}}
-  {{/if}}
-</div>
-<div class="main">
-  {{outlet}}
-</div>
+<h2 id="title">MMP</h2>
+
+{{#link-to 'index'}}
+  Index
+{{/link-to}}
+
+{{#if session.isAuthenticated}}
+  <button {{action 'logout'}}>Logout</button>
+  {{log session}}
+{{else}}
+  {{#link-to 'login'}}
+    Login
+  {{/link-to}}
+{{/if}}
+{{outlet}}
+
