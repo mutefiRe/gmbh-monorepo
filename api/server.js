@@ -14,6 +14,7 @@ db.sequelize.sync();
 //Import Routes
 const api = require('./router/api');
 const authenticate = require('./router/authenticate')
+const teapot = require('./router/teapot');
 
 server.listen(8080, function(){
 	//console.log("server listening to 8080")
@@ -27,6 +28,7 @@ app.get('/', function(req, res){
   );
 app.use('/authenticate', authenticate);
 app.use('/api', api);
+app.use('/teapot', teapot);
 
 
 /*
