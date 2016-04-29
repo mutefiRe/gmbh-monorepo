@@ -18,7 +18,10 @@
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha test/main.test.js ",
-    "jshint": "jshint src/. test/. --config",
+    "circleci": "cross-env NODE_ENV=circleci mocha test/main.test.js ",
+    "all": "eslint . || true",
+    "fix": "eslint --fix",
+    "lint": "eslint",
     "start": "cross-env NODE_ENV=development nodemon server",
     "production": "cross-env NODE_ENV=production node server"
   },
@@ -35,8 +38,10 @@
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
+    "babel-eslint": "^6.0.4",
     "chai": "^3.5.0",
     "cz-conventional-changelog": "^1.1.5",
+    "eslint": "^2.8.0",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",
     "should": "^8.3.1"
