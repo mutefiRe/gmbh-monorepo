@@ -36,6 +36,16 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+      ENV['ember-simple-auth'] = {
+        authorizer: 'authorizer:token'
+      };
+      ENV['ember-simple-auth-token'] = {
+        refreshAccessTokens: false,
+        serverTokenEndpoint: 'http://localhost:8080/authenticate'
+      };
+      ENV['ember-cli-mirage'] = {
+        enabled: false
+      }
   }
 
   if (environment === 'test') {
