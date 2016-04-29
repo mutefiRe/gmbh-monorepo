@@ -23,10 +23,15 @@ server.listen(8080, function(){
 
 // Routing
 app.use(bodyParser.json())
-app.get('/', function(req, res){
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); //allow acces from frontend server
-  next()
-  });
+app.all('/', function(req, res, next){
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); //allow acces from frontend server
+    next()
+});
+app.options('*', function(req, res) {
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.send(200)
+});
 app.use('/authenticate', authenticate);
 app.use('/api', api);
 app.use('/teapot', teapot);
