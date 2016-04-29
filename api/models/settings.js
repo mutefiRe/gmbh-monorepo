@@ -12,8 +12,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }*/);
-  Setting.sync();
-
   return Setting;
 };
 
