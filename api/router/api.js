@@ -7,8 +7,8 @@ const config = require('../config/config');
 const userPath = require('./user.js')
 const organizationPath = require ('./organization.js')
 const settingPath = require ('./setting.js')
-//const unitPath = require ('./unit.js')
-//const itemPath = require ('./item.js')
+const unitPath = require ('./unit.js')
+const itemPath = require ('./item.js')
 const db = require('../models')
 
 // Verification of Access
@@ -53,8 +53,8 @@ router.use(function(req, res, next) {
 router.use('/user', userPath)
 router.use('/organization', organizationPath)
 router.use('/setting', settingPath)
-//router.use('/item', itemPath)
-//router.use('/unit', unitPath)
+router.use('/item', itemPath)
+router.use('/unit', unitPath)
 
 
 module.exports = router;
