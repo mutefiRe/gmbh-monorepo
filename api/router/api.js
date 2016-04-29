@@ -7,6 +7,9 @@ const config = require('../config/config');
 const userPath = require('./user.js')
 const organizationPath = require ('./organization.js')
 const settingPath = require ('./setting.js')
+//const unitPath = require ('./unit.js')
+//const itemPath = require ('./item.js')
+const db = require('../models')
 
 // Verification of Access
 router.use(function(req, res, next) {
@@ -20,10 +23,16 @@ router.use(function(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, config.secret, function(err, decoded) {
       if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });
-      } else {
+        return res.status(400).send({ success: false, message: 'Failed to authenticate token.' });
+      } else if ((new Date(decoded.exp*1000)) < Date.now()){
+
+         return res.status(400).send({ success: false, message: 'Token has expired' });
+      }
+      else {
+        console.log(new Date(decoded.exp*1000))
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
+        console.log(decoded)
         next();
       }
     });
@@ -32,7 +41,7 @@ router.use(function(req, res, next) {
 
     // if there is no token
     // return an error
-    return res.status(403).send({
+    return res.status(400).send({
         success: false,
         message: 'No token provided.'
     });
@@ -44,6 +53,8 @@ router.use(function(req, res, next) {
 router.use('/user', userPath)
 router.use('/organization', organizationPath)
 router.use('/setting', settingPath)
+//router.use('/item', itemPath)
+//router.use('/unit', unitPath)
 
 
 module.exports = router;
