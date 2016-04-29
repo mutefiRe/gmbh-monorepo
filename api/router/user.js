@@ -9,6 +9,15 @@ router.use(function timeLog(req, res, next){
   next();
 })
 
+router.get('/me', function(req, res){
+  db.User.find({where: {
+    id: res.decoded.id
+  }}).then(data =>
+  {
+    res.send(data);
+  })
+})
+
 router.get('/:id', function(req, res){
   db.User.find({where: {id: req.params.id}}).then(data => {
     if(data === null){
@@ -64,5 +73,8 @@ router.delete('/:id', function(req, res){
     })
   })
 })
+
+
+
 
 module.exports = router;

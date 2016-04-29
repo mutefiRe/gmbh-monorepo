@@ -32,7 +32,7 @@ router.use(function(req, res, next) {
         console.log(new Date(decoded.exp*1000))
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
-        console.log(decoded)
+        //console.log(decoded)
         next();
       }
     });
