@@ -14,10 +14,9 @@ module.exports = function(sequelize, DataTypes) {
         User.hasMany(models.User, {as: 'children', foreignKey: 'UserId'});
         User.belongsTo(models.User, {as: 'parent', foreignKey: 'UserId'});
       }
-    }*/
 
-  User.sync();
-
+    }
+  }*/
   return User;
 };
 

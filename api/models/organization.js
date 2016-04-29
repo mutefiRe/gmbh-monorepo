@@ -16,8 +16,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }*/);
-  Organization.sync();
-
   return Organization;
 };
 
