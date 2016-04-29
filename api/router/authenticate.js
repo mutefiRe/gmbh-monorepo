@@ -12,29 +12,32 @@ router.use(function timeLog(req, res, next){
 })
 
 router.post('/', function(req, res){
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); //allow acces from frontend server
     db.User.findOne({where: {
       username: req.body.username
     }}).then( thisUser => {
 
       if (!thisUser){
-        res.send({ success: false, message: 'Authentication failed. User not found.' })
+        res.status(400).send({ success: false, message: 'Authentication failed. User not found.' })
       }
       else if (thisUser){
         if (thisUser.password != req.body.password){
-          res.send({success: false, message: 'Authentication failed. Wrong Password'})
+          res.status(400).send({success: false, message: 'Authentication failed. Wrong Password'})
         }
         else {
-          let token = jwt.sign(thisUser.dataValues, config.secret);
+          /*
+          var expires = new Date();
+          expires.setDate(expires.getDate() + 1);
+          */
+          let token = jwt.sign(thisUser.dataValues, config.secret, { expiresIn: '1h' });
 
-          thisUser.update({
-            token: token
-          }).then(updatedUser => {
-            res.send({success:true, message: 'Authentication successful', user: updatedUser})
+          res.send({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token
           })
         }
       }
-    })
   })
+})
 
 module.exports = router;
