@@ -28,7 +28,7 @@ router.post('/', function(req, res){
           var expires = new Date();
           expires.setDate(expires.getDate() + 1);
           */
-          let token = jwt.sign(thisUser.dataValues, config.secret, { expiresIn: '1h' });
+          let token = jwt.sign(thisUser.dataValues, config.secret, { expiresIn: '24h' });
 
           res.send({
           success: true,
