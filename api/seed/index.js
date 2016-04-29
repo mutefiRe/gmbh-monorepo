@@ -12,14 +12,7 @@ var user = db.User.create({
       password: "testPW",
       permission: 3,
       token: "abc123"
-}).then(thisUser=>{
-let token = jwt.sign(thisUser.dataValues, config.secret);
-thisUser.update({
-    token: token
-  })
 })
-
-
 
 user = db.User.create({
       username: "admin",
@@ -28,13 +21,7 @@ user = db.User.create({
       password: "admin",
       permission: 2,
       token: "abc1234"
-}).then(thisUser=>{
-let token = jwt.sign(thisUser.dataValues, config.secret);
-thisUser.update({
-    token: token
-  })
 })
-
 
 user = db.User.create({
       username: "sebastian",
@@ -43,11 +30,6 @@ user = db.User.create({
       password: "123",
       permission: 1,
       token: "abc1"
-}).then(thisUser=>{
-let token = jwt.sign(thisUser.dataValues, config.secret);
-thisUser.update({
-    token: token
-  })
 })
 
 
@@ -58,11 +40,6 @@ user = db.User.create({
       password: "123",
       permission: 1,
       token: "abc2"
-}).then(thisUser=>{
-let token = jwt.sign(thisUser.dataValues, config.secret);
-thisUser.update({
-    token: token
-  })
 })
 
 
@@ -73,11 +50,6 @@ user = db.User.create({
       password: "123",
       permission: 1,
       token: "abc3"
-}).then(thisUser=>{
-let token = jwt.sign(thisUser.dataValues, config.secret);
-thisUser.update({
-    token: token
-  })
 })
 
 
@@ -88,11 +60,6 @@ user = db.User.create({
       password: "123",
       permission: 1,
       token: "abc4"
-}).then(thisUser=>{
-let token = jwt.sign(thisUser.dataValues, config.secret);
-thisUser.update({
-    token: token
-  })
 })
 
 
@@ -103,11 +70,6 @@ user = db.User.create({
       password: "123",
       permission: 1,
       token: "abc5"
-}).then(thisUser=>{
-let token = jwt.sign(thisUser.dataValues, config.secret);
-thisUser.update({
-    token: token
-  })
 })
 
 //var userArray = [];
