@@ -1,11 +1,9 @@
 # GmBh Backend
 ##MMP2b
 
-
 ###Setup
 
 ####Database
-
 Install MySQL on your platfrom
 We need to set up a Production, Development and Test Database
 ```
