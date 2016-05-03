@@ -36,10 +36,9 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
-      ENV['ember-simple-auth'] = {
-        authorizer: 'authorizer:token'
-      };
       ENV['ember-simple-auth-token'] = {
+	authorizationPrefix: ' ',
+	authorizationHeaderName: 'x-access-token',
         refreshAccessTokens: false,
         serverTokenEndpoint: 'http://localhost:8080/authenticate'
       };
