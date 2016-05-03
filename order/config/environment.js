@@ -39,8 +39,9 @@ module.exports = function(environment) {
       ENV['ember-simple-auth-token'] = {
 	authorizationPrefix: ' ',
 	authorizationHeaderName: 'x-access-token',
-        refreshAccessTokens: false,
-        serverTokenEndpoint: 'http://localhost:8080/authenticate'
+	refreshAccessTokens: false,
+	serverTokenEndpoint: 'http://localhost:8080/authenticate',
+	timeFactor: 1000
       };
       ENV['ember-cli-mirage'] = {
         enabled: false
