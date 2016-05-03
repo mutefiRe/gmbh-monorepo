@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports  = function(){
   var chai = require('chai')
   var mocha = require('mocha')
@@ -28,3 +30,4 @@ module.exports  = function(){
     })
   })*/
 }
+
