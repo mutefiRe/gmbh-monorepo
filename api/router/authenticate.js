@@ -28,7 +28,14 @@ router.post('/', function(req, res){
           var expires = new Date();
           expires.setDate(expires.getDate() + 1);
           */
-          let token = jwt.sign(thisUser.dataValues, config.secret, { expiresIn: '24h' });
+          let userObject = {
+            "id": thisUser.dataValues.id,
+            "username": thisUser.dataValues.username,
+            "permission": thisUser.dataValues.permission,
+            "firstname": thisUser.dataValues.firstname,
+            "lastname": thisUser.dataValues.lastname
+          }
+          let token = jwt.sign(userObject, config.secret, { expiresIn: '24h' });
 
           res.send({
           success: true,
