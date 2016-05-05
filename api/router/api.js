@@ -6,10 +6,10 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const userPath = require('./user.js')
 const categoryPath = require('./category')
-const organizationPath = require ('./organization.js')
-const settingPath = require ('./setting.js')
-const unitPath = require ('./unit.js')
-const itemPath = require ('./item.js')
+const organizationPath = require('./organization.js')
+const settingPath = require('./setting.js')
+const unitPath = require('./unit.js')
+const itemPath = require('./item.js')
 const db = require('../models')
 
 
@@ -25,14 +25,21 @@ router.use(function(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, config.secret, function(err, decoded) {
       if (err) {
-        return res.status(400).send({ success: false, message: 'Failed to authenticate token.' });
-      } else if ((new Date(decoded.exp*1000)) < Date.now()){
+        return res.status(400).send({
+          'error': {
+            'msg': "Failed to authenticate token."
+          }
+        });
+      } else if ((new Date(decoded.exp * 1000)) < Date.now()) {
 
-         return res.status(400).send({ success: false, message: 'Token has expired' });
-      }
-      else {
-        console.log(new Date(decoded.exp*1000))
-        // if everything is good, save to request for use in other routes
+        return res.status(400).send({
+          'error': {
+            'msg': 'Token has expired'
+          }
+        });
+      } else {
+        console.log(new Date(decoded.exp * 1000))
+          // if everything is good, save to request for use in other routes
         req.decoded = decoded;
         //console.log(decoded)
         next();
@@ -44,15 +51,16 @@ router.use(function(req, res, next) {
     // if there is no token
     // return an error
     return res.status(400).send({
-        success: false,
-        message: 'No token provided.'
+      "error": {
+        "msg": "Something went wrong"
+      }
     });
 
   }
 });
 
 
-router.use('/user', userPath);
+router.use('/users', userPath);
 router.use('/category', categoryPath);
 router.use('/organization', organizationPath)
 router.use('/setting', settingPath)
