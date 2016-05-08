@@ -10,39 +10,41 @@ module.exports  = function(){
   var chaiHttp = require('chai-http');
   chai.use(chaiHttp);
 
-   db.User.create({
-      username: "testUser",
-      firstname: "max",
-      lastname: "mustermann",
-      password: "testPW",
-      permission: 1,
-      token: "abc123"
+  function before(){
+    db.User.sync({force:true}).then(() => {
+     db.User.create({
+      username: "test",
+      firstname: "test",
+      lastname: "test",
+      password: "test",
+      permission: 1
     })
+   })
+  }
+
 
   describe('/authenticate route', () => {
-
 
     it('should response to authentication with token', (done) => {
       chai.request(app)
       .post('/authenticate')
-      .send({ username: 'testUser', password: 'testPW' })
+      .send({ username: 'test', password: 'test' })
       .then( res => {
-        res.body.success.should.be.equal(true)
         res.status.should.be.equal(200)
         res.body.should.have.property("token")
         done();
       })
+
     })
 
     it('should response to wrong username with no token', (done) => {
       chai.request(app)
       .post('/authenticate')
       .send({ username: 'wrongUser', password: 'wrongPW' })
-      .then( res => {
-        res.body.success.should.be.equal(false)
-        res.status.should.be.equal(200)
-        res.body.should.not.have.property("token")
-        done();
+      .catch( res => {
+        res.response.status.should.be.equal(400)
+        res.response.body.should.have.property("error")
+        done()
       })
     })
   })
