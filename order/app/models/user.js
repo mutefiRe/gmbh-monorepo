@@ -6,5 +6,4 @@ export default DS.Model.extend({
   "lastname": DS.attr('string'),
   "password": DS.attr('string'),
   "permission": DS.attr('number'),
-  "token": DS.attr('string')
 });
