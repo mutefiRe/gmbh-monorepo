@@ -44,12 +44,12 @@
     "ember-simple-auth-token": "1.1.1",
     "ember-websockets": "3.0.0",
     "eslint-config-ember": "0.3.0",
-    "loader.js": "^4.0.0"
+    "loader.js": "^4.0.0",
+    "phantomjs-prebuilt": "^2.1.7"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "dependencies": {}
+  }
 }

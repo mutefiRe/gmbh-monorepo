@@ -4,8 +4,8 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
-    hinting: false,
-    tests: false
+    hinting: false
+  //  tests: false
   });
 
   // Use `app.import` to add additional libraries to the generated
