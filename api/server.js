@@ -25,7 +25,7 @@ const api = require('./router/api');
 const authenticate = require('./router/authenticate')
 const teapot = require('./router/teapot');
 
-server.listen(8080, function(){
+server.listen(process.env.PORT || 8080, function(){
 	//console.log("server listening to 8080")
 });
 
