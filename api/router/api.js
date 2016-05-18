@@ -27,32 +27,22 @@ router.use(function(req, res, next) {
       if (err) {
         return res.status(400).send({
           'error': {
-            'msg': "Failed to authenticate token."
-          }
-        });
-      } else if ((new Date(decoded.exp * 1000)) < Date.now()) {
-
-        return res.status(400).send({
-          'error': {
-            'msg': 'Token has expired'
+            'msg': err.message
           }
         });
       } else {
-        console.log(new Date(decoded.exp * 1000))
           // if everything is good, save to request for use in other routes
-        req.decoded = decoded;
-        //console.log(decoded)
-        next();
-      }
-    });
-
+          req.decoded = decoded;
+          next();
+        }
+      });
   } else {
 
     // if there is no token
     // return an error
     return res.status(400).send({
       "error": {
-        "msg": "Something went wrong"
+        "msg": "No token provided"
       }
     });
 
@@ -66,6 +56,9 @@ router.use('/organization', organizationPath)
 router.use('/setting', settingPath)
 router.use('/item', itemPath)
 router.use('/unit', unitPath)
+router.get('/', function(req, res){
+  res.status(200).send({"msg": "you have access to the api"})
+})
 
 
 module.exports = router;
