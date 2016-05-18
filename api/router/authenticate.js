@@ -25,23 +25,19 @@ router.post('/', function(req, res){
         res.status(400).send({error: 'Authentication failed. Wrong Password'})
       }
       else {
-          /*
-          var expires = new Date();
-          expires.setDate(expires.getDate() + 1);
-          */
-          let userObject = {
-            "id": thisUser.dataValues.id,
-            "username": thisUser.dataValues.username,
-            "permission": thisUser.dataValues.permission,
-            "firstname": thisUser.dataValues.firstname,
-            "lastname": thisUser.dataValues.lastname
-          }
-          let token = jwt.sign(userObject, config.secret, { expiresIn: '24h' });
-
-          res.send({token: token})
+        let userObject = {
+          "id": thisUser.dataValues.id,
+          "username": thisUser.dataValues.username,
+          "permission": thisUser.dataValues.permission,
+          "firstname": thisUser.dataValues.firstname,
+          "lastname": thisUser.dataValues.lastname
         }
+        let token = jwt.sign(userObject, config.secret, { expiresIn: '24h' });
+
+        res.send({token: token})
       }
-    })
+    }
+  })
 })
 
 module.exports = router;
