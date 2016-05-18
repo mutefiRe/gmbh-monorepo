@@ -8,7 +8,8 @@ module.exports = function(){
       host: {
         host: process.env.GMBH_IP || "localhost",
         port: 3306
-      }
+      },
+      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
     };
     case 'test':
     return {
@@ -19,7 +20,8 @@ module.exports = function(){
         logging: false,
         host: process.env.GMBH_IP || "localhost",
         port: 3306
-      }
+      },
+      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
     };
     case'production':
     return {
@@ -29,7 +31,8 @@ module.exports = function(){
       host: {
         host: process.env.GMBH_DB_HOST || "localhost",
         port:  process.env.GMBH_DB_PORT || 3306
-      }
+      },
+      dialect: process.env.GMBH_DB_DIALECT || 'postgres'
     };
     case 'circleci':
     return {
@@ -39,7 +42,8 @@ module.exports = function(){
       host: {
         hostname: process.env.GMBH_IP || "localhost",
         port: 3306
-      }
+      },
+      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
     }
     default:
     return {
@@ -49,7 +53,8 @@ module.exports = function(){
       host: {
         host: "localhost",
         port: 3306
-      }
+      },
+      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
     }
   }
 }

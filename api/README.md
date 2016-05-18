@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/gabsi20/gmbh-backend/tree/develop.svg?style=svg)](https://circleci.com/gh/gabsi20/gmbh-backend/tree/develop)
+
 # GmBh Backend
 ##MMP2b
 
@@ -47,7 +49,7 @@ We have prepared the Requests for you: [shared Collection](https://www.getpostma
 - __perf:__     A code change that improves performance
 - __test:__     Adding missing tests
 - __chore:__    Chnages to the build process or auxiliary tools and libraries such as documentation generation
- 
+
 ###Contributing
 
 We love structured branching
