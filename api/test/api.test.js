@@ -12,17 +12,17 @@ module.exports  = function(){
   const config = require('../config/config.js');
   chai.use(chaiHttp);
 
-  function before(){
+  before(function(done){
     db.User.sync({force:true}).then(() => {
-     db.User.create({
-      username: "test",
-      firstname: "test",
-      lastname: "test",
-      password: "test",
-      permission: 1
+      db.User.create({
+        username: "test",
+        firstname: "test",
+        lastname: "test",
+        password: "test",
+        permission: 1
+      }).then(() => done())
     })
-   })
-  }
+  })
 
   describe('/api route -> check restriction access', () => {
 

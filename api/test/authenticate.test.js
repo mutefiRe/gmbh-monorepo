@@ -11,17 +11,17 @@ module.exports  = function(){
   chai.use(chaiHttp);
 
 
-  function before(){
+  before(function(done){
     db.User.sync({force:true}).then(() => {
-     db.User.create({
-      username: "test",
-      firstname: "test",
-      lastname: "test",
-      password: "test",
-      permission: 1
+      db.User.create({
+        username: "test",
+        firstname: "test",
+        lastname: "test",
+        password: "test",
+        permission: 1
+      }).then(() => done())
     })
-   })
-  }
+  })
 
 
   describe('/authenticate route', () => {
@@ -33,9 +33,6 @@ module.exports  = function(){
         res.status.should.be.equal(200)
         res.body.should.have.property("token")
         done();
-      }).catch(res=> {
-        //should not happen, just for circleci
-        console.log(res.response.body)
       })
     })
 
