@@ -1,11 +1,11 @@
 machine:
   node:
     version: 5.7.0
-test:
-  override:
-    - npm run circleci
-deployment:
-  staging:
-    branch: master
-    heroku:
-      appname: gmbh-backend
+    test:
+      override:
+        - npm run circleci
+        deployment:
+          staging:
+            branch: develop
+            heroku:
+              appname: gmbh-backend
