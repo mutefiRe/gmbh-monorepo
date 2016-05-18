@@ -2,12 +2,12 @@
 
 module.exports  = function(){
 
-  var mocha = require('mocha');
-  var chai = require('chai');
-  var should = chai.should();
-  var app = require('../server.js');
-  var db = require('../models/index');
-  var chaiHttp = require('chai-http');
+  const mocha = require('mocha');
+  const chai = require('chai');
+  const should = chai.should();
+  const app = require('../server.js');
+  const db = require('../models/index');
+  const chaiHttp = require('chai-http');
   const jwt    = require('jsonwebtoken');
   const config = require('../config/config.js');
   chai.use(chaiHttp);
