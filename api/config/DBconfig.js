@@ -7,9 +7,10 @@ module.exports = function(){
       password: "",
       host: {
         host: process.env.GMBH_IP || "localhost",
-        port: 3306
+        port: 3306,
+        dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
       },
-      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+
     };
     case 'test':
     return {
@@ -19,9 +20,9 @@ module.exports = function(){
       host: {
         logging: false,
         host: process.env.GMBH_IP || "localhost",
-        port: 3306
-      },
-      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+        port: 3306,
+        dialect: process.env.GMBH_DB_DIALECT || 'mysql'
+      }
     };
     case'production':
     return {
@@ -30,9 +31,9 @@ module.exports = function(){
       password: process.env.GMBH_DB_PASSWORD || "",
       host: {
         host: process.env.GMBH_DB_HOST || "localhost",
-        port:  process.env.GMBH_DB_PORT || 3306
-      },
-      dialect: process.env.GMBH_DB_DIALECT || 'postgres'
+        port:  process.env.GMBH_DB_PORT || 3306,
+        dialect: process.env.GMBH_DB_DIALECT || 'postgres'
+      }
     };
     case 'circleci':
     return {
@@ -41,9 +42,9 @@ module.exports = function(){
       password: "",
       host: {
         hostname: process.env.GMBH_IP || "localhost",
-        port: 3306
-      },
-      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+        port: 3306,
+        dialect: process.env.GMBH_DB_DIALECT || 'mysql'
+      }
     }
     default:
     return {
@@ -52,9 +53,9 @@ module.exports = function(){
       password: "",
       host: {
         host: "localhost",
-        port: 3306
-      },
-      dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+        port: 3306,
+        dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+      }
     }
   }
 }
