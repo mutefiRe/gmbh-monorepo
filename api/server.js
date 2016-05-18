@@ -33,7 +33,7 @@ server.listen(8080, function(){
 // Routing
 app.use(bodyParser.json())
 app.all('*', function(req, res, next){
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); //allow acces from frontend server
+    res.setHeader('Access-Control-Allow-Origin', process.env.GMBH_FRONTEND || 'http://localhost:4200'); //allow acces from frontend server
     next()
   });
 app.options('*', function(req, res) {

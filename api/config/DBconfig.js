@@ -28,7 +28,7 @@ module.exports = function(){
       password: process.env.GMBH_DB_PASSWORD || "",
       host: {
         host: process.env.GMBH_DB_HOST || "localhost",
-        port:  process.env.GMBH_DB_HOST || 3306
+        port:  process.env.GMBH_DB_PORT || 3306
       }
     };
     case 'circleci':
