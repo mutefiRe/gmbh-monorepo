@@ -1,20 +1,19 @@
 /* jshint expr:true */
 import { expect } from 'chai';
-import { describeModel, it } from 'ember-mocha';
+import { describeModule, it } from 'ember-mocha';
 
-describeModel(
-  'user',
-  'Unit | Model | user',
+describeModule(
+  'adapter:application',
+  'Unit | Adapter | application',
   {
     // Specify the other units that are required for this test.
-      needs: []
+    // needs: ['serializer:foo']
   },
   function() {
     // Replace this with your real tests.
     it('exists', function() {
-      let model = this.subject();
-      // var store = this.store();
-      expect(model).to.be.ok;
+      let adapter = this.subject();
+      expect(adapter).to.be.ok;
     });
   }
 );

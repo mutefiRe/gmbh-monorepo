@@ -6,8 +6,8 @@ import {
 } from 'ember-mocha';
 
 describeModule(
-  'route:user',
-  'UserRoute',
+  'route:protected',
+  'ProtectedRoute',
   {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
