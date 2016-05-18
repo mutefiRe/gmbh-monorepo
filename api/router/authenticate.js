@@ -7,11 +7,6 @@ const jwt    = require('jsonwebtoken');
 const config = require('../config/config.js')
 
 
-router.use(function timeLog(req, res, next){
-  //console.log('Time: ', Date.now());
-  next();
-})
-
 router.post('/', function(req, res){
   db.User.findOne({where: {
     username: req.body.username

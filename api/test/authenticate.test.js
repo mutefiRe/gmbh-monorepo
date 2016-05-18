@@ -10,6 +10,7 @@ module.exports  = function(){
   var chaiHttp = require('chai-http');
   chai.use(chaiHttp);
 
+
   function before(){
     db.User.sync({force:true}).then(() => {
      db.User.create({
@@ -24,7 +25,6 @@ module.exports  = function(){
 
 
   describe('/authenticate route', () => {
-
     it('should response to authentication with token', (done) => {
       chai.request(app)
       .post('/authenticate')
@@ -33,8 +33,10 @@ module.exports  = function(){
         res.status.should.be.equal(200)
         res.body.should.have.property("token")
         done();
+      }).catch(res=> {
+        //should not happen, just for circleci
+        console.log(res.response.body)
       })
-
     })
 
     it('should response to wrong username with no token', (done) => {
