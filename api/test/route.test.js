@@ -1,7 +1,8 @@
-module.exports = function(){
-  'use strict'
+'use strict'
 
-  const chai = require('chai');
+module.exports = function(){
+
+    const chai = require('chai');
   const mocha = require('mocha');
   const request = require('request');
   const app = require('../server');
@@ -11,21 +12,19 @@ module.exports = function(){
 
   chai.use(chaiHttp);
 
-  db.User.create({username: 'test', firstname: 'test', lastname: 'test', password:'test', permission:1})
-
   describe('/user route', () => {
-    it('should response to authentication with token', (done) => {
+    it('should response to user', (done) => {
       chai.request(app)
         .get('/api/user/1')
         .then(res => {
-          console.log(res.status)
           res.should.have.status(200);
           done()
         })
         .catch(error => {
-          console.log(error)
           done()
         })
     })
+
+
   })
 }

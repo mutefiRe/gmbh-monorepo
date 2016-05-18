@@ -6,6 +6,4 @@ const userTest = require("./user.test")
 const authenticateTest = require("./authenticate.test")
 const db = require('../models/index');
 
-
-
 authenticateTest();
