@@ -10,7 +10,8 @@ module.exports = function(environment) {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
-      }
+      },
+      host: process.env['GMBH_BACKEND'] || "http://localhost:8080",
     },
 
     APP: {
@@ -38,7 +39,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
       ENV['ember-cli-mirage'] = {
-        enabled: true
+        enabled: false
       }
   }
 
@@ -46,7 +47,7 @@ module.exports = function(environment) {
       authorizationPrefix: ' ',
       authorizationHeaderName: 'x-access-token',
       refreshAccessTokens: false,
-      serverTokenEndpoint: 'http://localhost:8080/authenticate',
+      serverTokenEndpoint: (process.env["GMBH_BACKEND"] || "http://localhost:8080") + '/authenticate',
       timeFactor: 1000
     };
 

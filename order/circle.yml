@@ -13,7 +13,9 @@ deployment:
   production:
     branch: master
     commands:
-      - ember build --environment=production 
+      - ember build --environment=production
       - rsync -qaz --delete -e ssh dist/ gmbh@gmbh.ddns.net:~/frontend
-      
-       
+  staging:
+    branch: develop
+    heroku:
+        appname: gmbh
