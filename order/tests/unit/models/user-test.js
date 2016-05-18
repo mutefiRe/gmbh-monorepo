@@ -1,12 +1,20 @@
-import { moduleForModel, test } from 'ember-qunit';
+/* jshint expr:true */
+import { expect } from 'chai';
+import { describeModel, it } from 'ember-mocha';
 
-moduleForModel('user', 'Unit | Model | user', {
-  // Specify the other units that are required for this test.
-  needs: []
-});
-
-test('it exists', function(assert) {
-  let model = this.subject();
-  // let store = this.store();
-  assert.ok(!!model);
-});
+describeModel(
+  'user',
+  'Unit | Model | user',
+  {
+    // Specify the other units that are required for this test.
+      needs: []
+  },
+  function() {
+    // Replace this with your real tests.
+    it('exists', function() {
+      let model = this.subject();
+      // var store = this.store();
+      expect(model).to.be.ok;
+    });
+  }
+);
