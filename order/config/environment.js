@@ -10,12 +10,24 @@ module.exports = function(environment) {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
-      }
+      },
+      host: process.env['GMBH_BACKEND'] || "http://localhost:8080",
     },
 
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+    },
+
+    contentSecurityPolicy: {
+      'default-src': "'none'",
+      'script-src': "'self' 'unsafe-inline' 'unsafe-eval'",
+      'font-src': "'self'",
+      'connect-src': "'self' ws://localhost:8080 localhost:8080",
+      'img-src': "'self'",
+      'report-uri':"'localhost'",
+      'style-src': "'self' 'unsafe-inline'",
+      'frame-src': "'none'"
     }
   };
 
@@ -25,7 +37,19 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+
+      ENV['ember-cli-mirage'] = {
+        enabled: false
+      }
   }
+
+  ENV['ember-simple-auth-token'] = {
+      authorizationPrefix: ' ',
+      authorizationHeaderName: 'x-access-token',
+      refreshAccessTokens: false,
+      serverTokenEndpoint: (process.env["GMBH_BACKEND"] || "http://localhost:8080") + '/authenticate',
+      timeFactor: 1000
+    };
 
   if (environment === 'test') {
     // Testem prefers this...

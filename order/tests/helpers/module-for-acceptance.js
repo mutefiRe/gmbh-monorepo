@@ -1,9 +1,9 @@
-import { module } from 'qunit';
+import { describeModule, it } from 'ember-mocha';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 
 export default function(name, options = {}) {
-  module(name, {
+  describeModule(name, {
     beforeEach() {
       this.application = startApp();
 
