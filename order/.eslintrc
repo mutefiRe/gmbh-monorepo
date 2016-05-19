@@ -7,9 +7,12 @@
   "env": {
     "browser": true,
     "mocha": true,
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "rules": {
+    "array-callback-return": 1,
+    "no-process-env": 1,
     "comma-dangle": [2,"never"],
     "no-cond-assign": [2,"always"],
     "no-console": 1,
@@ -21,6 +24,7 @@
     "no-ex-assign": 2,
     "no-extra-parens": [1,"all"],
     "no-extra-semi": 2,
+    "no-magic-numbers": 1,
     "no-invalid-regexp": 2,
     "no-irregular-whitespace": 1,
     "no-negated-in-lhs": 1,
@@ -30,7 +34,7 @@
     "no-unreachable": 2,
     "use-isnan": 2,
     "valid-typeof": 2,
-    "curly": [1,"multi"],
+    "curly": [1,"multi-line"],
     "default-case": 2,
     "dot-notation": 1,
     "eqeqeq": 1,

@@ -10,7 +10,10 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
-    "test": "ember test"
+    "test": "ember test",
+    "all": "eslint . || true",
+    "fix": "eslint --fix",
+    "lint": "eslint"
   },
   "repository": "",
   "engines": {
@@ -19,6 +22,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^6.0.4",
     "broccoli-asset-rev": "^2.2.0",
     "cz-conventional-changelog": "^1.1.5",
     "ember-ajax": "0.7.1",
@@ -43,6 +47,7 @@
     "ember-simple-auth": "1.1.0-beta.4",
     "ember-simple-auth-token": "1.1.1",
     "ember-websockets": "3.0.0",
+    "eslint": "^2.10.2",
     "eslint-config-ember": "0.3.0",
     "loader.js": "^4.0.0",
     "phantomjs-prebuilt": "^2.1.7"
