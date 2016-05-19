@@ -4,11 +4,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
 
-router.use(function timeLog(req, res, next) {
-  //console.log('Time: ', Date.now());
-  next();
-})
-
 router.get('/me', function(req, res) {
   db.User.find({
     where: {
@@ -40,7 +35,9 @@ router.get('/:id', function(req, res) {
 })
 
 router.get('/', function(req, res) {
-  db.User.findAll().then(data => {
+  db.User.findAll({
+    where: req.query
+  }).then(data => {
     if (data[0] === undefined) {
       res.status(404).send({
         'error': {
