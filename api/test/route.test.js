@@ -2,7 +2,7 @@
 
 module.exports = function(){
 
-    const chai = require('chai');
+  const chai = require('chai');
   const mocha = require('mocha');
   const request = require('request');
   const app = require('../server');
@@ -15,14 +15,14 @@ module.exports = function(){
   describe('/user route', () => {
     it('should response to user', (done) => {
       chai.request(app)
-        .get('/api/user/1')
-        .then(res => {
-          res.should.have.status(200);
-          done()
-        })
-        .catch(error => {
-          done()
-        })
+      .get('/api/users/1')
+      .then(res => {
+        res.should.have.status(200);
+        done()
+      })
+      .catch(error => {
+        done()
+      })
     })
 
 

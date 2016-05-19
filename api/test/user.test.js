@@ -29,7 +29,7 @@ module.exports = function(){
 
     it('should get all users', (done) => {
       chai.request(app)
-      .get('/api/user/')
+      .get('/api/users/')
       .send({ token: token })
       .then( res => {
         res.status.should.be.equal(200)
@@ -40,7 +40,7 @@ module.exports = function(){
 
     it('should get one user', (done) => {
       chai.request(app)
-      .get('/api/user/1')
+      .get('/api/users/1')
       .send({ token: token })
       .then( res => {
         res.status.should.be.equal(200)
@@ -51,7 +51,7 @@ module.exports = function(){
 
     it('should get users with permission 0', (done) => {
       chai.request(app)
-      .get('/api/user?permission=0')
+      .get('/api/users?permission=0')
       .send({ token: token })
       .then( res => {
         res.status.should.be.equal(200)

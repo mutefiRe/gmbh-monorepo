@@ -50,12 +50,12 @@ router.use(function(req, res, next) {
 });
 
 
-router.use('/user', userPath);
-router.use('/category', categoryPath);
-router.use('/organization', organizationPath)
-router.use('/setting', settingPath)
-router.use('/item', itemPath)
-router.use('/unit', unitPath)
+router.use('/users', userPath);
+router.use('/categories', categoryPath);
+router.use('/organizations', organizationPath)
+router.use('/settings', settingPath)
+router.use('/items', itemPath)
+router.use('/units', unitPath)
 router.get('/', function(req, res){
   res.status(200).send({"msg": "you have access to the api"})
 })
