@@ -21,6 +21,9 @@ module.exports = function(sequelize, DataTypes) {
       let salt = bcrypt.genSaltSync();
       let hash = bcrypt.hashSync(plaintext, salt);
       return hash
+    },
+    associate: function(models) {
+      User.belongsToMany(models.Area, {through: 'UserArea'});
     }
   }
 })
@@ -29,7 +32,6 @@ module.exports = function(sequelize, DataTypes) {
   User.hook('beforeValidate', function(user, options) {
     user.password = User.generateHash(user.password)
   })
-
 
   return User;
 };

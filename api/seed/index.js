@@ -3,78 +3,17 @@
 const db = require('../models/index');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.js')
+const faker = require('faker2');
 
-
-var user = db.User.create({
-  username: "testUser",
-  firstname: "max",
-  lastname: "mustermann",
-  password: "testPW",
-  permission: 3,
-  token: "abc123"
-})
-
-user = db.User.create({
-  username: "admin",
-  firstname: "max",
-  lastname: "mustermann",
-  password: "admin",
-  permission: 2,
-  token: "abc1234"
-})
-
-user = db.User.create({
-  username: "sebastian",
-  firstname: "Sebastian",
-  lastname: "Huber",
-  password: "123",
-  permission: 1,
-  token: "abc1"
-})
-
-
-user = db.User.create({
-  username: "konrad",
-  firstname: "Konrad",
-  lastname: "Kleeberger",
-  password: "123",
-  permission: 1,
-  token: "abc2"
-})
-
-
-user = db.User.create({
-  username: "josef",
-  firstname: "Josef",
-  lastname: "Krabath",
-  password: "123",
-  permission: 1,
-  token: "abc3"
-})
-
-
-user = db.User.create({
-  username: "daniel",
-  firstname: "Daniel",
-  lastname: "Trojer",
-  password: "123",
-  permission: 1,
-  token: "abc4"
-})
-
-
-user = db.User.create({
-  username: "alexander",
-  firstname: "Alexander",
-  lastname: "Gabriel",
-  password: "123",
-  permission: 1,
-  token: "abc5"
-})
-
-//var userArray = [];
-
-
+for(let i = 0; i < 100; i++){
+  let user = db.User.create({
+    username: faker.Internet.userName(),
+    firstname: faker.Name.firstName(),
+    lastname: faker.Name.lastName(),
+    password: faker.Internet.domainWord() + faker.Helpers.randomNumber(999),
+    permission: faker.Helpers.randomNumber(2)
+  });
+}
 
 db.Organization.create({
   uid: "blaaaah",
@@ -104,13 +43,13 @@ db.Setting.create({
 })
 
 
-var essen = db.Category.create({
+let essen = db.Category.create({
   name: "essen",
   enabled: true,
   description: "esssen essen essen",
 }).then(cat => {
 
-  var stk = db.Unit.create({
+  let stk = db.Unit.create({
     name: "Stk."
   }).then(data => {
     db.Item.bulkCreate([{
@@ -141,12 +80,12 @@ var essen = db.Category.create({
 
 
 
-var drinks = db.Category.create({
+let drinks = db.Category.create({
   name: "alk",
   enabled: true,
   description: "alkohol",
 }).then(cat => {
-  var l = db.Unit.create({
+  let l = db.Unit.create({
     name: "l"
   }).then(data => {
     db.Item.bulkCreate([{
@@ -175,13 +114,13 @@ var drinks = db.Category.create({
   })
 })
 
-var noalk = db.Category.create({
+let noalk = db.Category.create({
   name: "alk",
   enabled: true,
   description: "alkohol",
 }).then(cat => {
 
-  var cl = db.Unit.create({
+  let cl = db.Unit.create({
     name: "cl"
   }).then(data => {
     db.Item.bulkCreate([{
@@ -211,6 +150,20 @@ var noalk = db.Category.create({
 
 
 })
+
+let Area = db.Area.create({
+  name: "Terrasse"
+}).then(area => {
+  let User = db.User.create({
+    username: "areausertest",
+    firstname: "Kellner1",
+    lastname: "Carlos",
+    password: "123",
+    permission: 1
+  }).then(user => {
+    user.addArea(area);
+  });
+});
 
 
 
