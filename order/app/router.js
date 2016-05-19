@@ -10,6 +10,8 @@ Router.map(function () {
   this.route('user', function () {
     this.route('profile', {path: ':userID'});
   });
+  this.route('dashboard');
+  this.route('order');
 });
 
 export default Router;
