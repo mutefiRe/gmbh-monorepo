@@ -43,6 +43,7 @@ module.exports = function(){
       password: "",
       host: {
         pool: false,
+        logging: false,
         hostname: process.env.GMBH_IP || "localhost",
         port: 3306,
         dialect: process.env.GMBH_DB_DIALECT || 'mysql'
