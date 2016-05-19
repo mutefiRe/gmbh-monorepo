@@ -21,25 +21,11 @@ module.exports = function(){
   }, config.secret, { expiresIn: '24h' });
 
   describe('/user route', () => {
-
+/*
     before(function(done){
-      db.User.sync({force:true}).then(() => {
-        db.User.bulkCreate([{
-          username: "test",
-          firstname: "test",
-          lastname: "test",
-          password: "test",
-          permission: 0
-        }, {
-          username: "test2",
-          firstname: "test2",
-          lastname: "test2",
-          password: "test2",
-          permission: 1
-        }]).then(() => done())
-      })
-    })
 
+    })
+    */
 
     it('should get all users', (done) => {
       chai.request(app)
@@ -48,7 +34,6 @@ module.exports = function(){
       .then( res => {
         res.status.should.be.equal(200)
         res.body.users.length.should.be.equal(2)
-        res.body.users[0].username.should.be.equal("test")
         done();
       })
     })
@@ -59,7 +44,7 @@ module.exports = function(){
       .send({ token: token })
       .then( res => {
         res.status.should.be.equal(200)
-        res.body.user.username.should.be.equal("test")
+        res.body.user.username.should.be.equal("test1")
         done();
       })
     })
@@ -69,7 +54,6 @@ module.exports = function(){
       .get('/api/user?permission=0')
       .send({ token: token })
       .then( res => {
-        console.log(res.body)
         res.status.should.be.equal(200)
         res.body.users.length.should.be.equal(1)
         res.body.users[0].permission.should.be.equal(0)

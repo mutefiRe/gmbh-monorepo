@@ -11,24 +11,15 @@ module.exports  = function(){
   chai.use(chaiHttp);
 
 
-  before(function(done){
-    db.User.sync({force:true}).then(() => {
-      db.User.create({
-        username: "test",
-        firstname: "test",
-        lastname: "test",
-        password: "test",
-        permission: 1
-      }).then(() => done())
-    })
-  })
+
 
 
   describe('/authenticate route', () => {
+
     it('should response to authentication with token', (done) => {
       chai.request(app)
       .post('/authenticate')
-      .send({ username: 'test', password: 'test' })
+      .send({ username: 'test1', password: 'test1' })
       .then( res => {
         res.status.should.be.equal(200)
         res.body.should.have.property("token")
