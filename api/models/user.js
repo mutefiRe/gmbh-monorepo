@@ -7,15 +7,13 @@ module.exports = function(sequelize, DataTypes) {
     lastname: {type: DataTypes.STRING, allowNull: true,  unique: false},
     password: {type: DataTypes.STRING, allowNull: false,  unique: false},
     permission: {type: DataTypes.INTEGER, allowNull:false, unique: false}
-  })/* , {
+  },{
     classMethods: {
-     associate: function(models) {
-        User.hasMany(models.User, {as: 'children', foreignKey: 'UserId'});
-        User.belongsTo(models.User, {as: 'parent', foreignKey: 'UserId'});
+      associate: function(models) {
+        User.belongsToMany(models.Area, {through: 'UserArea'});
       }
-
     }
-  }*/
+  });
   return User;
 };
 
