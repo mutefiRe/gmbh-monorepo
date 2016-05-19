@@ -5,8 +5,42 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config.js')
 const faker = require('faker2');
 
-for(let i = 0; i < 100; i++){
-  let user = db.User.create({
+let speisen = [ 'Schnitzel',
+'Käsekrainer',
+'Schweinebraten',
+'Pommes',
+'Toast',
+'Waffeln',
+'Wurst',
+'Currywurst',
+'Hendl',
+'Frankfurter',
+'Gulasch',
+'Leberkassemmel',
+'Kartoffelpuffer',
+'Steak',
+'Bananenquiche',
+'Knödel' ];
+
+let beilagen = [ 'Salat',
+'Püree',
+'Kartoffel',
+'Reis',
+'Nudeln',
+'Bratgemüse',
+'Frühlingsgemüse',
+'Brot',
+'Weißbrot',
+'Breze',
+'Rettich',
+'Sauerkraut',
+'Semmel',
+'Erdäpfelsalat',
+'Pommes' ];
+
+
+for(let i = 0; i < 50; i++){
+  db.User.create({
     username: faker.Internet.userName(),
     firstname: faker.Name.firstName(),
     lastname: faker.Name.lastName(),
@@ -14,6 +48,29 @@ for(let i = 0; i < 100; i++){
     permission: faker.Helpers.randomNumber(2)
   });
 }
+
+db.Category.create({
+  name: "Speisen",
+  enabled: true,
+  description: "Alle die Guten Sachen",
+}).then(cat => {
+
+  let stk = db.Unit.create({
+    name: "Stk."
+  }).then(data => {
+    for(let i = 0; i < 50; i++){
+      db.Item.create({
+        name: faker.Helpers.randomize(speisen) + " mit " + faker.Helpers.randomize(beilagen),
+        amount: 1,
+        price: faker.Helpers.randomNumber(20),
+        tax: 0.1,
+        UnitId: data.id,
+        CategoryId: cat.id
+      })
+    }
+  });
+});
+
 
 db.Organization.create({
   uid: "blaaaah",
@@ -23,8 +80,7 @@ db.Organization.create({
   postalcode: "5412",
   city: "Puch bei Hallein",
   telephone: "+43 650 12345678"
-})
-
+});
 
 db.Organization.create({
   uid: "puuuuh",
@@ -34,49 +90,16 @@ db.Organization.create({
   postalcode: "5412",
   city: "Puch bei Hallein",
   telephone: "+43 650 87654321"
-})
+});
 
 db.Setting.create({
   name: "Zeltfest volle saufen",
   begin_date: "nodate",
   end_date: "nodate"
-})
+});
 
 
-let essen = db.Category.create({
-  name: "essen",
-  enabled: true,
-  description: "esssen essen essen",
-}).then(cat => {
 
-  let stk = db.Unit.create({
-    name: "Stk."
-  }).then(data => {
-    db.Item.bulkCreate([{
-      name: "Schnitzel mit Pommes",
-      amount: 1,
-      price: 8.5,
-      tax: 0.1,
-      UnitId: data.id,
-      CategoryId: cat.id
-    },{
-      name: "Schnitzel mit Kartoffelsalat",
-      amount: 1,
-      price: 8.5,
-      tax: 0.1,
-      UnitId: data.id,
-      CategoryId: cat.id
-    },{
-      name: "Käsekrainer mit Semmel",
-      amount: 1,
-      price: 8.5,
-      tax: 0.1,
-      UnitId: data.id,
-      CategoryId: cat.id
-    }]
-    )
-  })
-})
 
 
 
@@ -112,7 +135,7 @@ let drinks = db.Category.create({
     }]
     )
   })
-})
+});
 
 let noalk = db.Category.create({
   name: "alk",
@@ -146,10 +169,9 @@ let noalk = db.Category.create({
       CategoryId: cat.id
     }]
     )
-  })
+  });
+});
 
-
-})
 
 let Area = db.Area.create({
   name: "Terrasse"
