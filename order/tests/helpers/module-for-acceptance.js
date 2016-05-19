@@ -1,8 +1,8 @@
-import { describeModule, it } from 'ember-mocha';
+import {describeModule, it} from 'ember-mocha';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 
-export default function(name, options = {}) {
+export default function (name, options = {}) {
   describeModule(name, {
     beforeEach() {
       this.application = startApp();

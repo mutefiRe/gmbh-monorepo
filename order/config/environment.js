@@ -1,9 +1,7 @@
-/* jshint node: true */
-
-module.exports = function(environment) {
-  var ENV = {
+module.exports = function (environment) {
+  const ENV = {
     modulePrefix: 'gmbh',
-    environment: environment,
+    environment,
     baseURL: '/',
     locationType: 'auto',
     EmberENV: {
@@ -11,7 +9,7 @@ module.exports = function(environment) {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       },
-      host: process.env['GMBH_BACKEND'] || "http://localhost:8080",
+      host: process.env.GMBH_BACKEND || 'http://localhost:8080'
     },
 
     APP: {
@@ -20,14 +18,14 @@ module.exports = function(environment) {
     },
 
     contentSecurityPolicy: {
-      'default-src': "'none'",
-      'script-src': "'self' 'unsafe-inline' 'unsafe-eval'",
-      'font-src': "'self'",
-      'connect-src': "'self' ws://localhost:8080 localhost:8080",
-      'img-src': "'self'",
-      'report-uri':"'localhost'",
-      'style-src': "'self' 'unsafe-inline'",
-      'frame-src': "'none'"
+      'default-src': '\'none\'',
+      'script-src': '\'self\' \'unsafe-inline\' \'unsafe-eval\'',
+      'font-src': '\'self\'',
+      'connect-src': '\'self\' ws://localhost:8080 localhost:8080',
+      'img-src': '\'self\'',
+      'report-uri': '\'localhost\'',
+      'style-src': '\'self\' \'unsafe-inline\'',
+      'frame-src': '\'none\''
     }
   };
 
@@ -38,18 +36,18 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-      ENV['ember-cli-mirage'] = {
-        enabled: false
-      }
+    ENV['ember-cli-mirage'] = {
+      enabled: false
+    };
   }
 
   ENV['ember-simple-auth-token'] = {
-      authorizationPrefix: ' ',
-      authorizationHeaderName: 'x-access-token',
-      refreshAccessTokens: false,
-      serverTokenEndpoint: (process.env["GMBH_BACKEND"] || "http://localhost:8080") + '/authenticate',
-      timeFactor: 1000
-    };
+    authorizationPrefix: ' ',
+    authorizationHeaderName: 'x-access-token',
+    refreshAccessTokens: false,
+    serverTokenEndpoint: (process.env['GMBH_BACKEND'] || 'http://localhost:8080') + '/authenticate',
+    timeFactor: 1000
+  };
 
   if (environment === 'test') {
     // Testem prefers this...
