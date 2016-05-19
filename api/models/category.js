@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Category.hasMany(models.Category, { as: 'children', foreignKey: "CategoryId" });
+        Category.hasMany(models.Item)
         Category.belongsTo(models.Category, { as: 'father', foreignKey: "CategoryId" });
       }
     }
