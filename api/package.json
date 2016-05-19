@@ -26,6 +26,7 @@
     "production": "cross-env NODE_ENV=production node server"
   },
   "dependencies": {
+    "bcrypt": "^0.8.6",
     "body-parser": "^1.15.0",
     "chai-http": "^2.0.1",
     "cross-env": "^1.0.7",
