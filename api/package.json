@@ -5,8 +5,8 @@
   "homepage": "",
   "main": "src/",
   "keywords": [
-    "order",
-    "system"
+  "order",
+  "system"
   ],
   "author": {},
   "contributors": [],
@@ -48,7 +48,8 @@
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",
     "should": "^8.3.1",
-    "request": "^2.72.0"
+    "request": "^2.72.0",
+    "socket.io-client": "^1.4.6"
   },
   "config": {
     "commitizen": {
