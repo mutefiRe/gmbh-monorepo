@@ -4,8 +4,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
 const jwt    = require('jsonwebtoken');
-const config = require('../config/config.js')
-
+const config = require('../config/config.js');
 
 router.post('/', function(req, res){
   db.User.findOne({where: {
@@ -16,7 +15,7 @@ router.post('/', function(req, res){
       res.status(400).send({ error: 'Authentication failed. User not found.' })
     }
     else if (thisUser){
-      if (thisUser.password != req.body.password){
+      if (!thisUser.validPassword(req.body.password)){
         res.status(400).send({error: 'Authentication failed. Wrong Password'})
       }
       else {
