@@ -50,7 +50,7 @@ router.use(function(req, res, next) {
 });
 
 
-router.use('/users', userPath);
+router.use('/user', userPath);
 router.use('/category', categoryPath);
 router.use('/organization', organizationPath)
 router.use('/setting', settingPath)
