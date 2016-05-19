@@ -44,7 +44,7 @@ for(let i = 0; i < 50; i++){
     username: faker.Internet.userName(),
     firstname: faker.Name.firstName(),
     lastname: faker.Name.lastName(),
-    password: faker.Internet.domainWord() + faker.Helpers.randomNumber(999),
+    password: "abc",
     permission: faker.Helpers.randomNumber(2)
   });
 }
