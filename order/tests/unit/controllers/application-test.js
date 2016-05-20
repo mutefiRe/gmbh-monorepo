@@ -1,8 +1,8 @@
-import { expect } from 'chai';
-import { describeModule, it } from 'ember-mocha';
-//import login from 'gmbh/tests/helpers/login'
+import {expect} from 'chai';
+import {describeModule, it} from 'ember-mocha';
+// import login from 'gmbh/tests/helpers/login'
 import moduleForAcceptance from 'gmbh/tests/helpers/module-for-acceptance';
-import { authenticateSession } from 'gmbh/tests/helpers/ember-simple-auth';
+import {authenticateSession} from 'gmbh/tests/helpers/ember-simple-auth';
 
 describeModule(
   'controller:application',
@@ -12,15 +12,15 @@ describeModule(
     // needs: ['controller:foo']
     //  needs: ['application']
   },
-  function() {
-    it('exists', function() {
+  function () {
+    it('exists', function () {
       let controller = this.subject();
       expect(controller).to.be.ok;
     });
 
-    it('no session is set', function() {
+    it('no session is set', function () {
       let controller = this.subject();
-      expect(controller.get('currentUser')).to.be.false
+      expect(controller.get('currentUser')).to.be.false;
     });
   }
 );
