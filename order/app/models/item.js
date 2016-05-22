@@ -6,5 +6,5 @@ export default DS.Model.extend({
   price: DS.attr('number'),
   tax: DS.attr('number'),
   unit: DS.belongsTo('unit', { inverse: null }),
-  category: DS.belongsTo('category', {coalesce: true})
+  category: DS.belongsTo('category')
 });
