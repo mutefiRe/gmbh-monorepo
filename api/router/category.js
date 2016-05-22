@@ -24,9 +24,14 @@ router.get('/:id/items', function(req, res){
 
 
 router.get('/', function(req, res){
-  db.Category.findAll().then(data =>
+  db.Category.findAll({include: [{model: db.Item}]}).then(data =>
   {
-    res.send({'category': data});
+    let categories = JSON.parse(JSON.stringify(data));
+    for(var i = 0; i < categories.length; i++){
+      categories[i].items = categories[i].Items.map(item => item.id);
+      categories[i].Items = undefined
+    }
+    res.send({'category': categories});
   })
 })
 
