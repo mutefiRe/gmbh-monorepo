@@ -11,7 +11,7 @@ router.get('/:id', function(req, res){
       res.status(404).send("couldn't find item")
       return
     }
-    res.send(data);
+    res.send({'item':data});
   })
 })
 
@@ -22,14 +22,14 @@ router.get('/', function(req, res){
       res.status(404).send("couldn't find any Items")
       return
     }
-    res.send(data);
+    res.send({'item':data});
   })
 })
 
 
 router.post('/', function(req, res){
   db.Item.create(req.body.item).then( data => {
-    res.send(data);
+    res.send({'item':data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
@@ -42,7 +42,7 @@ router.put('/:id', function(req, res){
       return
     }
     item.update(req.body.item).then( data => {
-      res.send(data)
+      res.send({'item':data})
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
     })
@@ -56,7 +56,7 @@ router.delete('/:id', function(req, res){
       return
     }
     item.destroy().then(()=>{
-      res.send('deleted item '+item.name)
+      res.send({'item':item})
     })
   })
 })
