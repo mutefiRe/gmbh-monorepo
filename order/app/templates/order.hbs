@@ -1,6 +1,7 @@
 {{outlet}}
-{{category-container categories=model.categories}}
+{{category-selection categories=model.categories changeCategory=(action "changeCategory")}}
 
-{{#each items of model.items item}}
+{{item-container category=actualCategory addItemToOrder=(action "addItemToOrder")}}
 
-{{/each}}
+
+{{order-list order=order}}

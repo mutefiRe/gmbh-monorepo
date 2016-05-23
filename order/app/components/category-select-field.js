@@ -2,10 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName:'li',
-  classNames: ['single-item'],
+  classNames: ['category-select-field'],
   actions: {
+
   },
   click() {
-    this.get('addItemToOrder')(this.get('item'))
+    this.get('changeCategory')(this.get('category'))
   }
-})
+});

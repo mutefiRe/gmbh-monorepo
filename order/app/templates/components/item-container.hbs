@@ -1,1 +1,3 @@
-{{yield}}
+{{#each category.items as |item|}}
+{{single-item item=item value=item addItemToOrder=(action "addItemToOrder")}}
+{{/each}}

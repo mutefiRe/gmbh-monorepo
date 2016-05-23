@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  tagName:'li',
-  classNames: ['single-category'],
+  classNames: ['category-container'],
+  tagName:'table'
 });
