@@ -1,8 +1,5 @@
-{{#each order as |orderItem|}}
-<tr>
-  <td>{{orderItem.name}}</td>
-  <td>{{orderItem.amount}} {{orderItem.unit.name}}</td>
-  <td>{{orderItem.category.name}}</td>
-  <td>{{orderItem.price}} €</td>
-</tr>
+{{#each order as |orderItem index|}}
+
+{{orderlist-item orderItem=orderItem index=index deleteOrderItem=(action "deleteOrderItem")}}
+
 {{/each}}

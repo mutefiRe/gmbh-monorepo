@@ -1,14 +1,17 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  actualCategory:{},
+  actualCategory: {},
   order: [],
   actions: {
     changeCategory(category) {
-      this.set('actualCategory', category)
+      this.set('actualCategory', category);
     },
-    addItemToOrder(item){
-      this.get('order').pushObject(item)
+    addItemToOrder(item) {
+      this.get('order').pushObject(item);
+    },
+    deleteOrderItem(index) {
+      this.get('order').removeAt(index);
     }
   }
 });
