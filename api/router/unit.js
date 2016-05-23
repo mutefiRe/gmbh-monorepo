@@ -22,7 +22,7 @@ router.get('/', function(req, res){
       res.status(404).send("couldn't find any units")
       return
     }
-    res.send(data);
+    res.send({unit : data});
   })
 })
 
