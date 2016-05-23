@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'single-category',
-  'Integration: SingleCategoryComponent',
+  'category-select-field',
+  'Integration: CategorySelectFieldComponent',
   {
     integration: true
   },
@@ -18,13 +18,13 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#single-category}}
+      //   {{#item-container}}
       //     template content
-      //   {{/single-category}}
+      //   {{/item-container}}
       // `);
 
-      this.render(hbs`{{single-category}}`);
+      this.render(hbs`{{category-select-field}}`);
       expect(this.$()).to.have.length(1);
     });
   }
-);
+  );
