@@ -9,21 +9,31 @@ function updateData(io, token, store) {
   socket.on('update', function (payload) {
     store.pushPayload(JSON.parse(payload));
   });
+
+  return socket;
 }
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   socketService: Ember.inject.service('socket-io'),
+  socketRef: null,
   session: Ember.inject.service('session'),
   store: this.store,
   init() {
     const session = this.get('session');
     const io = this.get('socketService');
     const store = this.get('store');
+    const self = this;
 
     session.on('authenticationSucceeded', function () {
       const token = this.get('session.content').authenticated.token;
 
-      updateData(io, token, store);
+      self.set('socketRef', updateData(io, token, store));
+    });
+
+    session.on('invalidationSucceeded', function () {
+      const socket = self.get('socketRef');
+
+      socket.close();
     });
 
   },
