@@ -1,4 +1,5 @@
 import Mirage from 'ember-cli-mirage';
+
 export default function () {
   const ERROR_CODE = 403;
   const PAYLOAD = 'eyJpZCI6MSwiaWF0IjoxNDYyODIxODM2LCJleHAiOjE0NjI5MDgyMzZ9';
@@ -28,4 +29,6 @@ export default function () {
         };
     }
   });
+
+  this.passthrough('http://localhost:8080/socket.io');
 }

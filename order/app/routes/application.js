@@ -19,25 +19,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   socketRef: null,
   session: Ember.inject.service('session'),
   store: this.store,
-  init() {
-    const session = this.get('session');
-    const io = this.get('socketService');
-    const store = this.get('store');
-    const self = this;
-
-    session.on('authenticationSucceeded', function () {
-      const token = this.get('session.content').authenticated.token;
-
-      self.set('socketRef', updateData(io, token, store));
-    });
-
-    session.on('invalidationSucceeded', function () {
-      const socket = self.get('socketRef');
-
-      socket.close();
-    });
-
-  },
   afterModel() {
     const io = this.get('socketService');
     const content = this.get('session.session.content');
@@ -48,22 +29,29 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
   sessionAuthenticated() {
     const session = this.get('session.session.content');
+    const io = this.get('socketService');
+    const token = session.authenticated.token;
+    const authenticator = getOwner(this).lookup('authenticator:jwt');
+    const userPermission = authenticator.getTokenData(session.authenticated.token).permission;
+    const socket = updateData(io, token, this.store);
 
-    if (session.authenticated.token) {
-      const authenticator = getOwner(this).lookup('authenticator:jwt');
-      const userPermission = authenticator.getTokenData(session.authenticated.token).permission;
+    this.set('socketRef', socket);
 
-      switch (userPermission) {
-        case 0:
-          this.transitionTo('/dashboard');
-          break;
-        case 1:
-          this.transitionTo('/order');
-          break;
-        default:
-          this.transitionTo('/login');
-          break;
-      }
+    switch (userPermission) {
+      case 0:
+        this.transitionTo('/dashboard');
+        break;
+      case 1:
+        this.transitionTo('/order');
+        break;
+      default:
+        this.transitionTo('/login');
+        break;
     }
+  },
+  sessionInvalidated() {
+    const socket = this.get('socketRef');
+
+    socket.close();
   }
 });
