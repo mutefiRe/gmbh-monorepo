@@ -11,6 +11,10 @@ export default function () {
   this.get('/users');
   this.get('/users/:id', 'user');
 
+  this.get('/items');
+  this.get('/categories');
+  this.get('/units');
+
   this.post('http://localhost:8080/authenticate', function (db, req) {
     switch (JSON.parse(req.requestBody).username) {
       case 'no':
