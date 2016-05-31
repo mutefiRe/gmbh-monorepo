@@ -62,6 +62,7 @@
     "prefer-const": 1,
     "prefer-spread": 1,
     "prefer-reflect": 1,
-    "require-yield": 1
+    "require-yield": 1,
+    "consistent-this": ["error", "self"],
   }
 }

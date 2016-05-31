@@ -1,4 +1,5 @@
 import Mirage from 'ember-cli-mirage';
+
 export default function () {
   const ERROR_CODE = 403;
   const PAYLOAD = 'eyJpZCI6MSwiaWF0IjoxNDYyODIxODM2LCJleHAiOjE0NjI5MDgyMzZ9';
@@ -9,6 +10,10 @@ export default function () {
   this.urlPrefix = 'http://localhost:8080';
   this.get('/users');
   this.get('/users/:id', 'user');
+
+  this.get('/items');
+  this.get('/categories');
+  this.get('/units');
 
   this.post('http://localhost:8080/authenticate', function (db, req) {
     switch (JSON.parse(req.requestBody).username) {
@@ -28,4 +33,6 @@ export default function () {
         };
     }
   });
+
+  this.passthrough('http://localhost:8080/socket.io');
 }
