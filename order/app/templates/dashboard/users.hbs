@@ -1,0 +1,26 @@
+<h1>Add User</h1>
+  <table>
+    <tr>
+    <th>Username</th>
+    <th>Vorname</th>
+    <th>Nachname</th>
+    <th>Passwort</th>
+    <th>Permission</th>
+  </tr>
+  {{add-users createUser=(action 'createUser')}}
+  </table>
+
+<h1>User List</h1>
+<table>
+  <tr>
+    <th>Username</th>
+    <th>Vorname</th>
+    <th>Nachname</th>
+    <th>Passwort</th>
+    <th>Permission</th>
+  </tr>
+  {{#each model as |userUnit|}}
+    {{show-users user=userUnit destroyUser=(action 'destroyUser')}}
+  {{/each}}
+</table>
+
