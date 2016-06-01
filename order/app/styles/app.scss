@@ -1,0 +1,25 @@
+@import 'reset';
+@import 'order';
+
+
+@font-face {
+font-family: 'Palanquin';
+src: url('./fonts/Palanquin-Medium.ttf');
+font-weight: normal;
+}
+@font-face {
+font-family: 'Palanquin';
+src: url('./fonts/Palanquin-Light.ttf');
+font-weight: light;
+ }
+@font-face {
+font-family: 'Palanquin';
+src: url('./fonts/Palanquin-Bold.ttf');
+font-weight: bold;
+}
+
+
+body {
+   font-family:'Palanquin', arial, sans-serif;
+}
+
