@@ -1,12 +1,25 @@
-.category-selection{
-  display:block;
+.category-selection {
+  width:100%;
+  min-height:110px;
+  justify-content: space-around;
+  align-items:center;
+  flex-direction:row;
+  flex-wrap:wrap;
+  display:flex;
+  background-color:$grey;
+  border-bottom: 1px solid $grey-dark;
 }
 
 .category-select-field{
-  float:left;
   width:250px;
-  height:150px;
+  height:90px;
   background-color:$blue;
-  margin:5px;
-  list-style-type:none;
+  border:none;
+  color:$white;
+  font-size:18px;
+}
+
+.category-select-field img {
+  height:30px;
+  vertical-align: middle;
 }

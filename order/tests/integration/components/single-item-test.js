@@ -23,8 +23,8 @@ describeComponent(
       //   {{/single-item}}
       // `);
 
-      this.render(hbs`{{single-item}}`);
+      this.render(hbs`{{item}}`);
       expect(this.$()).to.have.length(1);
     });
   }
-);
+  );
