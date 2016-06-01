@@ -1,0 +1,45 @@
+$blue: #177FB2;
+$blue-light: #6BCFFF;
+$blue-lighter: #BEE9FF;
+
+$grey-darker: #4D4D4D;
+$grey-dark: #666666;
+$grey: #E6E6E6;
+$grey-light: #F0F0F0;
+$white: #FFFFFF;
+
+$orange: #FF5700;
+$orange-light: #FF9863;
+
+@import 'reset';
+@import 'order/category-selection.scss';
+@import 'order/item-list.scss';
+@import 'order/orderlist.scss';
+@import 'order/orderlist-item.scss';
+
+
+@font-face {
+font-family: 'Palanquin';
+src: url('./fonts/Palanquin-Medium.ttf');
+font-weight: normal;
+}
+@font-face {
+font-family: 'Palanquin';
+src: url('./fonts/Palanquin-Light.ttf');
+font-weight: light;
+}
+@font-face {
+font-family: 'Palanquin';
+src: url('./fonts/Palanquin-Bold.ttf');
+font-weight: bold;
+}
+
+body {
+font-family:'Palanquin', arial, sans-serif;
+font-size: 14px;
+}
+
+* {
+box-sizing: border-box;
+}
+

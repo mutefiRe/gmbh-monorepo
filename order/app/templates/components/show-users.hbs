@@ -1,0 +1,16 @@
+{{#if isShowingUpdate}}
+  <td>{{input type="text" value=user.username}}</td>
+  <td>{{input type="text" value=user.firstname}}</td>
+  <td>{{input type="text" value=user.lastname}}</td>
+  <td>{{input type="text" value=user.password}}</td>
+  <td>{{input type="text" value=user.permission}}</td>
+  <td><button {{action "toggleUpdate" user}}>save</button></td>
+{{else}}
+  <td>{{user.username}}</td>
+  <td>{{user.firstname}}</td>
+  <td>{{user.lastname}}</td>
+  <td>{{user.password}}</td>
+  <td>{{user.permission}}</td>
+  <td><button {{action "toggleUpdate"}}>edit</button></td>
+  <td><button {{action "destroyRecord" user}}>X</button></td>
+{{/if}}

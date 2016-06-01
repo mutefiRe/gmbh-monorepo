@@ -1,0 +1,13 @@
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  name: DS.attr('string'),
+  enabled: DS.attr('boolean'),
+  description: DS.attr('string'),
+  createdAt: DS.attr('date'),
+  updatedAt: DS.attr('date'),
+  color: DS.attr('string'),
+  icon: DS.attr('string'),
+  category: DS.belongsTo('category'),
+  items: DS.hasMany('item')
+});

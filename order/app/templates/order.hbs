@@ -1,0 +1,8 @@
+{{outlet}}
+{{category-selection categories=model.categories changeCategory=(action "changeCategory")}}
+
+
+{{item-list category=actualCategory addItemToOrder=(action "addItemToOrder")}}
+
+{{order-list order=order}}
+

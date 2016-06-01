@@ -5,8 +5,35 @@
   {{input id='password' placeholder='Enter Password' type='password' value=password}}
   <button type="submit">Login</button>
   {{#if errorMessage}}
-    <p>{{errorMessage}}</p>
+  <p>{{errorMessage}}</p>
   {{/if}}
 </form>
 
 {{#link-to "user"}}Click here to contact us.{{/link-to}}
+
+
+{{#if currentUser}}
+Hallo {{currentUser.firstname}}
+{{else}}
+Hallo Gast
+{{/if}}
+
+
+<h2 id="title">MMP</h2>
+
+{{#link-to 'index'}}
+Index
+{{/link-to}}
+
+{{log sessionData}}
+
+{{#if session.isAuthenticated}}
+<button {{action 'logout'}}>Logout</button>
+{{log session}}
+{{else}}
+{{#link-to 'login'}}
+Login
+{{/link-to}}
+{{/if}}
+{{outlet}}
+
