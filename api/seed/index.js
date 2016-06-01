@@ -53,6 +53,7 @@ db.Category.create({
   name: "Speisen",
   enabled: true,
   description: "Alle die Guten Sachen",
+  color: faker.Internet.color
 }).then(cat => {
 
   let stk = db.Unit.create({
@@ -176,20 +177,46 @@ let noalk = db.Category.create({
 let Area = db.Area.create({
   name: "Terrasse"
 }).then(area => {
-  let User = db.User.create({
-    username: "areausertest",
-    firstname: "Kellner1",
-    lastname: "Carlos",
-    password: "123",
-    permission: 1
-  }).then(user => {
-    user.addArea(area);
-  });
+ let Table = db.Table.create({
+  name:"A1",
+  x: 1,
+  y: 2,
+  AreaId:1
+})
+ Table = db.Table.create({
+  name:"A2",
+  x: 2,
+  y: 3,
+  AreaId:1
+}).then(table => {
+
+  let Order = db.Order.create({
+    UserId: 1,
+    TableId: 1
+  }).then(order => {
+    db.Orderitem.create({
+      OrderId:order.id,
+      ItemId:1
+    }).then(orderitem => order.addOrderitem(orderitem))
+    db.Orderitem.create({
+      OrderId:order.id,
+      ItemId:1
+    }).then(orderitem => order.addOrderitem(orderitem))
+  }
+  )
+
+})
+
+
+let User = db.User.create({
+  username: "areausertest",
+  firstname: "Kellner1",
+  lastname: "Carlos",
+  password: "123",
+  permission: 1
+}).then(user => {
+  user.addArea(area);
 });
-
-
-
-
-
+});
 
 
