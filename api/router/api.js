@@ -10,6 +10,8 @@ const organizationPath = require('./organization.js')
 const settingPath = require('./setting.js')
 const unitPath = require('./unit.js')
 const itemPath = require('./item.js')
+const orderItemPath = require('./orderitem.js')
+const orderPath = require('./order.js')
 const db = require('../models')
 
 
@@ -51,6 +53,8 @@ router.use(function(req, res, next) {
 
 
 router.use('/users', userPath);
+router.use('/orders', orderPath);
+router.use('/orderItems', orderItemPath);
 router.use('/categories', categoryPath);
 router.use('/organizations', organizationPath)
 router.use('/settings', settingPath)

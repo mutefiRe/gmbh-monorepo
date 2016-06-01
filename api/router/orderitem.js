@@ -1,0 +1,74 @@
+'use strict'
+
+const express = require('express');
+const router = express.Router();
+const db = require('../models/index');
+
+
+router.get('/:id', function(req, res){
+  db.Orderitem.find({where: {id: req.params.id}}).then(data => {
+    if(data === null){
+      res.status(404).send("couldn't find item")
+      return
+    }
+    res.send({'item':data});
+  })
+})
+
+router.get('/', function(req, res){
+  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order}]}).then(data =>
+  {
+    if(data[0] === undefined){
+      res.status(404).send("couldn't find any items")
+      return
+    }
+    else
+    {
+      let orderitems = JSON.parse(JSON.stringify(data));
+      for(var i = 0; i < orderitems.length; i++){
+        orderitems[i].item = orderitems[i].Item.id
+        orderitems[i].Item = undefined
+      }
+      res.send({'orderitem': orderitems});
+    }
+  })
+})
+
+
+
+router.post('/', function(req, res){
+  db.Orderitem.create(req.body.item).then( data => {
+    res.send({'item':data});
+  }).catch(err => {
+    res.status(400).send(err.errors[0].message)
+  })
+})
+
+router.put('/:id', function(req, res){
+  db.Orderitem.find({where: {id: req.params.id}}).then(item => {
+    if(item === null){
+      res.status(404).send("couldn't find Item which should be updated")
+      return
+    }
+    item.update(req.body.item).then( data => {
+      res.send({'item':data})
+    }).catch(err => {
+      res.status(400).send(err.errors[0].message)
+    })
+  })
+})
+
+router.delete('/:id', function(req, res){
+  db.Orderitem.find({where: {id: req.params.id}}).then(item=>{
+    if(item === null){
+      res.status(404).send("couldn't find item which should be deleted")
+      return
+    }
+    item.destroy().then(()=>{
+      res.send({'item':item})
+    })
+  })
+})
+
+
+module.exports = router;
