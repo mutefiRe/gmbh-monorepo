@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     name: {type: DataTypes.STRING, allowNull: false,  unique: false},
     enabled: {type: DataTypes.BOOLEAN, allowNull: false,  unique: false},
     description: {type: DataTypes.STRING, allowNull: false, unique: false},
+    icon: {type: DataTypes.STRING, allowNull: true, unique: false},
     color: {
       type: DataTypes.STRING,
       allowNull: true,

@@ -105,7 +105,7 @@ db.Setting.create({
 
 
 let drinks = db.Category.create({
-  name: "alk",
+  name: "Alkoholisches",
   enabled: true,
   description: "alkohol",
 }).then(cat => {
@@ -139,9 +139,9 @@ let drinks = db.Category.create({
 });
 
 let noalk = db.Category.create({
-  name: "alk",
+  name: "Alkoholfreies",
   enabled: true,
-  description: "alkohol",
+  description: "Alkoholfreies",
 }).then(cat => {
 
   let cl = db.Unit.create({
