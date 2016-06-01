@@ -3,9 +3,5 @@
 
 {{item-container category=actualCategory addItemToOrder=(action "addItemToOrder")}}
 
-{{#each model.Orders as |singleOrder|}}
-{{singleOrder}}
-{{#each singleOrder.orderitems as |orderitem|}}
-{{orderitem}}
-{{/each}}
-{{/each}}
+
+{{order-list order=order}}

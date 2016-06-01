@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['category-container'],
+  classNames: ['orderlist'],
   tagName: 'table',
   actions: {
     deleteOrderItem(index) {

@@ -13,24 +13,27 @@ $orange-light: #FF9863;
 
 @import 'reset';
 @import 'order/category-selection.scss';
+@import 'order/orderlist.scss';
+@import 'order/orderlist-item.scss';
 
 
+
 @font-face {
-font-family: 'Palanquin';
-src: url('./fonts/Palanquin-Medium.ttf');
-font-weight: normal;
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Medium.ttf');
+  font-weight: normal;
 }
 @font-face {
-font-family: 'Palanquin';
-src: url('./fonts/Palanquin-Light.ttf');
-font-weight: light;
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Light.ttf');
+  font-weight: light;
 }
 @font-face {
-font-family: 'Palanquin';
-src: url('./fonts/Palanquin-Bold.ttf');
-font-weight: bold;
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Bold.ttf');
+  font-weight: bold;
 }
 
 body {
-font-family:'Palanquin', arial, sans-serif;
+  font-family:'Palanquin', arial, sans-serif;
 }

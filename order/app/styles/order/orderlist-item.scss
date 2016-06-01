@@ -1,17 +1,7 @@
-
-.item-container{
-  width:100%;
-  display:flex;
-  flex-wrap: wrap;
+.orderlist-item{
+  border: 1px solid $grey-dark;
 }
-
-.single-item {
-
-  width:150px;
-  height:150px;
-  background-color:rgba(255,30,30,0.5);
-  padding:15px;
-  margin:2px;
-  list-style-type:none;
+.orderlist-item td{
+  //padding-left: 10px;
+  //padding-right: 10px;
 }
-
