@@ -10,7 +10,13 @@ Router.map(function () {
   this.route('user', function () {
     this.route('profile', {path: ':userID'});
   });
-  this.route('dashboard');
+  this.route('dashboard', function () {
+    this.route('items');
+    this.route('users');
+    this.route('tables');
+    this.route('stats');
+    this.route('settings');
+  });
   this.route('order');
 });
 

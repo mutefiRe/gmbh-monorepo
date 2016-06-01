@@ -7,7 +7,7 @@ describeModel(
   'Unit | Model | item',
   {
     // Specify the other units that are required for this test.
-      needs: []
+      needs: ['model:unit', 'model:category']
   },
   function() {
     // Replace this with your real tests.

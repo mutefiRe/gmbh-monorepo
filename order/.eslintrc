@@ -64,5 +64,7 @@
     "prefer-reflect": 1,
     "require-yield": 1,
     "consistent-this": ["error", "self"],
+    "prefer-rest-params": 1,
+    "consistent-return": 1
   }
 }
