@@ -1,5 +1,4 @@
 import Ember from 'ember';
-const {store} = Ember.inject;
 
 export default Ember.Controller.extend({
   actualCategory: {},
