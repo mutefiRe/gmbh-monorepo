@@ -52,6 +52,7 @@ for(let i = 0; i < 50; i++){
 db.Category.create({
   name: "Speisen",
   enabled: true,
+  icon: "food.svg",
   description: "Alle die Guten Sachen",
   color: faker.Internet.color
 }).then(cat => {
@@ -107,6 +108,7 @@ db.Setting.create({
 let drinks = db.Category.create({
   name: "Alkoholisches",
   enabled: true,
+  icon: "drink-alc.svg",
   description: "alkohol",
 }).then(cat => {
   let l = db.Unit.create({
@@ -141,6 +143,7 @@ let drinks = db.Category.create({
 let noalk = db.Category.create({
   name: "Alkoholfreies",
   enabled: true,
+  icon: "drink-anti.svg",
   description: "Alkoholfreies",
 }).then(cat => {
 
