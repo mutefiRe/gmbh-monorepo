@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
+store: Ember.inject.service('store'),
 model(){
   return Ember.RSVP.hash({
     categories: this.store.findAll('category'),
