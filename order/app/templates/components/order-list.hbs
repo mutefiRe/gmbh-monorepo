@@ -1,5 +1,5 @@
-{{#each order as |orderItem index|}}
+{{#each order.orderitems as |orderItem|}}
 
-{{orderlist-item orderItem=orderItem index=index deleteOrderItem=(action "deleteOrderItem")}}
+{{orderlist-item orderItem=orderItem}}
 
 {{/each}}
