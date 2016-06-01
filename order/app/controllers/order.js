@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
       this.set('actualCategory', category);
     },
     addItemToOrder(item) {
-      this.store.createRecord('orderitem', {order: this.get('order')});
+      this.store.createRecord('orderitem', {order: this.get('order'), item});
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);

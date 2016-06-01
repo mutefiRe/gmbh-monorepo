@@ -1,11 +1,8 @@
 {{outlet}}
 {{category-selection categories=model.categories changeCategory=(action "changeCategory")}}
 
-{{item-container category=actualCategory addItemToOrder=(action "addItemToOrder")}}
 
-{{#each model.Orders as |singleOrder|}}
-{{singleOrder}}
-{{#each singleOrder.orderitems as |orderitem|}}
-{{orderitem}}
-{{/each}}
-{{/each}}
+{{item-list category=actualCategory addItemToOrder=(action "addItemToOrder")}}
+
+{{order-list order=order}}
+

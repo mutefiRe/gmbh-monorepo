@@ -1,12 +1,12 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  tagName:'li',
+  tagName: 'button',
   classNames: ['category-select-field'],
   actions: {
 
   },
   click() {
-    this.get('changeCategory')(this.get('category'))
+    this.get('changeCategory')(this.get('category'));
   }
 });

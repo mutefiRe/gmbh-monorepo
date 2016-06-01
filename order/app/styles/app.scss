@@ -13,6 +13,9 @@ $orange-light: #FF9863;
 
 @import 'reset';
 @import 'order/category-selection.scss';
+@import 'order/item-list.scss';
+@import 'order/orderlist.scss';
+@import 'order/orderlist-item.scss';
 
 
 @font-face {
@@ -33,4 +36,10 @@ font-weight: bold;
 
 body {
 font-family:'Palanquin', arial, sans-serif;
+font-size: 14px;
 }
+
+* {
+box-sizing: border-box;
+}
+
