@@ -3,5 +3,6 @@
 
 {{item-container category=actualCategory addItemToOrder=(action "addItemToOrder")}}
 
-
-{{order-list order=order deleteOrderItem=(action "deleteOrderItem")}}
+  {{#each model.Orders as |singleOrder|}}
+    {{singleOrder.id}}
+  {{/each}}
