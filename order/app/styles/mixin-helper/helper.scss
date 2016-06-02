@@ -4,7 +4,6 @@
   background-color: $background-color;
   font-weight: bold;
   font-size: 1.28em;
-  width: 100%;
   padding-top: 20px;
   padding-bottom: 20px;
   color: $font-color;
@@ -38,20 +37,36 @@
   }
 }
 
-// renders 2 buttons next to another
-.button-2{
-  width: 48%;
-  
-  &:first-child{
-    margin-right: 3%;
+@mixin styles(){
+  &.style-0{
+    @include button($dark, $blue, $white);
+
+    &:hover{
+      @include button-hover($blue);
+    }
   }
-}
 
-.button-3{
-  width: 30%;
-  margin-right: 4%;
+  &.style-1{
+    @include button($dark, $blue-light, $white);
 
-  &:last-child{
-    margin-right: 0;
+    &:hover {
+      @include button-hover($blue-light);
+    }
+  }
+
+  &.style-2{
+    @include button($dark, $orange-light, $white);
+
+    &:hover {
+      @include button-hover($orange-light);
+    }
+  }
+
+  &.style-3{
+    @include button($dark, $orange, $white);
+
+    &:hover {
+      @include button-hover($orange);
+    }
   }
 }
