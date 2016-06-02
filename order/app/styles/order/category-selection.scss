@@ -10,7 +10,7 @@
   border-bottom: 1px solid $grey-dark;
 }
 
-.category-select-field{
+.category-select-field {
   margin-right:10px;
   margin-left:10px;
   margin-bottom:10px;
@@ -28,13 +28,11 @@
   }
 }
 
-.category-select-field .inactive{
+.category-inactive {
   background-color: lighten(desaturate($blue, 50%), 10%);
 }
-
 
 .category-select-field img {
   height:30px;
   vertical-align: middle;
 }
-
