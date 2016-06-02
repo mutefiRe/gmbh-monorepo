@@ -13,6 +13,7 @@ const itemPath = require('./item.js')
 const orderItemPath = require('./orderitem.js')
 const orderPath = require('./order.js')
 const tablePath = require('./table.js')
+const areaPath = require('./area.js')
 const db = require('../models')
 
 
@@ -62,6 +63,7 @@ router.use('/settings', settingPath)
 router.use('/items', itemPath)
 router.use('/units', unitPath)
 router.use('/tables', tablePath)
+router.use('/areas', areaPath)
 router.get('/', function(req, res){
   res.status(200).send({"msg": "you have access to the api"})
 })
