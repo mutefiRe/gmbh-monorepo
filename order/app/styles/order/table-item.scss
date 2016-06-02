@@ -1,0 +1,10 @@
+.table-item{
+  height: 85px;
+  text-align: center;
+
+  @include button($dark, $blue-light, $white);
+
+  &:hover {
+    @include button-hover($blue-light);
+  }
+}
