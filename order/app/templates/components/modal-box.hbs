@@ -1,0 +1,16 @@
+<div class="modal-box">
+  <div class="head">
+    <h1>{{headline}}</h1>
+  </div>
+  <div class="body">
+    {{yield}}
+  </div>
+  <div class="foot">
+    {{#if false}}
+    <button class="button-grey">Abbrechen</button>
+    <button class="button-blue">Übernehmen</button>
+    {{else}}
+    <button class="button-grey big">Abbrechen</button>
+    {{/if}}
+  </div>
+</div>

@@ -10,36 +10,82 @@ $white: #FFFFFF;
 
 $orange: #FF5700;
 $orange-light: #FF9863;
+$orange-lighter: #FFEEE6;
+
+$light: true;
+$dark: false;
 
 @import 'reset';
+@import 'mixin-helper/helper.scss';
 @import 'order/category-selection.scss';
 @import 'order/item-list.scss';
 @import 'order/orderlist.scss';
 @import 'order/orderlist-item.scss';
+@import 'order/modal-box.scss';
+@import 'order/table-select.scss';
+@import 'order/table-item.scss';
+@import 'order/preview-list.scss';
 
 
 @font-face {
-font-family: 'Palanquin';
-src: url('./fonts/Palanquin-Medium.ttf');
-font-weight: normal;
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Medium.ttf');
+  font-weight: normal;
 }
 @font-face {
-font-family: 'Palanquin';
-src: url('./fonts/Palanquin-Light.ttf');
-font-weight: light;
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Light.ttf');
+  font-weight: light;
 }
 @font-face {
-font-family: 'Palanquin';
-src: url('./fonts/Palanquin-Bold.ttf');
-font-weight: bold;
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Bold.ttf');
+  font-weight: bold;
 }
 
 body {
-font-family:'Palanquin', arial, sans-serif;
-font-size: 14px;
+  font-family:'Palanquin', arial, sans-serif;
+  font-size: 14px;
+  color: $grey-darker;
 }
 
 * {
-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
+h1{
+  font-weight: bold;
+  font-size: 2.57em;
+}
+
+h2{
+  font-weight: bold;
+  font-size: 1.92em;
+}
+
+h3{
+  font-weight: bold;
+  font-size: 1.28em;
+}
+
+body, html {
+  width:100%;
+  height:100%;
+}
+
+body > div {
+  width:100%;
+  height:100%;
+}
+
+.order-screen{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+
+.item-and-preview-list {
+  display: flex;
+  align-items: stretch;
+}

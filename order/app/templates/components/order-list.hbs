@@ -1,5 +1,18 @@
-{{#each order.orderitems as |orderItem|}}
+<h2>Bestellung</h2>
+<table>
+  {{#each-in viewOrder as |name data|}}
+  {{orderlist-item name=name data=data}}
+  {{/each-in}}
+</table>
+<div class="flexcontainer">
+  <button class="tablebutton">Tisch auswählen</button>
+  <p class="sum">Summe: € {{totalAmount}}</p>
+</div>
+<div class="flexcontainer">
+  <button class="bigbutton">Tisch auswählen</button>
+</div>
+<div class="flexcontainer">
+  <button class="smallbutton">zurück</button>
+  <button class="smallbutton">Bestellung verwerfen</button>
+</div>
 
-{{orderlist-item orderItem=orderItem}}
-
-{{/each}}

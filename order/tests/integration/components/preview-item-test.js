@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'item-list',
-  'Integration: ItemListComponent',
+  'preview-item',
+  'Integration: PreviewItemComponent',
   {
     integration: true
   },
@@ -18,13 +18,13 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#single-category}}
+      //   {{#preview-item}}
       //     template content
-      //   {{/single-category}}
+      //   {{/preview-item}}
       // `);
 
-      this.render(hbs`{{item-list}}`);
+      this.render(hbs`{{preview-item}}`);
       expect(this.$()).to.have.length(1);
     });
   }
-  );
+);

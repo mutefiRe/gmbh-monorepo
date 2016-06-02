@@ -1,8 +1,18 @@
 {{outlet}}
-{{category-selection categories=model.categories changeCategory=(action "changeCategory")}}
+
+<div class="order-screen">
+  {{category-selection categories=model.categories changeCategory=(action "changeCategory")}}
+  <div class="item-and-preview-list">
+    {{item-list category=actualCategory addItemToOrder=(action "addItemToOrder")}}
+    {{preview-list viewOrder=viewOrder}}
+  </div>
+</div>
+
+{{#modal-box headline="headline"}}
+{{component modalWidget tables=model.Tables}}
+{{/modal-box}}
 
 
-{{item-list category=actualCategory addItemToOrder=(action "addItemToOrder")}}
 
-{{order-list order=order}}
+{{order-list viewOrder=viewOrder totalAmount=totalAmount}}
 

@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'item-list',
-  'Integration: ItemListComponent',
+  'modal-box',
+  'Integration: ModalBoxComponent',
   {
     integration: true
   },
@@ -18,13 +18,13 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#single-category}}
+      //   {{#modal-box}}
       //     template content
-      //   {{/single-category}}
+      //   {{/modal-box}}
       // `);
 
-      this.render(hbs`{{item-list}}`);
+      this.render(hbs`{{modal-box}}`);
       expect(this.$()).to.have.length(1);
     });
   }
-  );
+);

@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'item-list',
-  'Integration: ItemListComponent',
+  'table-select',
+  'Integration: TableSelectComponent',
   {
     integration: true
   },
@@ -18,13 +18,13 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#single-category}}
+      //   {{#table-select}}
       //     template content
-      //   {{/single-category}}
+      //   {{/table-select}}
       // `);
 
-      this.render(hbs`{{item-list}}`);
+      this.render(hbs`{{table-select}}`);
       expect(this.$()).to.have.length(1);
     });
   }
-  );
+);

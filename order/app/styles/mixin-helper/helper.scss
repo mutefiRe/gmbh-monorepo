@@ -1,0 +1,80 @@
+// brightness - dark buttons (high saturation) need a darker dropshadow
+//              light buttons (pastell) need a lighter dropshadow
+@mixin button($brightness, $background-color, $font-color){
+  background-color: $background-color;
+  font-weight: bold;
+  font-size: 1.28em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: $font-color;
+  @if $brightness {
+    box-shadow: rgba(0,0,0,0.2) 2px 2px 5px;
+  }
+  @else {
+    box-shadow: rgba(0,0,0,0.3) 2px 2px 5px;
+  }
+  border: none;
+}
+
+@mixin button-hover($background-color){
+  background-color: lighten($background-color,5%);
+  box-shadow: none;
+}
+
+.button-blue{
+  @include button($dark, $blue, $white);
+
+  &:active{
+    @include button-hover($blue);
+  }
+}
+
+.button-grey{
+  @include button($light, $grey, $grey-darker);
+
+  &:active{
+    @include button-hover($grey);
+  }
+}
+
+@mixin styles(){
+  &.style-0{
+    @include button($dark, $blue, $white);
+
+    &:hover{
+      @include button-hover($blue);
+    }
+  }
+
+  &.style-1{
+    @include button($dark, $blue-light, $white);
+
+    &:hover {
+      @include button-hover($blue-light);
+    }
+  }
+
+  &.style-2{
+    @include button($dark, $orange-light, $white);
+
+    &:hover {
+      @include button-hover($orange-light);
+    }
+  }
+
+  &.style-3{
+    @include button($dark, $orange, $white);
+
+    &:hover {
+      @include button-hover($orange);
+    }
+  }
+}
+
+
+@mixin flexbox(){
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
