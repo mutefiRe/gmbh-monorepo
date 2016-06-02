@@ -2,10 +2,10 @@
 {{category-selection categories=model.categories changeCategory=(action "changeCategory")}}
 
 {{#modal-box headline="headline"}}
-  {{component modalWidget tables=model.Tables}}
+{{component modalWidget tables=model.Tables}}
 {{/modal-box}}
 
 {{item-list category=actualCategory addItemToOrder=(action "addItemToOrder")}}
 
-{{order-list viewOrder=viewOrder}}
+{{order-list viewOrder=viewOrder totalAmount=totalAmount}}
 
