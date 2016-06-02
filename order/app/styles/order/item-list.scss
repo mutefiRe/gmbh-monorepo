@@ -1,0 +1,22 @@
+.item-list {
+  margin-top:20px;
+  width:90%;
+  justify-content: flex-start;
+  flex-direction:row;
+  display:flex;
+  flex-wrap: wrap;
+}
+
+.single-item{
+  width:23%;
+  margin-right:1%;
+  margin-left:1%;
+  margin-bottom:2%;
+  height:85px;
+  background-color:orange;
+  border:none;
+  color:$grey-darker;
+  font-weight:bold;
+  font-size:1.28em;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}

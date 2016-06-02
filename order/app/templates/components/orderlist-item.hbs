@@ -1,8 +1,3 @@
-<tr>
-  <td><button {{action "deleteOrderItem"}}>Löschen</button></td>
-  <td>{{orderItem.name}}</td>
-  <td>{{orderItem.amount}} {{orderItem.unit.name}}</td>
-  <td>{{orderItem.category.name}}</td>
-  <td>{{orderItem.price}} €</td>
-  <td>Nr. {{index}}</td>
-</tr>
+  <td>88X</td>
+  <td style="width= 100%">{{orderItem.item.name}}<span>{{orderItem.extras}}</span></td>
+  <td>€ {{orderItem.item.price}}</td>
