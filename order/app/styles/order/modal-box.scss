@@ -39,5 +39,15 @@
 
   .foot{
     padding: 20px;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      width: 48%;
+    }
+
+    button.big {
+      width: 100%;
+    }
   }
 }

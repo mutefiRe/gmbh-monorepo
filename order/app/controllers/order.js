@@ -21,14 +21,17 @@ export default Ember.Controller.extend({
       this.set('actualCategory', category);
     },
     addItemToOrder(item) {
-      let orderItem = this.store.createRecord('orderitem', {order:this.get('order'), item}).get('item').get('name');
-      let viewOrder = _.cloneDeep(this.get('viewOrder'));
-      if(!viewOrder[orderItem]){
+      const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item})
+        .get('item')
+        .get('name');
+      const viewOrder = _.cloneDeep(this.get('viewOrder'));
+
+      if (!viewOrder[orderItem]) {
         viewOrder[orderItem] = {};
         viewOrder[orderItem].amount = 1;
         viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
       }
-      else{
+      else {
         viewOrder[orderItem].amount++;
         viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
       }

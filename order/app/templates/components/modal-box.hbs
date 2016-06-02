@@ -6,7 +6,11 @@
     {{yield}}
   </div>
   <div class="foot">
-    <button class="button-grey button-2">Abbrechen</button>
-    <button class="button-blue button-2">Übernehmen</button>
+    {{#if false}}
+    <button class="button-grey">Abbrechen</button>
+    <button class="button-blue">Übernehmen</button>
+    {{else}}
+    <button class="button-grey big">Abbrechen</button>
+    {{/if}}
   </div>
 </div>
