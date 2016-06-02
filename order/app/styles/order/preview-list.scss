@@ -1,19 +1,24 @@
 .preview-list {
-
+  flex-grow: 1;
   width:10%;
   display:flex;
   flex-direction: column;
-
+  border-left:1px solid $grey-light;
 }
 
 
 .preview-list li {
-  border-left:1px solid $grey-dark;
+  background-color:grey;
+  margin:5%;
+  background-color:$grey-light;
+
   list-style-type: none;
-  width:100%;
+  width:90%;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding:10px;
+  padding-left:5px;
+  padding-right:5px;
+  padding-top:15px;
+  padding-bottom:15px;
   overflow:hidden;
-  border-bottom: 1px solid black;
 }
