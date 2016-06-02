@@ -1,7 +1,7 @@
 .category-selection {
   width:100%;
   min-height:110px;
-  justify-content: space-around;
+  justify-content: center;
   align-items:center;
   flex-direction:row;
   flex-wrap:wrap;
@@ -11,15 +11,30 @@
 }
 
 .category-select-field{
-  width:250px;
+  margin-right:10px;
+  margin-left:10px;
+  margin-bottom:10px;
+  width:220px;
   height:90px;
   background-color:$blue;
   border:none;
   color:$white;
   font-size:18px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  &:hover, &:active{
+    border:none;
+    box-shadow: none;
+    background-color:lighten($blue, 5%);
+  }
 }
+
+.category-select-field .inactive{
+  background-color: lighten(desaturate($blue, 50%), 10%);
+}
+
 
 .category-select-field img {
   height:30px;
   vertical-align: middle;
 }
+
