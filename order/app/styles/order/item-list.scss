@@ -5,6 +5,7 @@
   flex-direction:row;
   display:flex;
   flex-wrap: wrap;
+  flex-grow: 1;
 }
 
 .single-item{
@@ -23,5 +24,6 @@
 
   &:hover, &:active {
     box-shadow: none;
+    background-color:lighten($grey-light, 5%);
   }
 }
