@@ -19,7 +19,11 @@ export default Ember.Controller.extend({
   }.property('model.modalType'),
   actions: {
     changeCategory(category) {
-      this.set('actualCategory', category);
+      if (this.get('actualCategory') === category) {
+        this.set('actualCategory', false);
+      } else {
+        this.set('actualCategory', category);
+      }
     },
     addItemToOrder(item) {
       const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item}).get('item').get('name');
