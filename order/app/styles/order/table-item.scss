@@ -1,10 +1,8 @@
 .table-item{
+  margin-top: 10px;
+  width: 32%;
   height: 85px;
   text-align: center;
 
-  @include button($dark, $blue-light, $white);
-
-  &:hover {
-    @include button-hover($blue-light);
-  }
+  @include styles();
 }
