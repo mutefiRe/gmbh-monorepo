@@ -32,8 +32,7 @@ export default Ember.Controller.extend({
         viewOrder[orderItem].amount++;
         viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
       }
-      this.set('viewOrder', viewOrder)
-      console.log(item.get('price'));
+      this.set('viewOrder', viewOrder);
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);
