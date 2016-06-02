@@ -24,7 +24,7 @@
 .button-blue{
   @include button($dark, $blue, $white);
 
-  &:active{
+  &:hover, &:active {
     @include button-hover($blue);
   }
 }
@@ -32,24 +32,16 @@
 .button-grey{
   @include button($light, $grey, $grey-darker);
 
-  &:active{
+  &:hover, &:active {
     @include button-hover($grey);
   }
 }
 
 @mixin styles(){
-  &.style-0{
-    @include button($dark, $blue, $white);
-
-    &:hover{
-      @include button-hover($blue);
-    }
-  }
-
   &.style-1{
     @include button($dark, $blue-light, $white);
 
-    &:hover {
+    &:hover, &:active {
       @include button-hover($blue-light);
     }
   }
@@ -57,7 +49,7 @@
   &.style-2{
     @include button($dark, $orange-light, $white);
 
-    &:hover {
+    &:hover, &:active {
       @include button-hover($orange-light);
     }
   }
@@ -65,12 +57,19 @@
   &.style-3{
     @include button($dark, $orange, $white);
 
-    &:hover {
+    &:hover, &:active {
       @include button-hover($orange);
     }
   }
-}
 
+  &.style-0{
+    @include button($dark, $blue, $white);
+
+    &:hover, &:active {
+      @include button-hover($blue);
+    }
+  }
+}
 
 @mixin flexbox(){
   display: flex;

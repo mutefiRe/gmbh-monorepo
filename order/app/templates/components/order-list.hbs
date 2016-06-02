@@ -5,14 +5,13 @@
   {{/each-in}}
 </table>
 <div class="flexcontainer">
-  <button class="tablebutton">Tisch auswählen</button>
+  <button {{action 'showModal'}} class="tablebutton">Tisch auswählen</button>
   <p class="sum">Summe: € {{totalAmount}}</p>
 </div>
 <div class="flexcontainer">
-  <button class="bigbutton">Tisch auswählen</button>
+  <button {{action 'showModal'}} class="bigbutton">Tisch auswählen</button>
 </div>
 <div class="flexcontainer">
   <button class="smallbutton">zurück</button>
   <button class="smallbutton">Bestellung verwerfen</button>
 </div>
-
