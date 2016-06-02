@@ -10,6 +10,7 @@ $white: #FFFFFF;
 
 $orange: #FF5700;
 $orange-light: #FF9863;
+$orange-lighter: #FFEEE6;
 
 $light: true;
 $dark: false;
@@ -23,6 +24,7 @@ $dark: false;
 @import 'order/modal-box.scss';
 @import 'order/table-select.scss';
 @import 'order/table-item.scss';
+@import 'order/preview-list.scss';
 
 
 @font-face {
@@ -64,4 +66,26 @@ h2{
 h3{
   font-weight: bold;
   font-size: 1.28em;
+}
+
+body, html {
+  width:100%;
+  height:100%;
+}
+
+body > div {
+  width:100%;
+  height:100%;
+}
+
+.order-screen{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+
+.item-and-preview-list {
+  display: flex;
+  align-items: stretch;
 }

@@ -1,7 +1,6 @@
 .item-list {
   width:90%;
-  height:800px;
-  overflow-y:scroll;
+  overflow-y:auto;
   justify-content: flex-start;
   flex-direction:row;
   display:flex;

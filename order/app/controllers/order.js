@@ -8,10 +8,11 @@ export default Ember.Controller.extend({
   modalType: 'table-select',
   order: null,
   viewOrder: {},
+  totalAmount: 0,
   init() {
     const id = this.get('payload.id');
-    this.set('order', this.store.createRecord('order', {userId: id}));
 
+    this.set('order', this.store.createRecord('order', {userId: id}));
   },
   modalWidget: function () {
     return this.get('modalType');
@@ -21,22 +22,20 @@ export default Ember.Controller.extend({
       this.set('actualCategory', category);
     },
     addItemToOrder(item) {
-      const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item})
-        .get('item')
-        .get('name');
+      const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item}).get('item').get('name');
       const viewOrder = _.cloneDeep(this.get('viewOrder'));
+      let totalAmount = _.cloneDeep(this.get('totalAmount'));
 
       if (!viewOrder[orderItem]) {
         viewOrder[orderItem] = {};
         viewOrder[orderItem].amount = 1;
-        viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
-      }
-      else {
+      } else {
         viewOrder[orderItem].amount++;
-        viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
       }
-      this.set('viewOrder', viewOrder)
-      console.log(item.get('price'));
+      viewOrder[orderItem].prize = (item.get('price') * viewOrder[orderItem].amount).toFixed(2);
+      totalAmount += (item.get('price') * viewOrder[orderItem].amount);
+      this.set('viewOrder', viewOrder);
+      this.set('totalAmount', totalAmount);
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);

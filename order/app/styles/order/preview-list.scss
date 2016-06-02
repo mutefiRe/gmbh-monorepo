@@ -1,0 +1,19 @@
+.preview-list {
+
+  width:10%;
+  display:flex;
+  flex-direction: column;
+
+}
+
+
+.preview-list li {
+  border-left:1px solid $grey-dark;
+  list-style-type: none;
+  width:100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding:10px;
+  overflow:hidden;
+  border-bottom: 1px solid black;
+}
