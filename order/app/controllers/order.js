@@ -8,6 +8,7 @@ export default Ember.Controller.extend({
   modalType: 'table-select',
   order: null,
   viewOrder: {},
+  totalAmount: 0,
   init() {
     const id = this.get('payload.id');
     this.set('order', this.store.createRecord('order', {userId: id}));
@@ -23,16 +24,18 @@ export default Ember.Controller.extend({
     addItemToOrder(item) {
       let orderItem = this.store.createRecord('orderitem', {order:this.get('order'), item}).get('item').get('name');
       let viewOrder = _.cloneDeep(this.get('viewOrder'));
+      let totalAmount = _.cloneDeep(this.get('totalAmount'));
       if(!viewOrder[orderItem]){
         viewOrder[orderItem] = {};
         viewOrder[orderItem].amount = 1;
-        viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
       }
       else{
         viewOrder[orderItem].amount++;
-        viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
       }
+      viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
+      totalAmount += (item.get('price')*viewOrder[orderItem].amount);
       this.set('viewOrder', viewOrder);
+      this.set('totalAmount', totalAmount);
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);
