@@ -4,7 +4,7 @@ import _ from 'lodash';
 export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
-  actualCategory: {},
+  actualCategory: false,
   modalType: 'table-select',
   order: null,
   viewOrder: {},
