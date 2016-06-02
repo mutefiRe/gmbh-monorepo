@@ -4,12 +4,16 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   actualCategory: {},
+  modalType: 'table-select',
   order: null,
   init() {
     const id = this.get('payload.id');
 
     this.set('order', this.store.createRecord('order', {userId: id}));
   },
+  modalWidget: function () {
+    return this.get('modalType');
+  }.property('model.modalType'),
   actions: {
     changeCategory(category) {
       this.set('actualCategory', category);

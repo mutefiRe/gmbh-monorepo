@@ -1,0 +1,57 @@
+// brightness - dark buttons (high saturation) need a darker dropshadow
+//              light buttons (pastell) need a lighter dropshadow
+@mixin button($brightness, $background-color, $font-color){
+  background-color: $background-color;
+  font-weight: bold;
+  font-size: 1.28em;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: $font-color;
+  @if $brightness {
+    box-shadow: rgba(0,0,0,0.2) 2px 2px 5px;
+  }
+  @else {
+    box-shadow: rgba(0,0,0,0.3) 2px 2px 5px;
+  }
+  border: none;
+}
+
+@mixin button-hover($background-color){
+  background-color: lighten($background-color,5%);
+  box-shadow: none;
+}
+
+.button-blue{
+  @include button($dark, $blue, $white);
+
+  &:active{
+    @include button-hover($blue);
+  }
+}
+
+.button-grey{
+  @include button($light, $grey, $grey-darker);
+
+  &:active{
+    @include button-hover($grey);
+  }
+}
+
+// renders 2 buttons next to another
+.button-2{
+  width: 48%;
+  
+  &:first-child{
+    margin-right: 3%;
+  }
+}
+
+.button-3{
+  width: 30%;
+  margin-right: 4%;
+
+  &:last-child{
+    margin-right: 0;
+  }
+}
