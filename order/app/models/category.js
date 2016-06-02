@@ -6,7 +6,7 @@ export default DS.Model.extend({
   description: DS.attr('string'),
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
-  color: DS.attr('string'),
+  showAmount: DS.attr('boolean'),
   icon: DS.attr('string'),
   category: DS.belongsTo('category'),
   items: DS.hasMany('item')
