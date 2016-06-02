@@ -1,17 +1,31 @@
 import Ember from 'ember';
+import _ from 'lodash';
 
 export default Ember.Controller.extend({
   actualCategory: {},
   order: null,
+  viewOrder: {},
   init(){
-    this.set('order', this.store.createRecord('order'))
+    this.set('order', this.store.createRecord('order'));
   },
   actions: {
     changeCategory(category) {
       this.set('actualCategory', category);
     },
     addItemToOrder(item) {
-      this.store.createRecord('orderitem', {order:this.get('order'), item})
+      let orderItem = this.store.createRecord('orderitem', {order:this.get('order'), item}).get('item').get('name');
+      let viewOrder = _.cloneDeep(this.get('viewOrder'));
+      if(!viewOrder[orderItem]){
+        viewOrder[orderItem] = {};
+        viewOrder[orderItem].amount = 1;
+        viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
+      }
+      else{
+        viewOrder[orderItem].amount++;
+        viewOrder[orderItem].prize = (item.get('price')*viewOrder[orderItem].amount).toFixed(2);
+      }
+      this.set('viewOrder', viewOrder)
+      console.log(item.get('price'));
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);

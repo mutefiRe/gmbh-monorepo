@@ -1,5 +1,3 @@
-{{#each order.orderitems as |orderItem|}}
-
-{{orderlist-item orderItem=orderItem}}
-
-{{/each}}
+{{#each-in viewOrder as |name data|}}
+{{orderlist-item name=name data=data}}
+{{/each-in}}
