@@ -44,6 +44,22 @@ let beilagen = [ 'Salat',
 'Erdäpfelsalat',
 'Pommes' ];
 
+// USER
+
+db.User.create({
+  username: "admin",
+  firstname: "Meister",
+  lastname: "Lampe",
+  password: "abc",
+  permission: 0
+});
+db.User.create({
+  username: "waiter",
+  firstname: "Slave",
+  lastname: "Lampe",
+  password: "abc",
+  permission: 1
+});
 
 for(let i = 0; i < 50; i++){
   db.User.create({
@@ -54,6 +70,8 @@ for(let i = 0; i < 50; i++){
     permission: faker.Helpers.randomNumber(2)
   });
 }
+
+// FOOD
 
 db.Category.create({
   name: "Speisen",
@@ -66,7 +84,7 @@ db.Category.create({
   let stk = db.Unit.create({
     name: "Stk."
   }).then(data => {
-    for(let i = 0; i < 150; i++){
+    for(let i = 0; i < 25; i++){
       db.Item.create({
         name: faker.Helpers.randomize(speisen) + " "+ faker.Helpers.randomize(stopwords)+" " + faker.Helpers.randomize(beilagen),
         amount: 1,
@@ -79,6 +97,7 @@ db.Category.create({
   });
 });
 
+//ORGANISATIONS
 
 db.Organization.create({
   uid: "blaaaah",
@@ -106,21 +125,18 @@ db.Setting.create({
   end_date: "nodate"
 });
 
+// ALCOHOLICS
 
-
-
-
-
-let drinks = db.Category.create({
+db.Category.create({
   name: "Alkoholisches",
   enabled: true,
   icon: "drink-alc.svg",
   description: "alkohol",
   showAmount: true
 }).then(cat => {
-  let l = db.Unit.create({
-    name: "l"
-  }).then(data => {
+  db.Unit.findOrCreate({
+    where: {name: 'l'}
+  }).spread(data => {
     db.Item.bulkCreate([{
       name: "Bier",
       amount: 0.5,
@@ -129,35 +145,74 @@ let drinks = db.Category.create({
       UnitId: data.id,
       CategoryId: cat.id
     },{
-      name: "Radler",
+      name: "Bier",
       amount: 0.33,
       price: 2.5,
       tax: 0.2,
       UnitId: data.id,
       CategoryId: cat.id
     },{
-      name: "Bier",
+      name: "Radler",
       amount: 0.5,
       price: 2.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Radler",
+      amount: 0.3,
+      price: 2.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Grüner Veltliner",
+      amount: 0.125,
+      price: 3.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Grüner Veltliner",
+      amount: 0.25,
+      price: 5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Spätburgunder",
+      amount: 0.125,
+      price: 3.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Spätburgunder",
+      amount: 0.25,
+      price: 5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Weißer Spritzer",
+      amount: 0.5,
+      price: 3.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Roter Spritzer",
+      amount: 0.5,
+      price: 3.5,
       tax: 0.2,
       UnitId: data.id,
       CategoryId: cat.id
     }]
     )
   })
-});
-
-let noalk = db.Category.create({
-  name: "Alkoholfreies",
-  enabled: true,
-  icon: "drink-anti.svg",
-  description: "Alkoholfreies",
-  showAmount: true
-}).then(cat => {
-
-  let cl = db.Unit.create({
-    name: "cl"
-  }).then(data => {
+  db.Unit.findOrCreate({
+    where: {name: 'cl'}
+  }).spread(data => {
     db.Item.bulkCreate([{
       name: "Klopfer",
       amount: 2,
@@ -179,55 +234,124 @@ let noalk = db.Category.create({
       tax: 0.2,
       UnitId: data.id,
       CategoryId: cat.id
+    },{
+      name: "Williams-Schnaps",
+      amount: 4,
+      price: 2,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Nuss-Schnaps",
+      amount: 4,
+      price: 2,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    }]
+    )
+  });
+});
+
+// NONALCOHOLICS
+
+db.Category.create({
+  name: "Alkoholfreies",
+  enabled: true,
+  icon: "drink-anti.svg",
+  description: "Alkoholfreies",
+  showAmount: true
+}).then(cat => {
+  db.Unit.findOrCreate({
+    where: {name: 'l'}
+  }).spread(data => {
+    db.Item.bulkCreate([{
+      name: "Coca Cola",
+      amount: 0.3,
+      price: 2.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Coca Cola",
+      amount: 0.5,
+      price: 3.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Fanta",
+      amount: 0.3,
+      price: 2.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Fanta",
+      amount: 0.5,
+      price: 3.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Sprite",
+      amount: 0.3,
+      price: 2.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Sprite",
+      amount: 0.5,
+      price: 3.5,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Mineral",
+      amount: 0.3,
+      price: 2,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
+    },{
+      name: "Mineral",
+      amount: 0.5,
+      price: 3,
+      tax: 0.2,
+      UnitId: data.id,
+      CategoryId: cat.id
     }]
     )
   });
 });
 
 
-let Area = db.Area.create({
-  name: "Terrasse"
-}).then(area => {
- let Table = db.Table.create({
-  name:"A1",
-  x: 1,
-  y: 2,
-  AreaId:1
-})
- Table = db.Table.create({
-  name:"A2",
-  x: 2,
-  y: 3,
-  AreaId:1
-}).then(table => {
-
-  let Order = db.Order.create({
-    UserId: 1,
-    TableId: 1
-  }).then(order => {
-    db.Orderitem.create({
-      OrderId:order.id,
-      ItemId:1
-    }).then(orderitem => order.addOrderitem(orderitem))
-    db.Orderitem.create({
-      OrderId:order.id,
-      ItemId:1
-    }).then(orderitem => order.addOrderitem(orderitem))
+db.Area.findOrCreate({
+  where: {name: 'Terrasse'}
+}).spread(area => {
+  for(let i = 0; i < 12; i++){
+    db.Table.create({
+      name:"T"+i,
+      x: 1,
+      y: 2,
+      AreaId: area.id
+    })
   }
-  )
-
-})
-
-
-let User = db.User.create({
-  username: "areausertest",
-  firstname: "Kellner1",
-  lastname: "Carlos",
-  password: "123",
-  permission: 1
-}).then(user => {
-  user.addArea(area);
 });
+
+db.Area.findOrCreate({
+  where: {name: 'Gaststube'}
+}).spread(area => {
+  for(let i = 0; i < 12; i++){
+    db.Table.create({
+      name:"G"+i,
+      x: 1,
+      y: 2,
+      AreaId: area.id
+    })
+  }
 });
+
 
 
