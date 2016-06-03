@@ -4,10 +4,11 @@ import _ from 'lodash';
 export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
-  actualCategory: {},
+  actualCategory: false,
   modalType: 'table-select',
   order: null,
   viewOrder: {},
+  triggerModal: false,
   totalAmount: 0,
   init() {
     const id = this.get('payload.id');
@@ -19,7 +20,11 @@ export default Ember.Controller.extend({
   }.property('model.modalType'),
   actions: {
     changeCategory(category) {
-      this.set('actualCategory', category);
+      if (this.get('actualCategory') === category) {
+        this.set('actualCategory', false);
+      } else {
+        this.set('actualCategory', category);
+      }
     },
     addItemToOrder(item) {
       const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item}).get('item').get('name');
@@ -33,12 +38,17 @@ export default Ember.Controller.extend({
         viewOrder[orderItem].amount++;
       }
       viewOrder[orderItem].prize = (item.get('price') * viewOrder[orderItem].amount).toFixed(2);
+      viewOrder[orderItem].categoryId = item.get('category').get('id');
       totalAmount += (item.get('price') * viewOrder[orderItem].amount);
       this.set('viewOrder', viewOrder);
       this.set('totalAmount', totalAmount);
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);
+    },
+    showModal(activeType) {
+      this.set('modalType', activeType);
+      this.toggleProperty('triggerModal');
     }
   }
 });

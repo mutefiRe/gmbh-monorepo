@@ -7,10 +7,10 @@
   </div>
   <div class="foot">
     {{#if false}}
-    <button class="button-grey">Abbrechen</button>
+    <button {{action 'close'}} class="button-grey">Abbrechen</button>
     <button class="button-blue">Übernehmen</button>
     {{else}}
-    <button class="button-grey big">Abbrechen</button>
+    <button {{action 'close'}} class="button-grey big">Abbrechen</button>
     {{/if}}
   </div>
 </div>

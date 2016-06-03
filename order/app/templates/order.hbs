@@ -1,18 +1,15 @@
 {{outlet}}
 
 <div class="order-screen">
-  {{category-selection categories=model.categories changeCategory=(action "changeCategory")}}
+  {{category-selection categories=model.categories actualCategory=actualCategory changeCategory=(action "changeCategory")}}
   <div class="item-and-preview-list">
-    {{item-list category=actualCategory addItemToOrder=(action "addItemToOrder")}}
+    {{item-list category=actualCategory items=model.Items addItemToOrder=(action "addItemToOrder")}}
     {{preview-list viewOrder=viewOrder}}
   </div>
 </div>
 
-{{#modal-box headline="headline"}}
-{{component modalWidget tables=model.Tables}}
+{{#modal-box triggerModal=triggerModal headline="headline"}}
+  {{component modalWidget tables=model.Tables order=order}}
 {{/modal-box}}
 
-
-
-{{order-list viewOrder=viewOrder totalAmount=totalAmount}}
-
+{{order-list viewOrder=viewOrder totalAmount=totalAmount showModal=(action "showModal")}}
