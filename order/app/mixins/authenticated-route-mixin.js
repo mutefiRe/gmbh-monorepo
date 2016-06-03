@@ -1,16 +1,11 @@
 import Ember from 'ember';
-import getOwner from 'ember-getowner-polyfill';
-const {service} = Ember.inject;
 
 export default Ember.Mixin.create({
-  session: service('session'),
+  session: Ember.inject.service('session'),
+  payload: Ember.inject.service('session-payload'),
   beforeModel(transition) {
     if (this.get('session.isAuthenticated')) {
-
-      const session = this.get('session.session.content');
-      const token = session.authenticated.token;
-      const authenticator = getOwner(this).lookup('authenticator:jwt');
-      const userPermission = authenticator.getTokenData(token).permission;
+      const userPermission = this.get('payload.permission');
       const url = transition.targetName.split('.')[0];
       const admin = 0;
       const waiter = 1;
