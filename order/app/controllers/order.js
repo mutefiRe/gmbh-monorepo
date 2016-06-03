@@ -7,9 +7,11 @@ export default Ember.Controller.extend({
   actualCategory: false,
   modalType: 'table-select',
   order: null,
-  viewOrder: {},
+  viewOrder: {
+    items: {},
+    totalAmount: 0
+  },
   triggerModal: false,
-  totalAmount: 0,
   init() {
     const id = this.get('payload.id');
 
@@ -27,21 +29,22 @@ export default Ember.Controller.extend({
       }
     },
     addItemToOrder(item) {
-      const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item}).get('item').get('name');
+      const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item});
       const viewOrder = _.cloneDeep(this.get('viewOrder'));
-      let totalAmount = _.cloneDeep(this.get('totalAmount'));
+      console.log("NEUE",viewOrder.items[item.get('id')+orderItem.get('extras')]);
+      if (viewOrder.items[item.get('id')+orderItem.get('extras')] === undefined) {
+        viewOrder.items[item.get('id')+orderItem.get('extras')] = {};
+        viewOrder.items[item.get('id')+orderItem.get('extras')].amount = 0;
 
-      if (!viewOrder[orderItem]) {
-        viewOrder[orderItem] = {};
-        viewOrder[orderItem].amount = 1;
-      } else {
-        viewOrder[orderItem].amount++;
       }
-      viewOrder[orderItem].prize = (item.get('price') * viewOrder[orderItem].amount).toFixed(2);
-      viewOrder[orderItem].categoryId = item.get('category').get('id');
-      totalAmount += (item.get('price') * viewOrder[orderItem].amount);
+      viewOrder.items[item.get('id')+orderItem.get('extras')].amount++;
+      viewOrder.items[item.get('id')+orderItem.get('extras')].prize = (item.get('price') * viewOrder.items[item.get('id')+orderItem.get('extras')].amount).toFixed(2);
+      viewOrder.items[item.get('id')+orderItem.get('extras')].categoryId = item.get('category').get('id');
+      viewOrder.items[item.get('id')+orderItem.get('extras')].name = item.get('name') + " " + item.get('amount') + item.get('unit').get('name');
+      viewOrder.items[item.get('id')+orderItem.get('extras')].extras = orderItem.get('extras');
+      viewOrder.totalAmount += (item.get('price') * viewOrder.items[item.get('id')+orderItem.get('extras')].amount);
+      console.log(viewOrder);
       this.set('viewOrder', viewOrder);
-      this.set('totalAmount', totalAmount);
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);

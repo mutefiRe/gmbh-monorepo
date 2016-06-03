@@ -1,11 +1,12 @@
 .item-list {
   width:90%;
-  overflow-y:auto;
+  overflow-y: auto;
   justify-content: flex-start;
   flex-direction:row;
   display:flex;
   flex-wrap: wrap;
   flex-grow: 1;
+  align-content: flex-start;
 }
 
 .single-item{
@@ -21,6 +22,8 @@
   font-weight:bold;
   font-size:1.28em;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  text-overflow: ellipsis;
+  overflow:hidden;
 
   &:hover, &:active {
     box-shadow: none;
