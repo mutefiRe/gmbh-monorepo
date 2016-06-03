@@ -22,12 +22,15 @@ let speisen = [ 'Schnitzel',
 'Bananenquiche',
 'Knödel' ];
 
+let stopwords = ['in','an','auf','mit', 'überbacken mit'];
+
 let beilagen = [ 'Salat',
 'Püree',
 'Kartoffel',
 'Reis',
 'Nudeln',
 'Bratgemüse',
+'Pumpernickel',
 'Frühlingsgemüse',
 'Brot',
 'Weißbrot',
@@ -35,6 +38,9 @@ let beilagen = [ 'Salat',
 'Rettich',
 'Sauerkraut',
 'Semmel',
+'Soße',
+'Himbeerspiegel',
+'Preiselbeeren',
 'Erdäpfelsalat',
 'Pommes' ];
 
@@ -60,9 +66,9 @@ db.Category.create({
   let stk = db.Unit.create({
     name: "Stk."
   }).then(data => {
-    for(let i = 0; i < 50; i++){
+    for(let i = 0; i < 150; i++){
       db.Item.create({
-        name: faker.Helpers.randomize(speisen) + " mit " + faker.Helpers.randomize(beilagen),
+        name: faker.Helpers.randomize(speisen) + " "+ faker.Helpers.randomize(stopwords)+" " + faker.Helpers.randomize(beilagen),
         amount: 1,
         price: faker.Helpers.randomNumber(20),
         tax: 0.1,
