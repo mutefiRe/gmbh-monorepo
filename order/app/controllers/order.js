@@ -37,6 +37,7 @@ export default Ember.Controller.extend({
         viewOrder[orderItem].amount++;
       }
       viewOrder[orderItem].prize = (item.get('price') * viewOrder[orderItem].amount).toFixed(2);
+      viewOrder[orderItem].categoryId = item.get('category').get('id');
       totalAmount += (item.get('price') * viewOrder[orderItem].amount);
       this.set('viewOrder', viewOrder);
       this.set('totalAmount', totalAmount);

@@ -4,8 +4,6 @@
   background-color: $background-color;
   font-weight: bold;
   font-size: 1.28em;
-  padding-top: 20px;
-  padding-bottom: 20px;
   color: $font-color;
   @if $brightness {
     box-shadow: rgba(0,0,0,0.2) 2px 2px 5px;
