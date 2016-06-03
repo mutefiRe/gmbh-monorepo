@@ -4,4 +4,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  .table-mask{
+    overflow: scroll;
+    max-height: 470px;
+  }
 }

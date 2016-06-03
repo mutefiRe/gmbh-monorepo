@@ -32,7 +32,6 @@ export default Ember.Controller.extend({
     addItemToOrder(item) {
       const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item});
       const viewOrder = _.cloneDeep(this.get('viewOrder'));
-      console.log("NEUE",viewOrder.items[item.get('id')+orderItem.get('extras')]);
       if (viewOrder.items[item.get('id')+orderItem.get('extras')] === undefined) {
         viewOrder.items[item.get('id')+orderItem.get('extras')] = {};
         viewOrder.items[item.get('id')+orderItem.get('extras')].amount = 0;
@@ -44,7 +43,6 @@ export default Ember.Controller.extend({
       viewOrder.items[item.get('id')+orderItem.get('extras')].name = item.get('name') + " " + item.get('amount') + item.get('unit').get('name');
       viewOrder.items[item.get('id')+orderItem.get('extras')].extras = orderItem.get('extras');
       viewOrder.totalAmount += (item.get('price') * viewOrder.items[item.get('id')+orderItem.get('extras')].amount);
-      console.log(viewOrder);
       this.set('viewOrder', viewOrder);
     },
     deleteOrderItem(index) {
