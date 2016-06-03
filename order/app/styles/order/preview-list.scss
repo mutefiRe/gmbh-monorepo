@@ -1,16 +1,13 @@
 .preview-list {
-
   width:10%;
   display:flex;
   flex-direction: column;
-
   border-left:1px solid $grey-dark;
   background-color:$grey-light;
-  align-self:flex-start;
 }
 
 .preview-list li {
-  margin:5%;
+  margin:4px;
   background-color:$grey-light;
   list-style-type: none;
   width:90%;
