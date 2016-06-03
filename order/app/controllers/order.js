@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   payload: Ember.inject.service('session-payload'),
   actualCategory: false,
   modalType: 'table-select',
+  modalHeadline: 'Tisch auswählen',
   order: null,
   viewOrder: {
     items: {},

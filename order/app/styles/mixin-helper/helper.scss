@@ -23,6 +23,11 @@
   box-shadow: none;
 }
 
+.default-btn{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
 .button-blue{
   @include button($dark, $blue, $white);
 

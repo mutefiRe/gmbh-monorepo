@@ -34,13 +34,16 @@
   }
 
   .tablebutton{
-    background-color: $orange-lighter;
     font-weight: bold;
     padding: 10px;
     padding-left: 20px;
     padding-right: 20px;
     color: $grey-darker;
     border: none;
+  }
+
+  .required{
+    background-color: $orange-lighter;
   }
 
   .sum{
