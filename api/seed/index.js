@@ -60,7 +60,7 @@ db.Category.create({
   enabled: true,
   icon: "food.svg",
   description: "Alle die Guten Sachen",
-  color: faker.Internet.color
+  showAmount: false
 }).then(cat => {
 
   let stk = db.Unit.create({
@@ -116,6 +116,7 @@ let drinks = db.Category.create({
   enabled: true,
   icon: "drink-alc.svg",
   description: "alkohol",
+  showAmount: true
 }).then(cat => {
   let l = db.Unit.create({
     name: "l"
@@ -151,6 +152,7 @@ let noalk = db.Category.create({
   enabled: true,
   icon: "drink-anti.svg",
   description: "Alkoholfreies",
+  showAmount: true
 }).then(cat => {
 
   let cl = db.Unit.create({
