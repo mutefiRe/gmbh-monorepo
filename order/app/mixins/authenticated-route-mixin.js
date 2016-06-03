@@ -19,21 +19,19 @@ export default Ember.Mixin.create({
         return this._super(...arguments);
       }
 
-      if (url === 'oder' && userPermission === waiter) {
+      if (url === 'order' && userPermission === waiter) {
         return this._super(...arguments);
       }
 
-
       transition.abort();
-
-      if (url === 'order') {
+      if (userPermission === 0) {
         this.transitionTo('dashboard');
       } else {
         this.transitionTo('order');
       }
     } else {
       transition.abort();
-      this.set('session.attemptedTransition', transition);
+      // this.set('session.attemptedTransition', transition);
       this.transitionTo('login');
     }
   }
