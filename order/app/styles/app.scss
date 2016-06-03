@@ -12,8 +12,9 @@ $orange: #FF5700;
 $orange-light: #FF9863;
 $orange-lighter: #FFEEE6;
 
-$light: true;
-$dark: false;
+$light: 1;
+$dark: 0;
+$noshadow: 2;
 
 @import 'reset';
 @import 'mixin-helper/helper.scss';
