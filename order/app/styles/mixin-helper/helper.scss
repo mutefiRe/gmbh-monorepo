@@ -5,12 +5,16 @@
   font-weight: bold;
   font-size: 1.28em;
   color: $font-color;
-  @if $brightness {
+  @if $brightness == 0 {
     box-shadow: rgba(0,0,0,0.2) 2px 2px 5px;
   }
-  @else {
+  @if $brightness == 1{
     box-shadow: rgba(0,0,0,0.3) 2px 2px 5px;
   }
+  @if $brightness == 2{
+    box-shadow: none;
+  }
+
   border: none;
 }
 
@@ -74,4 +78,23 @@
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: nowrap;
+}
+
+
+@mixin stylespreview(){
+  &.style-1{
+    @include button($noshadow, $blue-light, $white);
+  }
+
+  &.style-2{
+    @include button($noshadow, $orange-light, $white);
+  }
+
+  &.style-3{
+    @include button($noshadow, $orange, $white);
+  }
+
+  &.style-0{
+    @include button($noshadow, $blue, $white);
+  }
 }
