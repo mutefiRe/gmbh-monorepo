@@ -1,12 +1,12 @@
 <h2>Bestellung</h2>
 <table>
-  {{#each-in viewOrder as |name data|}}
-  {{orderlist-item name=name data=data}}
+  {{#each-in viewOrder.items as |id data|}}
+  {{orderlist-item data=data}}
   {{/each-in}}
 </table>
 <div class="flexcontainer">
   <button {{action 'showModal'}} class="tablebutton">Tisch auswählen</button>
-  <p class="sum">Summe: € {{totalAmount}}</p>
+  <p class="sum">Summe: € {{viewOrder.totalAmount}}</p>
 </div>
 <div class="flexcontainer">
   <button {{action 'showModal'}} class="bigbutton">Tisch auswählen</button>
