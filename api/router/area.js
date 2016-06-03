@@ -26,19 +26,12 @@ router.get('/:id/items', function(req, res){
 router.get('/', function(req, res){
   db.Area.findAll({include: [{model: db.Item}]}).then(data =>
   {
-    if(data[0] === undefined){
-      res.status(404).send("couldn't find any units")
-      return
+    let areas = JSON.parse(JSON.stringify(data));
+    for(var i = 0; i < areas.length; i++){
+      areas[i].items = areas[i].Tables.map(table => table.id);
+      areas[i].Items = undefined
     }
-    else
-    {
-      let areas = JSON.parse(JSON.stringify(data));
-      for(var i = 0; i < areas.length; i++){
-        areas[i].items = areas[i].Tables.map(table => table.id);
-        areas[i].Items = undefined
-      }
-      res.send({'area': areas});
-    }
+    res.send({'area': areas});
   })
 })
 

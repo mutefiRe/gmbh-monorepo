@@ -18,19 +18,12 @@ router.get('/:id', function(req, res){
 router.get('/', function(req, res){
   db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order}]}).then(data =>
   {
-    if(data[0] === undefined){
-      res.status(404).send("couldn't find any items")
-      return
+    let orderitems = JSON.parse(JSON.stringify(data));
+    for(var i = 0; i < orderitems.length; i++){
+      orderitems[i].item = orderitems[i].Item.id
+      orderitems[i].Item = undefined
     }
-    else
-    {
-      let orderitems = JSON.parse(JSON.stringify(data));
-      for(var i = 0; i < orderitems.length; i++){
-        orderitems[i].item = orderitems[i].Item.id
-        orderitems[i].Item = undefined
-      }
-      res.send({'orderitem': orderitems});
-    }
+    res.send({'orderitem': orderitems});
   })
 })
 
