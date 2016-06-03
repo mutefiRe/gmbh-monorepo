@@ -8,6 +8,7 @@ export default Ember.Controller.extend({
   modalType: 'table-select',
   order: null,
   viewOrder: {},
+  triggerModal: false,
   totalAmount: 0,
   init() {
     const id = this.get('payload.id');
@@ -44,6 +45,10 @@ export default Ember.Controller.extend({
     },
     deleteOrderItem(index) {
       this.get('orders').removeAt(index);
+    },
+    showModal(activeType) {
+      this.set('modalType', activeType);
+      this.toggleProperty('triggerModal');
     }
   }
 });

@@ -6,6 +6,9 @@ export default Ember.Component.extend({
   actions: {
     deleteOrderItem(index) {
       this.get('deleteOrderItem')(index);
+    },
+    showModal() {
+      this.get('showModal')('table-list');
     }
   }
 });
