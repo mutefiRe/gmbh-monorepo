@@ -5,13 +5,21 @@
   {{/each-in}}
 </table>
 <div class="flexcontainer">
-  <button {{action 'showModal'}} class="tablebutton">Tisch auswählen</button>
+  {{#if order.table.name}}
+    <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>
+  {{else}}
+    <button {{action 'showModal'}} class="tablebutton required">Tisch auswählen</button>
+  {{/if}}
   <p class="sum">Summe: € {{viewOrder.totalAmount}}</p>
 </div>
 <div class="flexcontainer">
-  <button {{action 'showModal'}} class="bigbutton">Tisch auswählen</button>
+  {{#if order.table.name}}
+    <button class="bigbutton default-btn">Abschicken</button>
+  {{else}}
+    <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
+  {{/if}}
 </div>
 <div class="flexcontainer">
-  <button class="smallbutton">zurück</button>
-  <button class="smallbutton">Bestellung verwerfen</button>
+  <button class="smallbutton default-btn">zurück</button>
+  <button class="smallbutton default-btn">Bestellung verwerfen</button>
 </div>
