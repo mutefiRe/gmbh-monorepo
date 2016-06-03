@@ -12,6 +12,6 @@ export default Ember.Component.extend({
     this.set('styleType', `style-${(this.get('table').get('area').get('id') % numberOfStyles)}`);
   },
   click() {
-    this.get('')();
+    this.get('setTable')(this.get('table'));
   }
 });
