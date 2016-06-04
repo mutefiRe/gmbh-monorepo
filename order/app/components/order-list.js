@@ -9,6 +9,12 @@ export default Ember.Component.extend({
     },
     showModal() {
       this.get('showModal')('table-list');
+    },
+    saveOrder(){
+      this.get('saveOrder')();
+    },
+    resetOrder(){
+      this.get('resetOrder')();
     }
   }
 });
