@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['modal'],
   classNameBindings: ['modalVisibility'],
-  modalVisibility: '', // 'hidden',
+  modalVisibility: 'hidden',
   watchTriggerModal: function () {
     if (this.get('triggerModal')) {
       this.set('modalVisibility', '');
