@@ -36,8 +36,8 @@ export default Ember.Controller.extend({
         this.set('actualCategory', category);
       }
     },
-    addItemToOrder(item) {
-      let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item: item, extras: "mit Speicherl"});
+    addItemToOrder(item, extras = null) {
+      let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras});
       this.get('orderItems').push(orderItem);
       let viewOrder = _.cloneDeep(this.get('viewOrder'));
       let id = item.get('id');
