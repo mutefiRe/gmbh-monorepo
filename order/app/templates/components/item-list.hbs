@@ -1,9 +1,9 @@
 {{#if category}}
-{{#each category.items as |item|}}
-{{single-item item=item addItemToOrder=(action "addItemToOrder")}}
-{{/each}}
+  {{#each category.items as |item|}}
+    {{single-item item=item addItemToOrder=(action "addItemToOrder") showModal=(action "showModal")}}
+  {{/each}}
 {{else}}
-{{#each items as |item|}}
-{{single-item item=item addItemToOrder=(action "addItemToOrder")}}
-{{/each}}
+  {{#each items as |item|}}
+   {{single-item item=item addItemToOrder=(action "addItemToOrder") showModal=(action "showModal")}}
+  {{/each}}
 {{/if}}

@@ -24,4 +24,20 @@
       width: 20%;
     }
   }
+
+  .extra{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    input {
+      font-size: 1.92em;
+      text-align: center;
+      color: $grey-darker;
+      width: 100%;
+      font-family:'Palanquin', arial, sans-serif;
+      font-weight: bold;
+    }
+  }
 }

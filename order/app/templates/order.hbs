@@ -3,13 +3,13 @@
 <div class="order-screen">
   {{category-selection categories=model.categories actualCategory=actualCategory changeCategory=(action "changeCategory")}}
   <div class="item-and-preview-list">
-    {{item-list category=actualCategory items=model.Items addItemToOrder=(action "addItemToOrder")}}
+    {{item-list category=actualCategory items=model.Items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal")}}
     {{preview-list viewOrder=viewOrder}}
   </div>
 </div>
 
 {{#modal-box triggerModal=triggerModal headline=modalHeadline modalButtons=modalButtons}}
-  {{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder")}}
+  {{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem}}
 {{/modal-box}}
 
-{{order-list viewOrder=viewOrder order=order showModal=(action "showModal")}}
+{{order-list viewOrder=viewOrder order=order resetOrder=(action "resetOrder") saveOrder=(action "saveOrder") showModal=(action "showModal")}}

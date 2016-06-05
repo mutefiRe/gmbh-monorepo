@@ -5,19 +5,27 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   actualCategory: false,
-  modalType: 'item-settings',
+  modalType: 'table-select',
   modalHeadline: 'Tisch auswählen',
-  modalButtons: false,
+  modalButtons: true,
   order: null,
+  modalItem: null,
+  orderItems: [],
+  user: null,
   viewOrder: {
     items: {},
     totalAmount: 0
   },
   triggerModal: false,
   init() {
-    const id = this.get('payload.id');
+    let id = this.get('payload.id');
+    this.store.find('user',id).then((user) => {
+      this.set('user', user);
+      let order = this.store.createRecord('order', {});
+      order.set('user', user);
+      this.set('order', order);
+    });
 
-    this.set('order', this.store.createRecord('order', {userId: id}));
   },
   actions: {
     changeCategory(category) {
@@ -28,8 +36,9 @@ export default Ember.Controller.extend({
       }
     },
     addItemToOrder(item) {
-      const orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item});
-      const viewOrder = _.cloneDeep(this.get('viewOrder'));
+      let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item: item});
+      this.get('orderItems').push(orderItem);
+      let viewOrder = _.cloneDeep(this.get('viewOrder'));
       if (viewOrder.items[item.get('id')+orderItem.get('extras')] === undefined) {
         viewOrder.items[item.get('id')+orderItem.get('extras')] = {};
         viewOrder.items[item.get('id')+orderItem.get('extras')].amount = 0;
@@ -44,11 +53,41 @@ export default Ember.Controller.extend({
       this.set('viewOrder', viewOrder);
     },
     deleteOrderItem(index) {
-      this.get('orders').removeAt(index);
+      this.get('order').removeAt(index);
     },
-    showModal(activeType) {
+    showModal(activeType, buttons, item) {
       this.set('modalType', activeType);
+      this.set('modalButtons', buttons);
+      this.set('modalItem', item);
+      switch (activeType) {
+        case 'table-select':
+          this.set('modalHeadline', 'Tisch auswählen');
+          break;
+        case 'item-settings':
+          this.set('modalHeadline', this.get('modalItem').get('name'));
+          break;
+        default:
+          break;
+      }
       this.toggleProperty('triggerModal');
+    },
+    saveOrder(){
+      let order = this.get('order');
+      order.save().then(data => {
+        for(let orderItem of this.get('orderItems')){
+          orderItem.set('order', data);
+          orderItem.save();
+        }
+      }).then(() => {this.send('resetOrder');})
+    },
+    resetOrder(){
+      let order = this.get('order');
+      this.set('orderItems', []);
+      this.set('viewOrder', {items: {},totalAmount: 0});
+      order.deleteRecord();
+      order = this.store.createRecord('order', {});
+      order.set('user', this.get('user'));
+      this.set('order', order);
     }
   }
 });

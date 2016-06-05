@@ -1,7 +1,7 @@
 <h2>Bestellung</h2>
 <table>
   {{#each-in viewOrder.items as |id data|}}
-  {{orderlist-item data=data}}
+    {{orderlist-item data=data}}
   {{/each-in}}
 </table>
 <div class="flexcontainer">
@@ -14,12 +14,12 @@
 </div>
 <div class="flexcontainer">
   {{#if order.table.name}}
-    <button class="bigbutton default-btn">Abschicken</button>
+    <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
   {{else}}
     <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
   {{/if}}
 </div>
 <div class="flexcontainer">
   <button class="smallbutton default-btn">zurück</button>
-  <button class="smallbutton default-btn">Bestellung verwerfen</button>
+  <button {{action 'resetOrder'}} class="smallbutton default-btn">Bestellung verwerfen</button>
 </div>

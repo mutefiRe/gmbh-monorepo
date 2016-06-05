@@ -12,10 +12,18 @@ export default Ember.Component.extend({
         this.decrementProperty('amount');
       }
     },
-    addItemsToOrder(){
+    addItemsToOrder() {
       for (let i = 0; i < this.get('amount'); i += 1) {
-        this.get('addItemToOrder')();
+        this.get('addItemToOrder')(this.get('modalItem'), this.get('extra'));
       }
+      this.triggerAction({
+        action: 'close',
+        target: this
+      });
+    },
+    close(){
+      this.get('showModal')('table-select');
+      this.set('amount', 1);
     }
   }
 });
