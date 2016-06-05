@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
+const serialize = require('../serializers/user');
 
 router.get('/me', function(req, res) {
   db.User.find({
@@ -54,7 +55,7 @@ router.get('/', function(req, res) {
 
 
 router.post('/', function(req, res) {
-  db.User.create(req.body.user).then(data => {
+  db.User.create(serialize(req.body.user)).then(data => {
     res.send(data);
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
@@ -71,7 +72,7 @@ router.put('/:id', function(req, res) {
       res.status(404).send("couldn't find user which should be updated")
       return
     }
-    user.update(req.body.user).then(data => {
+    user.update(serialize(req.body.user)).then(data => {
       res.send(data)
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
