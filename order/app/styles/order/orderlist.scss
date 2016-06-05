@@ -3,6 +3,7 @@
   width: 66%;
   margin: 0 auto;
 
+
   h2{
     padding-top: 20px;
     padding-bottom: 20px;
@@ -10,6 +11,7 @@
 
   table{
     width: 100%;
+    table-layout: fixed;
   }
 
   .bigbutton{

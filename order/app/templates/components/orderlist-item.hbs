@@ -1,3 +1,10 @@
+{{#if isTabbed}}
+  <td class="disabled">{{data.amount}} x</td>
+  <td class="disabled" style="width= 100%">{{data.name}}</td>
+  <td class="disabled">Abbrechen</td>
+  <td {{action 'removeItemFromOrder'}}class="disabled">Löschen</td>
+{{else}}
   <td>{{data.amount}} x</td>
-  <td style="width= 100%">{{data.name}}<span> mit Speichel</span></td>
+  <td style="width= 100%" colspan="2">{{data.name}}<span> {{data.extras}}</span></td>
   <td>€ {{data.prize}}</td>
+{{/if}}

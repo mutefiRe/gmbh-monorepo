@@ -15,6 +15,9 @@ export default Ember.Component.extend({
     },
     resetOrder() {
       this.get('resetOrder')();
+    },
+    removeItemFromOrder(data){
+      this.get('removeItemFromOrder')(data);
     }
   }
 });

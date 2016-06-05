@@ -35,24 +35,26 @@ export default Ember.Controller.extend({
         this.set('actualCategory', category);
       }
     },
-    addItemToOrder(item) {
-      let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item: item});
+    addItemToOrder(item, extras = null) {
+      let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras});
       this.get('orderItems').push(orderItem);
       let viewOrder = _.cloneDeep(this.get('viewOrder'));
-      if (viewOrder.items[item.get('id')+orderItem.get('extras')] === undefined) {
-        viewOrder.items[item.get('id')+orderItem.get('extras')] = {};
-        viewOrder.items[item.get('id')+orderItem.get('extras')].amount = 0;
-
+      let id = item.get('id');
+      if (viewOrder.items[id+extras] === undefined) {
+        viewOrder.items[id+extras] = {};
+        viewOrder.items[id+extras].amount = 0;
       }
-      viewOrder.items[item.get('id')+orderItem.get('extras')].amount++;
-      viewOrder.items[item.get('id')+orderItem.get('extras')].prize = (item.get('price') * viewOrder.items[item.get('id')+orderItem.get('extras')].amount).toFixed(2);
-      viewOrder.items[item.get('id')+orderItem.get('extras')].categoryId = item.get('category').get('id');
-      viewOrder.items[item.get('id')+orderItem.get('extras')].name = item.get('name') + " " + item.get('amount') + item.get('unit').get('name');
-      viewOrder.items[item.get('id')+orderItem.get('extras')].extras = orderItem.get('extras');
-      viewOrder.totalAmount += (item.get('price') * viewOrder.items[item.get('id')+orderItem.get('extras')].amount);
+      viewOrder.items[id+extras].identifier = id+extras;
+      viewOrder.items[id+extras].amount++;
+      viewOrder.items[id+extras].prize = (item.get('price') * viewOrder.items[id+extras].amount).toFixed(2);
+      viewOrder.items[id+extras].categoryId = item.get('category.id');
+      viewOrder.items[id+extras].name = item.get('name') + " " + item.get('amount') + item.get('unit.name');
+      viewOrder.items[id+extras].extras = extras || null;
+      viewOrder.items[id+extras].id = id;
+      viewOrder.totalAmount += (item.get('price'));
       this.set('viewOrder', viewOrder);
     },
-    deleteOrderItem(index) {
+    removeItemFromOrder(index) {
       this.get('order').removeAt(index);
     },
     showModal(activeType, buttons, item) {
@@ -88,6 +90,19 @@ export default Ember.Controller.extend({
       order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);
+    },
+    removeItemFromOrder(data){
+      let viewOrder = _.cloneDeep(this.get('viewOrder'));
+      let items = this.get('orderItems');
+      let toDelete = [];
+      delete(viewOrder.items[data.identifier]);
+      for(let i = items.length-1; i >= 0; i--){
+        if(items[i].get('item.id')+items[i].get('extras') == data.identifier){
+          viewOrder.totalAmount -= items[i].get('item.price');
+          items.splice(i,1);
+        }
+      }
+      this.set('viewOrder', viewOrder);
     }
   }
 });
