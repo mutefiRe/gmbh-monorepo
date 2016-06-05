@@ -8,8 +8,8 @@
   </div>
 </div>
 
-{{#modal-box triggerModal=triggerModal headline=modalHeadline}}
-  {{component modalWidget tables=model.Tables order=order showModal=(action "showModal")}}
+{{#modal-box triggerModal=triggerModal headline=modalHeadline modalButtons=modalButtons}}
+  {{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder")}}
 {{/modal-box}}
 
 {{order-list viewOrder=viewOrder order=order showModal=(action "showModal")}}

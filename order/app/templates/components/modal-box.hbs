@@ -5,12 +5,9 @@
   <div class="body">
     {{yield}}
   </div>
-  <div class="foot">
-    {{#if false}}
-    <button {{action 'close'}} class="button-grey default-btn">Abbrechen</button>
-    <button class="button-blue default-btn">Übernehmen</button>
-    {{else}}
-    <button {{action 'close'}} class="button-grey big default-btn">Abbrechen</button>
-    {{/if}}
-  </div>
+  {{#if modalButtons}}
+    <div class="foot">
+        <button {{action 'close'}} class="button-grey big default-btn">Abbrechen</button>
+    </div>
+  {{/if}}
 </div>

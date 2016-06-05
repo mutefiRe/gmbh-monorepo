@@ -85,6 +85,13 @@
   flex-wrap: nowrap;
 }
 
+@mixin flexbox-around(){
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
 
 @mixin stylespreview(){
   &.style-1{

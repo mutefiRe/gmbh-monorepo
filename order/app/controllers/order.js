@@ -5,8 +5,9 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   actualCategory: false,
-  modalType: 'table-select',
+  modalType: 'item-settings',
   modalHeadline: 'Tisch auswählen',
+  modalButtons: false,
   order: null,
   viewOrder: {
     items: {},
@@ -18,9 +19,6 @@ export default Ember.Controller.extend({
 
     this.set('order', this.store.createRecord('order', {userId: id}));
   },
-  modalWidget: function () {
-    return this.get('modalType');
-  }.property('model.modalType'),
   actions: {
     changeCategory(category) {
       if (this.get('actualCategory') === category) {

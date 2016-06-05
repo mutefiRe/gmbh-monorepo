@@ -1,0 +1,27 @@
+.item-settings {
+  margin-top: 20px;
+
+  .button-group{
+    @include flexbox-around();
+
+    input {
+      text-align: center;
+      font-size: 2.57em;
+      font-family:'Palanquin', arial, sans-serif;
+      color: $grey-darker;
+      font-weight: bold;
+    }
+
+    .input {
+      max-width: 100px;
+
+      input {
+        width: 100%;
+      }
+    }
+
+    button {
+      width: 20%;
+    }
+  }
+}
