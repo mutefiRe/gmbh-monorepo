@@ -41,7 +41,6 @@ export default Ember.Controller.extend({
       this.get('orderItems').push(orderItem);
       let viewOrder = _.cloneDeep(this.get('viewOrder'));
       let id = item.get('id');
-      let extras = orderItem.get('extras');
       if (viewOrder.items[id+extras] === undefined) {
         viewOrder.items[id+extras] = {};
         viewOrder.items[id+extras].amount = 0;
