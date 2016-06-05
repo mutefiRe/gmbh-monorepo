@@ -1,7 +1,7 @@
 <h2>Bestellung</h2>
 <table>
   {{#each-in viewOrder.items as |id data|}}
-    {{orderlist-item data=data}}
+    {{orderlist-item data=data removeItemFromOrder=(action 'removeItemFromOrder')}}
   {{/each-in}}
 </table>
 <div class="flexcontainer">
