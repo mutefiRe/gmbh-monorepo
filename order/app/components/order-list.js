@@ -10,13 +10,13 @@ export default Ember.Component.extend({
     showModal() {
       this.get('showModal')('table-select', true);
     },
+    showModal2() {
+      this.get('showModal')('discard-order', false);
+    },
     saveOrder() {
       this.get('saveOrder')();
     },
-    resetOrder() {
-      this.get('resetOrder')();
-    },
-    removeItemFromOrder(data){
+    removeItemFromOrder(data) {
       this.get('removeItemFromOrder')(data);
     }
   }

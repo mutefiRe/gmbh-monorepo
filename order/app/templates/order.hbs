@@ -9,7 +9,7 @@
 </div>
 
 {{#modal-box triggerModal=triggerModal headline=modalHeadline modalButtons=modalButtons}}
-  {{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem}}
+  {{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem resetOrder=(action "resetOrder")}}
 {{/modal-box}}
 
-{{order-list viewOrder=viewOrder order=order removeItemFromOrder=(action 'removeItemFromOrder') resetOrder=(action "resetOrder") saveOrder=(action "saveOrder") showModal=(action "showModal")}}
+{{order-list viewOrder=viewOrder order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal")}}
