@@ -91,7 +91,6 @@ export default Ember.Controller.extend({
           items.splice(i,1);
         }
       }
-      console.log(this.get('orderItems'));
       this.set('viewOrder', viewOrder);
     }
   }
