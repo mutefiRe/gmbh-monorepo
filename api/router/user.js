@@ -69,13 +69,21 @@ router.put('/:id', function(req, res) {
     }
   }).then(user => {
     if (user === null) {
-      res.status(404).send("couldn't find user which should be updated")
+      res.status(404).send({
+        'error': {
+          'msg': "couldn't find user"
+        }
+      })
       return
     }
     user.update(serialize(req.body.user)).then(data => {
       res.send(data)
     }).catch(err => {
-      res.status(400).send(err.errors[0].message)
+      res.status(404).send({
+        'error': {
+          'msg': err.errors[0].message
+        }
+      })
     })
   })
 })
