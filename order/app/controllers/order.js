@@ -77,6 +77,7 @@ export default Ember.Controller.extend({
     },
     saveOrder(){
       let order = this.get('order');
+      order.totalAmount = this.get('viewOrder.totalAmount');
       order.save().then(data => {
         for(let orderItem of this.get('orderItems')){
           orderItem.set('order', data);

@@ -4,10 +4,16 @@ export default Ember.Component.extend({
   classNames: ['order-overview-item'],
   tagName: 'tr',
   classNameBindings: ['bezahlt'],
-  bezahlt: function() {
-    if (this.get('status') === 'bezahlt') {
-      return 'bezahlt';
+  init(){
+    this._super();
+    if(this.get('order.isPaid')){
+      this.get('classNames').push("paid");
     }
-    return 'offen';
-  }.property('status')
+    else{
+      this.get('classNames').push("notpaid");
+    }
+  },
+  actions: {
+
+  }
 });
