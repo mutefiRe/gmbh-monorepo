@@ -1,8 +1,30 @@
+import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+const {
+  Component
+} = Ember;
+
+export default Ember.Component.extend(RecognizerMixin, {
+  recognizers: 'swipe',
   classNames: ['orderlist'],
   tagName: 'div',
+  classNameBindings: ['SwipeChange'],
+  SwipeChange: function () {
+    if (this.get('swipeHelper.order-list.active') && this.get('swipeHelper.order-screen.last')) {
+      return 'slide-left-in';
+    } else if (this.get('swipeHelper.order-list.last') && this.get('swipeHelper.order-screen.active')) {
+      return 'slide-right-out';
+    }
+
+    return 'none';
+  }.property('swipeHelper.order-list.active'),
+  swipeRight() {
+    this.set('swipeHelper.order-screen.active', true);
+    this.set('swipeHelper.order-screen.last', false);
+    this.set('swipeHelper.order-list.active', false);
+    this.set('swipeHelper.order-list.last', true);
+  },
   actions: {
     deleteOrderItem(index) {
       this.get('deleteOrderItem')(index);

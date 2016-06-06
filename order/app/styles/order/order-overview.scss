@@ -1,11 +1,9 @@
-.orderlist{
+.order-overview{
   background: $white;
   margin: 0 auto;
-  position: absolute;
-  left: 100%;
-  top: 0%;
   padding: 40px;
   width: 100%;
+
 
   h2{
     padding-top: 20px;
@@ -14,23 +12,14 @@
 
   table{
     width: 100%;
-    table-layout: fixed;
   }
 
   .bigbutton{
-    @include button($dark, $blue, $white);
-    &:active{
-      @include button-hover($blue);
-    }
-    width: 100%;
-  }
-
-  .smallbutton{
-    @include button($light, $grey, $grey-darker);
+    @include button($dark, $grey, $grey-darker);
     &:active{
       @include button-hover($grey);
     }
-    width: 48%;
+    width: 100%;
   }
 
   .flexcontainer{

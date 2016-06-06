@@ -1,10 +1,15 @@
 import Ember from 'ember';
-import _ from 'lodash';
+import _ from 'lodash/lodash';
 
 export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   actualCategory: false,
+  swipeHelper: {
+    'order-overview': {active: false, last: false},
+    'order-screen': {active: true, last: false},
+    'order-list': {active: false, last: true}
+  },
   modalType: 'table-select',
   modalHeadline: 'Tisch auswählen',
   modalButtons: true,
@@ -63,21 +68,22 @@ export default Ember.Controller.extend({
       this.set('modalItem', item);
       switch (activeType) {
         case 'table-select':
-          this.set('modalHeadline', 'Tisch auswählen');
-          break;
+        this.set('modalHeadline', 'Tisch auswählen');
+        break;
         case 'item-settings':
-          this.set('modalHeadline', this.get('modalItem').get('name'));
-          break;
+        this.set('modalHeadline', this.get('modalItem').get('name'));
+        break;
         case 'discard-order':
-          this.set('modalHeadline', 'Bestellung verwerfen?');
-          break;
+        this.set('modalHeadline', 'Bestellung verwerfen?');
+        break;
         default:
-          break;
+        break;
       }
       this.toggleProperty('triggerModal');
     },
     saveOrder(){
       let order = this.get('order');
+      order.totalAmount = this.get('viewOrder.totalAmount');
       order.save().then(data => {
         for(let orderItem of this.get('orderItems')){
           orderItem.set('order', data);

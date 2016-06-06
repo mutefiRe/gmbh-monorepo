@@ -1,4 +1,21 @@
-{{yield}}
-<h2>Login</h2>
-{{input type="password" value=user.password placeholder="login-password" id="login-password"}}
-<button {{action 'login' user}}>Login</button>
+<form {{action 'authenticate' on='submit'}}>
+  <div>
+    <h1>Login</h1>
+  </div>
+  <div>
+    <h2><label for="identification">Benutzername</label></h2>
+    {{input id='identification' placeholder='Benutzernamen eingeben' value=identification}}
+  </div>
+  <div>
+    <h2><label for="password">Passwort</label></h2>
+    {{input id='password' placeholder='Passwort eingeben' type='password' value=password}}
+  </div>
+  {{#if errorMessage}}
+  <div>
+      <p class="error">{{errorMessage}}</p>
+  </div>
+  {{/if}}
+  <div>
+    <button type="submit" class="default-btn button-blue">einloggen</button>
+  </div>
+</form>

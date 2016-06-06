@@ -1,10 +1,10 @@
 {{yield}}
-<h1>Bestellungen</h1>
+<h2>Bestellungen</h2>
 <table>
-{{#each orderOverview.open as |item|}}
-  {{order-overview-item order=item}}
-{{/each}}
-{{#each orderOverview.paid as |item|}}
-  {{order-overview-item order=item}}
-{{/each}}
+  {{#each sortedOrders as |order|}}
+  {{order-overview-item order=order}}
+  {{/each}}
 </table>
+<div class="flexcontainer">
+  <button class="default-btn bigbutton">zurück</button>
+</div>

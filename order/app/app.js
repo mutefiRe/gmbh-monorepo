@@ -6,6 +6,9 @@ import config from './config/environment';
 Ember.MODEL_FACTORY_INJECTIONS = true;
 
 const App = Ember.Application.extend({
+  ready: function(){
+    FastClick.attach(document.body);
+  },
   modulePrefix: config.modulePrefix,
   podModulePrefix: config.podModulePrefix,
   Resolver

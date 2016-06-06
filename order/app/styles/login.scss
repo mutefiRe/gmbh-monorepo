@@ -1,0 +1,29 @@
+.login-screen {
+  input {
+    text-align: center;
+    font-size: 2.57em;
+    font-family:'Palanquin', arial, sans-serif;
+    color: $grey-darker;
+    font-weight: bold;
+    border-radius: 3px;
+    border-color: $grey_darker;
+    background: $white;
+    width: 100%;
+  }
+
+  .button-blue {
+    width: 100%;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  div {
+    margin-top: 20px;
+  }
+
+  .error {
+    color: red;
+  }
+}

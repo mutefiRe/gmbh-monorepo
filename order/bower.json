@@ -12,6 +12,8 @@
     "Faker": "~3.1.0",
     "mocha": "~2.2.4",
     "chai": "~2.3.0",
-    "ember-mocha-adapter": "~0.3.1"
+    "ember-mocha-adapter": "~0.3.1",
+    "fastclick": "^1.0.6",
+    "hammer-time": "1.0.0"
   }
 }
