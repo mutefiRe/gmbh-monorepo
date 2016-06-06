@@ -9,11 +9,16 @@ export default function () {
   this.namespace = '/api';
   this.urlPrefix = 'http://localhost:8080';
   this.get('/users');
-  this.get('/users/:id', 'user');
+  this.get('/users/:id');
 
   this.get('/items');
   this.get('/categories');
   this.get('/units');
+
+  this.get('/orders');
+  this.get('/orderitems');
+
+  this.get('/tables');
 
   this.post('http://localhost:8080/authenticate', function (db, req) {
     switch (JSON.parse(req.requestBody).username) {
