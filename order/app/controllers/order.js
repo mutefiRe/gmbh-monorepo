@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import _ from 'lodash';
 
 export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
@@ -63,16 +62,16 @@ export default Ember.Controller.extend({
       this.set('modalItem', item);
       switch (activeType) {
         case 'table-select':
-          this.set('modalHeadline', 'Tisch auswählen');
-          break;
+        this.set('modalHeadline', 'Tisch auswählen');
+        break;
         case 'item-settings':
-          this.set('modalHeadline', this.get('modalItem').get('name'));
-          break;
+        this.set('modalHeadline', this.get('modalItem').get('name'));
+        break;
         case 'discard-order':
-          this.set('modalHeadline', 'Bestellung verwerfen?');
-          break;
+        this.set('modalHeadline', 'Bestellung verwerfen?');
+        break;
         default:
-          break;
+        break;
       }
       this.toggleProperty('triggerModal');
     },
