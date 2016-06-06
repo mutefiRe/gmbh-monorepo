@@ -1,0 +1,10 @@
+{{yield}}
+<h1>Bestellungen</h1>
+<table>
+{{#each orderOverview.open as |item|}}
+  {{order-overview-item order=item}}
+{{/each}}
+{{#each orderOverview.paid as |item|}}
+  {{order-overview-item order=item}}
+{{/each}}
+</table>
