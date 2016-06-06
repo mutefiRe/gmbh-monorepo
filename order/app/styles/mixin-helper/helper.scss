@@ -36,6 +36,14 @@
   }
 }
 
+.button-orange{
+  @include button($dark, $orange, $white);
+
+  &:hover, &:active {
+    @include button-hover($orange);
+  }
+}
+
 .button-grey{
   @include button($light, $grey, $grey-darker);
 

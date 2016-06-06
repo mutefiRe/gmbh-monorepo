@@ -12,6 +12,9 @@ export default Ember.Controller.extend({
       .catch(reason=> {
         this.set('errorMessage', reason.error || reason);
       });
+    },
+    logout() {
+      this.get('session').invalidate();
     }
   }
 });

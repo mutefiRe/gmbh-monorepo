@@ -68,6 +68,9 @@ export default Ember.Controller.extend({
         case 'item-settings':
           this.set('modalHeadline', this.get('modalItem').get('name'));
           break;
+        case 'discard-order':
+          this.set('modalHeadline', 'Bestellung verwerfen?');
+          break;
         default:
           break;
       }

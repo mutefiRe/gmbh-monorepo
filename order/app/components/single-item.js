@@ -18,7 +18,6 @@ export default Ember.Component.extend({
     }
   },
   click() {
-    console.log('click');
     this.get('addItemToOrder')(this.get('item'));
   },
   touchStart() {

@@ -21,7 +21,7 @@ export default Ember.Component.extend({
         target: this
       });
     },
-    close(){
+    close() {
       this.get('showModal')('table-select');
       this.set('amount', 1);
     }
