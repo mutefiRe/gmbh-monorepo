@@ -3,7 +3,6 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['login-screen'],
   session: Ember.inject.service(),
-
   actions: {
     authenticate() {
       const credentials = this.getProperties('identification', 'password');
@@ -11,7 +10,11 @@ export default Ember.Component.extend({
 
       this.get('session').authenticate(authenticator, credentials)
       .catch(reason=> {
-        this.set('errorMessage', reason.error || reason);
+        if (reason) {
+          this.set('errorMessage', reason.error || reason);
+        } else {
+          this.set('errorMessage', 'Server nicht erreichbar.');
+        }
       });
     }
   }
