@@ -8,17 +8,23 @@ export default function () {
 
   this.namespace = '/api';
   this.urlPrefix = 'http://localhost:8080';
+
+  this.get('/areas');
+  this.get('/areas/:id');
+  this.get('/categories');
+  this.get('/categories/:id');
+  this.get('/items');
+  this.get('/items/:id');
+  this.get('/orderitems');
+  this.get('/orderitems/:id');
+  this.get('/orders');
+  this.get('/orders/:id');
+  this.get('/tables');
+  this.get('/tables/:id');
+  this.get('/units');
+  this.get('/units/:id');
   this.get('/users');
   this.get('/users/:id');
-
-  this.get('/items');
-  this.get('/categories');
-  this.get('/units');
-
-  this.get('/orders');
-  this.get('/orderitems');
-
-  this.get('/tables');
 
   this.post('http://localhost:8080/authenticate', function (db, req) {
     switch (JSON.parse(req.requestBody).username) {
