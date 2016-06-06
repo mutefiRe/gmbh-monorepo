@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
+const serialize = require('../serializers/table');
 
 router.use(function timeLog(req, res, next){
   //console.log('Time: ', Date.now());
@@ -37,14 +38,14 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.Table.create(req.body.table).then( data => {
+  db.Table.create(serialize(req.body.table)).then( data => {
     res.send({'table': data});
   })
 })
 
 router.put('/:id', function(req, res){
   db.Table.find({where: {id: req.params.id}}).then(table => {
-    table.update(req.body).then( data => {
+    table.update(serialize(req.body.table)).then( data => {
      res.send({'table': data});
    })
   })

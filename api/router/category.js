@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
+const serialize = require('../serializers/category');
 
 router.use(function timeLog(req, res, next){
   //console.log('Time: ', Date.now());
@@ -37,14 +38,14 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.Category.create(req.body.category).then( data => {
+  db.Category.create(serialize(req.body.category)).then( data => {
     res.send({'category': data});
   })
 })
 
 router.put('/:id', function(req, res){
   db.Category.find({where: {id: req.params.id}}).then(category => {
-    category.update(req.body).then( data => {
+    category.update(serialize(req.body.category)).then( data => {
      res.send({'category': data});
    })
   })

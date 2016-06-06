@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
+const serialize = require('../serializers/orderitem');
 
 
 router.get('/:id', function(req, res){
@@ -30,7 +31,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.Orderitem.create(req.body.item).then( data => {
+  db.Orderitem.create(serialize(req.body.orderitem)).then( data => {
     res.send({'item':data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)

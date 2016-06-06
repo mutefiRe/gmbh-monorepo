@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
+const serialize = require('../serializers/order');
 
 router.use(function timeLog(req, res, next){
   //console.log('Time: ', Date.now());
@@ -30,7 +31,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.Order.create(req.body.order).then( data => {
+  db.Order.create(serialize(req.body.order)).then( data => {
     res.send({'order': data});
   })
 })
