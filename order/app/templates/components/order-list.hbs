@@ -1,4 +1,4 @@
-<h2>Bestellung</h2>
+<h1>Bestellung</h1>
 <table>
   {{#each-in viewOrder.items as |id data|}}
     {{orderlist-item data=data removeItemFromOrder=(action 'removeItemFromOrder')}}

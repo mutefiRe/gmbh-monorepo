@@ -2,9 +2,12 @@
 <h1>Bestellungen</h1>
 <table>
 {{#each orderOverview.open as |item|}}
-  {{order-overview-item order=item}}
+  {{order-overview-item order=item status="offen"}}
 {{/each}}
 {{#each orderOverview.paid as |item|}}
-  {{order-overview-item order=item}}
+  {{order-overview-item order=item status="bezahlt"}}
 {{/each}}
 </table>
+<div class="flexcontainer">
+  <button class="default-btn bigbutton">zurück</button>
+</div>
