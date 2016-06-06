@@ -1,0 +1,60 @@
+.order-detail-view{
+  background: $white;
+  margin: 0 auto;
+  position: absolute;
+  left: 100%;
+  top: 0%;
+  padding: 40px;
+  width: 100%;
+
+
+  h2{
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  table{
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .bigbutton{
+    @include button($dark, $blue, $white);
+    &:active{
+      @include button-hover($blue);
+    }
+    width: 100%;
+  }
+
+  .smallbutton{
+    @include button($light, $grey, $grey-darker);
+    &:active{
+      @include button-hover($grey);
+    }
+    width: 48%;
+  }
+
+  .flexcontainer{
+    @include flexbox();
+    margin-top: 20px;
+  }
+
+  .tablebutton{
+    font-weight: bold;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: $grey-darker;
+    border: none;
+  }
+
+  .required{
+    background-color: $orange-lighter;
+  }
+
+  .sum{
+    font-weight: bold;
+    padding-top: 10px;
+    padding-right: 20px;
+  }
+}
