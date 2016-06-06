@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
+const serialize = require('../serializers/organization');
 
 router.use(function timeLog(req, res, next){
 	//console.log('Time: ', Date.now());
@@ -32,7 +33,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-	db.Organization.create(req.body.organization).then( data => {
+	db.Organization.create(serialize(req.body.organization)).then( data => {
     res.send(data);
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
@@ -45,7 +46,7 @@ router.put('/:id', function(req, res){
       res.status(404).send("couldn't find organization which should be updated")
       return
     }
-    organization.update(req.body.organization).then( data => {
+    organization.update(serialize(req.body.organization)).then( data => {
       res.send(data)
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
@@ -60,7 +61,7 @@ router.delete('/:id', function(req, res){
       return
     }
     organization.destroy().then(()=>{
-		  res.send('deleted organization '+organization.name)
+      res.send('deleted organization '+organization.name)
     })
   })
 })
