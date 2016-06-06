@@ -148,8 +148,12 @@
     visibility: visible;
     left: 0%;
   }
-  99% {
+  98% {
     visibility: visible;
+    left: -100%;
+  }
+  99% {
+    visibility: hidden;
     left: -100%;
   }
   100% {
@@ -175,8 +179,12 @@
     visibility: visible;
     left: 0%;
   }
-  99% {
+  98% {
     visibility: visible;
+    left: 100%;
+  }
+  99% {
+    visibility: hidden;
     left: 100%;
   }
   100% {
