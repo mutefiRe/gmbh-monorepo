@@ -1,37 +1,5 @@
-<form {{action 'authenticate' on='submit'}}>
-  <label for="identification">Login</label>
-  {{input id='identification' placeholder='Enter Login' value=identification}}
-  <label for="password">Password</label>
-  {{input id='password' placeholder='Enter Password' type='password' value=password}}
-  <button type="submit">Login</button>
-  {{#if errorMessage}}
-  <p>{{errorMessage}}</p>
-  {{/if}}
-</form>
-
-
-{{#if currentUser}}
-Hallo {{currentUser.firstname}}
-{{else}}
-Hallo Gast
-{{/if}}
-
-
-<h2 id="title">MMP</h2>
-
-{{#link-to 'index'}}
-Index
-{{/link-to}}
-
-{{log sessionData}}
-
 {{#if session.isAuthenticated}}
-<button {{action 'logout'}}>Logout</button>
-{{log session}}
+  {{logout-screen}}
 {{else}}
-{{#link-to 'login'}}
-Login
-{{/link-to}}
+  {{login-screen}}
 {{/if}}
-{{outlet}}
-

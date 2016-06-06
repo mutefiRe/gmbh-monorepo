@@ -1,4 +1,4 @@
-$blue: #177FB2;
+  $blue: #177FB2;
 $blue-light: #6BCFFF;
 $blue-lighter: #BEE9FF;
 
@@ -28,6 +28,7 @@ $noshadow: 2;
 @import 'order/preview-list.scss';
 @import 'order/item-settings.scss';
 
+@import 'login.scss';
 
 @font-face {
   font-family: 'Palanquin';
@@ -93,4 +94,15 @@ body > div {
   align-items: stretch;
   min-height:0;
   flex-grow:1;
+}
+
+.login-screen {
+  margin: 20px;
+}
+
+.logout-screen {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
