@@ -7,7 +7,7 @@
     <th>Passwort</th>
     <th>Permission</th>
   </tr>
-  {{add-users createUser=(action 'createUser')}}
+  {{dashboard-users-add-user createUser=(action 'createUser')}}
   </table>
 
 <h1>User List</h1>
@@ -20,6 +20,6 @@
     <th>Permission</th>
   </tr>
   {{#each model as |userUnit|}}
-    {{show-users user=userUnit destroyUser=(action 'destroyUser')}}
+    {{dashboard-users-show-user user=userUnit destroyUser=(action 'destroyUser')}}
   {{/each}}
 </table>
