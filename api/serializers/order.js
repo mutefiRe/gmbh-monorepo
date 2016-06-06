@@ -3,7 +3,8 @@
  module.exports = function(data){
   let order = {
     UserId: data.user,
-    TableId: data.table
+    TableId: data.table,
+    isPaid: data.isPaid
   }
   return order;
 }
