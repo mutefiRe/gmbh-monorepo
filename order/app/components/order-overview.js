@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['order-overview'],
+  classNames: ['order-overview', 'hidden'],
   orderOverview: {
     open: [],
     paid: []

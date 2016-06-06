@@ -1,17 +1,11 @@
 {{outlet}}
 
-<div class="order-screen">
-  {{category-selection categories=model.categories actualCategory=actualCategory changeCategory=(action "changeCategory")}}
-  <div class="item-and-preview-list">
-    {{item-list category=actualCategory categories=model.categories items=model.Items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal")}}
-    {{preview-list viewOrder=viewOrder}}
-  </div>
-</div>
+{{order-screen categories=model.categories actualCategory=actualCategory changeCategory=(action "changeCategory") items=model.Items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") viewOrder=viewOrder swipeHelper=swipeHelper}}
 
 {{#modal-box triggerModal=triggerModal headline=modalHeadline modalButtons=modalButtons}}
-{{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem resetOrder=(action "resetOrder")}}
+  {{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem resetOrder=(action "resetOrder")}}
 {{/modal-box}}
 
-{{order-list viewOrder=viewOrder order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal")}}
+{{order-list viewOrder=viewOrder order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal") swipeHelper=swipeHelper}}
 
-{{order-overview orders=model.Orders}}
+{{order-overview orders=model.Orders swipeHelper=swipeHelper}}

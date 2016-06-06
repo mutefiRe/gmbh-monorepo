@@ -5,6 +5,11 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   actualCategory: false,
+  swipeHelper: {
+    'order-overview': {active: false, last: false},
+    'order-screen': {active: true, last: false},
+    'order-list': {active: false, last: true}
+  },
   modalType: 'table-select',
   modalHeadline: 'Tisch auswählen',
   modalButtons: true,
