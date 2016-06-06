@@ -1,0 +1,6 @@
+{{yield}}
+{{category-selection categories=categories actualCategory=actualCategory changeCategory=(action "changeCategory")}}
+<div class="item-and-preview-list">
+  {{item-list category=actualCategory categories=categories items=items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") swipeHelper=swipeHelper}}
+  {{preview-list viewOrder=viewOrder swipeHelper=swipeHelper}}
+</div>
