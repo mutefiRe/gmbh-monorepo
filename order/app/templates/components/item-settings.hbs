@@ -1,0 +1,13 @@
+{{yield}}
+<div class="button-group">
+  <button class="default-btn button-blue" {{action 'sub'}}>-</button>
+  <div class="input">{{input value=amount type='number'}}</div>
+  <button class="default-btn button-blue" {{action 'add'}}>+</button>
+</div>
+<div class="extra">
+  {{input value=extra placeholder="Zusatzwunsch"}}
+</div>
+<div class="foot">
+  <button {{action 'close'}} class="button-grey default-btn">Abbrechen</button>
+  <button {{action 'addItemsToOrder'}} class="button-blue default-btn">Übernehmen</button>
+</div>

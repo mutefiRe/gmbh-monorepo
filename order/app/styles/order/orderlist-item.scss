@@ -14,7 +14,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 1px;
+    width: 68%;
     padding-left: 10px;
     span{
       font-weight: normal;
@@ -24,5 +24,43 @@
     text-align: right;
     padding-right: 20px;
     width: 17%;
+    min-width: 100px;
+  }
+}
+
+.orderlist-item td.disabled{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-weight: bold;
+  &:first-child{
+    text-align: left;
+    padding-left: 20px;
+    width: 15%;
+    background: $grey-light;
+  }
+  &:nth-child(2){
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 48%;
+    padding-left: 10px;
+    background: $grey-light;
+    span{
+      font-weight: normal;
+    }
+  }
+  &:nth-child(3){
+    text-align: right;
+    padding-right: 20px;
+    width: 20%;
+    background: $grey-light;
+  }
+  &:last-child{
+    text-align: right;
+    padding-right: 20px;
+    width: 17%;
+    min-width: 100px;
+    color: $white;
+    background: $orange;
   }
 }

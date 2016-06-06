@@ -36,6 +36,14 @@
   }
 }
 
+.button-orange{
+  @include button($dark, $orange, $white);
+
+  &:hover, &:active {
+    @include button-hover($orange);
+  }
+}
+
 .button-grey{
   @include button($light, $grey, $grey-darker);
 
@@ -81,6 +89,13 @@
 @mixin flexbox(){
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+@mixin flexbox-around(){
+  display: flex;
+  justify-content: space-around;
   flex-direction: row;
   flex-wrap: nowrap;
 }

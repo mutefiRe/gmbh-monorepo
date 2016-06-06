@@ -8,7 +8,16 @@ export default Ember.Component.extend({
       this.get('deleteOrderItem')(index);
     },
     showModal() {
-      this.get('showModal')('table-list');
+      this.get('showModal')('table-select', true);
+    },
+    showModal2() {
+      this.get('showModal')('discard-order', false);
+    },
+    saveOrder() {
+      this.get('saveOrder')();
+    },
+    removeItemFromOrder(data) {
+      this.get('removeItemFromOrder')(data);
     }
   }
 });

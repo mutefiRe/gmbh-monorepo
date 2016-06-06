@@ -51,7 +51,7 @@ We love consistent commiting
 
 ###License###
 ===============
-Copyright (c) 2015 Alexander Gabriel, Sebastian Huber, Konrad Kleeberger, Josef Krabath, Daniel Trojer
+Copyright (c) 2015 Alexander Gabriel, Sebastian Huber, Konrad Kleeberger, Josef Krabath, Daniel Trojer 
 
 Proprietary software
 

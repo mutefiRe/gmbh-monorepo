@@ -6,6 +6,9 @@ export default Ember.Component.extend({
   actions: {
     addItemToOrder(item) {
       this.get('addItemToOrder')(item);
+    },
+    showModal(modalType, buttons, item) {
+      this.get('showModal')(modalType, buttons, item);
     }
   }
 });
