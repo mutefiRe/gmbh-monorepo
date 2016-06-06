@@ -9,7 +9,7 @@ module.exports = function (environment) {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       },
-      host: ('http://'+process.env.GMBH_BACKEND) || 'http://localhost:8080'
+      host: process.env.GMBH_BACKEND || 'http://localhost:8080'
     },
 
     APP: {
@@ -21,7 +21,7 @@ module.exports = function (environment) {
       'default-src': '\'none\'',
       'script-src': '\'self\' \'unsafe-inline\' \'unsafe-eval\'',
       'font-src': '\'self\'',
-      'connect-src': '\'self\' ws://'+process.env.GMBH_BACKEND+' localhost:8080',
+      'connect-src': '\'self\' ws://localhost:8080 localhost:8080',
       'img-src': '\'self\'',
       'report-uri': '\'localhost\'',
       'style-src': '\'self\' \'unsafe-inline\'',
@@ -45,7 +45,7 @@ module.exports = function (environment) {
     authorizationPrefix: ' ',
     authorizationHeaderName: 'x-access-token',
     refreshAccessTokens: false,
-    serverTokenEndpoint: (('http://'+process.env.GMBH_BACKEND) || 'http://localhost:8080') + '/authenticate',
+    serverTokenEndpoint: (process.env.GMBH_BACKEND || 'http://localhost:8080') + '/authenticate',
     timeFactor: 1000
   };
 

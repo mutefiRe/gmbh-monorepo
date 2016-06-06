@@ -9,7 +9,6 @@ module.exports = function(defaults) {
       useLintTree: false
     }
   });
-  app.import('bower_components/fastclick/lib/fastclick.js');
 
   // Use `app.import` to add additional libraries to the generated
   // output files.
