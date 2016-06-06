@@ -29,6 +29,7 @@ $noshadow: 2;
 @import 'order/item-settings.scss';
 
 @import 'login.scss';
+@import 'loading.scss';
 
 @font-face {
   font-family: 'Palanquin';
@@ -101,6 +102,13 @@ body > div {
 }
 
 .logout-screen {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center {
   height: 100%;
   display: flex;
   align-items: center;
