@@ -18,12 +18,14 @@ router.get('/:id', function(req, res){
 
 
 router.get('/', function(req, res){
-  db.Order.findAll({include: [{model: db.Orderitem}]}).then(data =>
+  db.Order.findAll({include: [{model: db.Orderitem},{model: db.Table}]}).then(data =>
   {
     let orders = JSON.parse(JSON.stringify(data));
-    for(var i = 0; i < orders.length; i++){
+    for(let i = 0; i < orders.length; i++){
       orders[i].orderitems = orders[i].Orderitems.map(orderitem => orderitem.id);
-      orders[i].Orderitems = undefined
+      orders[i].Orderitems = undefined;
+      orders[i].table = orders[i].Table.id;
+      orders[i].Table = undefined;
     }
     res.send({'order': orders});
   })
