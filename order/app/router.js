@@ -7,8 +7,9 @@ const Router = Ember.Router.extend({
 
 Router.map(function () {
   this.route('login'); // domain/login
-  this.route('user', function () {
-    this.route('profile', {path: ':userID'});
+  this.route('order');
+  this.route('index', {
+    path: '/'
   });
   this.route('dashboard', function () {
     this.route('items');
@@ -17,7 +18,11 @@ Router.map(function () {
     this.route('stats');
     this.route('settings');
   });
-  this.route('order');
+
+  // not defined routes
+  this.route('index', {
+    path: '*path'
+  });
 });
 
 export default Router;
