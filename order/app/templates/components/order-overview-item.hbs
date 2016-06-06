@@ -1,6 +1,6 @@
 {{yield}}
-<td>Bestellung {{order.id}}</td>
-<td>Tisch: {{order.table.id}}</td>
-<td>Bestellzeit:</td>
-<td></td>
-<td></td>
+<td>Bestellung #{{order.id}}</td>
+<td>Tisch: {{order.table.name}}</td>
+<td>Bestellzeit: {{show-time order.createdAt}}</td>
+<td>Betrag: {{order.orderitems.firstObject.item.price}}</td>
+<td>{{status}}</td>
