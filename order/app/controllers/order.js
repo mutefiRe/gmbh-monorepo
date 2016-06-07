@@ -17,6 +17,7 @@ export default Ember.Controller.extend({
   modalItem: null,
   orderItems: [],
   user: null,
+  actualOrder: null,
   viewOrder: {
     items: {},
     totalAmount: 0

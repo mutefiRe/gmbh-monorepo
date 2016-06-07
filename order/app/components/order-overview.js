@@ -19,7 +19,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       return 'slide-left-out';
     }
 
-    return 'none';
+    return '';
   }.property('swipeHelper.order-overview.active'),
   swipeLeft() {
     this.triggerAction({

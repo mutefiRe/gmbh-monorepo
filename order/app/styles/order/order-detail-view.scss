@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 40px;
   width: 100%;
+  height: 100%;
 
 
   h2{
@@ -19,11 +20,12 @@
     table-layout: fixed;
   }
 
-  .smallbutton-grey{
+  .smallbutton-blue{
     @include button($dark, $blue, $white);
     &:active{
       @include button-hover($blue);
     }
+    padding: 20px;
     width: 48%;
   }
   .smallbutton-grey{
@@ -31,6 +33,7 @@
     &:active{
       @include button-hover($grey);
     }
+    padding: 20px;
     width: 48%;
   }
 

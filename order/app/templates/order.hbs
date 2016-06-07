@@ -10,4 +10,6 @@
 {{order-list viewOrder=viewOrder order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal") swipeHelper=swipeHelper triggerOrderListSwipe=triggerOrderListSwipe}}
 
 
-{{order-overview orders=model.Orders swipeHelper=swipeHelper}}
+{{order-overview  actualOrder= actualOrder orders=model.Orders swipeHelper=swipeHelper}}
+
+{{order-detail-view order=actualOrder}}

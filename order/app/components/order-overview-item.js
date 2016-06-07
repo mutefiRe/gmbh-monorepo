@@ -4,6 +4,9 @@ export default Ember.Component.extend({
   classNames: ['order-overview-item'],
   tagName: 'tr',
   classNameBindings: ['bezahlt'],
+  click(){
+    this.set('actualOrder', this.get('order'));
+  },
   init(){
     this._super();
     if(this.get('order.isPaid')){
