@@ -10,6 +10,7 @@
     "pretender": "~1.1.0",
     "lodash": "~3.7.0",
     "Faker": "~3.1.0",
+    "FakeXMLHttpRequest": "latest",
     "mocha": "~2.2.4",
     "chai": "~2.3.0",
     "ember-mocha-adapter": "~0.3.1",
