@@ -22,6 +22,7 @@ export default Ember.Controller.extend({
     totalAmount: 0
   },
   triggerModal: false,
+  triggerOrderListSwipe: true,
   init() {
     let id = this.get('payload.id');
     this.store.find('user',id).then((user) => {
@@ -81,7 +82,10 @@ export default Ember.Controller.extend({
       }
       this.toggleProperty('triggerModal');
     },
-    saveOrder(){
+    swipeOrderList() {
+      this.toggleProperty('triggerOrderListSwipe');
+    },
+    saveOrder() {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
       order.save().then(data => {
@@ -91,7 +95,7 @@ export default Ember.Controller.extend({
         }
       }).then(() => {this.send('resetOrder');})
     },
-    resetOrder(){
+    resetOrder() {
       let order = this.get('order');
       this.set('orderItems', []);
       this.set('viewOrder', {items: {},totalAmount: 0});
@@ -100,7 +104,7 @@ export default Ember.Controller.extend({
       order.set('user', this.get('user'));
       this.set('order', order);
     },
-    removeItemFromOrder(data){
+    removeItemFromOrder(data) {
       let viewOrder = _.cloneDeep(this.get('viewOrder'));
       let items = this.get('orderItems');
       let toDelete = [];

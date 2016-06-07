@@ -4,11 +4,10 @@ export default Ember.Component.extend({
   tagName: 'div',
   classNames: ['item-list'],
   swipeLeft() {
-    this.set('swipeHelper.order-list.active', true);
-    this.set('swipeHelper.order-list.last', false);
-    this.set('swipeHelper.order-screen.active', false);
-    this.set('swipeHelper.order-screen.last', true);
-    console.log('swipe left');
+    this.get('goToOrderList')();
+  },
+  swipeRight(){
+    this.get('goToOrderOverview')();
   },
   actions: {
     addItemToOrder(item) {
