@@ -44,7 +44,7 @@ router.put('/:id', function(req, res){
       res.status(404).send("couldn't find Item which should be updated")
       return
     }
-    item.update(req.body.item).then( data => {
+    item.update(serialize(req.body.orderitem)).then( data => {
       res.send({'item':data})
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
