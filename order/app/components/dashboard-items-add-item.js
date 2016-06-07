@@ -13,7 +13,8 @@ export default Ember.Component.extend({
           unit: this.get('unit'),
           category: this.get('category')
         }
-    );
+      );
+    }
+
   }
-}
 });

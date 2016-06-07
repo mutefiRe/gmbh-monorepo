@@ -10,7 +10,8 @@ export default Ember.Component.extend({
       const password = this.get('password') || null;
       const permission = this.get('permission') || null;
 
-      if (username === null || firstname === null || lastname === null || permission === null) {
+      if (username === null || firstname === null ||
+        lastname === null || permission === null) {
         console.log('fail');
       } else {
         this.get('createUser')(
