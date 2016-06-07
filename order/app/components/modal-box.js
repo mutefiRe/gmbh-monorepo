@@ -13,6 +13,7 @@ export default Ember.Component.extend({
   }.observes('triggerModal'),
   actions: {
     close() {
+      this.set('triggerModal', false);
       this.set('modalVisibility', 'hidden');
     }
   }

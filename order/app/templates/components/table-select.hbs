@@ -1,6 +1,6 @@
 {{yield}}
 <div class="table-mask">
-{{#each tables as |table|}}
+{{#each sortedTables as |table|}}
   {{table-item table=table setTable=(action "setTable")}}
 {{/each}}
 </div>
