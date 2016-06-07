@@ -1,17 +1,18 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  isShowingUpdate: true,
   tagName: 'tr',
   actions: {
-    toggleUpdate(user = null) {
+    save() {
       this.toggleProperty('isShowingUpdate');
-      if (user !== null) {
-        // console.log('user: ', user.get('username'));
-        user.save();
-      }
+      this.get('user').save();
     },
-    destroyUser(user = null) {
-      this.get('destroyUser')(user);
+    toggle() {
+      this.toggleProperty('isShowingUpdate');
+    },
+    destroyUser() {
+      this.get('user').destroyRecord();
     }
   }
 });

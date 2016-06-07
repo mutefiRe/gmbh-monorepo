@@ -4,15 +4,25 @@ export default Ember.Component.extend({
   tagName: 'tr',
   actions: {
     createUser() {
-      this.get('createUser')(
-        {
-          username: this.get('username'),
-          firstname: this.get('firstname'),
-          lastname: this.get('lastname'),
-          password: this.get('password'),
-          permission: this.get('permission')
-        }
-      );
+      const username = this.get('username') || null;
+      const firstname = this.get('firstname') || null;
+      const lastname = this.get('lastname') || null;
+      const password = this.get('password') || null;
+      const permission = this.get('permission') || null;
+
+      if (username === null || firstname === null || lastname === null || permission === null) {
+        console.log('fail');
+      } else {
+        this.get('createUser')(
+          {
+            username: username,
+            firstname: firstname,
+            lastname: lastname,
+            password: password,
+            permission: permission
+          }
+        );
+      }
     }
   }
 });
