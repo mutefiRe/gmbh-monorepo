@@ -26,8 +26,9 @@ export default Ember.Controller.extend({
   triggerModal: false,
   triggerOrderListSwipe: true,
   init() {
-    let id = this.get('payload.id');
-    this.store.find('user',id).then((user) => {
+    const id = this.get('payload.id');
+
+    this.store.find('user', id).then((user) => {
       this.set('user', user);
       let order = this.store.createRecord('order', {});
       order.set('user', user);
@@ -90,12 +91,8 @@ export default Ember.Controller.extend({
     saveOrder() {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
-      order.save().then(data => {
-        for(let orderItem of this.get('orderItems')){
-          orderItem.set('order', data);
-          orderItem.save();
-        }
-      }).then(() => {this.send('resetOrder');})
+      order.save().then(() => {this.send('resetOrder');})
+
     },
     resetOrder() {
       let order = this.get('order');

@@ -1,0 +1,12 @@
+<td>{{input type="text" value=username}}</td>
+<td>{{input type="text" value=firstname}}</td>
+<td>{{input type="text" value=lastname}}</td>
+<td>{{input type="text" value=password}}</td>
+
+
+{{#x-select value=permission}}
+  {{#x-option value=1}}Waiter{{/x-option}}
+  {{#x-option value=0}}Admin{{/x-option}}
+  {{!-- {{#x-option value=2}}Servierer{{/x-option}} --}}
+{{/x-select}}
+<td><button {{action "createUser"}}>save</button></td>
