@@ -56,7 +56,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
   db.User.create(serialize(req.body.user)).then(data => {
-    res.send(data);
+    res.send({user: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })

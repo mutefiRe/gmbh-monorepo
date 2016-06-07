@@ -34,7 +34,7 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   db.Organization.create(serialize(req.body.organization)).then( data => {
-    res.send(data);
+    res.send({organization: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })

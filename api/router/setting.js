@@ -33,7 +33,7 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   db.Setting.create(req.body.setting).then( data => {
-    res.send(data);
+    res.send({setting: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
