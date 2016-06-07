@@ -5,10 +5,10 @@ export default Ember.Component.extend({
   classNames: ['preview-list'],
   tagName: 'ul',
   swipeLeft(){
-    this.set('swipeHelper.order-list.active', true);
-    this.set('swipeHelper.order-list.last', false);
-    this.set('swipeHelper.order-screen.active', false);
-    this.set('swipeHelper.order-screen.last', true);
+    this.get('goToOrderList')();
+  },
+  swipeRight(){
+    this.get('goToOrderOverview')();
   },
   actions: {
     openOnTap() {

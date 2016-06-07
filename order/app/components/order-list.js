@@ -20,12 +20,18 @@ export default Ember.Component.extend(RecognizerMixin, {
     return 'none';
   }.property('swipeHelper.order-list.active'),
   swipeRight() {
-    this.set('swipeHelper.order-screen.active', true);
-    this.set('swipeHelper.order-screen.last', false);
-    this.set('swipeHelper.order-list.active', false);
-    this.set('swipeHelper.order-list.last', true);
+    this.triggerAction({
+      action: 'goToOrderScreen',
+      target: this
+    });
   },
   actions: {
+    goToOrderScreen() {
+      this.set('swipeHelper.order-screen.active', true);
+      this.set('swipeHelper.order-screen.last', false);
+      this.set('swipeHelper.order-list.active', false);
+      this.set('swipeHelper.order-list.last', true);
+    },
     deleteOrderItem(index) {
       this.get('deleteOrderItem')(index);
     },
