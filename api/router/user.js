@@ -77,7 +77,9 @@ router.put('/:id', function(req, res) {
       return
     }
     user.update(serialize(req.body.user)).then(data => {
-      res.send(data)
+      res.send({
+        user: data
+      });
     }).catch(err => {
       res.status(404).send({
         'error': {

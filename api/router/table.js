@@ -46,7 +46,7 @@ router.post('/', function(req, res){
 router.put('/:id', function(req, res){
   db.Table.find({where: {id: req.params.id}}).then(table => {
     table.update(serialize(req.body.table)).then( data => {
-      res.send({'table': data});
+      res.send({table: data});
     })
   })
 })

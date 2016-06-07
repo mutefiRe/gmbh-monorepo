@@ -46,7 +46,7 @@ router.put('/:id', function(req, res){
       return
     }
     setting.update(req.body.setting).then( data => {
-      res.send(data)
+      res.send({settings: data})
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
     })
