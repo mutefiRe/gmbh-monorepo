@@ -14,11 +14,11 @@
 </div>
 <div class="flexcontainer">
   {{#if order.table.name}}
-  {{#if order.orderitems}}
-  <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
-  {{else}}
-  <span class="empty-order default-btn">Bestellung ist leer!</span>
-  {{/if}}
+    {{#if order.orderitems}}
+    <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+    {{else}}
+    <span class="empty-order default-btn">Bestellung ist leer!</span>
+    {{/if}}
   {{else}}
   <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
   {{/if}}

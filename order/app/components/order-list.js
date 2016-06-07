@@ -19,6 +19,12 @@ export default Ember.Component.extend(RecognizerMixin, {
 
     return 'none';
   }.property('swipeHelper.order-list.active'),
+  modalSwipeTrigger: function () {
+    this.triggerAction({
+      action: 'goToOrderScreen',
+      target: this
+    });
+  }.observes('triggerOrderListSwipe'),
   swipeRight() {
     this.triggerAction({
       action: 'goToOrderScreen',
@@ -43,6 +49,10 @@ export default Ember.Component.extend(RecognizerMixin, {
     },
     saveOrder() {
       this.get('saveOrder')();
+      this.triggerAction({
+        action: 'goToOrderScreen',
+        target: this
+      });
     },
     removeItemFromOrder(data) {
       this.get('removeItemFromOrder')(data);

@@ -4,15 +4,13 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['preview-list'],
   tagName: 'ul',
-  swipeLeft(){
+  swipeLeft() {
     this.get('goToOrderList')();
   },
-  swipeRight(){
+  swipeRight() {
     this.get('goToOrderOverview')();
   },
-  actions: {
-    openOnTap() {
-      console.log('open');
-    }
+  click() {
+    this.get('goToOrderList')();
   }
 });
