@@ -1,6 +1,7 @@
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
+
 const {
   Component
 } = Ember;
@@ -18,7 +19,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       return 'slide-left-out';
     }
 
-    return 'none';
+    return '';
   }.property('swipeHelper.order-overview.active'),
   swipeLeft() {
     this.triggerAction({

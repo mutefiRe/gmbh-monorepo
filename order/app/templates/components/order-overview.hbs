@@ -2,7 +2,7 @@
 <h2>Bestellungen</h2>
 <table>
   {{#each sortedOrders as |order|}}
-  {{order-overview-item order=order}}
+  {{order-overview-item order=order actualOrder=actualOrder}}
   {{/each}}
 </table>
 <div class="flexcontainer">
