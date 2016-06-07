@@ -7,8 +7,8 @@ const {
 
 export default Ember.Component.extend(RecognizerMixin, {
   recognizers: 'swipe',
-  classNames: ['order-screen'],
-  classNameBindings: ['SwipeChange'],
+  classNames: ['order-screen','none'],
+  //classNameBindings: ['SwipeChange'],
   SwipeChange: function() {
     if (this.get('swipeHelper.order-screen.active') && this.get('swipeHelper.order-list.last')){
       return 'slide-right-in';

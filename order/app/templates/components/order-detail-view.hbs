@@ -3,16 +3,17 @@
   <h2 class="blue-light">offen</h2>
 </div>
 <table>
-  {{#each-in viewOrder as |name data|}}
-  {{orderlist-item name=name data=data}}
-  {{/each-in}}
+  {{#each order.orderitems as |item|}}
+
+    {{order-detail-view-item orderItem=item}}
+
+  {{/each}}
 </table>
 <div class="flexcontainer">
-  <p class="sum">Tisch: {{order.table}}</p>
-  <p class="sum">Summe offen: € {{totalAmount}}</p>
+  <p class="sum">Tisch: {{order.table.name}}</p>
+  <p class="sum">Summe: € {{order.totalAmount}}</p>
 </div>
 <div class="flexcontainer">
-  <button class="smallbutton">zurück</button>
-  <button class="smallbutton active">Alles zahlen</button>
+  <button class="smallbutton-grey">zurück</button>
+  <button class="smallbutton-blue">Alles zahlen</button>
 </div>
-

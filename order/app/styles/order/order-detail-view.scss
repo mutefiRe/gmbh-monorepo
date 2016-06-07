@@ -1,9 +1,6 @@
 .order-detail-view{
   background: $white;
   margin: 0 auto;
-  position: absolute;
-  left: 100%;
-  top: 0%;
   padding: 40px;
   width: 100%;
 
@@ -13,20 +10,23 @@
     padding-bottom: 20px;
   }
 
+  .blue-light{
+    color: $blue-light;
+  }
+
   table{
     width: 100%;
     table-layout: fixed;
   }
 
-  .bigbutton{
+  .smallbutton-grey{
     @include button($dark, $blue, $white);
     &:active{
       @include button-hover($blue);
     }
-    width: 100%;
+    width: 48%;
   }
-
-  .smallbutton{
+  .smallbutton-grey{
     @include button($light, $grey, $grey-darker);
     &:active{
       @include button-hover($grey);
