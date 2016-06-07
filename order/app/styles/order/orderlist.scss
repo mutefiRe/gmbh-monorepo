@@ -58,3 +58,10 @@
     padding-right: 20px;
   }
 }
+
+.empty-order {
+  @include button(2, transparent,  $grey-darker);
+  width: 100%;
+  display:inline-block;
+  text-align:center;
+}
