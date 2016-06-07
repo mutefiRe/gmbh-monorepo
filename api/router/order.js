@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/order');
+const printer = require('../mockPrinter.js');
 
 router.use(function timeLog(req, res, next){
   //console.log('Time: ', Date.now());
@@ -33,8 +34,22 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.Order.create(serialize(req.body.order)).then( data => {
-    res.send({'order': data});
+
+  let order = serialize(req.body.order)
+  db.Order.create(order.order).then( data => {
+    let promiseArray = [];
+    for (let orderitem of order.orderitems)
+    {
+      orderitem.OrderId = data.id;
+      orderitem.ItemId = orderitem.item;
+      promiseArray.unshift(db.Orderitem.create(orderitem));
+    }
+    Promise.all(promiseArray).then((orderitemData) =>
+    {
+      printer.print(data.id)
+      res.send({'order': data});
+    })
+
   })
 })
 
