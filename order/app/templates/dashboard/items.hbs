@@ -8,7 +8,7 @@
     <th>Stück</th>
     <th>Kategory</th>
   </tr>
-  {{add-users createItem=(action 'createItem')}}
+  {{dashboard-items-add-item createItem=(action 'createItem')}}
   </table>
 
 <h1>Item List</h1>
@@ -21,7 +21,7 @@
     <th>Stück</th>
     <th>Kategory</th>
   </tr>
-  {{#each model as |itemUnit|}}
-    {{show-users user=itemUnit destroyItem=(action 'destroyItem')}}
+  {{#each model.items as |item|}}
+    {{dashboard-items-show-item item=item destroyItem=(action 'destroyItem')}}
   {{/each}}
 </table>
