@@ -37,6 +37,7 @@ router.post('/', function(req, res){
 
   let order = serialize(req.body.order)
   db.Order.create(order.order).then( data => {
+
     let promiseArray = [];
     for (let orderitem of order.orderitems)
     {
@@ -46,10 +47,11 @@ router.post('/', function(req, res){
     }
     Promise.all(promiseArray).then((orderitemData) =>
     {
-      printer.print(data.id)
-      res.send({'order': data});
+      db.Order.findById(data.id, {include: [{model: db.Orderitem}]}).then(data => {
+        printer.print(data.id);
+        res.send({'order': data});
+      })
     })
-
   })
 })
 
