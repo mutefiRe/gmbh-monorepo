@@ -46,8 +46,8 @@ router.post('/', function(req, res){
 router.put('/:id', function(req, res){
   db.Area.find({where: {id: req.params.id}}).then(area => {
     area.update(req.body).then( data => {
-     res.send({'area': data});
-   })
+      res.send({'area': data});
+    })
   })
 })
 
@@ -55,7 +55,7 @@ router.delete('/:id', function(req, res){
   db.Area.find({where: {id: req.params.id}}).then(area=>{
     area.destroy()
   })
-  res.send({'area': data});
+  res.send({});
 })
 
 module.exports = router;

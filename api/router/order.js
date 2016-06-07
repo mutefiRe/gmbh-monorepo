@@ -41,8 +41,8 @@ router.post('/', function(req, res){
 router.put('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}}).then(order => {
     order.update(req.body).then( data => {
-     res.send({'order': data});
-   })
+      res.send({'order': data});
+    })
   })
 })
 
@@ -50,7 +50,7 @@ router.delete('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}}).then(order=>{
     order.destroy()
   })
-  res.send({'order': data});
+  res.send({});
 })
 
 module.exports = router;

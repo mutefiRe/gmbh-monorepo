@@ -46,8 +46,8 @@ router.post('/', function(req, res){
 router.put('/:id', function(req, res){
   db.Category.find({where: {id: req.params.id}}).then(category => {
     category.update(serialize(req.body.category)).then( data => {
-     res.send({'category': data});
-   })
+      res.send({'category': data});
+    })
   })
 })
 
@@ -55,7 +55,7 @@ router.delete('/:id', function(req, res){
   db.Category.find({where: {id: req.params.id}}).then(category=>{
     category.destroy()
   })
-  res.send({'category': data});
+  res.send({});
 })
 
 module.exports = router;

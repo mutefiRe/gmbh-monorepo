@@ -6,12 +6,12 @@ const db = require('../models/index');
 const serialize = require('../serializers/organization');
 
 router.use(function timeLog(req, res, next){
-	//console.log('Time: ', Date.now());
-	next();
+  // console.log('Time: ', Date.now());
+  next();
 })
 
 router.get('/:id', function(req, res){
-	db.Organization.find({where: {id: req.params.id}}).then(data => {
+  db.Organization.find({where: {id: req.params.id}}).then(data => {
     if(data === null){
       res.status(404).send("couldn't find organization")
       return
@@ -33,7 +33,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-	db.Organization.create(serialize(req.body.organization)).then( data => {
+  db.Organization.create(serialize(req.body.organization)).then( data => {
     res.send(data);
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
@@ -55,13 +55,13 @@ router.put('/:id', function(req, res){
 })
 
 router.delete('/:id', function(req, res){
-  db.Organization.find({where: {id: req.params.id}}).then(organization=>{
+  db.Organization.find({where: {id: req.params.id}}).then(organization => {
     if(organization === null){
       res.status(404).send("couldn't find organization which should be deleted")
       return
     }
-    organization.destroy().then(()=>{
-      res.send('deleted organization '+organization.name)
+    organization.destroy().then(() => {
+      res.send({})
     })
   })
 })

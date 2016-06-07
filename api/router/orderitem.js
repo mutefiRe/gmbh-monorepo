@@ -59,7 +59,7 @@ router.delete('/:id', function(req, res){
       return
     }
     item.destroy().then(()=>{
-      res.send({'item':item})
+      res.send({})
     })
   })
 })

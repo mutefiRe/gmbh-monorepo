@@ -60,7 +60,7 @@ router.delete('/:id', function(req, res){
       return
     }
     setting.destroy().then(()=>{
-      res.send('deleted setting '+setting.name)
+      res.send({})
     })
   })
 })

@@ -99,7 +99,7 @@ router.delete('/:id', function(req, res) {
       return
     }
     user.destroy().then(() => {
-      res.send('deleted user ' + user.firstname)
+      res.send({});
     })
   })
 })

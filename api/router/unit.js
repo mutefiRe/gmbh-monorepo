@@ -57,7 +57,7 @@ router.delete('/:id', function(req, res){
       return
     }
     unit.destroy().then(()=>{
-      res.send('deleted user '+unit.name)
+      res.send({})
     })
   })
 })
