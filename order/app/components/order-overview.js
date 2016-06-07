@@ -13,13 +13,13 @@ export default Ember.Component.extend(RecognizerMixin, {
   sortedOrders: Ember.computed.sort('orders', 'sortProps'),
   classNameBindings: ['SwipeChange'],
   SwipeChange: function () {
-    if (this.get('swipeHelper.order-overview.active') && this.get('swipeHelper.order-screen.last')) {
+    if ((this.get('swipeHelper.order-overview.active') && this.get('swipeHelper.order-screen.last')) || (this.get('swipeHelper.order-overview.active') && this.get('swipeHelper.order-detail.last'))) {
       return 'slide-right-in';
-    } else if (this.get('swipeHelper.order-overview.last') && this.get('swipeHelper.order-screen.active')) {
+    } else if ((this.get('swipeHelper.order-overview.last') && this.get('swipeHelper.order-screen.active')) || (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-overview.last'))) {
       return 'slide-left-out';
     }
 
-    return '';
+    return 'none';
   }.property('swipeHelper.order-overview.active'),
   swipeLeft() {
     this.triggerAction({
@@ -33,6 +33,14 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('swipeHelper.order-screen.last', false);
       this.set('swipeHelper.order-overview.active', false);
       this.set('swipeHelper.order-overview.last', true);
+      this.set('swipeHelper.order-detail.last', false);
+    },
+    gotToOrderDetail() {
+      this.set('swipeHelper.order-detail.active', true);
+      this.set('swipeHelper.order-detail.last', false);
+      this.set('swipeHelper.order-overview.active', false);
+      this.set('swipeHelper.order-overview.last', true);
+      this.set('swipeHelper.order-screen.last', false);
     }
   }
 });

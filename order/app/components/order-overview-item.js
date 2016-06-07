@@ -6,6 +6,10 @@ export default Ember.Component.extend({
   classNameBindings: ['bezahlt'],
   click(){
     this.set('actualOrder', this.get('order'));
+    this.triggerAction({
+      action: 'gotToOrderDetail',
+      target: this
+    });
   },
   init(){
     this._super();
@@ -17,6 +21,8 @@ export default Ember.Component.extend({
     }
   },
   actions: {
-
+    gotToOrderDetail() {
+      this.get('gotToOrderDetail')();
+    }
   }
 });

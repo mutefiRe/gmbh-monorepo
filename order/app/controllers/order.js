@@ -8,7 +8,8 @@ export default Ember.Controller.extend({
   swipeHelper: {
     'order-overview': {active: false, last: false},
     'order-screen': {active: true, last: false},
-    'order-list': {active: false, last: true}
+    'order-list': {active: false, last: true},
+    'order-detail': {active: false, last: false}
   },
   modalType: 'table-select',
   modalHeadline: 'Tisch auswählen',
