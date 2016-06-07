@@ -1,16 +1,12 @@
+<td>{{input type="text" value=user.username disabled=isShowingUpdate}}</td>
+<td>{{input type="text" value=user.firstname disabled=isShowingUpdate}}</td>
+<td>{{input type="text" value=user.lastname disabled=isShowingUpdate}}</td>
+<td>{{input type="text" value=user.password disabled=isShowingUpdate}}</td>
+<td>{{input type="text" value=user.permission disabled=isShowingUpdate}}</td>
 {{#if isShowingUpdate}}
-  <td>{{input type="text" value=user.username}}</td>
-  <td>{{input type="text" value=user.firstname}}</td>
-  <td>{{input type="text" value=user.lastname}}</td>
-  <td>{{input type="text" value=user.password}}</td>
-  <td>{{input type="text" value=user.permission}}</td>
-  <td><button {{action "toggleUpdate" user}}>save</button></td>
+  <td><button {{action "toggle"}}>Bearbeiten</button></td>
+  <td><button {{action "destroyUser"}}>Löschen</button></td>
 {{else}}
-  <td>{{user.username}}</td>
-  <td>{{user.firstname}}</td>
-  <td>{{user.lastname}}</td>
-  <td>{{user.password}}</td>
-  <td>{{user.permission}}</td>
-  <td><button {{action "toggleUpdate"}}>edit</button></td>
-  <td><button {{action "destroyUser" user}}>X</button></td>
+  <td><button {{action "toggle"}}>Abbrechen</button></td>
+  <td><button {{action "save"}}>Speichern</button></td>
 {{/if}}

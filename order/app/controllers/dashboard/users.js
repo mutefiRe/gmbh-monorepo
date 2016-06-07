@@ -6,9 +6,6 @@ export default Ember.Controller.extend({
       const user = this.store.createRecord('user', userObject);
 
       user.save();
-    },
-    destroyUser(userObject) {
-      userObject.destroyRecord();
     }
   }
 });
