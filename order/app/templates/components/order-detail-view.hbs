@@ -26,7 +26,7 @@
     {{/unless}}
   {{/each-in}}
 </table>
-<table>{{log sortedOrders}}
+<table>
   {{#each-in viewOrder.items as |id item|}}
     {{#if item.isPaid}}
       {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="paid"}}

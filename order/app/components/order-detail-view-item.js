@@ -8,7 +8,6 @@ export default Ember.Component.extend({
   click(){
     let viewOrder;
     let payOrder;
-
     if(this.get('pay') === "false"){
       viewOrder = _.cloneDeep(this.get('viewOrder'));
       payOrder = _.cloneDeep(this.get('payOrder'));
