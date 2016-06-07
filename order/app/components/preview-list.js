@@ -1,4 +1,3 @@
-import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
 export default Ember.Component.extend({
