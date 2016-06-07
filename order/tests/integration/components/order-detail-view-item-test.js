@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'order-detail-view',
-  'Integration: OrderDetailViewComponent',
+  'order-detail-view-item',
+  'Integration: OrderDetailViewItemComponent',
   {
     integration: true
   },
@@ -18,12 +18,12 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#order-detail-view}}
+      //   {{#order-detail-view-item}}
       //     template content
-      //   {{/order-detail-view}}
+      //   {{/order-detail-view-item}}
       // `);
 
-      this.render(hbs`{{order-detail-view}}`);
+      this.render(hbs`{{order-detail-view-item}}`);
       expect(this.$()).to.have.length(1);
     });
   }

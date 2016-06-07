@@ -4,6 +4,13 @@ export default Ember.Component.extend({
   classNames: ['order-overview-item'],
   tagName: 'tr',
   classNameBindings: ['bezahlt'],
+  click(){
+    this.set('actualOrder', this.get('order'));
+    this.triggerAction({
+      action: 'gotToOrderDetail',
+      target: this
+    });
+  },
   init(){
     this._super();
     if(this.get('order.isPaid')){
@@ -14,6 +21,8 @@ export default Ember.Component.extend({
     }
   },
   actions: {
-
+    gotToOrderDetail() {
+      this.get('gotToOrderDetail')();
+    }
   }
 });

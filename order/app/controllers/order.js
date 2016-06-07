@@ -8,7 +8,8 @@ export default Ember.Controller.extend({
   swipeHelper: {
     'order-overview': {active: false, last: false},
     'order-screen': {active: true, last: false},
-    'order-list': {active: false, last: true}
+    'order-list': {active: false, last: true},
+    'order-detail': {active: false, last: false}
   },
   modalType: 'table-select',
   modalHeadline: 'Tisch auswählen',
@@ -17,14 +18,17 @@ export default Ember.Controller.extend({
   modalItem: null,
   orderItems: [],
   user: null,
+  actualOrder: null,
   viewOrder: {
     items: {},
     totalAmount: 0
   },
   triggerModal: false,
+  triggerOrderListSwipe: true,
   init() {
-    let id = this.get('payload.id');
-    this.store.find('user',id).then((user) => {
+    const id = this.get('payload.id');
+
+    this.store.find('user', id).then((user) => {
       this.set('user', user);
       let order = this.store.createRecord('order', {});
       order.set('user', user);
@@ -81,17 +85,16 @@ export default Ember.Controller.extend({
       }
       this.toggleProperty('triggerModal');
     },
-    saveOrder(){
+    swipeOrderList() {
+      this.toggleProperty('triggerOrderListSwipe');
+    },
+    saveOrder() {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
-      order.save().then(data => {
-        for(let orderItem of this.get('orderItems')){
-          orderItem.set('order', data);
-          orderItem.save();
-        }
-      }).then(() => {this.send('resetOrder');})
+      order.save().then(() => {this.send('resetOrder');})
+
     },
-    resetOrder(){
+    resetOrder() {
       let order = this.get('order');
       this.set('orderItems', []);
       this.set('viewOrder', {items: {},totalAmount: 0});
@@ -100,7 +103,7 @@ export default Ember.Controller.extend({
       order.set('user', this.get('user'));
       this.set('order', order);
     },
-    removeItemFromOrder(data){
+    removeItemFromOrder(data) {
       let viewOrder = _.cloneDeep(this.get('viewOrder'));
       let items = this.get('orderItems');
       let toDelete = [];

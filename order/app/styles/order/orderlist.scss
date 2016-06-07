@@ -6,6 +6,7 @@
   top: 0%;
   padding: 40px;
   width: 100%;
+  height: 100%;
 
   h2{
     padding-top: 20px;
@@ -56,4 +57,11 @@
     padding-top: 10px;
     padding-right: 20px;
   }
+}
+
+.empty-order {
+  @include button(2, transparent,  $grey-darker);
+  width: 100%;
+  display:inline-block;
+  text-align:center;
 }
