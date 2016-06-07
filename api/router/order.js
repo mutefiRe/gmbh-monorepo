@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/order');
-const printer = require('../mockPrinter.js');
+const print = require('../print.js');
 
 router.use(function timeLog(req, res, next){
   //console.log('Time: ', Date.now());
@@ -47,10 +47,18 @@ router.post('/', function(req, res){
     }
     Promise.all(promiseArray).then((orderitemData) =>
     {
-      db.Order.findById(data.id, {include: [{model: db.Orderitem}]}).then(data => {
-        printer.print(data.id);
-        res.send({'order': data});
-      })
+      db.Order.findById(data.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]}).then(Order => {
+     //   print.printOrder(JSON.parse(JSON.stringify(data)));
+     Order = JSON.parse(JSON.stringify(Order));
+
+     Order.orderitems = Order.Orderitems;
+     for(let i = 0; i < Order.orderitems.length; i++) {
+      Order.orderitems[i].item = Order.orderitems[i].ItemId
+      delete(Order.orderitems[i].ItemId);
+    }
+
+    res.send({'order': Order});
+  })
     })
   })
 })
