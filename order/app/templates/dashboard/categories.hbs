@@ -1,4 +1,4 @@
-<h1>Add Category</h1>
+<h1>Kategorie hinzufügen</h1>
 <table>
   <tr>
     <th>Name</th>
@@ -6,10 +6,10 @@
     <th>Beschreibung</th>
     <th>Anzahl</th>
   </tr>
-  {{dashboard-categories-add-category createCategory=(action 'createCategory')}}
+  {{dashboard/category-item-new createCategory=(action 'createCategory')}}
 </table>
 
-<h1>Category List</h1>
+<h1>Kategorie Liste</h1>
 <table>
   <tr>
     <th>Name</th>
@@ -18,6 +18,6 @@
     <th>Anzahl</th>
   </tr>
   {{#each model as |category|}}
-    {{dashboard-categories-show-category category=category}}
+    {{dashboard/category-item category=category}}
   {{/each}}
 </table>

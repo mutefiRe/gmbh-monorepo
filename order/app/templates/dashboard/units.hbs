@@ -3,15 +3,15 @@
   <tr>
     <th>Einheit</th>
   </tr>
-  {{dashboard-units-add-unit createUnit=(action 'createUnit')}}
+  {{dashboard/unit-item-new createUnit=(action 'createUnit')}}
 </table>
 
-<h1>Unit List</h1>
+<h1>Unit Liste</h1>
 <table>
   <tr>
     <th>Einheit</th>
   </tr>
   {{#each model as |unit|}}
-    {{dashboard-units-show-unit unit=unit}}
+    {{dashboard/unit-item unit=unit}}
   {{/each}}
 </table>
