@@ -1,27 +1,27 @@
-<h1>Add Item</h1>
-  <table>
-    <tr>
-    <th>Name</th>
-    <th>Einheit</th>
-    <th>Preis</th>
-    <th>Steuer</th>
-    <th>Stück</th>
-    <th>Kategory</th>
-  </tr>
-  {{dashboard-items-add-item createItem=(action 'createItem')}}
-  </table>
-
-<h1>Item List</h1>
+<h3>Item List</h3>
 <table>
   <tr>
     <th>Name</th>
+    <th>Einheitsgröße</th>
     <th>Einheit</th>
     <th>Preis</th>
     <th>Steuer</th>
-    <th>Stück</th>
-    <th>Kategory</th>
+    <th>Kategorie</th>
+  </tr>
+  {{dashboard/item-item-new units=model.units categories=model.categories}}
+</table>
+
+<h3>Item List</h3>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Einheitsgröße</th>
+    <th>Einheit</th>
+    <th>Preis</th>
+    <th>Steuer</th>
+    <th>Kategorie</th>
   </tr>
   {{#each model.items as |item|}}
-    {{dashboard-items-show-item item=item destroyItem=(action 'destroyItem')}}
+    {{dashboard/item-item item=item units=model.units categories=model.categories}}
   {{/each}}
 </table>

@@ -1,0 +1,29 @@
+<td>{{input disabled=toggle value=item.name}}</td>
+<td>{{input disabled=toggle value=item.amount}}</td>
+<td>
+  <select {{action 'selectUnit' on='change'}} disabled={{toggle}} id="unit-select">
+    {{#each units as |unit|}}
+      <option value="{{unit.id}}" selected={{eq unit.id item.unit.id}}>
+        {{unit.name}}
+      </option>
+    {{/each}}
+  </select>
+</td>
+<td>{{input disabled=toggle value=item.price}}</td>
+<td>{{input disabled=toggle value=item.tax}}</td>
+<td>
+  <select {{action 'selectCategory' on='change'}} disabled={{toggle}} id="category-select">
+    {{#each categories as |category|}}
+      <option value="{{category.id}}" selected={{eq category.id item.category.id}}>
+        {{category.name}}
+      </option>
+    {{/each}}
+  </select>
+</td>
+{{#if toggle}}
+  <td><button {{action "toggle"}}>Bearbeiten</button></td>
+  <td><button {{action "delete"}}>Löschen</button></td>
+{{else}}
+  <td><button {{action "toggle"}}>Abbrechen</button></td>
+  <td><button {{action "updateItem"}}>Speichern</button></td>
+{{/if}}
