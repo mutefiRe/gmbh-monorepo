@@ -54,34 +54,34 @@
 
 @mixin styles(){
   &.style-1{
-    @include button($dark, $blue-light, $white);
+    @include button($dark, #FF2900, $white);
 
     &:hover, &:active {
-      @include button-hover($blue-light);
+      @include button-hover(#FF2900);
     }
   }
 
   &.style-2{
-    @include button($dark, $orange-light, $white);
+    @include button($dark, #E80C3B, $white);
 
     &:hover, &:active {
-      @include button-hover($orange-light);
+      @include button-hover(#E80C3B);
     }
   }
 
   &.style-3{
-    @include button($dark, $orange, $white);
+    @include button($dark, #FF00F9, $white);
 
     &:hover, &:active {
-      @include button-hover($orange);
+      @include button-hover(#FF00F9);
     }
   }
 
   &.style-0{
-    @include button($dark, $blue, $white);
+    @include button($dark, #8F0CE8, $white);
 
     &:hover, &:active {
-      @include button-hover($blue);
+      @include button-hover(#8F0CE8);
     }
   }
 }
@@ -103,19 +103,19 @@
 
 @mixin stylespreview(){
   &.style-1{
-    @include button($noshadow, $blue-light, $white);
+    @include button($noshadow, #FF2900, $white);
   }
 
   &.style-2{
-    @include button($noshadow, $orange-light, $white);
+    @include button($noshadow, #E80C3B, $white);
   }
 
   &.style-3{
-    @include button($noshadow, $orange, $white);
+    @include button($noshadow, #FF00F9, $white);
   }
 
   &.style-0{
-    @include button($noshadow, $blue, $white);
+    @include button($noshadow, #8F0CE8, $white);
   }
 }
 
