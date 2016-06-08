@@ -12,25 +12,30 @@ class Print {
     this.length = length;
   }
   printOrder(data){
-   let order = this.transformOrder(data);
-   console.log("ORDER DATA", order);
- }
+    console.log("ORDER before", data)
+    let order = this.transformOrder(data);
+    console.log("ORDER DATA", order);
+  }
 
- transformOrder(data){
-  let tmp = {};
-  for(let key in data.Orderitems)
-  {
-   orderitem = data.Orderitems[key]
-   if (tmp[orderitem.id + "_" + orderitem.extra]) {
-    tmp[orderitem.id + "_" + orderitem.extras].cnt = tmp[orderitem.id + "_" + orderitem.extras].cnt + 1;
+  transformOrder(data){
+    let tmp = {};
+    let order;
+    let orderitem;
+    for(let key in data.Orderitems)
+    {
+     orderitem = data.Orderitems[key]
+     if (tmp[orderitem.ItemId + "_" + orderitem.extras]) {
+      tmp[orderitem.ItemId + "_" + orderitem.extras].cnt = tmp[orderitem.ItemId + "_" + orderitem.extras].cnt + 1;
+    }
+    else
+    {
+      tmp[orderitem.ItemId + "_" + orderitem.extras] = orderitem;
+      tmp[orderitem.ItemId + "_" + orderitem.extras].cnt = 1;
+    }
   }
-  else
-  {
-    tmp[orderitem.id + "_" + orderitem.extras] = orderitem;
-    tmp[orderitem.id + "_" + orderitem.extras].cnt = 1;
-  }
-}
-return tmp;
+  order = data;
+  order.Orderitems = tmp;
+  return order;
 }
 
 formatDate(){
