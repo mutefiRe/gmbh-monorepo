@@ -54,7 +54,7 @@ router.use(function(req, res, next) {
   }
 });
 
-router.use('/print', printPath);
+router.use('/prints', printPath);
 router.use('/users', userPath);
 router.use('/orders', orderPath);
 router.use('/orderItems', orderItemPath);
