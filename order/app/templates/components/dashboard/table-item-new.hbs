@@ -1,0 +1,11 @@
+<td>{{input value=name}}{{log name}}</td>
+<td>
+  <select {{action 'selectTagType' on='change'}} id="tag-type-select">
+    {{#each areas as |area|}}
+      <option value="{{area.id}}" selected={{eq area.id table.area.id}}>
+        {{area.name}}
+      </option>
+    {{/each}}
+  </select>
+</td>
+<td><button {{action "saveTable"}} disabled={{disabled}}>Speichern</button></td>

@@ -1,1 +1,18 @@
 <h1>Tables</h1>
+<table>
+  <tr>
+    <th>name</th>
+    <th>&nbsp;</th>
+  </tr>
+  {{dashboard/table-item-new areas=model.areas saveTable=(action "saveTable")}}
+</table>
+
+<table>
+  <tr>
+    <th>name</th>
+    <th>&nbsp;</th>
+  </tr>
+  {{#each sortedTables as |table|}}
+    {{dashboard/table-item areas=model.areas table=table}}
+  {{/each}}
+</table>
