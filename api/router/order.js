@@ -34,37 +34,13 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-
-  let order = serialize(req.body.order)
-  db.Order.create(order.order).then( data => {
-
-    let promiseArray = [];
-    for (let orderitem of order.orderitems)
-    {
-      orderitem.OrderId = data.id;
-      orderitem.ItemId = orderitem.item;
-      promiseArray.unshift(db.Orderitem.create(orderitem));
-    }
-    Promise.all(promiseArray).then((orderitemData) =>
-    {
-      db.Order.findById(data.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]}).then(Order => {
-     //   print.printOrder(JSON.parse(JSON.stringify(data)));
-     Order = JSON.parse(JSON.stringify(Order));
-
-     Order.orderitems = Order.Orderitems;
-     for(let i = 0; i < Order.orderitems.length; i++) {
-      Order.orderitems[i].item = Order.orderitems[i].ItemId
-      delete(Order.orderitems[i].ItemId);
-    }
-
-    res.send({'order': Order});
-  })
-    })
+  db.Order.create(serialize(req.body.order)).then( data => {
+    res.send({'order': data});
   })
 })
 
 router.put('/:id', function(req, res){
-  db.Order.find({where: {id: req.params.id}}).then(order => {
+  db.Order.findById(params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]}).then(order => {
     order.update(req.body).then( data => {
       res.send({'order': data});
     })
