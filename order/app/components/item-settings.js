@@ -5,7 +5,9 @@ export default Ember.Component.extend({
   amount: 1,
   actions: {
     add() {
-      this.incrementProperty('amount');
+      if(this.get('amount') < 51){
+        this.incrementProperty('amount');
+      }
     },
     sub() {
       if (this.get('amount') > 0) {
