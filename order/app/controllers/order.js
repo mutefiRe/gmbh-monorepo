@@ -112,7 +112,7 @@ export default Ember.Controller.extend({
       let order = this.get('order');
       this.set('orderItems', []);
       this.set('viewOrder', {items: {},totalAmount: 0});
-      order.deleteRecord();
+
       order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);

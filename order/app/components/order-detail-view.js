@@ -23,8 +23,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   }.property('swipeHelper.order-detail.active'),
 
   observedOrder: function () {
-
-      let order = this.get('order');
+    let order = this.get('order');
     let viewOrder = {items: {}, totalAmount: 0};
     let payOrder = {items: {}, totalAmount: 0};
     order.get('orderitems').forEach((orderitem)=> {
@@ -52,9 +51,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('viewOrder', viewOrder);
     })
     this.set('payOrder', payOrder);
-
-
-  }.observes('order.id','order.totalAmount'),
+  }.observes('order','order.totalAmount'),
 
   swipeRight() {
     this.triggerAction({
@@ -70,6 +67,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('swipeHelper.order-detail.last', true);
     },
     paySelected(){
+      let proms = [];
       let pay =  this.get('payOrder');
       let items = this.get('payOrder.items');
       let orderitems = this.get('order.orderitems');
@@ -83,15 +81,18 @@ export default Ember.Component.extend(RecognizerMixin, {
             if(items[Item].identifier == id+extras+isPaid){
               amount--;
               item.set("isPaid", true);
-              item.save();
+              proms.push(item.save());
               let order = this.get('order');
-              order.set('totalAmount', pay.totalAmount);
-              order.save();
+              order.set('totalAmount', order.get('totalAmount')-pay.totalAmount);
+
             }
           }
         })
       }
-
+      Promise.all(proms)
+      .then(()=>{
+        this.get('order').save();
+      })
     }
   }
 });
