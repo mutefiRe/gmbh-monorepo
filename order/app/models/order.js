@@ -7,5 +7,5 @@ export default DS.Model.extend({
   totalAmount: DS.attr('number'),
   user: DS.belongsTo('user'),
   table: DS.belongsTo('table'),
-  orderitems: DS.hasMany('orderitem')
+  orderitems: DS.hasMany('orderitem',{ embedded: 'always' })
 });

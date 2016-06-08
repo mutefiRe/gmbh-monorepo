@@ -24,24 +24,31 @@ export default function () {
   this.get('/units');
   this.get('/units/:id');
   this.get('/users');
-  this.get('/users/:id');
+
+  this.get('/users/:id', ({users}, request) => {
+    console.log('user', {user: users.find(request.params.id)});
+
+    return {user: users.find(request.params.id)};
+  });
+
+  this.get('/users/:id', {id: 2, username: 'admin', permission: 0});
 
   this.post('http://localhost:8080/authenticate', function (db, req) {
     switch (JSON.parse(req.requestBody).username) {
       case 'no':
-        return new Mirage.Response(ERROR_CODE, {}, {error: 'User not foud'});
+      return new Mirage.Response(ERROR_CODE, {}, {error: 'User not foud'});
       case 'admin':
-        return {
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_ADMIN + '.Xlfhc0DpyJLHPVJp3fp1ZWZT-K9GQmwWZ52X6WVLi8M'
-        };
+      return {
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_ADMIN + '.Xlfhc0DpyJLHPVJp3fp1ZWZT-K9GQmwWZ52X6WVLi8M'
+      };
       case 'waiter':
-        return {
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_WAITER + '.KWMu1UJLrqHdO_n9h9x_itkDHExNXC91JxtyMbXPE_c'
-        };
+      return {
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_WAITER + '.KWMu1UJLrqHdO_n9h9x_itkDHExNXC91JxtyMbXPE_c'
+      };
       default:
-        return {
-          token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.' + PAYLOAD + '.QTVEuD2rlKRHREQhViVSf32pF0aAO7X9b5Zx1EwkN-g'
-        };
+      return {
+        token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.' + PAYLOAD + '.QTVEuD2rlKRHREQhViVSf32pF0aAO7X9b5Zx1EwkN-g'
+      };
     }
   });
 

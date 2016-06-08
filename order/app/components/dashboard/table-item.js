@@ -21,7 +21,7 @@ export default Ember.Component.extend({
       const selectedValue = options[selectedIndex].value;
 
       this.get('areas').forEach((item) => {
-        if (item.get('id') == selectedValue) {
+        if (item.get('id') === selectedValue) {
           this.set('table.area', item);
         }
       });

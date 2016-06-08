@@ -22,7 +22,7 @@ export default Ember.Component.extend({
       const selectedValue = options[selectedIndex].value;
 
       this.get('units').forEach((item) => {
-        if (item.get('id') == selectedValue) {
+        if (item.get('id') === selectedValue) {
           this.set('item.unit', item);
         }
       });
@@ -34,7 +34,7 @@ export default Ember.Component.extend({
       const selectedValue = options[selectedIndex].value;
 
       this.get('categories').forEach((item) => {
-        if (item.get('id') == selectedValue) {
+        if (item.get('id') === selectedValue) {
           this.set('item.category', item);
         }
       });
