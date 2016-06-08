@@ -6,7 +6,7 @@
   justify-content: space-between;
 
   .table-mask{
-    overflow: scroll;
+    overflow-y: auto;
     max-height: 470px;
   }
 }
