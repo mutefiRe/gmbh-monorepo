@@ -11,8 +11,12 @@
     padding-bottom: 20px;
   }
 
-  .blue-light{
+  .notPaid{
     color: $blue-light;
+  }
+
+  .isPaid{
+    color: $grey-dark;
   }
 
   table{

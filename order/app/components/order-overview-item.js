@@ -3,7 +3,13 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['order-overview-item'],
   tagName: 'tr',
-  classNameBindings: ['bezahlt'],
+  classNameBindings: ['paid'],
+  paid: function(){
+    if(this.get('order.isPaid')){
+      return "paid";
+    }
+    return "notpaid";
+  }.property('order.isPaid'),
   click(){
     this.set('actualOrder', this.get('order'));
     this.triggerAction({
@@ -13,12 +19,6 @@ export default Ember.Component.extend({
   },
   init(){
     this._super();
-    if(this.get('order.isPaid')){
-      this.get('classNames').push("paid");
-    }
-    else{
-      this.get('classNames').push("notpaid");
-    }
   },
   actions: {
     gotToOrderDetail() {
