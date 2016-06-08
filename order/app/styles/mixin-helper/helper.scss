@@ -54,10 +54,10 @@
 
 @mixin styles(){
   &.style-1{
-    @include button($dark, #A7A038, $white);
+    @include button($dark, #245C67, $white);
 
     &:hover, &:active {
-      @include button-hover(#A7A038);
+      @include button-hover(#245C67);
     }
   }
 
@@ -78,10 +78,10 @@
   }
 
   &.style-0{
-    @include button($dark, #245C67, $white);
+    @include button($dark, #D74F15, $white);
 
     &:hover, &:active {
-      @include button-hover(#245C67);
+      @include button-hover(#D74F15);
     }
   }
 }
@@ -103,7 +103,7 @@
 
 @mixin stylespreview(){
   &.style-1{
-    @include button($noshadow, #A7A038, $white);
+    @include button($noshadow, #245C67, $white);
   }
 
   &.style-2{
@@ -115,7 +115,7 @@
   }
 
   &.style-0{
-    @include button($noshadow, #245C67, $white);
+    @include button($noshadow, #D74F15, $white);
   }
 }
 
