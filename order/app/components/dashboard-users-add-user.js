@@ -3,12 +3,6 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'tr',
   toggle: true,
-  // error: {
-  //   username: '',
-  //   firstname: '',
-  //   lastname: '',
-  //   permission: ''
-  // },
   actions: {
     createUser() {
       this.get('createUser')(
@@ -28,7 +22,7 @@ export default Ember.Component.extend({
       const permission = this.get('permission') || '';
 
       if (username && firstname && lastname && permission) {
-        this.toggleProperty('toggle');
+        this.set('toggle', false);
       } else {
         this.set('toggle', true);
       }
