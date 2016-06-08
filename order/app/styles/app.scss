@@ -55,6 +55,7 @@
     font-family:'Palanquin', arial, sans-serif;
     font-size: 14px;
     color: $grey-darker;
+    overflow-y: hidden;
   }
 
   * {
@@ -103,10 +104,6 @@
     -ms-user-select:text;
     user-select:text;
   }
-
-
-
-
 
   .order-screen{
     width:100%;
