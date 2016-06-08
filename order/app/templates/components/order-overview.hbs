@@ -1,10 +1,12 @@
 {{yield}}
 <h2>Bestellungen</h2>
-<table>
-  {{#each sortedOrders as |order|}}
+<div class="scrollable">
+  <table>
+    {{#each sortedOrders as |order|}}
     {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "gotToOrderDetail")}}
-  {{/each}}
-</table>
+    {{/each}}
+  </table>
+</div>
 <div class="flexcontainer">
   <button {{action "goToOrderScreen"}} class="default-btn bigbutton">zurück</button>
 </div>

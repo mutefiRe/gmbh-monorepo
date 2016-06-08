@@ -1,9 +1,11 @@
 <h2>Bestellung</h2>
-<table>
-  {{#each-in viewOrder.items as |id data|}}
-  {{orderlist-item data=data removeItemFromOrder=(action 'removeItemFromOrder')}}
-  {{/each-in}}
-</table>
+<div class="scrollable">
+  <table>
+    {{#each-in viewOrder.items as |id data|}}
+    {{orderlist-item data=data removeItemFromOrder=(action 'removeItemFromOrder')}}
+    {{/each-in}}
+  </table>
+</div>
 <div class="flexcontainer">
   {{#if order.table.name}}
   <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>

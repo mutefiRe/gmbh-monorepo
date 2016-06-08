@@ -6,14 +6,36 @@
   <h2 class="notPaid">offen</h2>
   {{/if}}
 </div>
+
+
+<div class="scrollable">
+  <table>
+    {{#each-in viewOrder.items as |id item|}}
+    {{#unless item.isPaid}}
+    {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="notpaid"}}
+    {{/unless}}
+    {{/each-in}}
+  </table>
+  <table>
+    {{#each-in viewOrder.items as |id item|}}
+    {{#if item.isPaid}}
+    {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="paid"}}
+    {{/if}}
+    {{/each-in}}
+  </table>
+</div>
+
 {{#if payOrder.totalAmount}}
 <h3>Splitrechnung</h3>
 <br>
-<table>
-  {{#each-in payOrder.items as |id item|}}
-  {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="true" css="topay"}}
-  {{/each-in}}
-</table>
+<div class="scrollable-pay">
+  <table>
+    {{#each-in payOrder.items as |id item|}}
+    {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="true" css="topay"}}
+    {{/each-in}}
+  </table>
+</div>
+
 <div class="flexcontainer">
   <p class="sum"></p>
   <p class="sum">Summe: € {{showCurrency payOrder.totalAmount}}</p>
@@ -26,21 +48,7 @@
 <h3>Offene Posten</h3>
 {{/if}}
 
-<br>
-<table>
-  {{#each-in viewOrder.items as |id item|}}
-  {{#unless item.isPaid}}
-  {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="notpaid"}}
-  {{/unless}}
-  {{/each-in}}
-</table>
-<table>
-  {{#each-in viewOrder.items as |id item|}}
-  {{#if item.isPaid}}
-  {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="paid"}}
-  {{/if}}
-  {{/each-in}}
-</table>
+
 
 <div class="flexcontainer">
   <p class="sum">Tisch: {{order.table.name}}</p>
