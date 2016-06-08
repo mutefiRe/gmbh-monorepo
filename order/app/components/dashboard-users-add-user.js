@@ -2,27 +2,35 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'tr',
+  toggle: true,
+  // error: {
+  //   username: '',
+  //   firstname: '',
+  //   lastname: '',
+  //   permission: ''
+  // },
   actions: {
     createUser() {
-      const username = this.get('username') || null;
-      const firstname = this.get('firstname') || null;
-      const lastname = this.get('lastname') || null;
-      const password = this.get('password') || null;
-      const permission = this.get('permission') || null;
+      this.get('createUser')(
+        {
+          username: this.get('username'),
+          firstname: this.get('firstname'),
+          lastname: this.get('lastname'),
+          password: this.get('password'),
+          permission: this.get('permission')
+        }
+      );
+    },
+    toggleButton() {
+      const username = this.get('username') || '';
+      const firstname = this.get('firstname') || '';
+      const lastname = this.get('lastname') || '';
+      const permission = this.get('permission') || '';
 
-      if (username === null || firstname === null ||
-        lastname === null || permission === null) {
-        console.log('fail');
+      if (username && firstname && lastname && permission) {
+        this.toggleProperty('toggle');
       } else {
-        this.get('createUser')(
-          {
-            username: username,
-            firstname: firstname,
-            lastname: lastname,
-            password: password,
-            permission: permission
-          }
-        );
+        this.set('toggle', true);
       }
     }
   }

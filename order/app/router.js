@@ -18,6 +18,8 @@ Router.map(function () {
     this.route('stats');
     this.route('settings');
     this.route('areas');
+    this.route('units');
+    this.route('categories');
   });
 
   // not defined routes
