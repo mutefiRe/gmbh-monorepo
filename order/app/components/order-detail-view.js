@@ -51,7 +51,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('viewOrder', viewOrder);
     })
     this.set('payOrder', payOrder);
-  }.observes('order','order.totalAmount'),
+  }.observes('order.id','order.totalAmount'),
 
   swipeRight() {
     this.triggerAction({
@@ -83,15 +83,27 @@ export default Ember.Component.extend(RecognizerMixin, {
               item.set("isPaid", true);
               proms.push(item.save());
               let order = this.get('order');
-              order.set('totalAmount', order.get('totalAmount')-pay.totalAmount);
-
             }
           }
         })
       }
       Promise.all(proms)
       .then(()=>{
-        this.get('order').save();
+        let paid = true;
+        for(let order in this.get('viewOrder.items')){
+          console.log(this.get('viewOrder.items')[order].isPaid);
+          if(this.get('viewOrder.items')[order].isPaid != true){
+            paid = false;
+          }
+        }
+        let order = this.get('order');
+        order.set('isPaid', paid);
+        order.set('totalAmount', this.get('viewOrder.totalAmount'));
+        console.log(paid);
+        order.save();
+
+        //console.log(Object.keys(this.get('viewOrder.items')));
+
       })
     }
   }

@@ -1,13 +1,17 @@
 <div class="flexcontainer">
   <h2>Bestellung #{{order.id}}</h2>
-  <h2 class="blue-light">offen</h2>
+  {{#if order.isPaid}}
+  <h2 class="isPaid">bezahlt</h2>
+  {{else}}
+  <h2 class="notPaid">offen</h2>
+  {{/if}}
 </div>
 {{#if payOrder.totalAmount}}
 <h3>Splitrechnung</h3>
 <br>
 <table>
   {{#each-in payOrder.items as |id item|}}
-    {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="true" css="topay"}}
+  {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="true" css="topay"}}
   {{/each-in}}
 </table>
 <div class="flexcontainer">
@@ -16,21 +20,25 @@
 </div>
 <br>
 {{/if}}
-
+{{#if order.isPaid}}
+<h3>Bezahlte Posten</h3>
+{{else}}
 <h3>Offene Posten</h3>
+{{/if}}
+
 <br>
 <table>
   {{#each-in viewOrder.items as |id item|}}
-    {{#unless item.isPaid}}
-      {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="notpaid"}}
-    {{/unless}}
+  {{#unless item.isPaid}}
+  {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="notpaid"}}
+  {{/unless}}
   {{/each-in}}
 </table>
 <table>
   {{#each-in viewOrder.items as |id item|}}
-    {{#if item.isPaid}}
-      {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="paid"}}
-    {{/if}}
+  {{#if item.isPaid}}
+  {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="paid"}}
+  {{/if}}
   {{/each-in}}
 </table>
 
@@ -45,5 +53,10 @@
 {{/if}}
 <div class="flexcontainer">
   <button {{action "goToOrderOverview"}} class="smallbutton-grey">zurück</button>
+  {{#if order.isPaid}}
+  <button class="smallbutton-blue">Kopie Drucken</button>
+  {{else}}
   <button class="smallbutton-blue">Alles bezahlen</button>
+  {{/if}}
+
 </div>
