@@ -1,4 +1,4 @@
 
-  <td>{{orderItem.amount}} x</td>
-  <td colspan="2">{{orderItem.name}}<span> {{orderItem.extras}}</span></td>
-  <td>€ {{showCurrency orderItem.prize}}</td>
+<td>{{orderItem.amount}} x</td>
+<td colspan="2">{{orderItem.name}} {{show-amount orderItem.showAmount}}{{orderItem.unitName}}<span> {{orderItem.extras}}</span></td>
+<td>€ {{showCurrency orderItem.prize}}</td>

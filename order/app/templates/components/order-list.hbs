@@ -10,15 +10,15 @@
   {{else}}
   <button {{action 'showModal'}} class="tablebutton required">Tisch auswählen</button>
   {{/if}}
-  <p class="sum">Summe: € {{viewOrder.totalAmount}}</p>
+  <p class="sum">Summe: € {{show-currency viewOrder.totalAmount}}</p>
 </div>
 <div class="flexcontainer">
   {{#if order.table.name}}
-    {{#if order.orderitems}}
-    <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
-    {{else}}
-    <span class="empty-order default-btn">Bestellung ist leer!</span>
-    {{/if}}
+  {{#if order.orderitems}}
+  <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+  {{else}}
+  <span class="empty-order default-btn">Bestellung ist leer!</span>
+  {{/if}}
   {{else}}
   <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
   {{/if}}
