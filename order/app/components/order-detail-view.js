@@ -75,6 +75,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('swipeHelper.order-detail.last', true);
     },
     paySelected(){
+      this.triggerAction({action: 'showLoadingModal'})
       let proms = [];
       let pay =  this.get('payOrder');
       let items = this.get('payOrder.items');
@@ -105,10 +106,14 @@ export default Ember.Component.extend(RecognizerMixin, {
         let order = this.get('order');
         order.set('isPaid', paid);
         order.set('totalAmount', this.get('viewOrder.totalAmount'));
-        order.save();
+        order.save()
+        .then(() => {
+          this.triggerAction({action: 'triggerModal'})
+        });
       })
     },
     payAll(){
+      this.triggerAction({action: 'showLoadingModal'});
       let proms = [];
       let orderitems = this.get('order.orderitems');
       orderitems.forEach((item) => {
@@ -120,7 +125,10 @@ export default Ember.Component.extend(RecognizerMixin, {
         let order = this.get('order');
         order.set('isPaid', true);
         order.set('totalAmount', 0);
-        order.save();
+        order.save()
+        .then(() => {
+          this.triggerAction({action: 'triggerModal'})
+        });
       });
     }
   }

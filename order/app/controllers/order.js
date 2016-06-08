@@ -95,6 +95,13 @@ export default Ember.Controller.extend({
       }
       this.toggleProperty('triggerModal');
     },
+    showLoadingModal() {
+      this.set('modalType', 'show-loading-modal');
+      this.set('modalButtons', false);
+      this.set('modalItem', null);
+      this.set('modalHeadline', 'verarbeite Daten')
+      this.toggleProperty('triggerModal');
+    },
     swipeOrderList() {
       this.toggleProperty('triggerOrderListSwipe');
     },
@@ -102,6 +109,7 @@ export default Ember.Controller.extend({
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
       order.save().then(data => {
+        this.send('showLoadingModal');
         return Promise
         .all(this.get('orderItems')
           .map(item => {
@@ -113,7 +121,7 @@ export default Ember.Controller.extend({
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id}).save();
       }).then((response) => {
-
+        this.toggleProperty('triggerModal');
       })
     },
     resetOrder(){
@@ -137,6 +145,9 @@ export default Ember.Controller.extend({
         }
       }
       this.set('viewOrder', viewOrder);
+    },
+    triggerModal(){
+      this.toggleProperty('triggerModal');
     }
   }
 });
