@@ -32,7 +32,7 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   db.Orderitem.create(serialize(req.body.orderitem)).then( data => {
-    res.send({'item':data});
+    res.send({'orderitem':data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
