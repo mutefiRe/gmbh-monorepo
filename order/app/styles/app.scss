@@ -1,120 +1,142 @@
   $blue: #177FB2;
-$blue-light: #6BCFFF;
-$blue-lighter: #BEE9FF;
+  $blue-light: #6BCFFF;
+  $blue-lighter: #BEE9FF;
 
-$grey-darker: #4D4D4D;
-$grey-dark: #666666;
-$grey: #E6E6E6;
-$grey-light: #F0F0F0;
-$white: #FFFFFF;
+  $grey-darker: #4D4D4D;
+  $grey-dark: #666666;
+  $grey: #E6E6E6;
+  $grey-light: #F0F0F0;
+  $white: #FFFFFF;
 
-$orange: #FF5700;
-$orange-light: #FF9863;
-$orange-lighter: #FFEEE6;
+  $orange: #FF5700;
+  $orange-light: #FF9863;
+  $orange-lighter: #FFEEE6;
 
-$light: 1;
-$dark: 0;
-$noshadow: 2;
+  $light: 1;
+  $dark: 0;
+  $noshadow: 2;
 
-@import 'reset';
-@import 'mixin-helper/helper.scss';
-@import 'order/category-selection.scss';
-@import 'order/item-list.scss';
-@import 'order/orderlist.scss';
-@import 'order/orderlist-item.scss';
-@import 'order/modal-box.scss';
-@import 'order/table-select.scss';
-@import 'order/table-item.scss';
-@import 'order/preview-list.scss';
-@import 'order/item-settings.scss';
-@import 'order/order-overview.scss';
-@import 'order/order-overview-item.scss';
-@import 'order/order-detail-view.scss';
-@import 'order/order-detail-view-item.scss';
+  @import 'reset';
+  @import 'mixin-helper/helper.scss';
+  @import 'order/category-selection.scss';
+  @import 'order/item-list.scss';
+  @import 'order/orderlist.scss';
+  @import 'order/orderlist-item.scss';
+  @import 'order/modal-box.scss';
+  @import 'order/table-select.scss';
+  @import 'order/table-item.scss';
+  @import 'order/preview-list.scss';
+  @import 'order/item-settings.scss';
+  @import 'order/order-overview.scss';
+  @import 'order/order-overview-item.scss';
+  @import 'order/order-detail-view.scss';
+  @import 'order/order-detail-view-item.scss';
 
-@import 'login.scss';
-@import 'loading.scss';
+  @import 'login.scss';
+  @import 'loading.scss';
 
-@font-face {
-  font-family: 'Palanquin';
-  src: url('./fonts/Palanquin-Medium.ttf');
-  font-weight: normal;
-}
-@font-face {
-  font-family: 'Palanquin';
-  src: url('./fonts/Palanquin-Light.ttf');
-  font-weight: light;
-}
-@font-face {
-  font-family: 'Palanquin';
-  src: url('./fonts/Palanquin-Bold.ttf');
-  font-weight: bold;
-}
+  @font-face {
+    font-family: 'Palanquin';
+    src: url('./fonts/Palanquin-Medium.ttf');
+    font-weight: normal;
+  }
+  @font-face {
+    font-family: 'Palanquin';
+    src: url('./fonts/Palanquin-Light.ttf');
+    font-weight: light;
+  }
+  @font-face {
+    font-family: 'Palanquin';
+    src: url('./fonts/Palanquin-Bold.ttf');
+    font-weight: bold;
+  }
 
-body {
-  font-family:'Palanquin', arial, sans-serif;
-  font-size: 14px;
-  color: $grey-darker;
-}
+  body {
+    font-family:'Palanquin', arial, sans-serif;
+    font-size: 14px;
+    color: $grey-darker;
+  }
 
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-h1{
-  font-weight: bold;
-  font-size: 2.57em;
-}
+  h1{
+    font-weight: bold;
+    font-size: 2.57em;
+  }
 
-h2{
-  font-weight: bold;
-  font-size: 1.92em;
-}
+  h2{
+    font-weight: bold;
+    font-size: 1.92em;
+  }
 
-h3{
-  font-weight: bold;
-  font-size: 1.28em;
-}
+  h3{
+    font-weight: bold;
+    font-size: 1.28em;
+  }
 
-body, html {
-  width:100%;
-  height:100%;
-}
+  body, html {
+    width:100%;
+    height:100%;
+  }
 
-body > div {
-  width:100%;
-  height:100%;
-}
+  body > div {
+    width:100%;
+    height:100%;
+  }
 
-.order-screen{
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  min-height:0
-}
 
-.item-and-preview-list {
-  display: flex;
-  align-items: stretch;
-  min-height:0;
-  flex-grow:1;
-}
 
-.login-screen {
-  margin: 20px;
-}
+  * {
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+  }
 
-.logout-screen {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  input, textarea {
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+  }
 
-.center {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
+
+
+
+  .order-screen{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    min-height:0
+  }
+
+  .item-and-preview-list {
+    display: flex;
+    align-items: stretch;
+    min-height:0;
+    flex-grow:1;
+  }
+
+  .login-screen {
+    margin: 20px;
+  }
+
+  .logout-screen {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .center {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
