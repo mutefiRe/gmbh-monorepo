@@ -18,6 +18,7 @@
 
   @import 'reset';
   @import 'mixin-helper/helper.scss';
+  @import 'order/order';
   @import 'order/category-selection.scss';
   @import 'order/item-list.scss';
   @import 'order/orderlist.scss';
@@ -55,7 +56,6 @@
     font-family:'Palanquin', arial, sans-serif;
     font-size: 14px;
     color: $grey-darker;
-    overflow-y: hidden;
   }
 
   * {

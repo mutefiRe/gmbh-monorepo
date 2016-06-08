@@ -3,6 +3,7 @@ import _ from 'lodash/lodash';
 import ENV from '../config/environment';
 
 export default Ember.Controller.extend({
+  classNames: ['order'],
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   actualCategory: false,
