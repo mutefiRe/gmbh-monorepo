@@ -29,7 +29,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.Unit.create(serialize(req.body.user)).then( data => {
+  db.Unit.create(serialize(req.body.unit)).then( data => {
     res.send({unit: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
@@ -53,7 +53,7 @@ router.put('/:id', function(req, res){
 router.delete('/:id', function(req, res){
   db.Unit.find({where: {id: req.params.id}}).then(unit=>{
     if(unit === null){
-      res.status(404).send("couldn't find user which should be deleted")
+      res.status(404).send("couldn't find unit which should be deleted")
       return
     }
     unit.destroy().then(()=>{
