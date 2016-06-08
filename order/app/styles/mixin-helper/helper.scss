@@ -54,34 +54,34 @@
 
 @mixin styles(){
   &.style-1{
-    @include button($dark, #FF2900, $white);
+    @include button($dark, #A7A038, $white);
 
     &:hover, &:active {
-      @include button-hover(#FF2900);
+      @include button-hover(#A7A038);
     }
   }
 
   &.style-2{
-    @include button($dark, #E80C3B, $white);
+    @include button($dark, #689732, $white);
 
     &:hover, &:active {
-      @include button-hover(#E80C3B);
+      @include button-hover(#689732);
     }
   }
 
   &.style-3{
-    @include button($dark, #FF00F9, $white);
+    @include button($dark, #A75938, $white);
 
     &:hover, &:active {
-      @include button-hover(#FF00F9);
+      @include button-hover(#A75938);
     }
   }
 
   &.style-0{
-    @include button($dark, #8F0CE8, $white);
+    @include button($dark, #245C67, $white);
 
     &:hover, &:active {
-      @include button-hover(#8F0CE8);
+      @include button-hover(#245C67);
     }
   }
 }
@@ -103,19 +103,19 @@
 
 @mixin stylespreview(){
   &.style-1{
-    @include button($noshadow, #FF2900, $white);
+    @include button($noshadow, #A7A038, $white);
   }
 
   &.style-2{
-    @include button($noshadow, #E80C3B, $white);
+    @include button($noshadow, #689732, $white);
   }
 
   &.style-3{
-    @include button($noshadow, #FF00F9, $white);
+    @include button($noshadow, #A75938, $white);
   }
 
   &.style-0{
-    @include button($noshadow, #8F0CE8, $white);
+    @include button($noshadow, #245C67, $white);
   }
 }
 
