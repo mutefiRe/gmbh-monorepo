@@ -1,0 +1,25 @@
+<td>{{input value=name}}</td>
+<td>{{input value=amount}}</td>
+<td>
+  <select {{action 'selectUnit' on='change'}} disabled={{toggle}} id="unit-select">
+    {{#each units as |unit|}}
+      <option value="{{unit.id}}">
+        {{unit.name}}
+      </option>
+    {{/each}}
+  </select>
+</td>
+<td>{{input value=price}}</td>
+<td>{{input value=tax}}</td>
+<td>
+  <select {{action 'selectCategory' on='change'}} disabled={{toggle}} id="category-select">
+    {{#each categories as |category|}}
+      <option value="{{category.id}}">
+        {{category.name}}
+      </option>
+    {{/each}}
+  </select>
+</td>
+<td>
+  <button {{action "createItem"}} disabled={{disabled}}>Speichern</button>
+</td>

@@ -1,1 +1,27 @@
-<h1>Items</h1>
+<h1>Produkt hinzufügen</h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Einheitsgröße</th>
+    <th>Einheit</th>
+    <th>Preis</th>
+    <th>Steuer</th>
+    <th>Kategorie</th>
+  </tr>
+  {{dashboard/item-item-new units=model.units categories=model.categories createItem=(action "createItem")}}
+</table>
+
+<h1>Produkt Liste</h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Einheitsgröße</th>
+    <th>Einheit</th>
+    <th>Preis</th>
+    <th>Steuer</th>
+    <th>Kategorie</th>
+  </tr>
+  {{#each model.items as |item|}}
+    {{dashboard/item-item item=item units=model.units categories=model.categories}}
+  {{/each}}
+</table>

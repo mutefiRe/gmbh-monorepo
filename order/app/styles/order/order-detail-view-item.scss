@@ -1,6 +1,20 @@
 .order-detail-view-item {
   border: 1px solid $grey-dark;
 
+  &.topay{
+    background-color: $blue-lighter;
+  }
+
+  &.paid{
+    background-color: lighten($grey-dark, 40);
+    color: lighten($grey-dark, 10)
+  }
+
+  &:active{
+    background-color: $grey-light;
+  }
+
+
   td {
     padding-top: 20px;
     padding-bottom: 20px;

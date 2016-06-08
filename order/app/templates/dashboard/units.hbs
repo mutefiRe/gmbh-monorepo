@@ -1,0 +1,17 @@
+<h1>Einheit hinzufügen</h1>
+<table>
+  <tr>
+    <th>Einheit</th>
+  </tr>
+  {{dashboard/unit-item-new createUnit=(action 'createUnit')}}
+</table>
+
+<h1>Unit Liste</h1>
+<table>
+  <tr>
+    <th>Einheit</th>
+  </tr>
+  {{#each model as |unit|}}
+    {{dashboard/unit-item unit=unit}}
+  {{/each}}
+</table>

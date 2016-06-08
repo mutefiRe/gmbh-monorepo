@@ -9,32 +9,32 @@ import {expect} from 'chai';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 
-describe('Acceptance: Transition', function () {
-  let application;
+// describe('Acceptance: Transition', function () {
+//   let application;
 
-  beforeEach(function () {
-    application = startApp();
+//   beforeEach(function () {
+//     application = startApp();
 
 
-  });
+//   });
 
-  afterEach(function () {
-    destroyApp(application);
-  });
+//   afterEach(function () {
+//     destroyApp(application);
+//   });
 
-  // waiter
-  it('admin: visit /', function () {
-    visit('/login');
-    fillIn('#identification', 'waiter');
-    fillIn('#password', 'abc');
-    click('button');
+//   // waiter
+//   it('admin: visit /', function () {
+//     visit('/login');
+//     fillIn('#identification', 'waiter');
+//     fillIn('#password', 'abc');
+//     click('button');
 
-    // visit('/');
+//     // visit('/');
 
-    andThen(function () {
-      expect(currentPath()).to.equal('order');
-    });
-  });
+//     andThen(function () {
+//       expect(currentPath()).to.equal('order');
+//     });
+//   });
 
 
   // it('admin: visit /random', function () {
@@ -101,4 +101,4 @@ describe('Acceptance: Transition', function () {
   //     expect(currentPath()).to.equal('order');
   //   });
   // });
-});
+// });
