@@ -5,8 +5,8 @@
   "homepage": "",
   "main": "src/",
   "keywords": [
-  "order",
-  "system"
+    "order",
+    "system"
   ],
   "author": {},
   "contributors": [],
@@ -37,6 +37,7 @@
     "node-mysql": "^0.4.2",
     "pg": "^4.5.5",
     "pg-hstore": "^2.3.2",
+    "printer": "^0.2.1",
     "sequelize": "^3.21.0",
     "socket.io": "^1.4.5",
     "socketio-jwt": "^4.3.4"
