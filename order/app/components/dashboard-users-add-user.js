@@ -1,4 +1,3 @@
-/* eslint complexity: ["error", 14] */
 import Ember from 'ember';
 
 export default Ember.Component.extend({
