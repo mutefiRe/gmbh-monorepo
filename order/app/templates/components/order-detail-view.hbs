@@ -56,7 +56,7 @@
   {{#if order.isPaid}}
   <button class="smallbutton-blue">Kopie Drucken</button>
   {{else}}
-  <button class="smallbutton-blue">Alles bezahlen</button>
+  <button {{action 'payAll'}} class="smallbutton-blue">Alles bezahlen</button>
   {{/if}}
 
 </div>

@@ -42,9 +42,17 @@ export default Ember.Component.extend(RecognizerMixin, {
 
       }
       viewOrder.items[id+extras+isPaid].isPaid = orderitem.get('isPaid');
-      viewOrder.items[id+extras+isPaid].prize = (item.get('price') * viewOrder.items[id+extras+isPaid].amount).toFixed(2);
+      viewOrder.items[id+extras+isPaid].prize = (item.get('price') * viewOrder.items[id+extras+isPaid].amount);
       viewOrder.items[id+extras+isPaid].categoryId = item.get('category.id');
-      viewOrder.items[id+extras+isPaid].name = item.get('name') + " " + item.get('amount') + item.get('unit.name');
+      if(item.get('category.showAmount')){
+        viewOrder.items[id+extras+isPaid].unitName = item.get('unit.name');
+        viewOrder.items[id+extras+isPaid].showAmount = item.get('amount');
+      }
+      else{
+        viewOrder.items[id+extras+isPaid].showAmount = "";
+        viewOrder.items[id+extras+isPaid].unitName = "";
+      }
+      viewOrder.items[id+extras+isPaid].name = item.get('name');
       viewOrder.items[id+extras+isPaid].extras = extras || null;
       viewOrder.items[id+extras+isPaid].id = id;
 
@@ -82,7 +90,6 @@ export default Ember.Component.extend(RecognizerMixin, {
               amount--;
               item.set("isPaid", true);
               proms.push(item.save());
-              let order = this.get('order');
             }
           }
         })
@@ -91,7 +98,6 @@ export default Ember.Component.extend(RecognizerMixin, {
       .then(()=>{
         let paid = true;
         for(let order in this.get('viewOrder.items')){
-          console.log(this.get('viewOrder.items')[order].isPaid);
           if(this.get('viewOrder.items')[order].isPaid != true){
             paid = false;
           }
@@ -99,12 +105,23 @@ export default Ember.Component.extend(RecognizerMixin, {
         let order = this.get('order');
         order.set('isPaid', paid);
         order.set('totalAmount', this.get('viewOrder.totalAmount'));
-        console.log(paid);
         order.save();
-
-        //console.log(Object.keys(this.get('viewOrder.items')));
-
       })
+    },
+    payAll(){
+      let proms = [];
+      let orderitems = this.get('order.orderitems');
+      orderitems.forEach((item) => {
+        item.set("isPaid", true);
+        proms.push(item.save());
+      })
+      Promise.all(proms)
+      .then(() => {
+        let order = this.get('order');
+        order.set('isPaid', true);
+        order.set('totalAmount', 0);
+        order.save();
+      });
     }
   }
 });

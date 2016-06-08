@@ -57,9 +57,17 @@ export default Ember.Controller.extend({
       }
       viewOrder.items[id+extras].identifier = id+extras;
       viewOrder.items[id+extras].amount++;
-      viewOrder.items[id+extras].prize = (item.get('price') * viewOrder.items[id+extras].amount).toFixed(2);
+      viewOrder.items[id+extras].prize = (item.get('price') * viewOrder.items[id+extras].amount);
       viewOrder.items[id+extras].categoryId = item.get('category.id');
-      viewOrder.items[id+extras].name = item.get('name') + " " + item.get('amount') + item.get('unit.name');
+      if(item.get('category.showAmount')){
+        viewOrder.items[id+extras].unitName = item.get('unit.name');
+        viewOrder.items[id+extras].showAmount = item.get('amount');
+      }
+      else{
+        viewOrder.items[id+extras].showAmount = "";
+        viewOrder.items[id+extras].unitName = "";
+      }
+      viewOrder.items[id+extras].name = item.get('name');
       viewOrder.items[id+extras].extras = extras || null;
       viewOrder.items[id+extras].id = id;
       viewOrder.totalAmount += (item.get('price'));

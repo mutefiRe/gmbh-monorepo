@@ -4,9 +4,9 @@
 <td>
   Tisch: {{order.table.name}}
   <span class="spacer"></span>
-  Bestellzeit: {{show-time order.createdAt}}
+  bestellt um: {{show-time order.createdAt}}
   <span class="spacer"></span>
-  Betrag: {{order.orderitems.firstObject.item.price}}
+  offen: € {{show-currency order.totalAmount}}
 </td>
 <td>{{#if order.isPaid}}Bezahlt{{else}}Offen{{/if}}</td>
 {{/if}}
