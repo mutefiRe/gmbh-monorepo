@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'dashboard-units-add-unit',
-  'Integration: DashboardUnitsAddUnitComponent',
+  'dashboard/category-item-new',
+  'Integration: DashboardCategoriesAddCategoryComponent',
   {
     integration: true
   },
@@ -18,12 +18,12 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#dashboard-units-add-unit}}
+      //   {{#dashboard/category-item-new}}
       //     template content
-      //   {{/dashboard-units-add-unit}}
+      //   {{/dashboard/category-item-new}}
       // `);
 
-      this.render(hbs`{{dashboard-units-add-unit}}`);
+      this.render(hbs`{{dashboard/category-item-new}}`);
       expect(this.$()).to.have.length(1);
     });
   }

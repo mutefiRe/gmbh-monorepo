@@ -7,7 +7,7 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'dashboard-units-show-unit',
+  'dashboard/unit-item',
   'Integration: DashboardUnitsShowUnitComponent',
   {
     integration: true
@@ -18,12 +18,12 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#dashboard-units-show-unit}}
+      //   {{#dashboard/unit-item}}
       //     template content
-      //   {{/dashboard-units-show-unit}}
+      //   {{/dashboard/unit-item}}
       // `);
 
-      this.render(hbs`{{dashboard-units-show-unit}}`);
+      this.render(hbs`{{dashboard/unit-item}}`);
       expect(this.$()).to.have.length(1);
     });
   }

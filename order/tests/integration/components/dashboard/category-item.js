@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'dashboard-items-show-item',
-  'Integration: DashboardItemsShowItemComponent',
+  'dashboard/category-item',
+  'Integration: DashboardCategoriesShowCategoryComponent',
   {
     integration: true
   },
@@ -18,12 +18,12 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#dashboard-items-show-item}}
+      //   {{#dashboard/category-item}}
       //     template content
-      //   {{/dashboard-items-show-item}}
+      //   {{/dashboard/category-item}}
       // `);
 
-      this.render(hbs`{{dashboard-items-show-item}}`);
+      this.render(hbs`{{dashboard/category-item}}`);
       expect(this.$()).to.have.length(1);
     });
   }

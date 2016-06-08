@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'dashboard-categories-add-category',
-  'Integration: DashboardCategoriesAddCategoryComponent',
+  'dashboard/user-item',
+  'Integration: AddUsersComponent',
   {
     integration: true
   },
@@ -18,12 +18,12 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#dashboard-categories-add-category}}
+      //   {{#dashboard/user-item}}
       //     template content
-      //   {{/dashboard-categories-add-category}}
+      //   {{/dashboard/user-item}}
       // `);
 
-      this.render(hbs`{{dashboard-categories-add-category}}`);
+      this.render(hbs`{{dashboard/user-item}}`);
       expect(this.$()).to.have.length(1);
     });
   }
