@@ -180,7 +180,7 @@ function toPrintBuffer(data) {
 }
 
 const removeUmlauts = (function() {
-  const translate_re = /[öäüÖÄÜ]/g;
+  const translate_re = /[ßöäüÖÄÜ]/g;
   const translate = {
     'ä': 'a', 'ö': 'o', 'ü': 'u', 'ß': 's',
     'Ä': 'A', 'Ö': 'O', 'Ü': 'U'   // probably more to come
