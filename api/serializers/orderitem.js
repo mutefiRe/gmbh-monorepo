@@ -2,8 +2,8 @@
 
 module.exports = function(data){
   let orderitem = {
-    extras: data.extras || "",
-    idPaid: data.isPaid,
+    extras: data.extras,
+    isPaid: data.isPaid,
     OrderId: data.order,
     ItemId: data.item
   }

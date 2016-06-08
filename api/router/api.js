@@ -14,6 +14,7 @@ const orderItemPath = require('./orderitem.js')
 const orderPath = require('./order.js')
 const tablePath = require('./table.js')
 const areaPath = require('./area.js')
+const printPath = require('./print.js')
 const db = require('../models')
 
 
@@ -53,7 +54,7 @@ router.use(function(req, res, next) {
   }
 });
 
-
+router.use('/prints', printPath);
 router.use('/users', userPath);
 router.use('/orders', orderPath);
 router.use('/orderItems', orderItemPath);

@@ -25,12 +25,12 @@ router.get('/:id/items', function(req, res){
 
 
 router.get('/', function(req, res){
-  db.Area.findAll({include: [{model: db.Item}]}).then(data =>
+  db.Area.findAll({include: [{model: db.Table}]}).then(data =>
   {
     let areas = JSON.parse(JSON.stringify(data));
     for(var i = 0; i < areas.length; i++){
-      areas[i].items = areas[i].Tables.map(table => table.id);
-      areas[i].Items = undefined
+      areas[i].tables = areas[i].Tables.map(table => table.id);
+      areas[i].Tables = undefined
     }
     res.send({'area': areas});
   })
