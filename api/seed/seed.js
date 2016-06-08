@@ -56,8 +56,8 @@ module.exports = function(){
   });
   db.User.create({
     username: "waiter",
-    firstname: "Slave",
-    lastname: "Lampe",
+    firstname: "die GmBh",
+    lastname: " Buam",
     password: "abc",
     permission: 1
   });
