@@ -35,14 +35,18 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   db.Order.create(serialize(req.body.order)).then( data => {
-
-    res.send({'order': data});
+    let order = JSON.parse(JSON.stringify(data));
+    order.table = order.TableId;
+    order.user = order.UserId;
+    delete(order.TableId);
+    delete(order.UserId);
+    res.send({'order': order});
   })
 })
 
 router.put('/:id', function(req, res){
   db.Order.findById(req.params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]}).then(order => {
-    order.update(serialized(req.body.order)).then( data => {
+    order.update(serialize(req.body.order)).then( data => {
 
       res.send({'order': data});
     })

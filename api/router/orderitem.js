@@ -31,24 +31,31 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
-  db.Orderitem.create(serialize(req.body.orderitem)).then( data => {
-    res.send({'orderitem':data});
+  db.Orderitem.create(serialize(req.body.orderitem)).then( orderitem => {
+    let item = JSON.parse(JSON.stringify(orderitem));
+    item.item = item.ItemId;
+    item.order = item.OrderId;
+    delete(item.ItemId);
+    delete(item.OrderId);
+    res.send({'orderitem': item});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
 })
 
 router.put('/:id', function(req, res){
-  db.Orderitem.find({where: {id: req.params.id}}).then(item => {
-    if(item === null){
-      res.status(404).send("couldn't find Item which should be updated")
-      return
-    }
-    item.update(serialize(req.body.orderitem)).then( data => {
-      res.send({'orderitem':data})
-    }).catch(err => {
-      res.status(400).send(err.errors[0].message)
-    })
+  db.Orderitem.update(serialize(req.body.orderitem),{where: {id: req.params.id}})
+  .then( data => {
+    return db.Orderitem.findById(req.params.id);
+  }).then((orderitem) => {
+    let item = JSON.parse(JSON.stringify(orderitem));
+    item.item = item.ItemId;
+    item.order = item.OrderId;
+    delete(item.ItemId);
+    delete(item.OrderId);
+    res.send({'orderitem': item});
+  }).catch(err => {
+    res.status(400).send(err.errors[0].message)
   })
 })
 
