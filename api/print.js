@@ -54,7 +54,7 @@ class Print {
     }
 
     printData.push(ENTER);
-    printData.push(leftPadding('Gesamtsumme:', 28), leftPadding(`${order.totalAmount}`, 20))
+    printData.push(leftPadding('Gesamtsumme:', 28), leftPadding(`${order.totalAmount.toFixed(2)}`, 20))
 
     printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.User.firstname} ${order.User.lastname}`,48))
     printData.push(FEED, PAPER_PART_CUT);
@@ -182,7 +182,7 @@ function toPrintBuffer(data) {
 const removeUmlauts = (function() {
   const translate_re = /[öäüÖÄÜ]/g;
   const translate = {
-    'ä': 'a', 'ö': 'o', 'ü': 'u',
+    'ä': 'a', 'ö': 'o', 'ü': 'u', 'ß': 's',
     'Ä': 'A', 'Ö': 'O', 'Ü': 'U'   // probably more to come
   };
   return function(s) {
