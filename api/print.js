@@ -34,6 +34,11 @@ class Print {
   }
   printOrder(data){
     const order = this.transformOrder(data);
+
+    //Item.category.showAmount
+    //Item.amount;
+    //Item.Unit.name
+
     const printData = []
 
     printData.push(leftPadding(`${order.Table.name}/${order.Table.Area.name}`,48), ENTER);
@@ -43,12 +48,17 @@ class Print {
     printData.push(ENTER);
     printData.push(orderHeader(), ENTER);
     for (const item in order.Orderitems) {
-      let price = order.Orderitems[item].Item.price;
-      const amount = order.Orderitems[item].cnt;
+      const ord = order.Orderitems[item]
+      let price = ord.Item.price;
+      const amount = ord.cnt;
       const sum = (price * amount).toFixed(2);
-      const orderItem = removeUmlauts(order.Orderitems[item].Item.name);
+      let orderItem = removeUmlauts(ord.Item.name);
 
       price = price.toFixed(2);
+
+      if(ord.Item.Category.showAmount) {
+        orderItem = `${orderItem} ${showAmount(ord.Item.amount)}${ord.Item.Unit.name}`;
+      }
 
       printData.push(orderLine(amount, orderItem, price, sum), ENTER);
     }
@@ -92,6 +102,19 @@ class Print {
     return order;
   }
 
+}
+
+function showAmount(data) {
+  switch(data){
+  case 0.125:
+    return "1/8";
+  case 0.25:
+    return "1/4";
+  case 0.75:
+    return "3/4";
+  default:
+    return data;
+  }
 }
 
 function orderLine(amount, item, price, sum) {
