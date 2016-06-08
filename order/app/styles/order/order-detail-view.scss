@@ -37,6 +37,15 @@
     width: 48%;
   }
 
+  .bigbutton{
+    @include button($dark, $blue, $white);
+    &:active{
+      @include button-hover($blue);
+    }
+    padding: 20px;
+    width: 100%;
+  }
+
   .flexcontainer{
     @include flexbox();
     margin-top: 20px;
