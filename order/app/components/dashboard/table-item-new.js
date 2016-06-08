@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tableArea: null,
+  tagName: 'tr',
   disabled: function () {
     if (this.get('name') === undefined || this.get('name') === '') {
       return true;
@@ -15,6 +16,7 @@ export default Ember.Component.extend({
         name: this.get('name'),
         area: this.get('tableArea')
       });
+      this.set('name', '');
     },
     selectTagType() {
       const selectedEl = this.$('#tag-type-select')[0];

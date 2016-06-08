@@ -1,0 +1,19 @@
+{{outlet}}
+<h1>Tables</h1>
+<table>
+  <tr>
+    <th>name</th>
+    <th>&nbsp;</th>
+  </tr>
+  {{dashboard/area-item-new saveArea=(action "saveArea")}}
+</table>
+
+<table>
+  <tr>
+    <th>name</th>
+    <th>&nbsp;</th>
+  </tr>
+  {{#each model as |area|}}
+    {{dashboard/area-item area=area}}
+  {{/each}}
+</table>

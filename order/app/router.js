@@ -17,6 +17,7 @@ Router.map(function () {
     this.route('tables');
     this.route('stats');
     this.route('settings');
+    this.route('areas');
   });
 
   // not defined routes
