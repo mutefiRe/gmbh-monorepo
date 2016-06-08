@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import _ from 'lodash/lodash';
+import ENV from '../config/environment';
 
 export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
@@ -47,6 +48,7 @@ export default Ember.Controller.extend({
     addItemToOrder(item, extras = null) {
       let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras});
       this.get('orderItems').push(orderItem);
+
       let viewOrder = _.cloneDeep(this.get('viewOrder'));
       let id = item.get('id');
       if (viewOrder.items[id+extras] === undefined) {
@@ -91,10 +93,22 @@ export default Ember.Controller.extend({
     saveOrder() {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
-      order.save().then(() => {this.send('resetOrder');})
+      order.save().then(data => {
+        return Promise
+        .all(this.get('orderItems')
+          .map(item => {
+            item.set('order', data)
+            return item.save()
+          })
+          )
+      }).then(() => {
+        this.send('resetOrder');
+        return this.store.createRecord('print',{order: order.id}).save();
+      }).then((response) => {
 
+      })
     },
-    resetOrder() {
+    resetOrder(){
       let order = this.get('order');
       this.set('orderItems', []);
       this.set('viewOrder', {items: {},totalAmount: 0});
