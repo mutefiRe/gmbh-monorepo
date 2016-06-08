@@ -45,7 +45,7 @@ router.put('/:id', function(req, res){
       return
     }
     item.update(serialize(req.body.orderitem)).then( data => {
-      res.send({'item':data})
+      res.send({'orderitem':data})
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
     })
