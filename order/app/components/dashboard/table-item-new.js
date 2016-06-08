@@ -4,11 +4,11 @@ export default Ember.Component.extend({
   tableArea: null,
   tagName: 'tr',
   disabled: function () {
-    if (this.get('name') === undefined || this.get('name') === '') {
+    if (typeof this.get('name') === 'undefined' || this.get('name') === '') {
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }.property('name'),
   actions: {
     saveTable() {
@@ -25,7 +25,7 @@ export default Ember.Component.extend({
       const selectedValue = options[selectedIndex].value;
 
       this.get('areas').forEach((item) => {
-        if (item.get('id') == selectedValue) {
+        if (item.get('id') === selectedValue) {
           this.set('tableArea', item);
         }
       });

@@ -7,8 +7,8 @@ import {
 import hbs from 'htmlbars-inline-precompile';
 
 describeComponent(
-  'add-users',
-  'Integration: AddUsersComponent',
+  'dashboard/unit-item-new',
+  'Integration: DashboardUnitsAddUnitComponent',
   {
     integration: true
   },
@@ -18,12 +18,12 @@ describeComponent(
       // Handle any actions with this.on('myAction', function(val) { ... });
       // Template block usage:
       // this.render(hbs`
-      //   {{#add-users}}
+      //   {{#dashboard/unit-item-new}}
       //     template content
-      //   {{/add-users}}
+      //   {{/dashboard/unit-item-new}}
       // `);
 
-      this.render(hbs`{{add-users}}`);
+      this.render(hbs`{{dashboard/unit-item-new}}`);
       expect(this.$()).to.have.length(1);
     });
   }

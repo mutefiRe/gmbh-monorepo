@@ -1,1 +1,23 @@
-{{outlet}}
+<h1>Kategorie hinzufügen</h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Aktiv</th>
+    <th>Beschreibung</th>
+    <th>Anzahl</th>
+  </tr>
+  {{dashboard/category-item-new createCategory=(action 'createCategory')}}
+</table>
+
+<h1>Kategorie Liste</h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Aktiv</th>
+    <th>Beschreibung</th>
+    <th>Anzahl</th>
+  </tr>
+  {{#each model as |category|}}
+    {{dashboard/category-item category=category}}
+  {{/each}}
+</table>

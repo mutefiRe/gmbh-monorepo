@@ -1,4 +1,4 @@
-<h1>Add User</h1>
+<h1>Benutzer Hinzufügen</h1>
 <table>
   <tr>
     <th>Username</th>
@@ -7,10 +7,10 @@
     <th>Passwort</th>
     <th>Permission</th>
   </tr>
-  {{dashboard-users-add-user createUser=(action 'createUser')}}
+  {{dashboard/user-item-new createUser=(action 'createUser')}}
 </table>
 
-<h1>User List</h1>
+<h1>Benutzer Liste</h1>
 <table>
   <tr>
     <th>Username</th>
@@ -20,6 +20,6 @@
     <th>Permission</th>
   </tr>
   {{#each model as |userUnit|}}
-    {{dashboard-users-show-user user=userUnit}}
+    {{dashboard/user-item user=userUnit}}
   {{/each}}
 </table>
