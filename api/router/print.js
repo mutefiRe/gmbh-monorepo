@@ -12,8 +12,8 @@ router.use(function timeLog(req, res, next){
 })
 
 
-router.post('/:id', function(req, res){
-  db.Order.findById(req.params.id, {include: [{model: db.Orderitem},{model: db.Table}]}).then(data =>
+router.post('/', function(req, res){
+  db.Order.findById(req.body.id, {include: [{model: db.Orderitem},{model: db.Table}]}).then(data =>
   {
     let orders = JSON.parse(JSON.stringify(data));
     console.log(orders)
