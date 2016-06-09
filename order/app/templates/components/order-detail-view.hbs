@@ -7,7 +7,12 @@
   {{/if}}
 </div>
 
-
+{{#if order.isPaid}}
+<h3>Bezahlte Posten</h3>
+{{else}}
+<h3>Offene Posten</h3>
+{{/if}}
+<br>
 <div class="scrollable">
   <table>
     {{#each-in viewOrder.items as |id item|}}
@@ -24,6 +29,12 @@
     {{/each-in}}
   </table>
 </div>
+
+<div class="flexcontainer">
+  <p class="sum">Tisch: {{order.table.name}}</p>
+  <p class="sum">Summe: € {{showCurrency viewOrder.totalAmount}}</p>
+</div>
+<br>
 
 {{#if payOrder.totalAmount}}
 <h3>Splitrechnung</h3>
@@ -42,18 +53,7 @@
 </div>
 <br>
 {{/if}}
-{{#if order.isPaid}}
-<h3>Bezahlte Posten</h3>
-{{else}}
-<h3>Offene Posten</h3>
-{{/if}}
 
-
-
-<div class="flexcontainer">
-  <p class="sum">Tisch: {{order.table.name}}</p>
-  <p class="sum">Summe: € {{showCurrency viewOrder.totalAmount}}</p>
-</div>
 {{#if payOrder.totalAmount}}
 <div class="flexcontainer">
   <button {{action "paySelected"}} class="bigbutton default-btn">Auswahl bezahlen</button>
