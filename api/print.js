@@ -24,6 +24,9 @@ const ENTER = '\n'.toBytes();
 const TXT_2HEIGHT =  [ 0x1b, 0x21, 0x10 ];
 const TXT_NORMAL =  [ 0x1b, 0x21, 0x00 ];
 
+const StringDecoder = require('string_decoder').StringDecoder;
+const decoder = new StringDecoder('utf8');
+
 
 
 class Print {
@@ -74,10 +77,11 @@ class Print {
       printer:'GMBH',
       type: 'RAW',
       success:function(jobID){
-          //console.log('sent to printer with ID: '+jobID);
+        console.log('sent to printer with ID: '+jobID);
       },
       error:function(err){
-        //console.log(err);
+        console.log('Printer not working', err)
+        console.log(decoder.write(toPrintBuffer(printData)));
       }
     });
   }
