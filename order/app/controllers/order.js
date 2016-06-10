@@ -74,9 +74,6 @@ export default Ember.Controller.extend({
       viewOrder.totalAmount += (item.get('price'));
       this.set('viewOrder', viewOrder);
     },
-    removeItemFromOrder(index) {
-      this.get('order').removeAt(index);
-    },
     showModal(activeType, buttons, item) {
       this.set('modalType', activeType);
       this.set('modalButtons', buttons);
@@ -142,6 +139,7 @@ export default Ember.Controller.extend({
       for(let i = items.length-1; i >= 0; i--){
         if(items[i].get('item.id')+items[i].get('extras') == data.identifier){
           viewOrder.totalAmount -= items[i].get('item.price');
+          items[i].deleteRecord();
           items.splice(i,1);
         }
       }
