@@ -57,7 +57,8 @@ class Print {
       const sum = (price * amount).toFixed(2);
       let orderItem = removeUmlauts(ord.Item.name);
 
-      price = price.toFixed(2);
+      //workaround for sequelize/postgres. price and other decimal are of type string
+      price = (price * 1).toFixed(2);
 
       if(ord.Item.Category.showAmount) {
         orderItem = `${orderItem} ${showAmount(ord.Item.amount)}${ord.Item.Unit.name}`;
@@ -67,7 +68,7 @@ class Print {
     }
 
     printData.push(ENTER);
-    printData.push(leftPadding('Gesamtsumme:', 28), leftPadding(`${order.totalAmount.toFixed(2)}`, 20))
+    printData.push(leftPadding('Gesamtsumme:', 28), leftPadding(`${(order.totalAmount * 1).toFixed(2)}`, 20))
 
     printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.User.firstname} ${order.User.lastname}`,48))
     printData.push(FEED, PAPER_PART_CUT);
