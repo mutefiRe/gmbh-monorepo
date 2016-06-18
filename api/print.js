@@ -15,6 +15,10 @@ String.prototype.toBytes = function() {
 const PAPER_FULL_CUT = [ 0x1d, 0x56, 0x00 ];
 const PAPER_PART_CUT = [ 0x1d, 0x56, 0x01 ];
 
+const CHAR_CODE = [27, 116, 6]; // West Europe
+
+const EUR = [27, 116, 19, 213].concat(CHAR_CODE);
+
 const CENTER = [0x1b, 0x61, 0x1];
 const LEFT = [0x1b, 0x61, 0x0];
 const RIGHT = [0x1b, 0x61, 0x2];
@@ -43,6 +47,7 @@ class Print {
     //Item.Unit.name
 
     const printData = []
+    printData.push(CHAR_CODE);
 
     printData.push(leftPadding(`${order.Table.name}/${order.Table.Area.name}`,48), ENTER);
     printData.push(TXT_2HEIGHT, 'RECHNUNG', TXT_NORMAL, ENTER);
@@ -55,7 +60,7 @@ class Print {
       let price = ord.Item.price;
       const amount = ord.cnt;
       const sum = (price * amount).toFixed(2);
-      let orderItem = removeUmlauts(ord.Item.name);
+      let orderItem = ord.Item.name;
 
       //workaround for sequelize/postgres. price and other decimal are of type string
       price = (price * 1).toFixed(2);
@@ -206,18 +211,5 @@ function toPrintBuffer(data) {
   }
   return Buffer.from(result);
 }
-
-const removeUmlauts = (function() {
-  const translate_re = /[ßöäüÖÄÜ]/g;
-  const translate = {
-    'ä': 'a', 'ö': 'o', 'ü': 'u', 'ß': 's',
-    'Ä': 'A', 'Ö': 'O', 'Ü': 'U'   // probably more to come
-  };
-  return function(s) {
-    return ( s.replace(translate_re, function(match) {
-      return translate[match];
-    }) );
-  }
-})();
 
 module.exports = new Print('GMBH', 48);
