@@ -16,8 +16,5 @@ export default Ember.Component.extend({
     showModal(modalType, buttons, item) {
       this.get('showModal')(modalType, buttons, item);
     }
-  },
-  panStart() {
-    this.toggleProperty('triggerPan');
   }
 });
