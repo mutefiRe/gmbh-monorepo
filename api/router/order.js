@@ -1,10 +1,13 @@
 'use strict'
 
 const express = require('express');
+const server = require('http').Server(express);
+const io = require('socket.io')(server);
 const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/order');
 const print = require('../print.js');
+
 
 router.use(function timeLog(req, res, next){
   //console.log('Time: ', Date.now());
@@ -34,6 +37,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Order.create(serialize(req.body.order)).then( data => {
     let order = JSON.parse(JSON.stringify(data));
     order.table = order.TableId;
@@ -41,14 +45,19 @@ router.post('/', function(req, res){
     delete(order.TableId);
     delete(order.UserId);
     res.send({'order': order});
+    io.sockets.emit("update", {'order': order});
+    console.log("O POST");
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Order.findById(req.params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]}).then(order => {
     order.update(serialize(req.body.order)).then( data => {
 
       res.send({'order': data});
+      io.sockets.emit("update", {'order': data});
+      console.log("O PUT");
     })
   })
 })

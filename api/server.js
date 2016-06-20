@@ -11,6 +11,8 @@ const bodyParser = require('body-parser');
 const config = require('./config/config');
 const socketioJwt = require('socketio-jwt');
 
+app.set("io", io);
+app.set("server", server);
 
 io.use(socketioJwt.authorize({
   secret: config.secret,
@@ -47,6 +49,8 @@ app.use('/teapot', teapot);
 
 
 
+
+
 // SOCKET HANDLING
 io.on('connection', function(socket){
 
@@ -58,16 +62,5 @@ io.on('connection', function(socket){
   	//console.log('disconnected')
   });
 });
-
-function authenticateUser(socket, data){
-	socket.emit("authenticationResponse", {"password": data.password, "authenticated":true, "message": "du darfst hier rein"})
-}
-
-function authenticateUser(data){
-	if (data.password == "password")
-   return {"password": data.password, "authenticated":true, "message": "du darfst hier rein"}
- else return "raus hier"
-}
-
 
 exports = module.exports = server;

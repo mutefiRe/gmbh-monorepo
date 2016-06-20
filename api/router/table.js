@@ -38,15 +38,19 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Table.create(serialize(req.body.table)).then( data => {
     res.send({'table': data});
+    io.sockets.emit("update", {'table': data});
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Table.find({where: {id: req.params.id}}).then(table => {
     table.update(serialize(req.body.table)).then( data => {
       res.send({table: data});
+      io.sockets.emit("update", {table: data});
     })
   })
 })

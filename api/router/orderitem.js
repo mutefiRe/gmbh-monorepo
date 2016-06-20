@@ -31,6 +31,7 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Orderitem.create(serialize(req.body.orderitem)).then( orderitem => {
     let item = JSON.parse(JSON.stringify(orderitem));
     item.item = item.ItemId;
@@ -38,12 +39,15 @@ router.post('/', function(req, res){
     delete(item.ItemId);
     delete(item.OrderId);
     res.send({'orderitem': item});
+    io.sockets.emit('update', {'orderitem': item});
+    console.log("OI POST");
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Orderitem.update(serialize(req.body.orderitem),{where: {id: req.params.id}})
   .then( data => {
     return db.Orderitem.findById(req.params.id);
@@ -54,6 +58,8 @@ router.put('/:id', function(req, res){
     delete(item.ItemId);
     delete(item.OrderId);
     res.send({'orderitem': item});
+    io.sockets.emit('update', {'orderitem': item});
+    console.log("OI PUT");
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })

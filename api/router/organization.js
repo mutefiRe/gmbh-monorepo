@@ -33,14 +33,17 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Organization.create(serialize(req.body.organization)).then( data => {
     res.send({organization: data});
+    io.sockets.emit("update", {organization: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Organization.find({where: {id: req.params.id}}).then(organization => {
     if(organization === null){
       res.status(404).send("couldn't find organization which should be updated")
@@ -48,6 +51,7 @@ router.put('/:id', function(req, res){
     }
     organization.update(serialize(req.body.organization)).then( data => {
       res.send({organization: data});
+      io.sockets.emit("update", {organization: data});
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
     })
