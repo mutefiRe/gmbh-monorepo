@@ -6,15 +6,22 @@ export default Ember.Component.extend({
   classNameBindings: ['myStyle'],
   myStyle: 'style-1',
   clickDelay: 500,
+  watchTriggerPan: function () {
+    this.triggerAction({action: 'cancel', target: this});
+  }.observes('triggerPan'),
   init() {
     this._super();
     const numberOfStyles = 4;
 
-    this.set('myStyle', `style-${(this.get('item').get('category').get('id') % numberOfStyles)}`);
+    this.set('myStyle', `style-${(this.get('item.category.id') % numberOfStyles)}`);
   },
   actions: {
     showModal() {
       this.get('showModal')('item-settings', false, this.get('item'));
+    },
+    cancel() {
+      console.log('foo')
+      Ember.run.cancel(this.get('pressed'));
     }
   },
   click() {
@@ -31,6 +38,6 @@ export default Ember.Component.extend({
     this.set('pressed', runLater);
   },
   touchEnd() {
-    Ember.run.cancel(this.get('pressed'));
+    this.triggerAction({action: 'cancel', target: this});
   }
 });

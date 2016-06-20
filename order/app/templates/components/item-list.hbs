@@ -1,11 +1,11 @@
 {{#if category}}
-{{#each category.items as |item|}}
-{{single-item item=item addItemToOrder=(action "addItemToOrder") showModal=(action "showModal")}}
-{{/each}}
+  {{#each category.items as |item|}}
+    {{single-item item=item addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") triggerPan=triggerPan}}
+  {{/each}}
 {{else}}
-{{#each categories as |category|}}
-{{#each category.items as |item|}}
-{{single-item item=item addItemToOrder=(action "addItemToOrder") showModal=(action "showModal")}}
-{{/each}}
-{{/each}}
+  {{#each categories as |category|}}
+    {{#each category.items as |item|}}
+      {{single-item item=item addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") triggerPan=triggerPan}}
+    {{/each}}
+  {{/each}}
 {{/if}}

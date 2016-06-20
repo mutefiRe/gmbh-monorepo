@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   swipeLeft() {
     this.get('goToOrderList')();
   },
-  swipeRight(){
+  swipeRight() {
     this.get('goToOrderOverview')();
   },
   actions: {
@@ -16,5 +16,8 @@ export default Ember.Component.extend({
     showModal(modalType, buttons, item) {
       this.get('showModal')(modalType, buttons, item);
     }
+  },
+  panStart() {
+    this.toggleProperty('triggerPan');
   }
 });
