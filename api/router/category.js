@@ -38,15 +38,19 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Category.create(serialize(req.body.category)).then( data => {
     res.send({'category': data});
+    io.sockets.emit("update", {'category': data});
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Category.find({where: {id: req.params.id}}).then(category => {
     category.update(serialize(req.body.category)).then( data => {
       res.send({'category': data});
+      io.sockets.emit("update", {'category': data});
     })
   })
 })

@@ -29,14 +29,17 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Unit.create(serialize(req.body.unit)).then( data => {
     res.send({unit: data});
+    io.sockets.emit("update", {unit: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
     if(unit === null){
       res.status(404).send("couldn't find unit which should be updated")
@@ -44,6 +47,7 @@ router.put('/:id', function(req, res){
     }
     unit.update(serialize(req.body.unit)).then( data => {
       res.send({unit: data})
+      io.sockets.emit("update", {unit: data})
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
     })

@@ -6,7 +6,8 @@ module.exports = function(sequelize, DataTypes) {
     enabled: {type: DataTypes.BOOLEAN, allowNull: false,  unique: false},
     description: {type: DataTypes.STRING, allowNull: false, unique: false},
     icon: {type: DataTypes.STRING, allowNull: true, unique: false},
-    showAmount: {type:DataTypes.BOOLEAN, allowNull: true, unique: false}
+    showAmount: {type:DataTypes.BOOLEAN, allowNull: true, unique: false},
+    printer: {type:DataTypes.STRING, allowNull: true, unique: false}
   }, {
     classMethods: {
       associate: function(models) {

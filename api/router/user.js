@@ -36,9 +36,7 @@ router.get('/:id', function(req, res) {
 })
 
 router.get('/', function(req, res) {
-  db.User.findAll({
-    where: req.query
-  }).then(data => {
+  db.User.findAll().then(data => {
     if (data[0] === undefined) {
       res.status(404).send({
         'error': {
@@ -55,14 +53,17 @@ router.get('/', function(req, res) {
 
 
 router.post('/', function(req, res) {
+  const io = req.app.get('io');
   db.User.create(serialize(req.body.user)).then(data => {
     res.send({user: data});
+    io.sockets.emit("update", {user: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
 })
 
 router.put('/:id', function(req, res) {
+  const io = req.app.get('io');
   db.User.find({
     where: {
       id: req.params.id
@@ -80,6 +81,7 @@ router.put('/:id', function(req, res) {
       res.send({
         user: data
       });
+      io.sockets.emit("update", {user: data});
     }).catch(err => {
       res.status(404).send({
         'error': {

@@ -38,15 +38,19 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Area.create(req.body.area).then( data => {
     res.send({'area': data});
+    io.sockets.emit("update", {'area': data});
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Area.find({where: {id: req.params.id}}).then(area => {
     area.update(req.body).then( data => {
       res.send({'area': data});
+      io.sockets.emit("update", {'area': data});
     })
   })
 })

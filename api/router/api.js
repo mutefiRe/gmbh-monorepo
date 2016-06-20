@@ -15,6 +15,7 @@ const orderPath = require('./order.js')
 const tablePath = require('./table.js')
 const areaPath = require('./area.js')
 const printPath = require('./print.js')
+const printerPath = require('./printer.js')
 const db = require('../models')
 
 
@@ -55,6 +56,7 @@ router.use(function(req, res, next) {
 });
 
 router.use('/prints', printPath);
+router.use('/printers', printerPath);
 router.use('/users', userPath);
 router.use('/orders', orderPath);
 router.use('/orderItems', orderItemPath);
@@ -68,6 +70,5 @@ router.use('/areas', areaPath)
 router.get('/', function(req, res){
   res.status(200).send({"msg": "you have access to the api"})
 })
-
 
 module.exports = router;

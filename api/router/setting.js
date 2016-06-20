@@ -32,14 +32,17 @@ router.get('/', function(req, res){
 
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Setting.create(req.body.setting).then( data => {
     res.send({setting: data});
+    io.sockets.emit("update", {setting: data});
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
 })
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Setting.find({where: {id: req.params.id}}).then(setting => {
     if(setting === null){
       res.status(404).send("couldn't find setting which should be updated")
@@ -47,6 +50,7 @@ router.put('/:id', function(req, res){
     }
     setting.update(req.body.setting).then( data => {
       res.send({settings: data})
+      io.sockets.emit("update", {settings: data})
     }).catch(err => {
       res.status(400).send(err.errors[0].message)
     })
