@@ -8,7 +8,7 @@ function updateData(io, token, store) {
   });
 
   socket.on('update', function (payload) {
-    store.pushPayload(JSON.parse(payload));
+    setTimeout(function(){store.pushPayload(payload)},500);
   });
 
   return socket;
@@ -39,14 +39,14 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
     switch (userPermission) {
       case 0:
-        this.transitionTo('/dashboard');
-        break;
+      this.transitionTo('/dashboard');
+      break;
       case 1:
-        this.transitionTo('/order');
-        break;
+      this.transitionTo('/order');
+      break;
       default:
-        this.transitionTo('/login');
-        break;
+      this.transitionTo('/login');
+      break;
     }
   },
   sessionInvalidated() {
