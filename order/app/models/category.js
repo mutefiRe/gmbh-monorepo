@@ -8,6 +8,7 @@ export default DS.Model.extend({
   updatedAt: DS.attr('date'),
   showAmount: DS.attr('boolean'),
   icon: DS.attr('string'),
+  printer: DS.attr('string'),
   category: DS.belongsTo('category'),
   items: DS.hasMany('item')
 });

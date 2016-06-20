@@ -2,4 +2,12 @@
 <td>{{input type="text" value=enabled key-up="toggleButton"}}</td>
 <td>{{input type="text" value=description key-up="toggleButton"}}</td>
 <td>{{input type="text" value=showAmount key-up="toggleButton"}}</td>
+<select {{action 'selectPrinter' on='change' disabled=toggle}} id="printer-select">
+  <option value=null selected={{eq category.printer null}}> </option>
+  {{#each printers as |printer|}}
+  <option value="{{printer.name}}" selected={{eq category.printer printer.name}}>
+    {{printer.name}}
+  </option>
+  {{/each}}
+</select>
 <td><button {{action "createCategory"}} disabled={{toggle}}>save</button></td>
