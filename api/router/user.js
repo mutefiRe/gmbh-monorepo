@@ -36,9 +36,7 @@ router.get('/:id', function(req, res) {
 })
 
 router.get('/', function(req, res) {
-  db.User.findAll({
-    where: req.query
-  }).then(data => {
+  db.User.findAll().then(data => {
     if (data[0] === undefined) {
       res.status(404).send({
         'error': {

@@ -7,7 +7,8 @@ module.exports = function(data){
     description : data.description,
     icon : data.icon,
     showAmount : data.showAmount,
-    CategoryId : data.category
+    CategoryId : data.category,
+    printer: data.printer
   }
   return category;
 }
