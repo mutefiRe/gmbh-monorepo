@@ -34,17 +34,62 @@ const decoder = new StringDecoder('utf8');
 
 
 class Print {
-
-  constructor(printername, length) {
-    this.printername = printername;
+  constructor(length) {
     this.length = length;
   }
-  printOrder(data){
-    const order = this.transformOrder(data);
 
-    //Item.category.showAmount
-    //Item.amount;
-    //Item.Unit.name
+  deliveryNote(data) {
+    const printers = {}
+    for (let key in data.Orderitems) {
+      const ord = data.Orderitems[key];
+      const printer = ord.Item.Category.printer;
+      if (!printers[printer]) {
+        printers[printer] = {}
+      }
+      printers[printer][key] = ord
+    }
+
+    const order = data;
+
+    for(let printer in printers) {
+      order.Orderitems = printers[printer];
+      this.singleDeliveryNote(printer, order)
+    }
+  }
+
+  singleDeliveryNote(printer, data) {
+    const order = this.transformOrder(data);
+    const printData = [];
+    printData.push(CHAR_CODE);
+
+    printData.push(leftPadding(`${order.Table.name}/${order.Table.Area.name}`,48), ENTER);
+    printData.push(TXT_2HEIGHT, 'Bestellung', TXT_NORMAL, ENTER);
+    printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
+
+    printData.push(ENTER);
+    printData.push(deliveryNoteHeader(), ENTER);
+
+    for (const item in order.Orderitems) {
+      const ord = order.Orderitems[item];
+      const extra = ord.extras;
+      const amount = ord.cnt;
+      let orderItem = ord.Item.name;
+
+      if(ord.Item.Category.showAmount) {
+        orderItem = `${orderItem} ${showAmount(ord.Item.amount)}${ord.Item.Unit.name}`;
+      }
+
+      printData.push(deliveryNoteLine(amount, orderItem, extra));
+      printData.push(ENTER);
+    }
+
+    printData.push(FEED, PAPER_PART_CUT);
+
+    printJob(printer, printData);
+  }
+
+  bill(printer, data){
+    const order = this.transformOrder(data);
 
     const printData = []
     printData.push(CHAR_CODE);
@@ -54,7 +99,7 @@ class Print {
     printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
 
     printData.push(ENTER);
-    printData.push(orderHeader(), ENTER);
+    printData.push(billHeader(), ENTER);
     for (const item in order.Orderitems) {
       const ord = order.Orderitems[item]
       let price = ord.Item.price;
@@ -69,7 +114,7 @@ class Print {
         orderItem = `${orderItem} ${showAmount(ord.Item.amount)}${ord.Item.Unit.name}`;
       }
 
-      printData.push(orderLine(amount, orderItem, price, sum), ENTER);
+      printData.push(billLine(amount, orderItem, price, sum), ENTER);
     }
 
     printData.push(ENTER);
@@ -78,18 +123,7 @@ class Print {
     printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.User.firstname} ${order.User.lastname}`,48))
     printData.push(FEED, PAPER_PART_CUT);
 
-    printer.printDirect({
-      data: toPrintBuffer(printData),
-      printer:'GMBH',
-      type: 'RAW',
-      success:function(jobID){
-        console.log('sent to printer with ID: '+jobID);
-      },
-      error:function(err){
-        console.log('Printer not working', err)
-        console.log(decoder.write(toPrintBuffer(printData)));
-      }
-    });
+    printJob(printer, printData);
   }
 
   transformOrder(data){
@@ -114,34 +148,57 @@ class Print {
 
 }
 
-function showAmount(data) {
-  switch(data){
-  case 0.125:
-    return "1/8";
-  case 0.25:
-    return "1/4";
-  case 0.75:
-    return "3/4";
-  default:
-    return data;
-  }
+function printJob(printerName, data) {
+  printer.printDirect({
+    data: toPrintBuffer(data),
+    printer: printerName,
+    type: 'RAW',
+    success(jobID){
+      console.log('sent to printer with ID: '+jobID);
+    },
+    error(err){
+      console.log('Printer not working', err)
+      console.log(decoder.write(toPrintBuffer(data)));
+    }
+  });
 }
 
-function orderLine(amount, item, price, sum) {
-  const arr = [];
-  amount = rightPadding((amount + 'x'), 7);
+function billLine(amount, item, price, sum) {
+  amount = rightPadding(amount + 'x', 7);
   item = rightPadding(item, 20);
   price = leftPadding(price, 9);
   sum = leftPadding(sum, 9);
   return amount.concat(' ', item, ' ', price, ' ', sum);
 }
 
-function orderHeader() {
+function deliveryNoteLine(amount, orderItem, extra) {
+  const whitespace8 = '        ';
+  let tmp = rightPadding(`${amount} x`, 7) + ' ' + rightPadding(orderItem) + '\n';
+
+  if(extra) {
+    const line_count = Math.round(extra.length / 40) + 1
+    tmp += whitespace8 + next40(0, extra) + '\n';
+
+    for (let i = 1; i < line_count; i++) {
+      tmp += whitespace8 + next40(i, extra) + '\n';
+    }
+  }
+
+  return tmp;
+}
+
+function billHeader() {
   const amount = rightPadding('Menge', 7);
   const item = rightPadding('Artikel', 20);
   const price = leftPadding('Preis', 9);
   const sum = leftPadding('Summe', 9);
   return amount.concat(' ', item, ' ', price, ' ', sum);
+}
+
+function deliveryNoteHeader() {
+  const amount = rightPadding('Menge', 7);
+  const item = rightPadding('Artikel', 40);
+  return amount.concat(' ', item);
 }
 
 function rightPadding(str, amount) {
@@ -200,6 +257,24 @@ function leftZero(str) {
   return str;
 }
 
+function showAmount(data) {
+  switch(data){
+  case 0.125:
+    return "1/8";
+  case 0.25:
+    return "1/4";
+  case 0.75:
+    return "3/4";
+  default:
+    return data;
+  }
+}
+
+
+function next40(idx, str) {
+  return str.substr(idx * 40, 40);
+}
+
 function toPrintBuffer(data) {
   let result = [];
   for(let i = 0; i < data.length; i++) {
@@ -212,4 +287,4 @@ function toPrintBuffer(data) {
   return Buffer.from(result);
 }
 
-module.exports = new Print('GMBH', 48);
+module.exports = new Print(48);

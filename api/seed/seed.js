@@ -79,7 +79,8 @@ module.exports = function(){
     enabled: true,
     icon: "food.svg",
     description: "Alle die Guten Sachen",
-    showAmount: false
+    showAmount: false,
+    printer: "GMBH-WLAN"
   }).then(cat => {
 
     let stk = db.Unit.create({
@@ -133,7 +134,8 @@ module.exports = function(){
     enabled: true,
     icon: "drink-alc.svg",
     description: "alkohol",
-    showAmount: true
+    showAmount: true,
+    printer: "GMBH-LAN"
   }).then(cat => {
     db.Unit.findOrCreate({
       where: {name: 'l'}
@@ -261,7 +263,8 @@ module.exports = function(){
     enabled: true,
     icon: "drink-anti.svg",
     description: "Alkoholfreies",
-    showAmount: true
+    showAmount: true,
+    printer: "GMBH-LAN"
   }).then(cat => {
     db.Unit.findOrCreate({
       where: {name: 'l'}
