@@ -1,7 +1,7 @@
 <td>{{input type="text" value=category.name disabled=isShowingUpdate}}</td>
-<td>{{input type="text" value=category.enabled disabled=isShowingUpdate}}</td>
+<td>{{input type="checkbox" checked=category.enabled disabled=isShowingUpdate}}</td>
 <td>{{input type="text" value=category.description disabled=isShowingUpdate}}</td>
-<td>{{input type="text" value=category.showAmount disabled=isShowingUpdate}}</td>
+<td>{{input type="checkbox" checked=category.showAmount disabled=isShowingUpdate}}</td>
 <select {{action 'selectPrinter' on='change'}} disabled={{isShowingUpdate}} id="printer-select">
   <option value=null selected={{eq category.printer null}}> </option>
   {{#each printers as |printer|}}
