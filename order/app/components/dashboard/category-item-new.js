@@ -22,7 +22,7 @@ export default Ember.Component.extend({
       const description = this.get('description') || '';
       const showAmount = this.get('showAmount') || '';
 
-      if (name && enabled && description && showAmount) {
+      if (name && description) {
         this.set('toggle', false);
       } else {
         this.set('toggle', true);
