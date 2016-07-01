@@ -35,6 +35,13 @@ router.post('/', function(req, res){
   db.Item.create(serialize(req.body.item)).then( data => {
     res.send({'item':data});
     io.sockets.emit("update", {'item':data});
+    return db.Category.find({where: {id: data.CategoryId}, include: [{model: db.Item}]}).then((catData) =>
+    {
+      let categories = JSON.parse(JSON.stringify(catData));
+      categories.items = categories.Items.map(item => item.id);
+      categories.Items = undefined
+      io.sockets.emit("update", {'category': categories});
+    })
   }).catch(err => {
     res.status(400).send(err.errors[0].message)
   })
