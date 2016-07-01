@@ -25,7 +25,7 @@ router.post('/', function(req, res){
           "firstname": thisUser.dataValues.firstname,
           "lastname": thisUser.dataValues.lastname
         }
-        let token = jwt.sign(userObject, config.secret, { expiresIn: '24h' });
+        let token = jwt.sign(userObject, config.secret, { expiresIn: '72h' });
 
         res.send({token: token})
       }
