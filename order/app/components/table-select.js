@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['table-select'],
-  sortProps: ['area.id', 'numericID'],
+  sortProps: ['area.name', 'numericID'],
   sortedTables: Ember.computed.sort('tables', 'sortProps'),
   filter: "",
   actions: {
