@@ -60,6 +60,7 @@ router.delete('/:id', function(req, res){
     category.destroy()
   })
   res.send({});
+  io.sockets.emit("update", {'category': data});
 })
 
 module.exports = router;
