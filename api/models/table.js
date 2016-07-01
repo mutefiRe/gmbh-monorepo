@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Table.belongsTo(models.Area);
+        Table.belongsTo(models.Area, {onDelete: 'RESTRICT'});
       }
     }
   });

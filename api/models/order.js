@@ -7,9 +7,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Order.belongsTo(models.User);
-        Order.belongsTo(models.Table);
-        Order.hasMany(models.Orderitem);
+        Order.belongsTo(models.User, {onDelete: 'RESTRICT'});
+        Order.belongsTo(models.Table, {onDelete: 'RESTRICT'});
+        Order.hasMany(models.Orderitem, {onDelete: 'RESTRICT'});
       }
     }
   });

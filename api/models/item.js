@@ -9,8 +9,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Item.belongsTo(models.Unit)
-        Item.belongsTo(models.Category)
+        Item.belongsTo(models.Unit, {onDelete: 'RESTRICT'})
+        Item.belongsTo(models.Category, {onDelete: 'RESTRICT'})
       }
     }
   });

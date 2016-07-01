@@ -6,8 +6,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Area.hasMany(models.Table);
-        Area.belongsToMany(models.User, {through: 'UserArea'});
+        Area.hasMany(models.Table, {onDelete: 'RESTRICT'});
+        Area.belongsToMany(models.User, {through: 'UserArea', onDelete: 'RESTRICT'});
       }
     }
   });
