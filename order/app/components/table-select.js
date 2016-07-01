@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   classNames: ['table-select'],
   sortProps: ['area.id', 'numericID'],
   sortedTables: Ember.computed.sort('tables', 'sortProps'),
+  filter: "",
   actions: {
     setTable(table) {
       this.set('order.table', table);

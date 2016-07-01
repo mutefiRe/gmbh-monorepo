@@ -1,6 +1,9 @@
 {{yield}}
+{{input class="table-filter" type="text" value=filter}}
 <div class="table-mask">
 {{#each sortedTables as |table|}}
+  {{#if (contains table.name filter)}}
   {{table-item table=table setTable=(action "setTable")}}
+  {{/if}}
 {{/each}}
 </div>
