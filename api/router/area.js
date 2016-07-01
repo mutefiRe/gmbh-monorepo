@@ -39,7 +39,7 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
-  db.Area.create(req.body.area).then( data => {
+  db.Area.create(serialize(req.body.area)).then( data => {
     res.send({'area': data});
     io.sockets.emit("update", {'area': data});
   })
@@ -48,7 +48,7 @@ router.post('/', function(req, res){
 router.put('/:id', function(req, res){
   const io = req.app.get('io');
   db.Area.find({where: {id: req.params.id}}).then(area => {
-    area.update(req.body).then( data => {
+    area.update(serialize(req.body.area)).then( data => {
       res.send({'area': data});
       io.sockets.emit("update", {'area': data});
     })
