@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     name: {type: DataTypes.STRING, allowNull: false,  unique: false},
     beginDate: {type: DataTypes.DATE, allowNull: true,  unique: false},
     endDate: {type: DataTypes.DATE, allowNull: true,  unique: false},
+    instantPay: {type: DataTypes.BOOLEAN, allowNull: false,  unique: false, defaultValue: true }
   }/*, {
     classMethods: {
       associate: function(models) {
