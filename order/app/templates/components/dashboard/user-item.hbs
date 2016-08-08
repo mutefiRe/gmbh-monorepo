@@ -3,6 +3,7 @@
 <td>{{input type="text" value=user.lastname disabled=isShowingUpdate}}</td>
 <td>{{input type="text" value=user.password disabled=isShowingUpdate}}</td>
 <td>{{input type="text" value=user.permission disabled=isShowingUpdate}}</td>
+<td>{{input type="text" value=user.printer disabled=isShowingUpdate}}</td>
 {{#if isShowingUpdate}}
   <td><button {{action "toggle"}}>Bearbeiten</button></td>
   <td><button {{action "destroyUser"}}>Löschen</button></td>
