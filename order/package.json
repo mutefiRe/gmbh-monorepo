@@ -50,6 +50,7 @@
     "ember-resolver": "^2.0.3",
     "ember-simple-auth": "1.1.0-beta.4",
     "ember-simple-auth-token": "1.1.1",
+    "ember-sortable": "1.8.1",
     "ember-websockets": "3.0.0",
     "emberx-select": "2.1.2",
     "eslint": "^2.10.2",
