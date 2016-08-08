@@ -16,7 +16,13 @@ router.post('/', function(req, res){
   db.Order.findById(req.body.print.order, {include: [{model: db.Orderitem, include: [{model: db.Item, include: [{model: db.Unit}, {model: db.Category}]}]}, {model: db.Table, include: [{model: db.Area}]}, {model: db.User}]}).then(data =>
   {
     let orders = JSON.parse(JSON.stringify(data));
-    print.deliveryNote(orders);
+    //if user  has printer use this not category printer
+    if (true) {
+      print.deliveryNote(orders, true);
+    } else {
+      print.deliveryNote(orders);
+    }
+
     res.send({'print': { "order" : data.id }});
   })
 })
