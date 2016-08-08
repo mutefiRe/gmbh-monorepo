@@ -7,7 +7,8 @@ module.exports = function(data){
     price : data.price,
     tax : data.tax,
     CategoryId : data.category,
-    UnitId : data.unit
+    UnitId : data.unit,
+    sortId: data.sortId
   }
   return item;
 }
