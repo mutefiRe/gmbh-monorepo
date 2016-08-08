@@ -2,7 +2,12 @@
 <td>{{input type="text" value=user.firstname disabled=isShowingUpdate}}</td>
 <td>{{input type="text" value=user.lastname disabled=isShowingUpdate}}</td>
 <td>{{input type="text" value=user.password disabled=isShowingUpdate}}</td>
-<td>{{input type="text" value=user.permission disabled=isShowingUpdate}}</td>
+<td>{{#x-select value=user.permission disabled=isShowingUpdate }}
+
+  {{#x-option value=1 selected=(eq user.permission "Waiter")}}Waiter{{/x-option}}
+  {{#x-option value=0 selected=(eq user.permission "Admin")}}Admin{{/x-option}}
+  {{!-- {{#x-option value=2}}Servierer{{/x-option}} --}}
+{{/x-select}}</td>
 <td>{{input type="text" value=user.printer disabled=isShowingUpdate}}</td>
 {{#if isShowingUpdate}}
   <td><button {{action "toggle"}}>Bearbeiten</button></td>
