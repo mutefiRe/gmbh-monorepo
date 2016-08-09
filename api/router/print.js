@@ -15,10 +15,11 @@ router.use(function timeLog(req, res, next){
 router.post('/', function(req, res){
   db.Order.findById(req.body.print.order, {include: [{model: db.Orderitem, include: [{model: db.Item, include: [{model: db.Unit}, {model: db.Category}]}]}, {model: db.Table, include: [{model: db.Area}]}, {model: db.User}]}).then(data =>
   {
-    let orders = JSON.parse(JSON.stringify(data));
-    //if user  has printer use this not category printer
-    if (true) {
-      print.deliveryNote(orders, true);
+    const orders = JSON.parse(JSON.stringify(data));
+
+    const userPrinter = data.User.dataValues.printer;
+    if (userPrinter) {
+      print.deliveryNote(orders, userPrinter);
     } else {
       print.deliveryNote(orders);
     }
