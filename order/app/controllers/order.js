@@ -147,6 +147,15 @@ export default Ember.Controller.extend({
     },
     triggerModal(){
       this.toggleProperty('triggerModal');
+    },
+    socketDisconnected() {
+      console.log("change to disconnected")
+    },
+    socketReconnected() {
+      console.log("change to connected")
+    },
+    socketConnected() {
+      console.log("change to connected") //FIXME only need one of them? i think on connected means also authenticated!!
     }
   }
 });

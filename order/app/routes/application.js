@@ -2,18 +2,6 @@ import Ember from 'ember';
 import getOwner from 'ember-getowner-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
-function updateData(io, token, store) {
-  const socket = io.createSocket(window.EmberENV.host, {
-    query: `token=${token}`
-  });
-
-  socket.on('update', function (payload) {
-    setTimeout(function(){store.pushPayload(payload)},500);
-  });
-
-  return socket;
-}
-
 export default Ember.Route.extend(ApplicationRouteMixin, {
   socketService: Ember.inject.service('socket-io'),
   socketRef: null,
@@ -24,7 +12,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     const content = this.get('session.session.content');
 
     if (this.get('session.isAuthenticated')) {
-      this.set('socketRef', updateData(io, content.authenticated.token, this.store));
+      this.set('socketRef', this.updateData(io, content.authenticated.token, this.store));
     }
   },
   sessionAuthenticated() {
@@ -33,8 +21,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     const token = session.authenticated.token;
     const authenticator = getOwner(this).lookup('authenticator:jwt');
     const userPermission = authenticator.getTokenData(session.authenticated.token).permission;
-    const socket = updateData(io, token, this.store);
-
+    const socket = this.updateData(io, token, this.store);
     this.set('socketRef', socket);
 
     switch (userPermission) {
@@ -53,5 +40,32 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     const socket = this.get('socketRef');
 
     socket.close();
-  }
+  },
+  updateData(io, token, store) {
+  const that = this;
+  const socket = io.createSocket(window.EmberENV.host, {
+    query: `token=${token}`
+  });
+
+  socket.on('update', function (payload) {
+    setTimeout(function () {store.pushPayload(payload)},500);
+  });
+
+  socket.on('disconnect', function () {
+    that.controllerFor('order').send('socketDisconnected');
+  });
+
+  socket.on('reconnect', function () {
+    that.controllerFor('order').send('socketReconnected');
+  });
+
+  socket.on('connect', function () {
+    that.controllerFor('order').send('socketConnected');
+  });
+
+  return socket;
+}
+
 });
+
+
