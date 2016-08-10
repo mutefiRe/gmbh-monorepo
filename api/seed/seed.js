@@ -122,9 +122,10 @@ module.exports = function(){
   });
 
   db.Setting.create({
-    name: "Zeltfest volle saufen",
+    name: "Testsetting",
     begin_date: "nodate",
-    end_date: "nodate"
+    end_date: "nodate",
+    instantPay: true
   });
 
   /*ALCOHOLICS*/
@@ -356,6 +357,5 @@ module.exports = function(){
       })
     }
   });
-
 }
 
