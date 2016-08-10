@@ -12,7 +12,7 @@
 </table>
 
 <h1>Produkt Liste</h1>
-<table>
+{{#sortable-group tagName="table" onChange="reorderItems" as |group|}}
   <tr>
     <th>Name</th>
     <th>Einheitsgröße</th>
@@ -21,7 +21,11 @@
     <th>Steuer</th>
     <th>Kategorie</th>
   </tr>
-  {{#each model.items as |item|}}
-    {{dashboard/item-item item=item units=model.units categories=model.categories}}
+  {{#each sortedItems as |item|}}
+    {{#sortable-item tagName="tr" model=item group=group handle=".handle"}}
+      <td>{{item.sortId}}</td>
+      <td><span class="handle">&varr;  </span></td>
+      {{dashboard/item-item item=item units=model.units categories=model.categories}}
+    {{/sortable-item}}
   {{/each}}
-</table>
+{{/sortable-group}}
