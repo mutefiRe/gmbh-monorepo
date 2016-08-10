@@ -3,7 +3,8 @@
 module.exports = function(sequelize, DataTypes) {
   let Orderitem = sequelize.define("Orderitem", {
     extras: {type: DataTypes.STRING, allowNull: true,  unique: false},
-    isPaid: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue:false,  unique: false}
+    isPaid: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue:false,  unique: false},
+    forFree: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue:false, unique: false}
   }, {
     classMethods: {
       associate: function(models) {
