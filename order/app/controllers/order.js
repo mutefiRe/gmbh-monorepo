@@ -97,7 +97,7 @@ export default Ember.Controller.extend({
       this.set('modalType', 'show-loading-modal');
       this.set('modalButtons', false);
       this.set('modalItem', null);
-      this.set('modalHeadline', 'verarbeite Daten')
+      this.set('modalHeadline', 'verarbeite Daten');
       this.toggleProperty('triggerModal');
     },
     swipeOrderList() {
@@ -152,10 +152,14 @@ export default Ember.Controller.extend({
       this.set('modalHeadline', 'Verbindungsfehler');
       this.set('modalType', 'error-screen');
       this.set('modalButtons', false);
-      this.toggleProperty('triggerModal');
+      if($('.modal').hasClass('hidden')){
+        this.toggleProperty('triggerModal');
+      }
     },
     socketReconnected() {
-      this.toggleProperty('triggerModal');
+      if(!$('.modal').hasClass('hidden')){
+        this.toggleProperty('triggerModal');
+      }
     },
     socketConnected() {
       //on Connection
