@@ -15,6 +15,12 @@ export default Ember.Component.extend({
     },
     showModal(modalType, buttons, item) {
       this.get('showModal')(modalType, buttons, item);
+    },
+    goToOrderList() {
+      this.get('goToOrderList')();
+    },
+    goToOrderOverview() {
+      this.get('goToOrderOverview')();
     }
   }
 });

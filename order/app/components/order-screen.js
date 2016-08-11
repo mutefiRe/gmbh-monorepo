@@ -6,7 +6,7 @@ const {
 } = Ember;
 
 export default Ember.Component.extend(RecognizerMixin, {
-  recognizers: 'swipe vertical-pan',
+  recognizers: 'swipe',
   classNames: ['order-screen'],
   classNameBindings: ['SwipeChange'],
   SwipeChange: function () {

@@ -23,9 +23,9 @@ export default Ember.Component.extend({
   click() {
     this.get('addItemToOrder')(this.get('item'));
   },
-  panStart() {
-    this.triggerAction({action: 'cancel', target: this});
-  },
+  // pan() {
+  //   this.triggerAction({action: 'cancel', target: this});
+  // },
   touchStart() {
     const runLater = Ember.run.later(this, function () {
       this.triggerAction({action: 'showModal', target: this});

@@ -8,5 +8,16 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       categories: this.store.findAll('category'),
       units: this.store.findAll('unit')
     });
+  },
+   actions: {
+    reorderItems(itemModels, draggedModel) {
+      this.set('currentModel.items', itemModels);
+      this.set('currentModel.justDragged', draggedModel);
+
+      for (var i = 0; i < itemModels.length; i++){
+        itemModels[i].set('sortId', i)
+        itemModels[i].save()
+      }
+    }
   }
 });
