@@ -57,13 +57,9 @@ class Print {
     }
   }
 
-  deliveryNote(data, bool) {
-    if(bool !== true) {
-      this.deliveryNote(data);deliveryNote
-    }
-
+  deliveryNote(data, printer) {
     for(let order in data.Orderitems) {
-      this.token_coin('GMBH_COUPON', data.Orderitems[order]);
+      this.token_coin(printer, data.Orderitems[order]);
     }
   }
 
