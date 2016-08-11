@@ -1,2 +1,3 @@
-{{outlet}}
-<h1>Settings</h1>
+{{#each model as |setting|}}
+  {{dashboard/setting-setting setting=setting}}
+{{/each}}

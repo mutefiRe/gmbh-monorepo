@@ -5,7 +5,8 @@
     <th>Vorname</th>
     <th>Nachname</th>
     <th>Passwort</th>
-    <th>Permission</th>
+    <th>Berechtigung</th>
+    <th>Drucker</th>
   </tr>
   {{dashboard/user-item-new createUser=(action 'createUser')}}
 </table>
@@ -17,7 +18,8 @@
     <th>Vorname</th>
     <th>Nachname</th>
     <th>Passwort</th>
-    <th>Permission</th>
+    <th>Berechtigung</th>
+    <th>Drucker</th>
   </tr>
   {{#each model as |userUnit|}}
     {{dashboard/user-item user=userUnit}}

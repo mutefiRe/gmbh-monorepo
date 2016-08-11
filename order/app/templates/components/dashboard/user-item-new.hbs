@@ -3,9 +3,11 @@
 <td>{{input type="text" value=lastname key-up="toggleButton"}}</td>
 <td>{{input type="text" value=password key-up="toggleButton"}}</td>
 
+
 {{#x-select value=permission}}
   {{#x-option value=1}}Waiter{{/x-option}}
   {{#x-option value=0}}Admin{{/x-option}}
   {{!-- {{#x-option value=2}}Servierer{{/x-option}} --}}
 {{/x-select}}
+<td>{{input type="text" value=printer key-up="toggleButton"}}</td>
 <td><button {{action "createUser"}} disabled={{toggle}}>save</button></td>

@@ -10,7 +10,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       Units: this.store.findAll('unit'),
       Orders: this.store.findAll('order'),
       Orderitems: this.store.findAll('orderitem'),
-      Tables: this.store.findAll('table')
+      Tables: this.store.findAll('table'),
+      Settings: this.store.findAll('setting')
     });
   }
 });
