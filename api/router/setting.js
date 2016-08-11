@@ -20,13 +20,18 @@ router.get('/:id', function(req, res){
 })
 
 router.get('/', function(req, res){
-  db.Setting.findAll().then(data =>
-  {
-    if(data[0] === undefined){
-      res.status(404).send("couldn't find any settings")
+  db.Setting.findAll().then((data) => {
+    if (data[0] === undefined) {
+      res.status(404).send({
+        'error': {
+          'msg': "couldn't find any settings"
+        }
+      })
       return
     }
-    res.send(data);
+    res.send({
+      'settings': data
+    });
   })
 })
 
