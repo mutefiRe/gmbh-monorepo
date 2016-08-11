@@ -16,26 +16,20 @@ router.get('/:id', function(req, res){
   })
 })
 
-router.get('/:id/items', function(req, res){
-  db.Items.find({where: {AreaId: req.params.id}}).then(data => {
-    console.log(data)
-    res.send({'items': data});
-  })
-})
-
-
 router.get('/', function(req, res){
-  db.Area.findAll({include: [{model: db.Table}]}).then(data =>
+  db.Area.findAll({include: [{model: db.Table}, {model: db.User}]}).then(data =>
   {
     let areas = JSON.parse(JSON.stringify(data));
     for(var i = 0; i < areas.length; i++){
       areas[i].tables = areas[i].Tables.map(table => table.id);
-      areas[i].Tables = undefined
+      areas[i].Tables = undefined;
+
+      areas[i].users = areas[i].Users.map(user => user.id);
+      areas[i].Users = undefined;
     }
     res.send({'area': areas});
   })
 })
-
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
