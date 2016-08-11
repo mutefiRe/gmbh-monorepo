@@ -45,7 +45,7 @@ router.post('/', function(req, res){
     delete(order.TableId);
     delete(order.UserId);
     res.send({'order': order});
-    io.sockets.emit("update", {'order': order});
+  //  io.sockets.emit("update", {'order': order});
     console.log("O POST");
   })
 })
@@ -56,7 +56,7 @@ router.put('/:id', function(req, res){
     order.update(serialize(req.body.order)).then( data => {
 
       res.send({'order': data});
-      io.sockets.emit("update", {'order': data});
+ //     io.sockets.emit("update", {'order': data});
       console.log("O PUT");
     })
   })

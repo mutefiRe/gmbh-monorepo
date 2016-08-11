@@ -39,7 +39,7 @@ router.post('/', function(req, res){
     delete(item.ItemId);
     delete(item.OrderId);
     res.send({'orderitem': item});
-    io.sockets.emit('update', {'orderitem': item});
+ //   io.sockets.emit('update', {'orderitem': item});
   }).catch(err => {
     res.status(400).send(err)
   })
@@ -57,7 +57,7 @@ router.put('/:id', function(req, res){
     delete(item.ItemId);
     delete(item.OrderId);
     res.send({'orderitem': item});
-    io.sockets.emit('update', {'orderitem': item});
+ //   io.sockets.emit('update', {'orderitem': item});
   }).catch(err => {
     res.status(400).send(err)
   })
