@@ -106,18 +106,24 @@ export default Ember.Controller.extend({
     saveOrder() {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
-      order.save().then(data => {
+      order.save()
+      .then((data) => {
         this.send('showLoadingModal');
-        return Promise
-        .all(this.get('orderItems')
+        return new Promise(
+          this.get('orderItems')
           .map(item => {
             item.set('order', data)
             return item.save()
           })
           )
+      }, (err) => {
+        //TODO: HANDLE ERROR WHEN CAN'T SAVE ORDER
       }).then(() => {
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id}).save();
+      }, (err) => {
+        //TODO: HANDLE ERROR WHEN CAN'T MAKE PRINT REQUEST
+        //COUD PROBABLY BE JUST IGNORED
       }).then((response) => {
         this.toggleProperty('triggerModal');
       })
