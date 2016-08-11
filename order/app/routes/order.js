@@ -3,6 +3,7 @@ import AuthenticatedRouteMixin from '../mixins/authenticated-route-mixin';
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   store: Ember.inject.service('store'),
+  sessionPayload: Ember.inject.service('session-payload'),
   model() {
     return Ember.RSVP.hash({
       categories: this.store.findAll('category'),
@@ -10,7 +11,9 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       Units: this.store.findAll('unit'),
       Orders: this.store.findAll('order'),
       Orderitems: this.store.findAll('orderitem'),
-      Tables: this.store.findAll('table')
+      Tables: this.store.findAll('table'),
+      Areas: this.store.findAll('area'),
+      currentUser: this.store.findRecord('user', 2),
     });
   }
 });
