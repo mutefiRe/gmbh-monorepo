@@ -129,6 +129,9 @@ export default Ember.Component.extend(RecognizerMixin, {
         .then(() => {
           this.triggerAction({action: 'triggerModal'})
         });
+      })
+      .catch((err) => {
+        //TODO COULDN'T UPDATE ITEMS
       });
     }
   }
