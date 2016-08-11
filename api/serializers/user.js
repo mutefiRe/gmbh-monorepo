@@ -6,7 +6,8 @@ module.exports = function(data){
     firstname: data.firstname,
     lastname: data.lastname,
     permission: data.permission,
-    password: data.password
+    password: data.password,
+    printer: data.printer
   }
   return user;
 }
