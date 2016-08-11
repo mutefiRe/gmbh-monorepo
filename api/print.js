@@ -57,6 +57,12 @@ class Print {
     }
   }
 
+  deliveryNote(data, printer) {
+    for(let order in data.Orderitems) {
+      this.token_coin(printer, data.Orderitems[order]);
+    }
+  }
+
   singleDeliveryNote(printer, data) {
     const order = this.transformOrder(data);
     const printData = [];
@@ -123,6 +129,25 @@ class Print {
     printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.User.firstname} ${order.User.lastname}`,48))
     printData.push(FEED, PAPER_PART_CUT);
 
+    printJob(printer, printData);
+  }
+
+  token_coin(printer, data) {
+    let orderItem = data.Item.name.toUpperCase().substr(0, 46);
+    if(data.Item.Category.showAmount) {
+      orderItem = `${orderItem.toUpperCase().substr(0, 35)} ${showAmount(data.Item.amount)}${data.Item.Unit.name}`;
+    }
+
+    const printData = []
+    printData.push(CHAR_CODE);
+    printData.push(ENTER);
+    printData.push(rightPadding('WERTMARKE FÜR', 24), leftPadding(formatDate(data.createdAt), 24), ENTER);
+
+    printData.push(ENTER, ENTER, ENTER);
+    printData.push(TXT_2HEIGHT, centerPadding('1x ' + orderItem, 48), TXT_NORMAL);
+    printData.push(ENTER, ENTER, ENTER);
+    printData.push(centerPadding('Oberländer Bataillons-Schützenfest', 48))
+    printData.push(FEED, PAPER_PART_CUT);
     printJob(printer, printData);
   }
 

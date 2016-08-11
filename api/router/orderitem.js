@@ -57,7 +57,11 @@ router.put('/:id', function(req, res){
     delete(item.ItemId);
     delete(item.OrderId);
     res.send({'orderitem': item});
+<<<<<<< HEAD
+    io.sockets.emit('update', {'orderitem': item});
+=======
  //   io.sockets.emit('update', {'orderitem': item});
+>>>>>>> develop
   }).catch(err => {
     res.status(400).send(err)
   })
