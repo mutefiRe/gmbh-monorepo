@@ -10,5 +10,7 @@ export default DS.Model.extend({
   icon: DS.attr('string'),
   printer: DS.attr('string'),
   category: DS.belongsTo('category'),
-  items: DS.hasMany('item')
+  items: DS.hasMany('item'),
+  itemsSorting: ['sortId', 'name'],
+  sortedItems: Ember.computed.sort('items', 'itemsSorting')
 });
