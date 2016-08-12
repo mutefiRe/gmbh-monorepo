@@ -111,11 +111,17 @@ export default Ember.Component.extend(RecognizerMixin, {
           this.triggerAction({action: 'triggerModal'})
         });
       })
+      .catch((err) => {
+        //TODO: HANDLE ERROR WHEN CAN'T SAVE PAYMENT
+      });
     },
     payAll(){
       this.triggerAction({action: 'showLoadingModal'});
       let proms = [];
       let orderitems = this.get('order.orderitems');
+      let rollbackOrder = {};
+      rollbackOrder.isPaid = this.get('order.isPaid');
+      rollbackOrder.totalAmount = this.get('order.totalAmount');
       orderitems.forEach((item) => {
         item.set("isPaid", true);
         proms.push(item.save());
@@ -131,7 +137,7 @@ export default Ember.Component.extend(RecognizerMixin, {
         });
       })
       .catch((err) => {
-        //TODO COULDN'T UPDATE ITEMS
+        //TODO: HANDLE ERROR WHEN CAN'T SAVE PAYMENT
       });
     }
   }

@@ -109,12 +109,13 @@ export default Ember.Controller.extend({
       order.save()
       .then((data) => {
         this.send('showLoadingModal');
-        return new Promise(
-          this.get('orderItems')
-          .map(item => {
-            item.set('order', data)
-            return item.save()
-          })
+        return Promise
+          .all(
+            this.get('orderItems')
+            .map(item => {
+              item.set('order', data)
+              return item.save()
+            })
           )
       }, (err) => {
         //TODO: HANDLE ERROR WHEN CAN'T SAVE ORDER
