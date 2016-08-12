@@ -18,11 +18,12 @@ export default Ember.Component.extend(RecognizerMixin, {
         return 'slide-left-in';
       }
     } else {
-      if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-overview.last')) {
-        return 'slide-left-in';
-      } else if (this.get('swipeHelper.order-detail.last') && this.get('swipeHelper.order-overview.active')) {
+      if (this.get('swipeHelper.order-detail.last') && this.get('swipeHelper.order-overview.active')) {
         return 'slide-right-out';
       }
+    }
+    if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-overview.last')) {
+      return 'slide-left-in';
     }
     return 'none';
   }.property('swipeHelper.order-detail.active'),
@@ -73,6 +74,12 @@ export default Ember.Component.extend(RecognizerMixin, {
     });
   },
   actions: {
+    goToOrderScreen() {
+      this.set('swipeHelper.order-screen.active', true);
+      this.set('swipeHelper.order-screen.last', false);
+      this.set('swipeHelper.order-detail.active', false);
+      this.set('swipeHelper.order-detail.last', true);
+    },
     goToOrderOverview() {
       this.set('swipeHelper.order-overview.active', true);
       this.set('swipeHelper.order-overview.last', false);
