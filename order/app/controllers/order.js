@@ -109,7 +109,7 @@ export default Ember.Controller.extend({
       order.save()
       .then((data) => {
         this.send('showLoadingModal');
-        return new Promise(
+        return Promise.all(
           this.get('orderItems')
           .map(item => {
             item.set('order', data)

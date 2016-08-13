@@ -54,6 +54,9 @@
 <br>
 {{/if}}
 
+<div class="flexcontainer">
+{{input type="checkbox" checked=forFree}} Mit Gutschein bezahlen
+</div>
 {{#if payOrder.totalAmount}}
 <div class="flexcontainer">
   <button {{action "paySelected"}} class="bigbutton default-btn">Auswahl bezahlen</button>
