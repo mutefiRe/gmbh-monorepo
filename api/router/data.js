@@ -9,6 +9,7 @@ const serialize = require('../serializers/order');
 const print = require('../print.js');
 const csvWriter = require('csv-write-stream');
 const fs = require('fs');
+const path = require('path');
 
 
 
@@ -18,34 +19,72 @@ router.use(function timeLog(req, res, next){
 })
 
 router.get('/', function(req, res){
-  db.Orderitem.findAll({include: [{model: db.Item}]}).then(data =>
+  db.Orderitem.findAll({include: [{model: db.Item, include: [db.Category]}]}).then(data =>
   {
     let Orderitems = JSON.parse(JSON.stringify(data));
 
     let csvItems = {};
 
-    let writer = csvWriter({ headers: ["Produkt", "Anzahl", "Verdienst"]});
-    writer.pipe(fs.createWriteStream('out.csv'));
+    let writer = csvWriter({ headers: ["Produkt", "Verkauft","davon Frei", "Verdienst"]});
+    writer.pipe(fs.createWriteStream('products.csv'));
 
     for(let Orderitem in Orderitems){
+      let freecount = 0;
+
+      if(Orderitems[Orderitem].forFree){ freecount = 1; }
       if(!csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount]){
-        csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount] = {count : 1, price: Orderitems[Orderitem].Item.price};
+        csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount] = {count : 1, price: Orderitems[Orderitem].Item.price, freecount : freecount};
       }else{
         csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount].count++;
-        csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount].price += Orderitems[Orderitem].Item.price;
+        if(!freecount){
+          csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount].price += Orderitems[Orderitem].Item.price;
+        }
+        csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount].freecount += freecount;
+
       }
     }
 
     for(let item in csvItems){
-      writer.wrtie([item,csvItems[item].count,csvItems[item].price]);
+      writer.write([item,csvItems[item].count, csvItems[item].freecount, csvItems[item].price]);
     }
-
-    console.log(csvItems);
-
     writer.end();
 
-    res.send({'items': Orderitems});
-  })
+    let writer2 = csvWriter({ headers: ["Kategorie", "Verkauft","davon Frei", "Verdienst"]});
+    writer2.pipe(fs.createWriteStream('categories.csv'));
+
+    csvItems = {};
+    for(let Orderitem in Orderitems){
+      let category = Orderitems[Orderitem].Item.Category;
+      let freecount = 0;
+      if(Orderitems[Orderitem].forFree){ freecount = 1; }
+      if(!csvItems[category.name]){
+        csvItems[category.name] = {count : 1, price: Orderitems[Orderitem].Item.price, freecount : freecount};
+      }else{
+        csvItems[category.name].count++;
+        if(!freecount){
+         csvItems[category.name].price += Orderitems[Orderitem].Item.price;
+       }
+       csvItems[category.name].freecount += freecount;
+     }
+   }
+
+
+
+   for(let item in csvItems){
+    writer2.write([item,csvItems[item].count, csvItems[item].freecount, csvItems[item].price]);
+  }
+  writer2.end();
+
+
+
+
+
+
+
+  res.send("Erfolgreich erstellt!");
 })
+})
+
+
 
 module.exports = router;
