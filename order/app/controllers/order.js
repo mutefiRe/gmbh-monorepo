@@ -119,6 +119,9 @@ export default Ember.Controller.extend({
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id, isBill: false}).save();
       }).then((response) => {
+        if(this.get('model.Settings.firstObject.instantPay')){
+          this.set('actualOrder', order);
+        }
         this.toggleProperty('triggerModal');
       })
     },
