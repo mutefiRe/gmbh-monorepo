@@ -5,7 +5,8 @@ module.exports = function(data){
     extras: data.extras,
     isPaid: data.isPaid,
     OrderId: data.order,
-    ItemId: data.item
+    ItemId: data.item,
+    forFree: data.forFree
   }
   return orderitem;
 }
