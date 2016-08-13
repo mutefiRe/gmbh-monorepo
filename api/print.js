@@ -57,9 +57,9 @@ class Print {
     }
   }
 
-  deliveryNote(data, printer) {
+  tokenCoin(data, printer) {
     for(let order in data.Orderitems) {
-      this.token_coin(printer, data.Orderitems[order]);
+      this.singleTokenCoin(printer, data.Orderitems[order]);
     }
   }
 
@@ -94,7 +94,7 @@ class Print {
     printJob(printer, printData);
   }
 
-  bill(printer, data){
+  bill(data, printer){
     const order = this.transformOrder(data);
 
     const printData = []
@@ -132,7 +132,7 @@ class Print {
     printJob(printer, printData);
   }
 
-  token_coin(printer, data) {
+  singleTokenCoin(printer, data) {
     let orderItem = data.Item.name.toUpperCase().substr(0, 46);
     if(data.Item.Category.showAmount) {
       orderItem = `${orderItem.toUpperCase().substr(0, 35)} ${showAmount(data.Item.amount)}${data.Item.Unit.name}`;
@@ -174,6 +174,7 @@ class Print {
 }
 
 function printJob(printerName, data) {
+  console.log(`recieved print job for printer ${printerName}`)
   printer.printDirect({
     data: toPrintBuffer(data),
     printer: printerName,

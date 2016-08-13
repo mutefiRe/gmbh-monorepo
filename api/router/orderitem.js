@@ -17,7 +17,7 @@ router.get('/:id', function(req, res){
 })
 
 router.get('/', function(req, res){
-  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order}]}).then(data =>
+  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(data =>
   {
     let orderitems = JSON.parse(JSON.stringify(data));
     for(var i = 0; i < orderitems.length; i++){
