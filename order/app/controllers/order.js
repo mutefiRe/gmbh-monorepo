@@ -119,8 +119,11 @@ export default Ember.Controller.extend({
           )
       }).then(() => {
         this.send('resetOrder');
-        return this.store.createRecord('print',{order: order.id}).save();
+        return this.store.createRecord('print',{order: order.id, isBill: false}).save();
       }).then((response) => {
+        if(this.get('model.Settings.firstObject.instantPay')){
+          this.set('actualOrder', order);
+        }
         this.toggleProperty('triggerModal');
         goToOrderScreen();
       }).catch((err)=>{
@@ -149,6 +152,11 @@ export default Ember.Controller.extend({
         }
       }
       this.set('viewOrder', viewOrder);
+    },
+    printBill(orderId){
+      this.store.createRecord('print', {order: orderId, isBill: true}).save().then(() => {
+        this.toggleProperty('triggerModal');
+      });
     },
     triggerModal(){
       this.toggleProperty('triggerModal');

@@ -11,10 +11,18 @@ export default Ember.Component.extend(RecognizerMixin, {
   tagName: 'div',
   classNameBindings: ['SwipeChange'],
   SwipeChange: function () {
-    if (this.get('swipeHelper.order-list.active') && this.get('swipeHelper.order-screen.last')) {
-      return 'slide-left-in';
-    } else if (this.get('swipeHelper.order-list.last') && this.get('swipeHelper.order-screen.active')) {
-      return 'slide-right-out';
+    if(this.get('settings.firstObject.instantPay')){
+      if (this.get('swipeHelper.order-list.active') && this.get('swipeHelper.order-screen.last')) {
+        return 'slide-left-in';
+      } else if (this.get('swipeHelper.order-list.last') && this.get('swipeHelper.order-detail.active')) {
+        return 'slide-left-out';
+      }
+    } else {
+      if (this.get('swipeHelper.order-list.active') && this.get('swipeHelper.order-screen.last')) {
+        return 'slide-left-in';
+      } else if (this.get('swipeHelper.order-list.last') && this.get('swipeHelper.order-screen.active')) {
+        return 'slide-right-out';
+      }
     }
 
     return 'none';
@@ -37,6 +45,14 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('swipeHelper.order-screen.last', false);
       this.set('swipeHelper.order-list.active', false);
       this.set('swipeHelper.order-list.last', true);
+      this.set('swipeHelper.order-detail.last', false);
+    },
+    gotToOrderDetail() {
+      this.set('swipeHelper.order-detail.active', true);
+      this.set('swipeHelper.order-detail.last', false);
+      this.set('swipeHelper.order-list.active', false);
+      this.set('swipeHelper.order-list.last', true);
+      this.set('swipeHelper.order-screen.last', false);
     },
     deleteOrderItem(index) {
       this.get('deleteOrderItem')(index);
@@ -49,10 +65,17 @@ export default Ember.Component.extend(RecognizerMixin, {
     },
     saveOrder() {
       this.get('saveOrder')(()=>{
-        this.triggerAction({
-          action: 'goToOrderScreen',
-          target: this
-        });
+        if(this.get('settings.firstObject.instantPay')){
+          this.triggerAction({
+            action: 'gotToOrderDetail',
+            target: this
+          });
+        } else {
+          this.triggerAction({
+            action: 'goToOrderScreen',
+            target: this
+          });
+        }
       })
     },
     removeItemFromOrder(data) {
