@@ -5,6 +5,7 @@ export default DS.Model.extend({
   updatedAt: DS.attr('date'),
   extras: DS.attr('string'),
   isPaid: DS.attr('boolean'),
+  forFree: DS.attr('boolean'),
   order: DS.belongsTo('order'),
   item: DS.belongsTo('item')
 });

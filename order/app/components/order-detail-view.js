@@ -12,6 +12,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   classNameBindings: ['SwipeChange'],
   viewOrder : {items: {}, totalAmount: 0},
   payOrder: {items: {}, totalAmount: 0},
+  forFree: false,
   SwipeChange: function () {
     if(this.get('settings.firstObject.instantPay')){
       if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-list.last')) {
@@ -37,30 +38,31 @@ export default Ember.Component.extend(RecognizerMixin, {
       let id = item.get('id');
       let extras = orderitem.get('extras');
       let isPaid = orderitem.get('isPaid');
-      if (viewOrder.items[id+extras+isPaid] === undefined) {
-        viewOrder.items[id+extras+isPaid] = {};
-        viewOrder.items[id+extras+isPaid].amount = 0;
+      let forFree = orderitem.get('forFree');
+      if (viewOrder.items[id+extras+isPaid+forFree] === undefined) {
+        viewOrder.items[id+extras+isPaid+forFree] = {};
+        viewOrder.items[id+extras+isPaid+forFree].amount = 0;
       }
-      viewOrder.items[id+extras+isPaid].identifier = id+extras+isPaid;
-      viewOrder.items[id+extras+isPaid].amount++;
+      viewOrder.items[id+extras+isPaid+forFree].identifier = id+extras+isPaid+forFree;
+      viewOrder.items[id+extras+isPaid+forFree].amount++;
       if(!orderitem.get('isPaid')){
         viewOrder.totalAmount += (item.get('price'));
-
       }
-      viewOrder.items[id+extras+isPaid].isPaid = orderitem.get('isPaid');
-      viewOrder.items[id+extras+isPaid].prize = (item.get('price') * viewOrder.items[id+extras+isPaid].amount);
-      viewOrder.items[id+extras+isPaid].categoryId = item.get('category.id');
+      viewOrder.items[id+extras+isPaid+forFree].isPaid = orderitem.get('isPaid');
+      viewOrder.items[id+extras+isPaid+forFree].forFree = orderitem.get('forFree');
+      viewOrder.items[id+extras+isPaid+forFree].prize = (item.get('price') * viewOrder.items[id+extras+isPaid+forFree].amount);
+      viewOrder.items[id+extras+isPaid+forFree].categoryId = item.get('category.id');
       if(item.get('category.showAmount')){
-        viewOrder.items[id+extras+isPaid].unitName = item.get('unit.name');
-        viewOrder.items[id+extras+isPaid].showAmount = item.get('amount');
+        viewOrder.items[id+extras+isPaid+forFree].unitName = item.get('unit.name');
+        viewOrder.items[id+extras+isPaid+forFree].showAmount = item.get('amount');
       }
       else{
-        viewOrder.items[id+extras+isPaid].showAmount = "";
-        viewOrder.items[id+extras+isPaid].unitName = "";
+        viewOrder.items[id+extras+isPaid+forFree].showAmount = "";
+        viewOrder.items[id+extras+isPaid+forFree].unitName = "";
       }
-      viewOrder.items[id+extras+isPaid].name = item.get('name');
-      viewOrder.items[id+extras+isPaid].extras = extras || null;
-      viewOrder.items[id+extras+isPaid].id = id;
+      viewOrder.items[id+extras+isPaid+forFree].name = item.get('name');
+      viewOrder.items[id+extras+isPaid+forFree].extras = extras || null;
+      viewOrder.items[id+extras+isPaid+forFree].id = id;
 
       this.set('viewOrder', viewOrder);
     })
@@ -92,15 +94,21 @@ export default Ember.Component.extend(RecognizerMixin, {
       let pay =  this.get('payOrder');
       let items = this.get('payOrder.items');
       let orderitems = this.get('order.orderitems');
+      const forFreeOrder = this.get('forFree');
       for(let Item in items){
         let amount = items[Item].amount;
         orderitems.forEach((item)=>{
           let extras = item.get('extras');
           let id = item.get('item.id');
           let isPaid = item.get('isPaid');
+          const forFree = item.get('forFree')
           if(amount > 0){
-            if(items[Item].identifier == id+extras+isPaid){
+            if(items[Item].identifier == id+extras+isPaid+forFree){
               amount--;
+              if(forFreeOrder) {
+                item.set("forFree", true);
+              }
+
               item.set("isPaid", true);
               proms.push(item.save());
             }
@@ -121,6 +129,9 @@ export default Ember.Component.extend(RecognizerMixin, {
         order.save()
         .then(() => {
           this.triggerAction({action: 'triggerModal'})
+
+          //reset forFree
+          this.set('forFree', false)
         });
       })
       .catch((err) => {
@@ -134,10 +145,12 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.triggerAction({action: 'showLoadingModal'});
       let proms = [];
       let orderitems = this.get('order.orderitems');
-      let rollbackOrder = {};
-      rollbackOrder.isPaid = this.get('order.isPaid');
-      rollbackOrder.totalAmount = this.get('order.totalAmount');
+      const forFree = this.get('forFree');
       orderitems.forEach((item) => {
+        const isPaid = item.get('isPaid');
+        if(forFree && !isPaid) {
+          item.set('forFree', true);
+        }
         item.set("isPaid", true);
         proms.push(item.save());
       })
@@ -149,6 +162,9 @@ export default Ember.Component.extend(RecognizerMixin, {
         order.save()
         .then(() => {
           this.triggerAction({action: 'triggerModal'});
+
+          //reset forFree
+          this.set('forFree', false);
         });
       })
       .catch((err) => {
