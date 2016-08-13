@@ -22,7 +22,7 @@ router.get('/:id', function(req, res){
 
 
 router.get('/', function(req, res){
-  db.Order.findAll({include: [{model: db.Orderitem},{model: db.Table}]}).then(data =>
+  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(data =>
   {
     let orders = JSON.parse(JSON.stringify(data));
     for(let i = 0; i < orders.length; i++){
@@ -34,7 +34,6 @@ router.get('/', function(req, res){
     res.send({'order': orders});
   })
 })
-
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
