@@ -48,11 +48,12 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('showModal')('discard-order', false);
     },
     saveOrder() {
-      this.get('saveOrder')();
-      this.triggerAction({
-        action: 'goToOrderScreen',
-        target: this
-      });
+      this.get('saveOrder')(()=>{
+        this.triggerAction({
+          action: 'goToOrderScreen',
+          target: this
+        });
+      })
     },
     removeItemFromOrder(data) {
       this.get('removeItemFromOrder')(data);

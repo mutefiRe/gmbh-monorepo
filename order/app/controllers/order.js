@@ -103,7 +103,7 @@ export default Ember.Controller.extend({
     swipeOrderList() {
       this.toggleProperty('triggerOrderListSwipe');
     },
-    saveOrder() {
+    saveOrder(goToOrderScreen) {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
       order.save()
@@ -117,16 +117,14 @@ export default Ember.Controller.extend({
               return item.save()
             })
           )
-      }, (err) => {
-        //TODO: HANDLE ERROR WHEN CAN'T SAVE ORDER
       }).then(() => {
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id}).save();
-      }, (err) => {
-        //TODO: HANDLE ERROR WHEN CAN'T MAKE PRINT REQUEST
-        //COUD PROBABLY BE JUST IGNORED
       }).then((response) => {
         this.toggleProperty('triggerModal');
+        goToOrderScreen();
+      }).catch((err)=>{
+        // nothing to do here
       })
     },
     resetOrder(){

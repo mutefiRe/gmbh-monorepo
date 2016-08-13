@@ -112,7 +112,10 @@ export default Ember.Component.extend(RecognizerMixin, {
         });
       })
       .catch((err) => {
-        //TODO: HANDLE ERROR WHEN CAN'T SAVE PAYMENT
+        this.get('order.orderitems').forEach((item) => {
+          item.rollbackAttributes();
+        })
+        this.get('order').rollbackAttributes();
       });
     },
     payAll(){
@@ -137,7 +140,10 @@ export default Ember.Component.extend(RecognizerMixin, {
         });
       })
       .catch((err) => {
-        //TODO: HANDLE ERROR WHEN CAN'T SAVE PAYMENT
+        this.get('order.orderitems').forEach((item) => {
+          item.rollbackAttributes();
+        })
+        this.get('order').rollbackAttributes();
       });
     }
   }
