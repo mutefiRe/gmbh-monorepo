@@ -19,6 +19,7 @@ export default Ember.Controller.extend({
   order: null,
   modalItem: null,
   orderItems: [],
+  barKeeper: false,
   user: null,
   actualOrder: null,
   viewOrder: {
@@ -35,8 +36,14 @@ export default Ember.Controller.extend({
       let order = this.store.createRecord('order', {});
       order.set('user', user);
       this.set('order', order);
-    });
 
+      if (this.get('user.printer')) {
+        this.set('barKeeper', true);
+        this.store.findAll('table').then((table) => {
+          order.set('table', table.get('firstObject'));
+        });
+      }
+    });
   },
   actions: {
     changeCategory(category) {
@@ -106,16 +113,15 @@ export default Ember.Controller.extend({
     saveOrder() {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
-      order.save()
-      .then((data) => {
+      order.save().then(data => {
         this.send('showLoadingModal');
-        return new Promise(
-          this.get('orderItems')
+        return Promise
+        .all(this.get('orderItems')
           .map(item => {
             item.set('order', data)
             return item.save()
           })
-          )
+        )
       }, (err) => {
         //TODO: HANDLE ERROR WHEN CAN'T SAVE ORDER
       }).then(() => {
