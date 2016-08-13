@@ -13,12 +13,18 @@ export default Ember.Component.extend(RecognizerMixin, {
   viewOrder : {items: {}, totalAmount: 0},
   payOrder: {items: {}, totalAmount: 0},
   SwipeChange: function () {
+    if(this.get('settings.firstObject.instantPay')){
+      if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-list.last')) {
+        return 'slide-left-in';
+      }
+    } else {
+      if (this.get('swipeHelper.order-detail.last') && this.get('swipeHelper.order-overview.active')) {
+        return 'slide-right-out';
+      }
+    }
     if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-overview.last')) {
       return 'slide-left-in';
-    } else if (this.get('swipeHelper.order-detail.last') && this.get('swipeHelper.order-overview.active')) {
-      return 'slide-right-out';
     }
-
     return 'none';
   }.property('swipeHelper.order-detail.active'),
 
@@ -68,6 +74,12 @@ export default Ember.Component.extend(RecognizerMixin, {
     });
   },
   actions: {
+    goToOrderScreen() {
+      this.set('swipeHelper.order-screen.active', true);
+      this.set('swipeHelper.order-screen.last', false);
+      this.set('swipeHelper.order-detail.active', false);
+      this.set('swipeHelper.order-detail.last', true);
+    },
     goToOrderOverview() {
       this.set('swipeHelper.order-overview.active', true);
       this.set('swipeHelper.order-overview.last', false);
@@ -111,11 +123,20 @@ export default Ember.Component.extend(RecognizerMixin, {
           this.triggerAction({action: 'triggerModal'})
         });
       })
+      .catch((err) => {
+        this.get('order.orderitems').forEach((item) => {
+          item.rollbackAttributes();
+        })
+        this.get('order').rollbackAttributes();
+      });
     },
     payAll(){
       this.triggerAction({action: 'showLoadingModal'});
       let proms = [];
       let orderitems = this.get('order.orderitems');
+      let rollbackOrder = {};
+      rollbackOrder.isPaid = this.get('order.isPaid');
+      rollbackOrder.totalAmount = this.get('order.totalAmount');
       orderitems.forEach((item) => {
         item.set("isPaid", true);
         proms.push(item.save());
@@ -127,12 +148,19 @@ export default Ember.Component.extend(RecognizerMixin, {
         order.set('totalAmount', 0);
         order.save()
         .then(() => {
-          this.triggerAction({action: 'triggerModal'})
+          this.triggerAction({action: 'triggerModal'});
         });
       })
       .catch((err) => {
-        //TODO COULDN'T UPDATE ITEMS
+        this.get('order.orderitems').forEach((item) => {
+          item.rollbackAttributes();
+        })
+        this.get('order').rollbackAttributes();
       });
+    },
+    printBill() {
+      this.triggerAction({action: 'showLoadingModal'});
+      this.get('printBill')(this.get('order').id);
     }
   }
 });
