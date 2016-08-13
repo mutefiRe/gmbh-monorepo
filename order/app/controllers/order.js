@@ -103,17 +103,19 @@ export default Ember.Controller.extend({
     swipeOrderList() {
       this.toggleProperty('triggerOrderListSwipe');
     },
-    saveOrder() {
+    saveOrder(goToOrderScreen) {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
-      order.save().then(data => {
+      order.save()
+      .then((data) => {
         this.send('showLoadingModal');
         return Promise
-        .all(this.get('orderItems')
-          .map(item => {
-            item.set('order', data)
-            return item.save()
-          })
+          .all(
+            this.get('orderItems')
+            .map(item => {
+              item.set('order', data)
+              return item.save()
+            })
           )
       }).then(() => {
         this.send('resetOrder');
@@ -123,6 +125,9 @@ export default Ember.Controller.extend({
           this.set('actualOrder', order);
         }
         this.toggleProperty('triggerModal');
+        goToOrderScreen();
+      }).catch((err)=>{
+        // nothing to do here
       })
     },
     resetOrder(){

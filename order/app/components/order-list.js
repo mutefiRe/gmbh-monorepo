@@ -64,18 +64,19 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('showModal')('discard-order', false);
     },
     saveOrder() {
-      this.get('saveOrder')();
-      if(this.get('settings.firstObject.instantPay')){
-        this.triggerAction({
-        action: 'gotToOrderDetail',
-        target: this
-      });
-      } else {
-        this.triggerAction({
-          action: 'goToOrderScreen',
-          target: this
-        });
-      }
+      this.get('saveOrder')(()=>{
+        if(this.get('settings.firstObject.instantPay')){
+          this.triggerAction({
+            action: 'gotToOrderDetail',
+            target: this
+          });
+        } else {
+          this.triggerAction({
+            action: 'goToOrderScreen',
+            target: this
+          });
+        }
+      })
     },
     removeItemFromOrder(data) {
       this.get('removeItemFromOrder')(data);
