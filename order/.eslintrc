@@ -27,7 +27,7 @@
     "no-ex-assign": 2,
     "no-extra-parens": [1,"all"],
     "no-extra-semi": 2,
-    "no-magic-numbers": 1,
+    "no-magic-numbers": 0,
     "no-invalid-regexp": 2,
     "no-irregular-whitespace": 1,
     "no-negated-in-lhs": 1,

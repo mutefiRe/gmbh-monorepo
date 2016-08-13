@@ -139,9 +139,13 @@ export default Ember.Component.extend(RecognizerMixin, {
         order.set('totalAmount', 0);
         order.save()
         .then(() => {
-          this.triggerAction({action: 'triggerModal'})
+          this.triggerAction({action: 'triggerModal'});
         });
       });
+    },
+    printBill() {
+      this.triggerAction({action: 'showLoadingModal'});
+      this.get('printBill')(this.get('order').id);
     }
   }
 });

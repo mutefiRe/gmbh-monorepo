@@ -4,7 +4,7 @@
 
 {{#modal-box triggerModal=triggerModal headline=modalHeadline modalButtons=modalButtons}}
 
-{{component modalType tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem resetOrder=(action "resetOrder") swipeOrderList=(action "swipeOrderList")}}
+{{component modalType currentUser=model.currentUser tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem resetOrder=(action "resetOrder") swipeOrderList=(action "swipeOrderList")}}
 {{/modal-box}}
 
 {{order-list settings=model.Settings viewOrder=viewOrder order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal") swipeHelper=swipeHelper triggerOrderListSwipe=triggerOrderListSwipe}}
@@ -12,4 +12,4 @@
 
 {{order-overview settings=model.Settings  actualOrder= actualOrder orders=model.Orders swipeHelper=swipeHelper}}
 
-{{order-detail-view settings=model.Settings order=actualOrder swipeHelper=swipeHelper}}
+{{order-detail-view settings=model.Settings order=actualOrder swipeHelper=swipeHelper printBill=(action "printBill")}}
