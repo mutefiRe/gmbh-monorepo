@@ -14,12 +14,18 @@ export default Ember.Component.extend(RecognizerMixin, {
   payOrder: {items: {}, totalAmount: 0},
   forFree: false,
   SwipeChange: function () {
+    if(this.get('settings.firstObject.instantPay')){
+      if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-list.last')) {
+        return 'slide-left-in';
+      }
+    } else {
+      if (this.get('swipeHelper.order-detail.last') && this.get('swipeHelper.order-overview.active')) {
+        return 'slide-right-out';
+      }
+    }
     if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-overview.last')) {
       return 'slide-left-in';
-    } else if (this.get('swipeHelper.order-detail.last') && this.get('swipeHelper.order-overview.active')) {
-      return 'slide-right-out';
     }
-
     return 'none';
   }.property('swipeHelper.order-detail.active'),
 
@@ -70,6 +76,12 @@ export default Ember.Component.extend(RecognizerMixin, {
     });
   },
   actions: {
+    goToOrderScreen() {
+      this.set('swipeHelper.order-screen.active', true);
+      this.set('swipeHelper.order-screen.last', false);
+      this.set('swipeHelper.order-detail.active', false);
+      this.set('swipeHelper.order-detail.last', true);
+    },
     goToOrderOverview() {
       this.set('swipeHelper.order-overview.active', true);
       this.set('swipeHelper.order-overview.last', false);
@@ -122,6 +134,12 @@ export default Ember.Component.extend(RecognizerMixin, {
           this.set('forFree', false)
         });
       })
+      .catch((err) => {
+        this.get('order.orderitems').forEach((item) => {
+          item.rollbackAttributes();
+        })
+        this.get('order').rollbackAttributes();
+      });
     },
     payAll(){
       this.triggerAction({action: 'showLoadingModal'});
@@ -150,7 +168,10 @@ export default Ember.Component.extend(RecognizerMixin, {
         });
       })
       .catch((err) => {
-        //TODO COULDN'T UPDATE ITEMS
+        this.get('order.orderitems').forEach((item) => {
+          item.rollbackAttributes();
+        })
+        this.get('order').rollbackAttributes();
       });
     },
     printBill() {

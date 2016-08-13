@@ -19,6 +19,7 @@ export default Ember.Controller.extend({
   order: null,
   modalItem: null,
   orderItems: [],
+  barKeeper: false,
   user: null,
   actualOrder: null,
   viewOrder: {
@@ -35,8 +36,14 @@ export default Ember.Controller.extend({
       let order = this.store.createRecord('order', {});
       order.set('user', user);
       this.set('order', order);
-    });
 
+      if (this.get('user.printer')) {
+        this.set('barKeeper', true);
+        this.store.findAll('table').then((table) => {
+          order.set('table', table.get('firstObject'));
+        });
+      }
+    });
   },
   actions: {
     changeCategory(category) {
@@ -103,26 +110,31 @@ export default Ember.Controller.extend({
     swipeOrderList() {
       this.toggleProperty('triggerOrderListSwipe');
     },
-    saveOrder() {
+    saveOrder(goToOrderScreen) {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
       order.save()
       .then((data) => {
         this.send('showLoadingModal');
-        return Promise.all(
-          this.get('orderItems')
-          .map(item => {
-            item.set('order', data)
-            return item.save()
-          })
+        return Promise
+          .all(
+            this.get('orderItems')
+            .map(item => {
+              item.set('order', data)
+              return item.save()
+            })
           )
-      }, (err) => {
-        //TODO: HANDLE ERROR WHEN CAN'T SAVE ORDER
       }).then(() => {
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id, isBill: false}).save();
       }).then((response) => {
+        if(this.get('model.Settings.firstObject.instantPay')){
+          this.set('actualOrder', order);
+        }
         this.toggleProperty('triggerModal');
+        goToOrderScreen();
+      }).catch((err)=>{
+        // nothing to do here
       })
     },
     resetOrder(){

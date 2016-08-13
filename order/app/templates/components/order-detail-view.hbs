@@ -58,16 +58,26 @@
   {{input id="voucher" type="checkbox" checked=forFree}} <label for="voucher">Mit Gutschein bezahlen</label>
 </div>
 {{#if payOrder.totalAmount}}
-<div class="flexcontainer">
-  <button {{action "paySelected"}} class="bigbutton default-btn">Auswahl bezahlen</button>
-</div>
+  <div class="flexcontainer">
+    <button {{action "paySelected"}} class="bigbutton default-btn">Auswahl bezahlen</button>
+  </div>
 {{/if}}
 <div class="flexcontainer">
-  <button {{action "goToOrderOverview"}} class="smallbutton-grey">zurück</button>
+  <button {{action "goToOrderOverview"}} class="smallbutton-grey">
+    {{#if settings.firstObject.instantPay}}
+      Meine Bestellungen anzeigen
+    {{else}}
+      zurück
+    {{/if}}
+  </button>
   {{#if order.isPaid}}
   <button {{action "printBill"}} class="smallbutton-blue">Rechnung drucken</button>
   {{else}}
   <button {{action 'payAll'}} class="smallbutton-blue">Alles bezahlen</button>
   {{/if}}
-
+</div>
+<div class="flexcontainer">
+  {{#if settings.firstObject.instantPay}}
+    <button {{action 'goToOrderScreen'}} class="bigbutton default-btn">neue Bestellung aufnehmen</button>
+  {{/if}}
 </div>
