@@ -127,12 +127,16 @@ export default Ember.Component.extend(RecognizerMixin, {
         order.set('totalAmount', 0);
         order.save()
         .then(() => {
-          this.triggerAction({action: 'triggerModal'})
+          this.triggerAction({action: 'triggerModal'});
         });
       })
       .catch((err) => {
         //TODO COULDN'T UPDATE ITEMS
       });
+    },
+    printBill() {
+      this.triggerAction({action: 'showLoadingModal'});
+      this.get('printBill')(this.get('order').id);
     }
   }
 });
