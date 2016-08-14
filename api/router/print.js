@@ -27,7 +27,7 @@ router.post('/', function(req, res){
       print.bill(orders, billprinter);
     } else if(userPrinter) {
       console.log('Print delivery Note from User assigned Printer')
-      print.singleTokenCoin(orders, userPrinter);
+      print.tokenCoin(orders, userPrinter);
     } else {
       console.log('Print delivery Note')
       print.deliveryNote(orders);
