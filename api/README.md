@@ -1,11 +1,11 @@
 [![CircleCI](https://circleci.com/gh/gabsi20/gmbh-backend/tree/develop.svg?style=svg)](https://circleci.com/gh/gabsi20/gmbh-backend/tree/develop)
 
 # GmBh Backend
-##MMP2b
+## MMP2b
 
-###Setup
+### Setup
 
-####Database
+#### Database
 Install MySQL on your platfrom
 We need to set up a Production, Development and Test Database
 ```
@@ -21,26 +21,26 @@ password: ""
 hostname: "localhost"
 port: 3306
 ```
-####Install
+#### Install
 ```
 npm install
 ```
 
-####API Testing with Postman
+#### API Testing with Postman
 Testing our API Funktionality is easy with Postman.
 
 Check it out: [get Postman](http://www.getpostman.com/)
 
 We have prepared the Requests for you: [shared Collection](https://www.getpostman.com/collections/e5f341bd489ee40b27df)
 
-###Contributors###
+### Contributors
 - [Alexander Gabriel](https://www.github.com/gabsi20)
 - [Sebastian Huber](https://www.github.com/godfather27)
 - [Konrad Kleeberger](https://www.github.com/Konkrad)
 - [Josef Krabath](https://www.github.com/josefkrabath)
 - [Daniel Trojer](https://www.github.com/mutefiRe)
 
-###Commit Conventions###
+### Commit Conventions
 - __feat:__     new feature
 - __fix:__      a bug fix
 - __docs:__     Documentation only changes
@@ -50,7 +50,7 @@ We have prepared the Requests for you: [shared Collection](https://www.getpostma
 - __test:__     Adding missing tests
 - __chore:__    Chnages to the build process or auxiliary tools and libraries such as documentation generation
 
-###Contributing
+### Contributing
 
 We love structured branching
 
@@ -60,8 +60,10 @@ We love consistent commiting
 
 [Install Commitizen](https://www.npmjs.com/package/commitizen)
 
-###License###
+### License
+
 ===============
+
 Copyright (c) 2015 Alexander Gabriel, Sebastian Huber, Konrad Kleeberger, Josef Krabath, Daniel Trojer
 
 Proprietary software
