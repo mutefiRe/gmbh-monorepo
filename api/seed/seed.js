@@ -92,8 +92,8 @@ module.exports = function(){
           amount: 1,
           price: faker.Helpers.randomNumber(20),
           tax: 0.1,
-          UnitId: data.id,
-          CategoryId: cat.id
+          unitId: data.id,
+          categoryId: cat.id
         })
       }
     });
@@ -146,71 +146,71 @@ module.exports = function(){
         amount: 0.5,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Bier",
         amount: 0.33,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Radler",
         amount: 0.5,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Radler",
         amount: 0.3,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Grüner Veltliner",
         amount: 0.125,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Grüner Veltliner",
         amount: 0.25,
         price: 5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Spätburgunder",
         amount: 0.125,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Spätburgunder",
         amount: 0.25,
         price: 5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Weißer Spritzer",
         amount: 0.5,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Roter Spritzer",
         amount: 0.5,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       }]
       )
     })
@@ -222,36 +222,36 @@ module.exports = function(){
         amount: 2,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Jägermeister",
         amount: 2,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Obstler",
         amount: 4,
         price: 2,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Williams-Schnaps",
         amount: 4,
         price: 2,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Nuss-Schnaps",
         amount: 4,
         price: 2,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       }]
       )
     });
@@ -275,57 +275,57 @@ module.exports = function(){
         amount: 0.3,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Coca Cola",
         amount: 0.5,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Fanta",
         amount: 0.3,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Fanta",
         amount: 0.5,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Sprite",
         amount: 0.3,
         price: 2.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Sprite",
         amount: 0.5,
         price: 3.5,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Mineral",
         amount: 0.3,
         price: 2,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       },{
         name: "Mineral",
         amount: 0.5,
         price: 3,
         tax: 0.2,
-        UnitId: data.id,
-        CategoryId: cat.id
+        unitId: data.id,
+        categoryId: cat.id
       }]
       )
     });
@@ -340,7 +340,7 @@ module.exports = function(){
         name:"T"+i,
         x: 1,
         y: 2,
-        AreaId: area.id
+        areaId: area.id
       })
     }
   });
@@ -353,7 +353,7 @@ module.exports = function(){
         name:"G"+i,
         x: 1,
         y: 2,
-        AreaId: area.id
+        areaId: area.id
       })
     }
   });

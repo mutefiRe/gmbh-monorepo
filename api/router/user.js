@@ -18,7 +18,7 @@ router.get('/me', function(req, res) {
 router.get('/:id', function(req, res) {
   db.User.find({
     where: {
-      id: req.params.id
+      id: req.params.id,
     }
   }).then(data => {
     if (data === null) {

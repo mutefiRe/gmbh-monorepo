@@ -1,15 +1,15 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-  let Orderitem = sequelize.define("Orderitem", {
-    extras: {type: DataTypes.STRING, allowNull: true,  unique: false},
-    isPaid: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue:false,  unique: false},
-    forFree: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue:false, unique: false}
+  const Orderitem = sequelize.define("orderitem", {
+    extras:  {type: DataTypes.STRING,  allowNull: true,  unique: false},
+    isPaid:  {type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue:false },
+    forFree: {type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue:false }
   }, {
     classMethods: {
-      associate: function(models) {
+      associate(models) {
         Orderitem.belongsTo(models.Order, {onDelete: 'RESTRICT'});
-        Orderitem.belongsTo(models.Item, {onDelete: 'RESTRICT'})
+        Orderitem.belongsTo(models.Item,  {onDelete: 'RESTRICT'})
       }
     }
   });

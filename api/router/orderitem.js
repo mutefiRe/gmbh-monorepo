@@ -21,8 +21,7 @@ router.get('/', function(req, res){
   {
     let orderitems = JSON.parse(JSON.stringify(data));
     for(var i = 0; i < orderitems.length; i++){
-      orderitems[i].item = orderitems[i].Item.id
-      orderitems[i].Item = undefined
+      orderitems[i].item = orderitems[i].item.id
     }
     res.send({'orderitem': orderitems});
   })
@@ -34,15 +33,13 @@ router.post('/', function(req, res){
   const io = req.app.get('io');
   db.Orderitem.create(serialize(req.body.orderitem)).then( orderitem => {
     let item = JSON.parse(JSON.stringify(orderitem));
-    item.item = item.ItemId;
-    item.order = item.OrderId;
-    delete(item.ItemId);
-    delete(item.OrderId);
+    item.item = item.itemId;
+    item.order = item.orderId;
     res.send({'orderitem': item});
  //   io.sockets.emit('update', {'orderitem': item});
-  }).catch(err => {
-    res.status(400).send(err)
-  })
+}).catch(err => {
+  res.status(400).send(err)
+})
 })
 
 router.put('/:id', function(req, res){
@@ -52,15 +49,13 @@ router.put('/:id', function(req, res){
     return db.Orderitem.findById(req.params.id);
   }).then((orderitem) => {
     let item = JSON.parse(JSON.stringify(orderitem));
-    item.item = item.ItemId;
-    item.order = item.OrderId;
-    delete(item.ItemId);
-    delete(item.OrderId);
+    item.item = item.itemId;
+    item.order = item.orderId;;
     res.send({'orderitem': item});
  //   io.sockets.emit('update', {'orderitem': item});
-  }).catch(err => {
-    res.status(400).send(err)
-  })
+}).catch(err => {
+  res.status(400).send(err)
+})
 })
 
 router.delete('/:id', function(req, res){

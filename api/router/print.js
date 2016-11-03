@@ -17,7 +17,7 @@ router.post('/', function(req, res){
   {
     const isBill = req.body.print.isBill;
     const orders = JSON.parse(JSON.stringify(data));
-    const userPrinter = data.User.dataValues.printer;
+    const userPrinter = data.user.dataValues.printer;
 
     if(isBill && userPrinter) {
       console.log('Print bill from User assigned Printer')

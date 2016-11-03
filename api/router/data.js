@@ -32,14 +32,14 @@ router.get('/', function(req, res){
       let freecount = 0;
 
       if(Orderitems[Orderitem].forFree){ freecount = 1; }
-      if(!csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount]){
-        csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount] = {count : 1, price: Orderitems[Orderitem].Item.price, freecount : freecount};
+      if(!csvItems[Orderitems[Orderitem].item.name+' '+Orderitems[Orderitem].item.amount]){
+        csvItems[Orderitems[Orderitem].item.name+' '+Orderitems[Orderitem].item.amount] = {count : 1, price: Orderitems[Orderitem].item.price, freecount : freecount};
       }else{
-        csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount].count++;
+        csvItems[Orderitems[Orderitem].item.name+' '+Orderitems[Orderitem].item.amount].count++;
         if(!freecount){
-          csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount].price += Orderitems[Orderitem].Item.price;
+          csvItems[Orderitems[Orderitem].item.name+' '+Orderitems[Orderitem].item.amount].price += Orderitems[Orderitem].item.price;
         }
-        csvItems[Orderitems[Orderitem].Item.name+' '+Orderitems[Orderitem].Item.amount].freecount += freecount;
+        csvItems[Orderitems[Orderitem].item.name+' '+Orderitems[Orderitem].item.amount].freecount += freecount;
 
       }
     }
@@ -62,18 +62,18 @@ router.get('/', function(req, res){
       }else{
         csvItems[category.name].count++;
         if(!freecount){
-         csvItems[category.name].price += Orderitems[Orderitem].Item.price;
-       }
-       csvItems[category.name].freecount += freecount;
-     }
-   }
+          csvItems[category.name].price += Orderitems[Orderitem].item.price;
+        }
+        csvItems[category.name].freecount += freecount;
+      }
+    }
 
 
 
-   for(let item in csvItems){
-    writer2.write([item,csvItems[item].count, csvItems[item].freecount, csvItems[item].price]);
-  }
-  writer2.end();
+    for(let item in csvItems){
+      writer2.write([item,csvItems[item].count, csvItems[item].freecount, csvItems[item].price]);
+    }
+    writer2.end();
 
 
 
@@ -81,8 +81,8 @@ router.get('/', function(req, res){
 
 
 
-  res.send("Erfolgreich erstellt!");
-})
+    res.send("Erfolgreich erstellt!");
+  })
 })
 
 

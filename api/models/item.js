@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-  let Item = sequelize.define("Item", {
+  const Item = sequelize.define("item", {
     name: {type: DataTypes.STRING, allowNull: false,  unique: false},
     amount: {type: DataTypes.DECIMAL(10,3), allowNull: false,  unique: false},
     price: {type: DataTypes.DECIMAL(10,2), allowNull: false,  unique: false},
@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     sortId: {type: DataTypes.INTEGER, allowNull:true, unique:false}
   }, {
     classMethods: {
-      associate: function(models) {
+      associate(models) {
         Item.belongsTo(models.Unit, {onDelete: 'RESTRICT'})
         Item.belongsTo(models.Category, {onDelete: 'RESTRICT'})
       }

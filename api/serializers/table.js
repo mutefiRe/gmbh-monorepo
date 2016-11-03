@@ -5,7 +5,7 @@ module.exports = function(data){
     name: data.name,
     x: data.x,
     y: data.y,
-    AreaId: data.area
+    areaId: data.area
   }
   return table;
 }
