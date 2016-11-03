@@ -11,7 +11,6 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       Items: this.store.findAll('item'),
       Units: this.store.findAll('unit'),
       Orders: this.store.findAll('order'),
-      Orderitems: this.store.findAll('orderitem'),
       Tables: this.store.findAll('table'),
       Areas: this.store.findAll('area'),
       Settings: this.store.findAll('setting')
