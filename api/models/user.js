@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
         return bcrypt.hashSync(plaintext, salt);
       },
       associate(models) {
-        User.belongsToMany(models.Area, {through: 'UserArea'});
+        User.belongsToMany(models.Area, {through: 'userarea'});
       }
     }
   })
