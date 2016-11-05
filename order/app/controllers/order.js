@@ -113,18 +113,10 @@ export default Ember.Controller.extend({
     saveOrder(goToOrderScreen) {
       let order = this.get('order');
       order.totalAmount = this.get('viewOrder.totalAmount');
+      this.send('showLoadingModal');
       order.save()
-      .then((data) => {
-        this.send('showLoadingModal');
-        return Promise
-          .all(
-            this.get('orderItems')
-            .map(item => {
-              item.set('order', data)
-              return item.save()
-            })
-          )
-      }).then(() => {
+      .then(() => {
+        this.get('orderItems').filterBy('id', null).invoke('deleteRecord');
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id, isBill: false}).save();
       }).then((response) => {
