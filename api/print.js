@@ -68,7 +68,7 @@ class Print {
     const printData = [];
     printData.push(CHAR_CODE);
 
-    printData.push(leftPadding(`${order.Table.name}/${order.Table.Area.name}`,48), ENTER);
+    printData.push(leftPadding(`${order.table.name}/${order.table.area.name}`,48), ENTER);
     printData.push(TXT_2HEIGHT, 'Bestellung', TXT_NORMAL, ENTER);
     printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
 
@@ -82,7 +82,7 @@ class Print {
       let orderItem = ord.item.name;
 
       if(ord.item.category.showAmount) {
-        orderItem = `${orderItem} ${showAmount(ord.item.amount)}${ord.item.Unit.name}`;
+        orderItem = `${orderItem} ${showAmount(ord.item.amount)}${ord.item.unit.name}`;
       }
 
       printData.push(deliveryNoteLine(amount, orderItem, extra));
@@ -100,7 +100,7 @@ class Print {
     const printData = []
     printData.push(CHAR_CODE);
 
-    printData.push(leftPadding(`${order.Table.name}/${order.Table.Area.name}`,48), ENTER);
+    printData.push(leftPadding(`${order.table.name}/${order.table.area.name}`,48), ENTER);
     printData.push(TXT_2HEIGHT, 'RECHNUNG', TXT_NORMAL, ENTER);
     printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
 
