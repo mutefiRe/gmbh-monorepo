@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports  = function() {
+  const app = require('../../server.js');
   const chai = require('chai');
   const expect = chai.expect;
   const jwt    = require('jsonwebtoken');
@@ -18,7 +19,7 @@ module.exports  = function() {
   describe('socket basic connection with authentication', () => {
 
     it('client connects with token -> should get response connected', (done) => {
-      const client = ioClient.connect("http://localhost:8080", {
+      const client = ioClient.connect(`http://localhost:${process.env.PORT}`, {
         query: 'token=' + token
       });
       client.once("connect", () => {
@@ -31,7 +32,7 @@ module.exports  = function() {
     });
 
     it('client connects without token -> should get credentials_required message', (done) => {
-      const client = ioClient.connect("http://localhost:8080")
+      const client = ioClient.connect(`http://localhost:${process.env.PORT}`)
       client.once("connect", () => {
         // trigger when reach this -> Authentication failed
         expect(true).to.equal(false);
@@ -52,7 +53,7 @@ module.exports  = function() {
         permission: 1
       }, config.secret, { expiresIn: '0' });
 
-      const client = ioClient.connect("http://localhost:8080", {
+      const client = ioClient.connect(`http://localhost:${process.env.PORT}`, {
         query: 'token=' + expiredToken
       });
 
