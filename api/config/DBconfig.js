@@ -14,7 +14,7 @@ module.exports = function(){
     };
     case 'test':
     return {
-      database: process.env.GMBH_DB          || "gmbh_test",
+      database: process.env.GMBH_DB_TEST     || "gmbh_test",
       user:     process.env.GMBH_DB_USER     || "root",
       password: process.env.GMBH_DB_PASSWORD || "",
       host: {
