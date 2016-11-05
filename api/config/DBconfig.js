@@ -2,61 +2,61 @@ module.exports = function(){
   switch(process.env.NODE_ENV){
     case 'development':
     return {
-      database: "gmbh",
-      user: "root",
-      password: "",
+      database: process.env.GMBH_DB          || "gmbh",
+      user:     process.env.GMBH_DB_USER     || "root",
+      password: process.env.GMBH_DB_PASSWORD || "",
       host: {
-        host: process.env.GMBH_IP || "localhost",
-        port: 3306,
-        dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+        host:    process.env.GMBH_DB_HOST    || "localhost",
+        port:    process.env.GMBH_DB_PORT    || 3306,
+        dialect: process.env.GMBH_DB_DIALECT || 'mysql'
       },
 
     };
     case 'test':
     return {
-      database: "gmbh_test",
-      user: "root",
-      password: "",
+      database: process.env.GMBH_DB          || "gmbh_test",
+      user:     process.env.GMBH_DB_USER     || "root",
+      password: process.env.GMBH_DB_PASSWORD || "",
       host: {
         pool: false,
         logging: false,
-        host: process.env.GMBH_IP || "localhost",
-        port: 3306,
+        host:    process.env.GMBH_DB_HOST    || "localhost",
+        port:    process.env.GMBH_DB_PORT    || 3306,
         dialect: process.env.GMBH_DB_DIALECT || 'mysql'
       }
     };
     case'production':
     return {
-      database: process.env.GMBH_DB || "gmbh_production",
-      user: process.env.GMBH_DB_USER || "root",
-      password: process.env.GMBH_DB_PASSWORD || "",
+      database:  process.env.GMBH_DB          || "gmbh_production",
+      user:      process.env.GMBH_DB_USER     || "root",
+      password:  process.env.GMBH_DB_PASSWORD || "",
       host: {
-        host: process.env.GMBH_DB_HOST || "localhost",
-        port:  process.env.GMBH_DB_PORT || 3306,
+        host:    process.env.GMBH_DB_HOST    || "localhost",
+        port:    process.env.GMBH_DB_PORT    || 3306,
         dialect: process.env.GMBH_DB_DIALECT || 'postgres'
       }
     };
     case 'circleci':
     return {
-      database: "circle_test",
-      user: "ubuntu",
-      password: "",
+      database: process.env.GMBH_DB          || "circleci_test",
+      user:     process.env.GMBH_DB_USER     || "ubuntu",
+      password: process.env.GMBH_DB_PASSWORD || "",
       host: {
-        pool: false,
-        logging: false,
-        hostname: process.env.GMBH_IP || "localhost",
-        port: 3306,
-        dialect: process.env.GMBH_DB_DIALECT || 'mysql'
+        pool:     false,
+        logging:  false,
+        hostname: process.env.GMBH_IP         || "localhost",
+        port:     process.env.GMBH_DB_PORT    || 3306,
+        dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
       }
     }
     default:
     return {
-      database: "gmbh",
-      user: "root",
-      password: "",
+      database:  process.env.GMBH_DB          || "gmbh_production",
+      user:      process.env.GMBH_DB_USER     || "root",
+      password:  process.env.GMBH_DB_PASSWORD || "",
       host: {
-        host: "localhost",
-        port: 3306,
+        hostname: process.env.GMBH_IP         || "localhost",
+        port:     process.env.GMBH_DB_PORT    || 3306,
         dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
       }
     }
