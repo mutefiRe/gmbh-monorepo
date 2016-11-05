@@ -16,12 +16,6 @@ export default Ember.Controller.extend({
     }
 
     return false;
-
-  }),
-  actions: {
-    logout() {
-      this.get('session').invalidate();
-    }
-  }
+  })
 });
 

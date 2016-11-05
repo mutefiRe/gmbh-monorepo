@@ -1,5 +1,11 @@
 {{#if session.isAuthenticated}}
-  {{logout-screen}}
+  {{logout-screen setErrorMessage=(action "setErrorMessage")}}
 {{else}}
-  {{login-screen}}
+  {{login-screen setErrorMessage=(action "setErrorMessage")}}
+{{/if}}
+
+{{#if errorMessage}}
+  <div>
+    <p class="error">{{errorMessage}}</p>
+  </div>
 {{/if}}
