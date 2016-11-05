@@ -51,7 +51,7 @@ module.exports = function(){
     }
     default:
     return {
-      database:  process.env.GMBH_DB          || "gmbh_production",
+      database:  process.env.GMBH_DB          || "gmbh",
       user:      process.env.GMBH_DB_USER     || "root",
       password:  process.env.GMBH_DB_PASSWORD || "",
       host: {
