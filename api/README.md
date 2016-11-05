@@ -23,6 +23,7 @@ port: 3306
 ```
 #### Install
 ```
+sudo apt-get install libcups2-dev
 npm install
 ```
 
