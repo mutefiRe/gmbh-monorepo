@@ -15,13 +15,12 @@ router.get('/:id', function(req, res){
 
 router.get('/:id/items', function(req, res){
   db.Items.find({where: {CategoryId: req.params.id}}).then(data => {
-    console.log(data)
     res.send({'items': data});
   })
 })
 
 
-router.get('/', function(req, res){
+router.get('/', function(req, res) { 
   db.Category.findAll({include: [{model: db.Item}]}).then(data =>
   {
     let categories = JSON.parse(JSON.stringify(data));
@@ -31,7 +30,6 @@ router.get('/', function(req, res){
     res.send({'category': categories});
   })
 })
-
 
 router.post('/', function(req, res){
   const io = req.app.get('io');

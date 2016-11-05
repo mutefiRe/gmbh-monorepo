@@ -34,19 +34,20 @@ router.get('/', function(req, res){
 router.post('/', function(req, res){
   var reqData = serialize(req.body.order)
   var orderitems = reqData.orderitems
+  console.log(reqData)
   var orderId = null;
   const io = req.app.get('io');
   db.Order.create(reqData)
   .then( data => {
     orderitems.map((x) => {
-      x.orderId = data.id
-      x.itemId  = x.item
+      x.orderId = data.id;
+      x.itemId  = x.item;
     })
     orderId = data.id
-    return db.Orderitem.bulkCreate(orderitems)
+    return db.Orderitem.bulkCreate(orderitems);
   })
   .then(() => {
-    return db.Order.findById(orderId, {include: [{model: db.Orderitem}]})
+    return db.Order.findById(orderId, {include: [{model: db.Orderitem}]});
   })
   .then((data) => {
     let order = JSON.parse(JSON.stringify(data));
