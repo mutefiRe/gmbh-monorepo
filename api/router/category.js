@@ -7,11 +7,6 @@ const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/category');
 
-router.use(function timeLog(req, res, next){
-  //console.log('Time: ', Date.now());
-  next();
-})
-
 router.get('/:id', function(req, res){
   db.Category.find({where: {id: req.params.id}}).then(data => {
     res.send({'category': data});
@@ -31,8 +26,7 @@ router.get('/', function(req, res){
   {
     let categories = JSON.parse(JSON.stringify(data));
     for(var i = 0; i < categories.length; i++){
-      categories[i].items = categories[i].Items.map(item => item.id);
-      categories[i].Items = undefined
+      categories[i].items = categories[i].items.map(item => item.id);
     }
     res.send({'category': categories});
   })

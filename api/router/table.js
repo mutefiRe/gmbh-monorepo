@@ -5,11 +5,6 @@ const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/table');
 
-router.use(function timeLog(req, res, next){
-  //console.log('Time: ', Date.now());
-  next();
-})
-
 router.get('/:id', function(req, res){
   db.Table.find({where: {id: req.params.id}}).then(data => {
     res.send({'table': data});
@@ -29,8 +24,7 @@ router.get('/', function(req, res){
   {
     let tables = JSON.parse(JSON.stringify(data));
     for(var i = 0; i < tables.length; i++){
-      tables[i].area = tables[i].Area.id;
-      tables[i].Area = undefined
+      tables[i].area = tables[i].area.id;
     }
     res.send({'table': tables});
   })

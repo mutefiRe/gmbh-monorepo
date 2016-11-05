@@ -4,11 +4,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
 
-router.use(function timeLog(req, res, next){
-  //console.log('Time: ', Date.now());
-  next();
-})
-
 router.get('/:id', function(req, res){
   db.Setting.find({where: {id: req.params.id}}).then(data => {
     if(data === null){
@@ -34,7 +29,6 @@ router.get('/', function(req, res){
     });
   })
 })
-
 
 router.post('/', function(req, res){
   const io = req.app.get('io');

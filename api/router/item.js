@@ -23,8 +23,8 @@ router.get('/', function(req, res){
   {
     let items = JSON.parse(JSON.stringify(data));
     for(var i = 0; i < items.length; i++){
-      items[i].unit = items[i].Unit.id
-      items[i].Unit = undefined
+      items[i].unit = items[i].unitId
+      items[i].category = items[i].cateteogryId
     }
     res.send({'item': items});
   })
@@ -37,11 +37,10 @@ router.post('/', function(req, res){
   db.Item.create(serialize(req.body.item)).then( data => {
     res.send({'item':data});
     io.sockets.emit("update", {'item':data});
-    return db.Category.find({where: {id: data.CategoryId}, include: [{model: db.Item}]}).then((catData) =>
+    return db.Category.find({where: {id: data.categoryId}, include: [{model: db.Item}]}).then((catData) =>
     {
       let categories = JSON.parse(JSON.stringify(catData));
-      categories.items = categories.Items.map(item => item.id);
-      categories.Items = undefined
+      categories.items = categories.items.map(item => item.id);
       io.sockets.emit("update", {'category': categories});
     })
   }).catch(err => {

@@ -22,13 +22,9 @@ const db = require('../models')
 // Verification of Access
 router.use(function(req, res, next) {
 
-  // Get Token of Request
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-  // if token available
   if (token) {
-
-    // verifies secret and checks exp
     jwt.verify(token, config.secret, function(err, decoded) {
       if (err) {
         return res.status(400).send({
@@ -37,21 +33,16 @@ router.use(function(req, res, next) {
           }
         });
       } else {
-          // if everything is good, save to request for use in other routes
-          req.decoded = decoded;
-          next();
-        }
-      });
+        req.decoded = decoded;
+        next();
+      }
+    });
   } else {
-
-    // if there is no token
-    // return an error
     return res.status(400).send({
       "error": {
         "msg": "No token provided"
       }
     });
-
   }
 });
 
