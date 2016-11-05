@@ -29,7 +29,7 @@ const teapot = require('./router/teapot');
 const data = require('./router/data');
 
 server.listen(process.env.PORT || 8080, function(){
-	//console.log("server listening to 8080")
+	console.log(`server listening to ${process.env.PORT || 8080}`)
 });
 
 

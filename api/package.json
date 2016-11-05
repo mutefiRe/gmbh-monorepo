@@ -17,7 +17,7 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha test/main.test.js ",
+    "test": "cross-env NODE_ENV=test PORT=8081 mocha test/main.test.js ",
     "circleci": "cross-env NODE_ENV=circleci mocha test/main.test.js ",
     "all": "eslint . || true",
     "fix": "eslint --fix",
