@@ -42,7 +42,7 @@ class Print {
     const printers = {}
     for (let key in data.orderitems) {
       const ord = data.orderitems[key];
-      const printer = ord.Item.Category.printer;
+      const printer = ord.item.category.printer;
       if (!printers[printer]) {
         printers[printer] = {}
       }
@@ -58,7 +58,7 @@ class Print {
   }
 
   tokenCoin(data, printer) {
-    for(let order in data.orderitems) {
+    for(let order of data.orderitems) {
       this.singleTokenCoin(printer, data.orderitems[order]);
     }
   }
@@ -134,7 +134,7 @@ class Print {
 
   singleTokenCoin(printer, data) {
     let orderItem = data.item.name.toUpperCase().substr(0, 46);
-    if(data.item.Category.showAmount) {
+    if(data.item.category.showAmount) {
       orderItem = `${orderItem.toUpperCase().substr(0, 35)} ${showAmount(data.item.amount)}${data.item.unit.name}`;
     }
 

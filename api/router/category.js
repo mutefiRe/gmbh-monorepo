@@ -14,7 +14,7 @@ router.get('/:id', function(req, res){
 })
 
 router.get('/:id/items', function(req, res){
-  db.Items.find({where: {CategoryId: req.params.id}}).then(data => {
+  db.Items.find({where: {categoryId: req.params.id}}).then(data => {
     res.send({'items': data});
   })
 })

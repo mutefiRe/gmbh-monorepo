@@ -1,8 +1,8 @@
 'use strict'
 
 const express = require('express');
-const router = express.Router();
-const db = require('../models/index');
+const router = express.Router()
+const db = require('../models/index')
 const jwt    = require('jsonwebtoken');
 const config = require('../config/config.js');
 

@@ -94,7 +94,7 @@ function mapOrderItems(order){
     delete(x.itemId);
     delete(x.orderId);
   })
-  delete(order.Orderitems);
+  delete(order.orderitems);
 }
 
 function mapOrderRelations(order){

@@ -14,7 +14,6 @@ const path = require('path');
 
 
 router.use(function timeLog(req, res, next){
-  //console.log('Time: ', Date.now());
   next();
 })
 
@@ -54,11 +53,11 @@ router.get('/', function(req, res){
 
     csvItems = {};
     for(let Orderitem in Orderitems){
-      let category = Orderitems[Orderitem].Item.Category;
+      let category = Orderitems[Orderitem].item.category;
       let freecount = 0;
       if(Orderitems[Orderitem].forFree){ freecount = 1; }
       if(!csvItems[category.name]){
-        csvItems[category.name] = {count : 1, price: Orderitems[Orderitem].Item.price, freecount : freecount};
+        csvItems[category.name] = {count : 1, price: Orderitems[Orderitem].item.price, freecount : freecount};
       }else{
         csvItems[category.name].count++;
         if(!freecount){
