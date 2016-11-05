@@ -54,33 +54,21 @@ export default Ember.Controller.extend({
       }
     },
     addItemToOrder(item, extras = null) {
-      let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras});
-      this.get('orderItems').push(orderItem);
+      const order = this.get('order');
+      const totalAmount = order.get('totalAmount');
 
-      let viewOrder = _.cloneDeep(this.get('viewOrder'));
-      let id = item.get('id');
-      if (viewOrder.items[id+extras] === undefined) {
-        viewOrder.items[id+extras] = {};
-        viewOrder.items[id+extras].amount = 0;
+      const orderItem = order.get('orderitems')
+      .filterBy('item.id', item.id)
+      .filterBy('extras', extras);
+
+      if (orderItem.length === 0) {
+        this.store.createRecord('orderitem', {order: this.get('order'), item, extras, price: item.get('price')});
+      } else {
+        orderItem[0].incrementProperty('count');
       }
-      viewOrder.items[id+extras].identifier = id+extras;
-      viewOrder.items[id+extras].amount++;
-      viewOrder.items[id+extras].prize = (item.get('price') * viewOrder.items[id+extras].amount);
-      viewOrder.items[id+extras].categoryId = item.get('category.id');
-      if(item.get('category.showAmount')){
-        viewOrder.items[id+extras].unitName = item.get('unit.name');
-        viewOrder.items[id+extras].showAmount = item.get('amount');
-      }
-      else{
-        viewOrder.items[id+extras].showAmount = "";
-        viewOrder.items[id+extras].unitName = "";
-      }
-      viewOrder.items[id+extras].name = item.get('name');
-      viewOrder.items[id+extras].extras = extras || null;
-      viewOrder.items[id+extras].id = id;
-      viewOrder.totalAmount += (item.get('price'));
-      this.set('viewOrder', viewOrder);
+      order.set('totalAmount', totalAmount + item.get('price'));
     },
+
     showModal(activeType, buttons, item) {
       this.set('modalType', activeType);
       this.set('modalButtons', buttons);

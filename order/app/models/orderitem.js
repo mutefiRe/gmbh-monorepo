@@ -4,10 +4,10 @@ export default DS.Model.extend({
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
   extras:    DS.attr('string'),
-  isPaid:    DS.attr('boolean'),
-  forFree:   DS.attr('boolean'),
   order:     DS.belongsTo('order'),
   item:      DS.belongsTo('item'),
-  count:     DS.attr('number'),
-  countPaid: DS.attr('number')
+  count:     DS.attr('number', {defaultValue: 1}),
+  countPaid: DS.attr('number', {defaultValue: 0}),
+  countFree: DS.attr('number', {defaultValue: 0}),
+  price:     DS.attr('number')
 });
