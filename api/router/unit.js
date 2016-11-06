@@ -1,72 +1,81 @@
-'use strict'
+'use strict';
 
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/unit');
 
-
 router.get('/:id', function(req, res){
   db.Unit.find({where: {id: req.params.id}}).then(data => {
-    if(data === null){
-      res.status(404).send("couldn't find unit")
-      return
-    }
-    res.send(data);
-  })
-})
+    res.send({'unit': data});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.get('/', function(req, res){
-  db.Unit.findAll().then(data =>
-  {
-    if(data[0] === undefined){
-      res.status(404).send("couldn't find any units")
-      return
-    }
-    res.send({unit : data});
-  })
-})
-
+  db.Unit.findAll().then(units => {
+    res.send({units});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
-  db.Unit.create(serialize(req.body.unit)).then( data => {
+  db.Unit.create(serialize(req.body.unit)).then(data => {
     res.send({unit: data});
     io.sockets.emit("update", {unit: data});
-  }).catch(err => {
-    res.status(400).send(err.errors[0].message)
-  })
-})
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.put('/:id', function(req, res){
   const io = req.app.get('io');
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
-    if(unit === null){
-      res.status(404).send("couldn't find unit which should be updated")
-      return
-    }
-    unit.update(serialize(req.body.unit)).then( data => {
-      res.send({unit: data})
-      io.sockets.emit("update", {unit: data})
-    }).catch(err => {
-      res.status(400).send(err.errors[0].message)
-    })
+    if(unit === null) throw Error('unit not found');
+    return unit.update(serialize(req.body.unit));
   })
-})
+  .then(unit => {
+    res.send({unit});
+    io.sockets.emit("update", {unit});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.delete('/:id', function(req, res){
-  db.Unit.find({where: {id: req.params.id}}).then(unit=>{
-    if(unit === null){
-      res.status(404).send("couldn't find unit which should be deleted")
-      return
-    }
-    unit.destroy().then(()=>{
-      res.send({})
-    })
-  })
-})
-
-
-
+  const io = req.app.get('io');
+  db.Unit.find({where: {id: req.params.id}}).then(unit => {
+    if(unit === null) throw Error('unit not found');
+    return unit.destroy();
+  }).then(() => {
+    res.send({});
+    io.sockets.emit("delete", {'type': 'unit', 'id': unit.id});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 module.exports = router;

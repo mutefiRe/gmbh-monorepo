@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 module.exports = function(data){
-  let category = {
+  const category = {
     name : data.name,
     enabled : data.enabled,
     description : data.description,
@@ -9,6 +9,6 @@ module.exports = function(data){
     showAmount : data.showAmount,
     categoryId : data.category,
     printer: data.printer
-  }
+  };
   return category;
-}
+};

@@ -23,12 +23,12 @@ router.use(function(req, res, next) {
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
   if (token) {
-    jwt.verify(token, config.secret, function(err, decoded) {
+    jwt.verify(token, config.secret, function(error, decoded) {
 
-      if (err) {
+      if (error) {
         return res.status(400).send({
-          'error': {
-            'msg': err.message
+          'errors': {
+            'msg': error.message
           }
         });
       }
@@ -38,7 +38,7 @@ router.use(function(req, res, next) {
 
   } else {
     res.status(400).send({
-      "error": {
+      'errors': {
         "msg": "No token provided"
       }
     });

@@ -1,7 +1,6 @@
-'use strict'
+'use strict';
 
 module.exports  = function() {
-  const app = require('../../server.js');
   const chai = require('chai');
   const expect = chai.expect;
   const jwt    = require('jsonwebtoken');
@@ -18,34 +17,34 @@ module.exports  = function() {
 
   describe('socket basic connection with authentication', () => {
 
-    it('client connects with token -> should get response connected', (done) => {
+    it('client connects with token -> should get response connected', done => {
       const client = ioClient.connect(`http://localhost:${process.env.PORT || 8080}`, {
         query: 'token=' + token
       });
       client.once("connect", () => {
-        client.once("connected", (data) => {
+        client.once("connected", data => {
           expect(data).to.equal(true);
           client.disconnect();
-          done()
+          done();
         });
       });
     });
 
-    it('client connects without token -> should get credentials_required message', (done) => {
-      const client = ioClient.connect(`http://localhost:${process.env.PORT || 8080}`)
+    it('client connects without token -> should get credentials_required message', done => {
+      const client = ioClient.connect(`http://localhost:${process.env.PORT || 8080}`);
       client.once("connect", () => {
         // trigger when reach this -> Authentication failed
         expect(true).to.equal(false);
         client.disconnect();
       });
-      client.on("error", (error) => {
-        expect(error.code).to.equal('credentials_required')
+      client.on("error", error => {
+        expect(error.code).to.equal('credentials_required');
         client.disconnect();
         done();
       });
     });
 
-    it('client connects with expired token -> should get invalid_token message', (done) => {
+    it('client connects with expired token -> should get invalid_token message', done => {
       const expiredToken = jwt.sign({
         username: "test",
         firstname: "test",
@@ -57,13 +56,13 @@ module.exports  = function() {
         query: 'token=' + expiredToken
       });
 
-      client.once("connect", function () {
+      client.once("connect", () => {
         // trigger when reach this -> Authentication failed
         expect(true).to.equal(false);
         client.disconnect();
       });
-      client.on("error", function(error) {
-        expect(error.code).to.equal('invalid_token')
+      client.on("error", error => {
+        expect(error.code).to.equal('invalid_token');
         client.disconnect();
         done();
       });

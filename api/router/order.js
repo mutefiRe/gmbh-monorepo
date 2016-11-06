@@ -1,30 +1,39 @@
 'use strict';
 
-const express   = require('express');
-const router    = express.Router();
-const db        = require('../models/index');
-const serialize = require('../serializers/order');
+const express            = require('express');
+const router             = express.Router();
+const db                 = require('../models/index');
+const serialize          = require('../serializers/order');
+const serializeOrderitem = require('../serializers/orderitem');
 
-// GET one order with orderitems
 router.get('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}, include: [{model: db.Orderitem}]}).then(order => {
     res.send({order});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
   });
 });
 
-// GET my orders with orderitems
 router.get('/', function(req, res){
-  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(data =>
-  {
+  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(data => {
     const orders = JSON.parse(JSON.stringify(data));
     for(let i = 0; i < orders.length; i++){
       orders[i].table = orders[i].table.id;
     }
     res.send({'order': orders});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
   });
 });
 
-// CREATE order with orderitems
 router.post('/', function(req, res){
   const requestOrder = serialize(req.body.order);
   const orderitems   = requestOrder.orderitems;
@@ -50,30 +59,61 @@ router.post('/', function(req, res){
 
     res.send({order});
     // io.sockets.emit("update", {'order': order});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
   });
 });
 
 router.put('/:id', function(req, res){
   // const io = req.app.get('io');
-  db.Order.findById(req.params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]}).then(order => {
-    order.update(serialize(req.body.order)).then( data => {
+// .then(order => {;
+  const requestOrder = serialize(req.body.order);
+  db.Order.findById(req.params.id).then(order => {
+    return order.update(serialize(req.body.order));
+  }).then(() => {
+    const promises = [];
+    for(const orderitem of requestOrder.orderitems){
+      const promise = db.Orderitem.update(serializeOrderitem(orderitem), {where: {id: orderitem.id}});
 
-      const order = JSON.parse(JSON.stringify(data));
+      promises.push(promise);
+    }
+    return Promise.all(promises);
+    // we have to change this according orderitem changes?
+  }).then(() => {
+    return db.Order.findById(req.params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]});
+  }).then(data => {
+    const order = JSON.parse(JSON.stringify(data));
 
-      mapOrderItems(order);
-      mapOrderRelations(order);
+    mapOrderItems(order);
+    mapOrderRelations(order);
 
-      res.send({order});
-      // io.sockets.emit("update", {'order': data});
+    res.send({order});
+    // io.sockets.emit("update", {'order': data});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
     });
   });
 });
 
 router.delete('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}}).then(order => {
-    order.destroy();
+    return order.destroy();
+  }).then(() => {
+    res.send({});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
   });
-  res.send({});
 });
 
 module.exports = router;

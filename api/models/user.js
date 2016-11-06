@@ -14,6 +14,15 @@ module.exports = function(sequelize, DataTypes) {
     instanceMethods: {
       validPassword(plaintext) {
         return bcrypt.compareSync(plaintext, this.password);
+      },
+      createAuthUser(){
+        return {
+          "id":         this.id,
+          "username":   this.username,
+          "permission": this.permission,
+          "firstname":  this.firstname,
+          "lastname":   this.lastname
+        };
       }
     },
     classMethods: {

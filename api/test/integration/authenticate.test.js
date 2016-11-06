@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const app = require('../../server.js');
 const db = require('../../models/index');
@@ -11,60 +11,60 @@ module.exports  = function(){
 
   describe('/authenticate route', () => {
 
-    before((done) => {
+    before(done => {
       db.User.create({
         username: "test",
         firstname: "max",
         lastname: "mustermann",
         password: "test",
         permission: 0
-      }).then(() => done())
-    })
+      }).then(() => done());
+    });
 
     describe('with valid username', () => {
       const username = "test";
 
       describe('and valid password', () => {
         const password = "test";
-        it('should response to authentication with token', (done) => {
+        it('should response to authentication with token', done => {
           chai.request(app)
           .post('/authenticate')
           .send({ username, password })
-          .then( (res) => {
+          .then(res => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property("token");
             done();
-          })
-        })
-      })
+          });
+        });
+      });
 
       describe('and invalid password', () => {
         const password = "wrong";
-        it('should response no token', (done) => {
+        it('should response no token', done => {
           chai.request(app)
           .post('/authenticate')
           .send({ username, password })
-          .catch( (res) => {
+          .catch(res => {
             expect(res.response.status).to.equal(400);
-            expect(res.response.body).to.have.property("error");
+            expect(res.response.body).to.have.property("errors");
             done();
-          })
-        })
-      })
-    })
+          });
+        });
+      });
+    });
 
     describe('with invalid username', () => {
-      const username = 'invalid'
-      it('should response to wrong username with no token', (done) => {
+      const username = 'invalid';
+      it('should response to wrong username with no token', done => {
         chai.request(app)
         .post('/authenticate')
         .send({ username, password: 'test1' })
-        .catch( (res) => {
+        .catch(res => {
           expect(res.response.status).to.equal(400);
-          expect(res.response.body).to.have.property("error");
+          expect(res.response.body).to.have.property("errors");
           done();
-        })
-      })
-    })
-  })
-}
+        });
+      });
+    });
+  });
+};

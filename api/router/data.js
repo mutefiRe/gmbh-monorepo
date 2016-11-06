@@ -40,7 +40,7 @@ router.get('/', function(req, res){
     writer2.pipe(fs.createWriteStream('categories.csv'));
 
     csvItems = {};
-    for(let Orderitem in Orderitems){
+    for(let Orderitem in Orderitems) {
       const category = Orderitems[Orderitem].item.category;
       let freecount = 0;
 
