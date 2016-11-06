@@ -9,6 +9,7 @@
     "es6": true
   },
   "rules": {
+    "semi": [1, "always"],
     "comma-dangle": [2,"never"],
     "no-cond-assign": [2,"always"],
     "no-console": 1,
@@ -29,7 +30,7 @@
     "no-unreachable": 2,
     "use-isnan": 2,
     "valid-typeof": 2,
-    "curly": [1,"multi"],
+    "curly": [1,"multi-line"],
     "default-case": 2,
     "dot-notation": 1,
     "eqeqeq": 1,
@@ -45,7 +46,7 @@
     "indent": ["error", 2],
     "no-mixed-spaces-and-tabs": ["error"],
     "no-new-object": 1,
-    "arrow-parens": 1,
+    "arrow-parens": [1, "as-needed"],
     "arrow-spacing": 1,
     "constructor-super": 1,
     "generator-star-spacing": 1,
@@ -58,6 +59,22 @@
     "prefer-spread": 1,
     "prefer-reflect": 1,
     "require-yield": 1,
-    "space-before-function-paren":0
+    "space-before-function-paren":0,
+    "spaced-comment": 2,
+    "space-unary-ops": [
+      1, {
+        "words": true,
+        "nonwords": true,
+        "overrides": {
+          "new": true,
+          "++": false,
+          "--": false,
+          "[":  false,
+          "]":  false,
+          "!":  false
+        }
+      }
+    ],
+    "space-infix-ops": 1
   }
 }

@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate(models) {
         Orderitem.belongsTo(models.Order, {onDelete: 'RESTRICT'});
-        Orderitem.belongsTo(models.Item,  {onDelete: 'RESTRICT'})
+        Orderitem.belongsTo(models.Item,  {onDelete: 'RESTRICT'});
       }
     }
   });

@@ -25,11 +25,11 @@ module.exports = function(sequelize, DataTypes) {
         User.belongsToMany(models.Area, {through: 'userarea'});
       }
     }
-  })
+  });
 
   User.hook('beforeValidate', function(user) {
-    user.password = User.generateHash(user.password)
-  })
+    user.password = User.generateHash(user.password);
+  });
 
   return User;
 };
