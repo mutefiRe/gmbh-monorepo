@@ -79,18 +79,14 @@ export default Ember.Component.extend(RecognizerMixin, {
         orderitem.set('countPaid', orderitem.get('countPaid') + orderitem.get('countMarked'));
         if (forFreeOrder) orderitem.set('countFree', orderitem.get('countFree') + orderitem.get('countMarked'));
         orderitem.set('countMarked', 0);
-        promises.push(orderitem.save());
       }
-      Promise.all(promises)
-      .then(() => {
 
-        let order = this.get('order');
-        let items = order.get('orderitems');
+      let order = this.get('order');
+      let items = order.get('orderitems');
 
-        order.set('isPaid', this.get('openAmount') == 0 ? true : false);
-        order.set('totalAmount', this.get('openAmount'));
-        return order.save();
-      }).then(() => {
+      order.set('isPaid', this.get('openAmount') == 0 ? true : false);
+      order.set('totalAmount', this.get('openAmount'));
+      order.save().then(() => {
         this.triggerAction({action: 'triggerModal'})
         this.set('forFree', false)
       }).catch((err) => {
