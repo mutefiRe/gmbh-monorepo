@@ -8,22 +8,9 @@ const Router = Ember.Router.extend({
 Router.map(function () {
   this.route('login'); // domain/login
   this.route('order');
-  this.route('index', {
-    path: '/'
-  });
-  this.route('dashboard', function () {
-    this.route('items');
-    this.route('users');
-    this.route('tables');
-    this.route('stats');
-    this.route('settings');
-    this.route('areas');
-    this.route('units');
-    this.route('categories');
-  });
 
-  // not defined routes
-  this.route('index', {
+  // not defined routes ("404")
+  this.route('login', {
     path: '*path'
   });
 });

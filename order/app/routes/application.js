@@ -1,8 +1,6 @@
 import Ember from 'ember';
-import getOwner from 'ember-getowner-polyfill';
-import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
-export default Ember.Route.extend(ApplicationRouteMixin, {
+export default Ember.Route.extend({
   socketService: Ember.inject.service('socket-io'),
   socketRef: null,
   session: Ember.inject.service('session'),
@@ -19,22 +17,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     const session = this.get('session.session.content');
     const io = this.get('socketService');
     const token = session.authenticated.token;
-    const authenticator = getOwner(this).lookup('authenticator:jwt');
-    const userPermission = authenticator.getTokenData(session.authenticated.token).permission;
     const socket = this.updateData(io, token, this.store);
-    this.set('socketRef', socket);
 
-    switch (userPermission) {
-      case 0:
-      this.transitionTo('/dashboard');
-      break;
-      case 1:
-      this.transitionTo('/order');
-      break;
-      default:
-      this.transitionTo('/login');
-      break;
-    }
+    this.set('socketRef', socket);
   },
   sessionInvalidated() {
     const socket = this.get('socketRef');
@@ -48,7 +33,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     });
 
     socket.on('update', function (payload) {
-      setTimeout(function () {store.pushPayload(payload)},500);
+      setTimeout(function () {
+          store.pushPayload(payload)
+      },500);
     });
 
     socket.on('delete', function (payload) {
