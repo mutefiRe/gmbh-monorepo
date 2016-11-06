@@ -141,36 +141,27 @@ export default Ember.Component.extend(RecognizerMixin, {
         this.get('order').rollbackAttributes();
       });
     },
-    payAll(){
+    payAll() {
       this.triggerAction({action: 'showLoadingModal'});
-      let proms = [];
-      let orderitems = this.get('order.orderitems');
+      const orderitems = this.get('order.orderitems');
       const forFree = this.get('forFree');
-      orderitems.forEach((item) => {
-        const isPaid = item.get('isPaid');
-        if(forFree && !isPaid) {
-          item.set('forFree', true);
-        }
-        item.set("isPaid", true);
-        proms.push(item.save());
-      })
-      Promise.all(proms)
-      .then(() => {
-        let order = this.get('order');
-        order.set('isPaid', true);
-        order.set('totalAmount', 0);
-        order.save()
-        .then(() => {
-          this.triggerAction({action: 'triggerModal'});
 
-          //reset forFree
-          this.set('forFree', false);
-        });
-      })
-      .catch((err) => {
-        this.get('order.orderitems').forEach((item) => {
+      orderitems.forEach(item => {
+        item.set('countPaid', item.get('count'));
+        if (forFree) item.set('countFree', item.get('count'));
+      });
+
+      const order = this.get('order');
+
+      order.set('isPaid', true);
+      order.set('totalAmount', 0);
+      order.save().then(() => {
+        this.triggerAction({action: 'triggerModal'});
+        this.set('forFree', false);
+      }).catch(() => {
+        this.get('order.orderitems').forEach(item => {
           item.rollbackAttributes();
-        })
+        });
         this.get('order').rollbackAttributes();
       });
     },
