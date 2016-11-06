@@ -12,7 +12,7 @@ router.get('/:id', function(req, res){
 })
 
 router.get('/:id/items', function(req, res){
-  db.Areas.find({where: {TableId: req.params.id}}).then(data => {
+  db.Areas.find({where: {tableId: req.params.id}}).then(data => {
     console.log(data)
     res.send({'items': data});
   })

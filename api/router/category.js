@@ -20,7 +20,8 @@ router.get('/:id', function(req, res){
 });
 
 router.get('/:id/items', function(req, res){
-  db.Items.find({where: {CategoryId: req.params.id}}).then(data => {
+
+  db.Items.find({where: {categoryId: req.params.id}}).then(data => {
     res.send({'items': data});
   }).catch(err => {
     res.status(400).send({
@@ -32,7 +33,7 @@ router.get('/:id/items', function(req, res){
 });
 
 
-router.get('/', function(req, res){
+router.get('/', function(req, res) {
   db.Category.findAll({include: [{model: db.Item}]}).then(data =>
   {
     const categories = JSON.parse(JSON.stringify(data));
@@ -48,7 +49,6 @@ router.get('/', function(req, res){
     });
   });
 });
-
 
 router.post('/', function(req, res){
   const io = req.app.get('io');

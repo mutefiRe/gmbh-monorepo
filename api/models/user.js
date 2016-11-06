@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
   } , {
     instanceMethods: {
       validPassword(plaintext) {
-        return bcrypt.compareSync(plaintext, this.password); // false
+        return bcrypt.compareSync(plaintext, this.password);
       }
     },
     classMethods: {

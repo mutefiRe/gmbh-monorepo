@@ -40,9 +40,9 @@ class Print {
 
   deliveryNote(data) {
     const printers = {}
-    for (let key in data.Orderitems) {
-      const ord = data.Orderitems[key];
-      const printer = ord.Item.Category.printer;
+    for (let key in data.orderitems) {
+      const ord = data.orderitems[key];
+      const printer = ord.item.category.printer;
       if (!printers[printer]) {
         printers[printer] = {}
       }
@@ -52,14 +52,14 @@ class Print {
     const order = data;
 
     for(let printer in printers) {
-      order.Orderitems = printers[printer];
+      order.orderitems = printers[printer];
       this.singleDeliveryNote(printer, order)
     }
   }
 
   tokenCoin(data, printer) {
-    for(let order in data.Orderitems) {
-      this.singleTokenCoin(printer, data.Orderitems[order]);
+    for(let order of data.orderitems) {
+      this.singleTokenCoin(printer, data.orderitems[order]);
     }
   }
 
@@ -68,21 +68,21 @@ class Print {
     const printData = [];
     printData.push(CHAR_CODE);
 
-    printData.push(leftPadding(`${order.Table.name}/${order.Table.Area.name}`,48), ENTER);
+    printData.push(leftPadding(`${order.table.name}/${order.table.area.name}`,48), ENTER);
     printData.push(TXT_2HEIGHT, 'Bestellung', TXT_NORMAL, ENTER);
     printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
 
     printData.push(ENTER);
     printData.push(deliveryNoteHeader(), ENTER);
 
-    for (const item in order.Orderitems) {
-      const ord = order.Orderitems[item];
+    for (const item in order.orderitems) {
+      const ord = order.orderitems[item];
       const extra = ord.extras;
       const amount = ord.cnt;
-      let orderItem = ord.Item.name;
+      let orderItem = ord.item.name;
 
-      if(ord.Item.Category.showAmount) {
-        orderItem = `${orderItem} ${showAmount(ord.Item.amount)}${ord.Item.Unit.name}`;
+      if(ord.item.category.showAmount) {
+        orderItem = `${orderItem} ${showAmount(ord.item.amount)}${ord.item.unit.name}`;
       }
 
       printData.push(deliveryNoteLine(amount, orderItem, extra));
@@ -100,24 +100,24 @@ class Print {
     const printData = []
     printData.push(CHAR_CODE);
 
-    printData.push(leftPadding(`${order.Table.name}/${order.Table.Area.name}`,48), ENTER);
+    printData.push(leftPadding(`${order.table.name}/${order.table.area.name}`,48), ENTER);
     printData.push(TXT_2HEIGHT, 'RECHNUNG', TXT_NORMAL, ENTER);
     printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
 
     printData.push(ENTER);
     printData.push(billHeader(), ENTER);
-    for (const item in order.Orderitems) {
-      const ord = order.Orderitems[item]
-      let price = ord.Item.price;
+    for (const item in order.orderitems) {
+      const ord = order.orderitems[item]
+      let price = ord.item.price;
       const amount = ord.cnt;
       const sum = (price * amount).toFixed(2);
-      let orderItem = ord.Item.name;
+      let orderItem = ord.item.name;
 
       //workaround for sequelize/postgres. price and other decimal are of type string
       price = (price * 1).toFixed(2);
 
-      if(ord.Item.Category.showAmount) {
-        orderItem = `${orderItem} ${showAmount(ord.Item.amount)}${ord.Item.Unit.name}`;
+      if(ord.item.Category.showAmount) {
+        orderItem = `${orderItem} ${showAmount(ord.item.amount)}${ord.item.unit.name}`;
       }
 
       printData.push(billLine(amount, orderItem, price, sum), ENTER);
@@ -126,16 +126,16 @@ class Print {
     printData.push(ENTER);
     printData.push(leftPadding('Gesamtsumme:', 28), leftPadding(`${(order.totalAmount * 1).toFixed(2)}`, 20))
 
-    printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.User.firstname} ${order.User.lastname}`,48))
+    printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.user.firstname} ${order.user.lastname}`,48))
     printData.push(FEED, PAPER_PART_CUT);
 
     printJob(printer, printData);
   }
 
   singleTokenCoin(printer, data) {
-    let orderItem = data.Item.name.toUpperCase().substr(0, 46);
-    if(data.Item.Category.showAmount) {
-      orderItem = `${orderItem.toUpperCase().substr(0, 35)} ${showAmount(data.Item.amount)}${data.Item.Unit.name}`;
+    let orderItem = data.item.name.toUpperCase().substr(0, 46);
+    if(data.item.category.showAmount) {
+      orderItem = `${orderItem.toUpperCase().substr(0, 35)} ${showAmount(data.item.amount)}${data.item.unit.name}`;
     }
 
     const printData = []
@@ -152,23 +152,7 @@ class Print {
   }
 
   transformOrder(data){
-    let tmp = {};
-    let order;
-    let orderitem;
-    for(let key in data.Orderitems) {
-      orderitem = data.Orderitems[key]
-      if (tmp[orderitem.ItemId + '_' + orderitem.extras]) {
-        tmp[orderitem.ItemId + '_' + orderitem.extras].cnt = tmp[orderitem.ItemId + '_' + orderitem.extras].cnt + 1;
-      }
-      else
-      {
-        tmp[orderitem.ItemId + '_' + orderitem.extras] = orderitem;
-        tmp[orderitem.ItemId + '_' + orderitem.extras].cnt = 1;
-      }
-    }
-    order = data;
-    order.Orderitems = tmp;
-    return order;
+    return data;
   }
 
 }
@@ -285,13 +269,13 @@ function leftZero(str) {
 
 function showAmount(data) {
   switch(data){
-  case 0.125:
+    case 0.125:
     return "1/8";
-  case 0.25:
+    case 0.25:
     return "1/4";
-  case 0.75:
+    case 0.75:
     return "3/4";
-  default:
+    default:
     return data;
   }
 }

@@ -80,6 +80,7 @@ module.exports = router;
 
 function mapOrderItems(order){
   order.orderitems.map(x => {
+
     x.item    = x.itemId;
     x.order   = x.orderId;
     x.itemId  = undefined;
