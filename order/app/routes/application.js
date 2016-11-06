@@ -42,29 +42,37 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     socket.close();
   },
   updateData(io, token, store) {
-  const that = this;
-  const socket = io.createSocket(window.EmberENV.host, {
-    query: `token=${token}`
-  });
+    const that = this;
+    const socket = io.createSocket(window.EmberENV.host, {
+      query: `token=${token}`
+    });
 
-  socket.on('update', function (payload) {
-    setTimeout(function () {store.pushPayload(payload)},500);
-  });
+    socket.on('update', function (payload) {
+      setTimeout(function () {store.pushPayload(payload)},500);
+    });
 
-  socket.on('disconnect', function () {
-    that.controllerFor('order').send('socketDisconnected');
-  });
+    socket.on('delete', function (payload) {
 
-  socket.on('reconnect', function () {
-    that.controllerFor('order').send('socketReconnected');
-  });
+      setTimeout(function () {
+        let record = store.peekRecord(payload.type, payload.id);
+        if (record) record.unloadRecord();
+      }, 500);
+    });
 
-  socket.on('connect', function () {
-    that.controllerFor('order').send('socketConnected');
-  });
+    socket.on('disconnect', function () {
+      that.controllerFor('order').send('socketDisconnected');
+    });
 
-  return socket;
-}
+    socket.on('reconnect', function () {
+      that.controllerFor('order').send('socketReconnected');
+    });
+
+    socket.on('connect', function () {
+      that.controllerFor('order').send('socketConnected');
+    });
+
+    return socket;
+  }
 
 });
 
