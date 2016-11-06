@@ -152,7 +152,6 @@ class Print {
   }
 
   transformOrder(data){
-    console.log("WARNING REFACTORING", data)
     return data;
   }
 

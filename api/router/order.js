@@ -34,7 +34,6 @@ router.get('/', function(req, res){
 router.post('/', function(req, res){
   var reqData = serialize(req.body.order)
   var orderitems = reqData.orderitems
-  console.log(reqData)
   var orderId = null;
   const io = req.app.get('io');
   db.Order.create(reqData)
@@ -57,7 +56,6 @@ router.post('/', function(req, res){
 
     res.send({'order': order});
     // io.sockets.emit("update", {'order': order});
-    console.log("POST ORDER");
   })
 })
 
@@ -73,7 +71,6 @@ router.put('/:id', function(req, res){
 
       res.send({'order': order});
       // io.sockets.emit("update", {'order': data});
-      console.log("O PUT");
     })
   })
 })
