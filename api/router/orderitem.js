@@ -54,7 +54,7 @@ router.put('/:id', function(req, res){
     item.order = item.orderId;
     res.send({'orderitem': item});
     // io.sockets.emit('update', {'orderitem': item});
-  }).catch(err => {
+  }).catch(error => {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message

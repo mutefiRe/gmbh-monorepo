@@ -8,6 +8,8 @@ const serializeOrderitem = require('../serializers/orderitem');
 
 router.get('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}, include: [{model: db.Orderitem}]}).then(order => {
+    mapOrderItems(order);
+    mapOrderRelations(order);
     res.send({order});
   }).catch(error => {
     res.status(400).send({
@@ -21,9 +23,11 @@ router.get('/:id', function(req, res){
 router.get('/', function(req, res){
   db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(data => {
     const orders = JSON.parse(JSON.stringify(data));
-    for(let i = 0; i < orders.length; i++){
-      orders[i].table = orders[i].table.id;
+    for(let order of orders){
+      mapOrderItems(order);
+      mapOrderRelations(order);
     }
+
     res.send({'order': orders});
   }).catch(error => {
     res.status(400).send({
