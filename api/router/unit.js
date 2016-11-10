@@ -29,11 +29,11 @@ router.get('/', function(req, res){
   });
 });
 
-router.post('/', function(req, res){
+router.post('/', function(req, res) {
   const io = req.app.get('io');
-  db.Unit.create(serialize(req.body.unit)).then(data => {
-    res.send({unit: data});
-    io.sockets.emit("update", {unit: data});
+  db.Unit.create(serialize(req.body.unit)).then(unit => {
+    res.send({unit});
+    io.sockets.emit("update", {unit});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -46,10 +46,9 @@ router.post('/', function(req, res){
 router.put('/:id', function(req, res){
   const io = req.app.get('io');
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
-    if(unit === null) throw Error('unit not found');
+    if (unit === null) throw new Error('unit not found');
     return unit.update(serialize(req.body.unit));
-  })
-  .then(unit => {
+  }).then(unit => {
     res.send({unit});
     io.sockets.emit("update", {unit});
   }).catch(error => {
@@ -64,7 +63,7 @@ router.put('/:id', function(req, res){
 router.delete('/:id', function(req, res){
   const io = req.app.get('io');
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
-    if(unit === null) throw Error('unit not found');
+    if (unit === null) throw new Error('unit not found');
     return unit.destroy();
   }).then(() => {
     res.send({});

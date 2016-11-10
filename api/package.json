@@ -17,7 +17,7 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test PORT=8081 mocha test/main.test.js ",
+    "test": "cross-env NODE_ENV=test PORT=8081 mocha",
     "circleci": "cross-env NODE_ENV=circleci mocha test/main.test.js ",
     "all": "eslint . || true",
     "fix": "eslint --fix",
@@ -48,9 +48,8 @@
     "chai": "^3.5.0",
     "cz-conventional-changelog": "^1.1.5",
     "eslint": "^2.8.0",
-    "mocha": "^2.4.5",
+    "mocha": "^3.1.2",
     "nodemon": "^1.9.1",
-    "should": "^8.3.1",
     "request": "^2.72.0",
     "socket.io-client": "^1.4.6"
   },

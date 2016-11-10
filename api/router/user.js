@@ -5,19 +5,6 @@ const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/user');
 
-
-router.get('/me', function(req, res) {
-  db.User.find({where: {id: req.decoded.id}}).then(data => {
-    res.send(data);
-  }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
-    });
-  });
-});
-
 router.get('/:id', function(req, res) {
   db.User.find({where: {id: req.params.id}}).then(user => {
     res.send({user});
@@ -31,9 +18,8 @@ router.get('/:id', function(req, res) {
 });
 
 router.get('/', function(req, res) {
-  db.User.findAll().then(users => {
-    if (users[0] === undefined) res.send({users: null});
-    else res.send({users});
+  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printer']}).then(users => {
+    res.send({users});
   }).catch(error => {
     res.status(400).send({
       'errors': {

@@ -24,7 +24,8 @@ module.exports  = function(){
       chai.request(app)
       .get('/api/')
       .send({ token })
-      .then(res => {
+      .end((err, res) => {
+        expect(err).to.be.null;
         expect(res.status).to.equal(200);
         expect(res.body.msg).equal("you have access to the api");
         done();
@@ -35,21 +36,20 @@ module.exports  = function(){
       chai.request(app)
       .get('/api/')
       .send({ token: token + 1 })
-      .catch(res => {
+      .end((err, res) => {
         expect(res.status).equal(400);
-        expect(res.response.body.errors.msg).equal("invalid signature");
+        expect(res.body.errors.msg).equal("invalid signature");
         done();
       });
     });
-
 
     it('should response status 400 to api call, when send without token', done => {
       chai.request(app)
       .get('/api/')
       .send({})
-      .catch(res => {
+      .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.response.body.errors.msg).to.equal("No token provided");
+        expect(res.body.errors.msg).to.equal("No token provided");
         done();
       });
     });
@@ -65,9 +65,9 @@ module.exports  = function(){
       chai.request(app)
       .get('/api/')
       .send({ token: expiredToken })
-      .catch(res => {
+      .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.response.body.errors.msg).to.equal("jwt expired");
+        expect(res.body.errors.msg).to.equal("jwt expired");
         done();
       });
     });

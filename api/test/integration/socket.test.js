@@ -38,9 +38,13 @@ module.exports  = function() {
         client.disconnect();
       });
       client.on("error", error => {
-        expect(error.code).to.equal('credentials_required');
-        client.disconnect();
-        done();
+        try {
+          expect(error.code).to.equal('credentials_required');
+          client.disconnect();
+          done();
+        } catch(e) {
+          done(e);
+        }
       });
     });
 
@@ -59,12 +63,15 @@ module.exports  = function() {
       client.once("connect", () => {
         // trigger when reach this -> Authentication failed
         expect(true).to.equal(false);
-        client.disconnect();
       });
       client.on("error", error => {
-        expect(error.code).to.equal('invalid_token');
-        client.disconnect();
-        done();
+        try {
+          expect(error.code).to.equal('invalid_token');
+          client.disconnect();
+          done();
+        } catch(e) {
+          done(e);
+        }
       });
     });
   });

@@ -18,7 +18,11 @@ module.exports  = function(){
         lastname: "mustermann",
         password: "test",
         permission: 0
-      }).then(() => done());
+      }).then(() => {
+        done();
+      }).catch(error => {
+        done(error);
+      });
     });
 
     describe('with valid username', () => {
@@ -30,7 +34,7 @@ module.exports  = function(){
           chai.request(app)
           .post('/authenticate')
           .send({ username, password })
-          .then(res => {
+          .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property("token");
             done();
@@ -44,9 +48,9 @@ module.exports  = function(){
           chai.request(app)
           .post('/authenticate')
           .send({ username, password })
-          .catch(res => {
-            expect(res.response.status).to.equal(400);
-            expect(res.response.body).to.have.property("errors");
+          .end((err, res) => {
+            expect(res.status).to.equal(400);
+            expect(res.body).to.have.property("errors");
             done();
           });
         });
@@ -59,9 +63,9 @@ module.exports  = function(){
         chai.request(app)
         .post('/authenticate')
         .send({ username, password: 'test1' })
-        .catch(res => {
-          expect(res.response.status).to.equal(400);
-          expect(res.response.body).to.have.property("errors");
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body).to.have.property("errors");
           done();
         });
       });

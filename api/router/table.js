@@ -17,18 +17,6 @@ router.get('/:id', function(req, res){
   });
 });
 
-router.get('/:id/items', function(req, res){
-  db.Areas.find({where: {tableId: req.params.id}}).then(data => {
-    res.send({'items': data});
-  }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
-    });
-  });
-});
-
 router.get('/', function(req, res){
   db.Table.findAll({include: [{model: db.Area}]}).then(data => {
     const tables = JSON.parse(JSON.stringify(data));
