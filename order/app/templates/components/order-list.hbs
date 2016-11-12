@@ -1,34 +1,34 @@
 <h2>Bestellung</h2>
 <div class="scrollable">
   <table>
-    {{#each-in viewOrder.items as |id data|}}
-    {{orderlist-item data=data removeItemFromOrder=(action 'removeItemFromOrder')}}
-    {{/each-in}}
+    {{#each order.orderitems as |orderitem|}}
+    {{orderlist-item orderitem=orderitem removeItemFromOrder=(action 'removeItemFromOrder')}}
+    {{/each}}
   </table>
 </div>
 <div class="flexcontainer">
   {{#unless barKeeper}}
-    {{#if order.table.name}}
-    <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>
-    {{else}}
-    <button {{action 'showModal'}} class="tablebutton required">Tisch auswählen</button>
-    {{/if}}
+  {{#if order.table.name}}
+  <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>
+  {{else}}
+  <button {{action 'showModal'}} class="tablebutton required">Tisch auswählen</button>
+  {{/if}}
   {{/unless}}
-  <p class="sum">Summe: € {{show-currency viewOrder.totalAmount}}</p>
+  <p class="sum">Summe: € {{show-currency order.totalAmount}}</p>
 </div>
 <div class="flexcontainer">
   {{#if order.table.name}}
-    {{#if order.orderitems}}
-      <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
-    {{else}}
-    <span class="empty-order default-btn">Bestellung ist leer!</span>
-    {{/if}}
+  {{#if order.orderitems}}
+  <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+  {{else}}
+  <span class="empty-order default-btn">Bestellung ist leer!</span>
+  {{/if}}
   {{else if barKeeper}}
-    {{#if order.orderitems}}
-      <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
-    {{else}}
-    <span class="empty-order default-btn">Bestellung ist leer!</span>
-    {{/if}}
+  {{#if order.orderitems}}
+  <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+  {{else}}
+  <span class="empty-order default-btn">Bestellung ist leer!</span>
+  {{/if}}
   {{else}}
   <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
   {{/if}}

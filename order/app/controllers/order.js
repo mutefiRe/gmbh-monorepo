@@ -1,6 +1,4 @@
 import Ember from 'ember';
-import _ from 'lodash/lodash';
-import ENV from '../config/environment';
 
 export default Ember.Controller.extend({
   classNames: ['order'],
@@ -22,6 +20,7 @@ export default Ember.Controller.extend({
   barKeeper: false,
   user: null,
   actualOrder: null,
+
   viewOrder: {
     items: {},
     totalAmount: 0
@@ -31,15 +30,15 @@ export default Ember.Controller.extend({
   init() {
     const id = this.get('payload.id');
 
-    this.store.find('user', id).then((user) => {
+    this.store.find('user', id).then( user => {
       this.set('user', user);
-      let order = this.store.createRecord('order', {});
+      const order = this.store.createRecord('order', {});
       order.set('user', user);
       this.set('order', order);
 
       if (this.get('user.printer')) {
         this.set('barKeeper', true);
-        this.store.findAll('table').then((table) => {
+        this.store.findAll('table').then( table => {
           order.set('table', table.get('firstObject'));
         });
       }
@@ -54,49 +53,37 @@ export default Ember.Controller.extend({
       }
     },
     addItemToOrder(item, extras = null) {
-      let orderItem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras});
-      this.get('orderItems').push(orderItem);
+      const order = this.get('order');
+      const totalAmount = order.get('totalAmount');
 
-      let viewOrder = _.cloneDeep(this.get('viewOrder'));
-      let id = item.get('id');
-      if (viewOrder.items[id+extras] === undefined) {
-        viewOrder.items[id+extras] = {};
-        viewOrder.items[id+extras].amount = 0;
+      const orderItem = order.get('orderitems')
+      .filterBy('item.id', item.id)
+      .filterBy('extras', extras);
+
+      if (orderItem.length === 0) {
+        this.store.createRecord('orderitem', {order: this.get('order'), item, extras, price: item.get('price')});
+      } else {
+        orderItem[0].incrementProperty('count');
       }
-      viewOrder.items[id+extras].identifier = id+extras;
-      viewOrder.items[id+extras].amount++;
-      viewOrder.items[id+extras].prize = (item.get('price') * viewOrder.items[id+extras].amount);
-      viewOrder.items[id+extras].categoryId = item.get('category.id');
-      if(item.get('category.showAmount')){
-        viewOrder.items[id+extras].unitName = item.get('unit.name');
-        viewOrder.items[id+extras].showAmount = item.get('amount');
-      }
-      else{
-        viewOrder.items[id+extras].showAmount = "";
-        viewOrder.items[id+extras].unitName = "";
-      }
-      viewOrder.items[id+extras].name = item.get('name');
-      viewOrder.items[id+extras].extras = extras || null;
-      viewOrder.items[id+extras].id = id;
-      viewOrder.totalAmount += (item.get('price'));
-      this.set('viewOrder', viewOrder);
+      order.set('totalAmount', totalAmount + item.get('price'));
     },
+
     showModal(activeType, buttons, item) {
       this.set('modalType', activeType);
       this.set('modalButtons', buttons);
       this.set('modalItem', item);
       switch (activeType) {
         case 'table-select':
-        this.set('modalHeadline', 'Tisch auswählen');
-        break;
+          this.set('modalHeadline', 'Tisch auswählen');
+          break;
         case 'item-settings':
-        this.set('modalHeadline', this.get('modalItem').get('name'));
-        break;
+          this.set('modalHeadline', this.get('modalItem').get('name'));
+          break;
         case 'discard-order':
-        this.set('modalHeadline', 'Bestellung verwerfen?');
-        break;
+          this.set('modalHeadline', 'Bestellung verwerfen?');
+          break;
         default:
-        break;
+          break;
       }
       this.toggleProperty('triggerModal');
     },
@@ -111,46 +98,42 @@ export default Ember.Controller.extend({
       this.toggleProperty('triggerOrderListSwipe');
     },
     saveOrder(goToOrderScreen) {
-      let order = this.get('order');
-      order.totalAmount = this.get('viewOrder.totalAmount');
+      const order = this.get('order');
       this.send('showLoadingModal');
       order.save()
       .then(() => {
-        this.get('orderItems').filterBy('id', null).invoke('deleteRecord');
+        order.get('orderitems').filterBy('id', null).invoke('unloadRecord');
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id, isBill: false}).save();
-      }).then((response) => {
+      }).then(() => {
         if(this.get('model.Settings.firstObject.instantPay')){
           this.set('actualOrder', order);
         }
         this.toggleProperty('triggerModal');
         goToOrderScreen();
-      }).catch((err)=>{
+      }).catch(() => {
         // nothing to do here
-      })
+      });
     },
     resetOrder(){
+
       let order = this.get('order');
-      this.set('orderItems', []);
-      this.set('viewOrder', {items: {},totalAmount: 0});
+
+      order.get('orderitems').invoke('unloadRecord');
+      order.unloadRecord();
 
       order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);
+
+
     },
-    removeItemFromOrder(data) {
-      let viewOrder = _.cloneDeep(this.get('viewOrder'));
-      let items = this.get('orderItems');
-      let toDelete = [];
-      delete(viewOrder.items[data.identifier]);
-      for(let i = items.length-1; i >= 0; i--){
-        if(items[i].get('item.id')+items[i].get('extras') == data.identifier){
-          viewOrder.totalAmount -= items[i].get('item.price');
-          items[i].deleteRecord();
-          items.splice(i,1);
-        }
-      }
-      this.set('viewOrder', viewOrder);
+    removeItemFromOrder(orderitem) {
+      const order = orderitem.get('order');
+      const totalAmount = order.get('totalAmount');
+
+      order.set('totalAmount', totalAmount -  orderitem.get('price') * orderitem.get('count'));
+      this.store.deleteRecord(orderitem);
     },
     printBill(orderId){
       this.store.createRecord('print', {order: orderId, isBill: true}).save().then(() => {
@@ -172,9 +155,6 @@ export default Ember.Controller.extend({
       if(!$('.modal').hasClass('hidden')){
         this.toggleProperty('triggerModal');
       }
-    },
-    socketConnected() {
-      //on Connection
     }
   }
 });

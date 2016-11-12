@@ -15,59 +15,54 @@
 <br>
 <div class="scrollable">
   <table>
-    {{#each-in viewOrder.items as |id item|}}
-    {{#unless item.isPaid}}
-    {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="notpaid"}}
-    {{/unless}}
-    {{/each-in}}
+    {{#each orderitems as |orderitem|}}
+    {{order-detail-view-item orderitem=orderitem type="open" css="notpaid"}}
+    {{/each}}
   </table>
   <table>
-    {{#each-in viewOrder.items as |id item|}}
-    {{#if item.isPaid}}
-    {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="false" css="paid"}}
-    {{/if}}
-    {{/each-in}}
+    {{#each paidOrderitems as |orderitem|}}
+    {{order-detail-view-item orderitem=orderitem type="paid" css="paid"}}
+    {{/each}}
   </table>
 </div>
 
 <div class="flexcontainer">
   <p class="sum">Tisch: {{order.table.name}}</p>
-  <p class="sum">Summe: € {{showCurrency viewOrder.totalAmount}}</p>
+  <p class="sum">Summe: € {{showCurrency openAmount}}</p>
 </div>
 <br>
 
-{{#if payOrder.totalAmount}}
+{{#if markedOrderitems}}
 <h3>Splitrechnung</h3>
 <br>
 <div class="scrollable-pay">
   <table>
-    {{#each-in payOrder.items as |id item|}}
-    {{order-detail-view-item orderItem=item viewOrder=viewOrder payOrder=payOrder pay="true" css="topay"}}
-    {{/each-in}}
+    {{#each markedOrderitems as |orderitem|}}
+    {{order-detail-view-item orderitem=orderitem type="marked" css="topay"}}
+    {{/each}}
   </table>
 </div>
 
 <div class="flexcontainer">
   <p class="sum"></p>
-  <p class="sum">Summe: € {{showCurrency payOrder.totalAmount}}</p>
+  <p class="sum">Summe: € {{showCurrency markedAmount}}</p>
 </div>
 <br>
 {{/if}}
-
 <div>
   {{input id="voucher" type="checkbox" checked=forFree}} <label for="voucher">Mit Gutschein bezahlen</label>
 </div>
-{{#if payOrder.totalAmount}}
-  <div class="flexcontainer">
-    <button {{action "paySelected"}} class="bigbutton default-btn">Auswahl bezahlen</button>
-  </div>
+{{#if markedOrderitems}}
+<div class="flexcontainer">
+  <button {{action "paySelected"}} class="bigbutton default-btn">Auswahl bezahlen</button>
+</div>
 {{/if}}
 <div class="flexcontainer">
   <button {{action "goToOrderOverview"}} class="smallbutton-grey">
     {{#if settings.firstObject.instantPay}}
-      Meine Bestellungen anzeigen
+    Meine Bestellungen anzeigen
     {{else}}
-      zurück
+    zurück
     {{/if}}
   </button>
   {{#if order.isPaid}}
@@ -78,6 +73,6 @@
 </div>
 <div class="flexcontainer">
   {{#if settings.firstObject.instantPay}}
-    <button {{action 'goToOrderScreen'}} class="bigbutton default-btn">neue Bestellung aufnehmen</button>
+  <button {{action 'goToOrderScreen'}} class="bigbutton default-btn">neue Bestellung aufnehmen</button>
   {{/if}}
 </div>
