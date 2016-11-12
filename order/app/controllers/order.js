@@ -105,16 +105,16 @@ export default Ember.Controller.extend({
       this.send('showLoadingModal');
       order.save()
       .then(() => {
-        this.get('orderItems').filterBy('id', null).invoke('deleteRecord');
+        order.get('orderitems').filterBy('id', null).invoke('unloadRecord');
         this.send('resetOrder');
         return this.store.createRecord('print',{order: order.id, isBill: false}).save();
-      }).then((response) => {
+      }).then(() => {
         if(this.get('model.Settings.firstObject.instantPay')){
           this.set('actualOrder', order);
         }
         this.toggleProperty('triggerModal');
         goToOrderScreen();
-      }).catch((err)=>{
+      }).catch(err => {
         // nothing to do here
       })
     },

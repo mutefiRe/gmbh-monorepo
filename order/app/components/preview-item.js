@@ -7,6 +7,7 @@ export default Ember.Component.extend({
   init() {
     this._super();
     const numberOfStyles = 4;
-  //  this.set('myStyle', `style-${(this.get('item.item').categoryId % numberOfStyles)}`);
-}
+    const style = this.get('item.item.category.id');
+    this.set('myStyle', `style-${(style % numberOfStyles)}`);
+  }
 });

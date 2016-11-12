@@ -1,21 +1,16 @@
 {
-  "extends": "ember",
   "parser": "babel-eslint",
   "ecmaFeatures": {
     "modules": true
   },
   "env": {
     "browser": true,
+    "node": true,
     "mocha": true,
-    "es6": true,
-    "node": true
-  },
-  "globals": {
-    "$": true
+    "es6": true
   },
   "rules": {
-    "array-callback-return": 1,
-    "no-process-env": 1,
+    "semi": [1, "always"],
     "comma-dangle": [2,"never"],
     "no-cond-assign": [2,"always"],
     "no-console": 1,
@@ -27,7 +22,6 @@
     "no-ex-assign": 2,
     "no-extra-parens": [1,"all"],
     "no-extra-semi": 2,
-    "no-magic-numbers": 0,
     "no-invalid-regexp": 2,
     "no-irregular-whitespace": 1,
     "no-negated-in-lhs": 1,
@@ -50,10 +44,10 @@
     "no-redeclare": 2,
     "no-delete-var": 2,
     "no-unused-vars": 1,
-    "indent": [2, 2, {"SwitchCase": 1}],
-    "no-mixed-spaces-and-tabs": [1,"smart-tabs"],
+    "indent": ["error", 2],
+    "no-mixed-spaces-and-tabs": ["error"],
     "no-new-object": 1,
-    "arrow-parens": 1,
+    "arrow-parens": [1, "as-needed"],
     "arrow-spacing": 1,
     "constructor-super": 1,
     "generator-star-spacing": 1,
@@ -61,13 +55,27 @@
     "no-const-assign": 1,
     "no-this-before-super": 1,
     "no-var": 1,
-    "object-shorthand": 0,
+    "object-shorthand": 1,
     "prefer-const": 1,
     "prefer-spread": 1,
     "prefer-reflect": 1,
     "require-yield": 1,
-    "consistent-this": ["error", "self"],
-    "prefer-rest-params": 1,
-    "consistent-return": 1
+    "space-before-function-paren":0,
+    "spaced-comment": 2,
+    "space-unary-ops": [
+      1, {
+        "words": true,
+        "nonwords": true,
+        "overrides": {
+          "new": true,
+          "++": false,
+          "--": false,
+          "[":  false,
+          "]":  false,
+          "!":  false
+        }
+      }
+    ],
+    "space-infix-ops": 1
   }
 }
