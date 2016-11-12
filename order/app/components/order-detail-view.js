@@ -1,17 +1,39 @@
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
-import _ from 'lodash/lodash';
-
-const {
-  Component
-} = Ember;
 
 export default Ember.Component.extend(RecognizerMixin, {
-  classNames: ['order-detail-view'],
-  recognizers: 'swipe',
+  classNames:        ['order-detail-view'],
+  recognizers:       'swipe',
   classNameBindings: ['SwipeChange'],
-  viewOrder : {items: {}, totalAmount: 0},
-  payOrder: {items: {}, totalAmount: 0},
+  paidOrderitems: Ember.computed.filter('order.orderitems', function(orderitem) {
+    if (orderitem.get('countPaid') > 0) return true;
+    return false;
+  }),
+  markedOrderitems: Ember.computed.filter('order.orderitems.@each.countMarked', function(orderitem) {
+    if (orderitem.get('countMarked') > 0) return true;
+    return false;
+  }),
+  orderitems: Ember.computed.filter('order.orderitems.@each.countMarked', function(orderitem) {
+    console.log(orderitem.get('countPaid') + orderitem.get('countMarked') < orderitem.get('count'))
+    if (orderitem.get('countPaid') + orderitem.get('countMarked') < orderitem.get('count')) return true;
+    return false;
+  }),
+  markedAmount: Ember.computed('markedOrderitems', function(){
+    let orderitems = this.get('markedOrderitems');
+    let sum = 0;
+    for (const orderitem of orderitems) {
+      sum += orderitem.get('price') * orderitem.get('countMarked');
+    }
+    return sum;
+  }),
+  openAmount: Ember.computed('orderitems', function(){
+    let orderitems = this.get('orderitems');
+    let sum = 0;
+    for (const orderitem of orderitems) {
+      sum += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'));
+    }
+    return sum;
+  }),
   forFree: false,
   SwipeChange: function () {
     if(this.get('settings.firstObject.instantPay')){
@@ -28,46 +50,6 @@ export default Ember.Component.extend(RecognizerMixin, {
     }
     return 'none';
   }.property('swipeHelper.order-detail.active'),
-
-  observedOrder: function () {
-    let order = this.get('order');
-    let viewOrder = {items: {}, totalAmount: 0};
-    let payOrder = {items: {}, totalAmount: 0};
-    order.get('orderitems').forEach((orderitem)=> {
-      let item = orderitem.get('item');
-      let id = item.get('id');
-      let extras = orderitem.get('extras');
-      let isPaid = orderitem.get('isPaid');
-      let forFree = orderitem.get('forFree');
-      if (viewOrder.items[id+extras+isPaid+forFree] === undefined) {
-        viewOrder.items[id+extras+isPaid+forFree] = {};
-        viewOrder.items[id+extras+isPaid+forFree].amount = 0;
-      }
-      viewOrder.items[id+extras+isPaid+forFree].identifier = id+extras+isPaid+forFree;
-      viewOrder.items[id+extras+isPaid+forFree].amount++;
-      if(!orderitem.get('isPaid')){
-        viewOrder.totalAmount += (item.get('price'));
-      }
-      viewOrder.items[id+extras+isPaid+forFree].isPaid = orderitem.get('isPaid');
-      viewOrder.items[id+extras+isPaid+forFree].forFree = orderitem.get('forFree');
-      viewOrder.items[id+extras+isPaid+forFree].prize = (item.get('price') * viewOrder.items[id+extras+isPaid+forFree].amount);
-      viewOrder.items[id+extras+isPaid+forFree].categoryId = item.get('category.id');
-      if(item.get('category.showAmount')){
-        viewOrder.items[id+extras+isPaid+forFree].unitName = item.get('unit.name');
-        viewOrder.items[id+extras+isPaid+forFree].showAmount = item.get('amount');
-      }
-      else{
-        viewOrder.items[id+extras+isPaid+forFree].showAmount = "";
-        viewOrder.items[id+extras+isPaid+forFree].unitName = "";
-      }
-      viewOrder.items[id+extras+isPaid+forFree].name = item.get('name');
-      viewOrder.items[id+extras+isPaid+forFree].extras = extras || null;
-      viewOrder.items[id+extras+isPaid+forFree].id = id;
-
-      this.set('viewOrder', viewOrder);
-    })
-    this.set('payOrder', payOrder);
-  }.observes('order.id','order.totalAmount'),
 
   swipeRight() {
     this.triggerAction({
@@ -90,87 +72,51 @@ export default Ember.Component.extend(RecognizerMixin, {
     },
     paySelected(){
       this.triggerAction({action: 'showLoadingModal'})
-      let proms = [];
-      let pay =  this.get('payOrder');
-      let items = this.get('payOrder.items');
-      let orderitems = this.get('order.orderitems');
+      const orderitems = this.get('markedOrderitems');
       const forFreeOrder = this.get('forFree');
-      for(let Item in items){
-        let amount = items[Item].amount;
-        orderitems.forEach((item)=>{
-          let extras = item.get('extras');
-          let id = item.get('item.id');
-          let isPaid = item.get('isPaid');
-          const forFree = item.get('forFree')
-          if(amount > 0){
-            if(items[Item].identifier == id+extras+isPaid+forFree){
-              amount--;
-              if(forFreeOrder) {
-                item.set("forFree", true);
-              }
-
-              item.set("isPaid", true);
-              proms.push(item.save());
-            }
-          }
-        })
+      let promises = []
+      for(let orderitem of orderitems){
+        orderitem.set('countPaid', orderitem.get('countPaid') + orderitem.get('countMarked'));
+        if (forFreeOrder) orderitem.set('countFree', orderitem.get('countFree') + orderitem.get('countMarked'));
+        orderitem.set('countMarked', 0);
       }
-      Promise.all(proms)
-      .then(()=>{
-        let paid = true;
-        for(let order in this.get('viewOrder.items')){
-          if(this.get('viewOrder.items')[order].isPaid != true){
-            paid = false;
-          }
-        }
-        let order = this.get('order');
-        order.set('isPaid', paid);
-        order.set('totalAmount', this.get('viewOrder.totalAmount'));
-        order.save()
-        .then(() => {
-          this.triggerAction({action: 'triggerModal'})
 
-          //reset forFree
-          this.set('forFree', false)
-        });
-      })
-      .catch((err) => {
+      let order = this.get('order');
+      let items = order.get('orderitems');
+
+      order.set('isPaid', this.get('openAmount') == 0 ? true : false);
+      order.set('totalAmount', this.get('openAmount'));
+      order.save().then(() => {
+        this.triggerAction({action: 'triggerModal'})
+        this.set('forFree', false)
+      }).catch((err) => {
         this.get('order.orderitems').forEach((item) => {
           item.rollbackAttributes();
         })
         this.get('order').rollbackAttributes();
       });
     },
-    payAll(){
+    payAll() {
       this.triggerAction({action: 'showLoadingModal'});
-      let proms = [];
-      let orderitems = this.get('order.orderitems');
+      const orderitems = this.get('order.orderitems');
       const forFree = this.get('forFree');
-      orderitems.forEach((item) => {
-        const isPaid = item.get('isPaid');
-        if(forFree && !isPaid) {
-          item.set('forFree', true);
-        }
-        item.set("isPaid", true);
-        proms.push(item.save());
-      })
-      Promise.all(proms)
-      .then(() => {
-        let order = this.get('order');
-        order.set('isPaid', true);
-        order.set('totalAmount', 0);
-        order.save()
-        .then(() => {
-          this.triggerAction({action: 'triggerModal'});
 
-          //reset forFree
-          this.set('forFree', false);
-        });
-      })
-      .catch((err) => {
-        this.get('order.orderitems').forEach((item) => {
+      orderitems.forEach(item => {
+        item.set('countPaid', item.get('count'));
+        if (forFree) item.set('countFree', item.get('count'));
+      });
+
+      const order = this.get('order');
+
+      order.set('isPaid', true);
+      order.set('totalAmount', 0);
+      order.save().then(() => {
+        this.triggerAction({action: 'triggerModal'});
+        this.set('forFree', false);
+      }).catch(() => {
+        this.get('order.orderitems').forEach(item => {
           item.rollbackAttributes();
-        })
+        });
         this.get('order').rollbackAttributes();
       });
     },

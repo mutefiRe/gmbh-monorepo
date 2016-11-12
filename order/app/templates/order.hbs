@@ -1,13 +1,13 @@
 {{outlet}}
 
-{{order-screen settings=model.Settings categories=model.categories actualCategory=actualCategory changeCategory=(action "changeCategory") items=model.Items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") viewOrder=viewOrder swipeHelper=swipeHelper}}
+{{order-screen settings=model.Settings categories=model.categories actualCategory=actualCategory changeCategory=(action "changeCategory") items=model.Items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") order=order swipeHelper=swipeHelper}}
 
 {{#modal-box triggerModal=triggerModal headline=modalHeadline modalButtons=modalButtons}}
 
 {{component modalType currentUser=model.currentUser tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem resetOrder=(action "resetOrder") swipeOrderList=(action "swipeOrderList")}}
 {{/modal-box}}
 
-{{order-list barKeeper=barKeeper settings=model.Settings viewOrder=viewOrder order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal") swipeHelper=swipeHelper triggerOrderListSwipe=triggerOrderListSwipe}}
+{{order-list barKeeper=barKeeper settings=model.Settings order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal") swipeHelper=swipeHelper triggerOrderListSwipe=triggerOrderListSwipe}}
 
 
 {{order-overview settings=model.Settings  actualOrder= actualOrder orders=model.Orders swipeHelper=swipeHelper}}

@@ -78,8 +78,8 @@ export default Ember.Component.extend(RecognizerMixin, {
         }
       })
     },
-    removeItemFromOrder(data) {
-      this.get('removeItemFromOrder')(data);
+    removeItemFromOrder(orderitem) {
+      this.get('removeItemFromOrder')(orderitem);
     }
   }
 });
