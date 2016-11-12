@@ -1,6 +1,4 @@
 import Ember from 'ember';
-import _ from 'lodash/lodash';
-import ENV from '../config/environment';
 
 export default Ember.Controller.extend({
   classNames: ['order'],
@@ -32,15 +30,15 @@ export default Ember.Controller.extend({
   init() {
     const id = this.get('payload.id');
 
-    this.store.find('user', id).then((user) => {
+    this.store.find('user', id).then( user => {
       this.set('user', user);
-      let order = this.store.createRecord('order', {});
+      const order = this.store.createRecord('order', {});
       order.set('user', user);
       this.set('order', order);
 
       if (this.get('user.printer')) {
         this.set('barKeeper', true);
-        this.store.findAll('table').then((table) => {
+        this.store.findAll('table').then( table => {
           order.set('table', table.get('firstObject'));
         });
       }
@@ -76,16 +74,16 @@ export default Ember.Controller.extend({
       this.set('modalItem', item);
       switch (activeType) {
         case 'table-select':
-        this.set('modalHeadline', 'Tisch auswählen');
-        break;
+          this.set('modalHeadline', 'Tisch auswählen');
+          break;
         case 'item-settings':
-        this.set('modalHeadline', this.get('modalItem').get('name'));
-        break;
+          this.set('modalHeadline', this.get('modalItem').get('name'));
+          break;
         case 'discard-order':
-        this.set('modalHeadline', 'Bestellung verwerfen?');
-        break;
+          this.set('modalHeadline', 'Bestellung verwerfen?');
+          break;
         default:
-        break;
+          break;
       }
       this.toggleProperty('triggerModal');
     },
@@ -100,8 +98,7 @@ export default Ember.Controller.extend({
       this.toggleProperty('triggerOrderListSwipe');
     },
     saveOrder(goToOrderScreen) {
-      let order = this.get('order');
-      order.totalAmount = this.get('viewOrder.totalAmount');
+      const order = this.get('order');
       this.send('showLoadingModal');
       order.save()
       .then(() => {
@@ -114,24 +111,28 @@ export default Ember.Controller.extend({
         }
         this.toggleProperty('triggerModal');
         goToOrderScreen();
-      }).catch(err => {
+      }).catch(() => {
         // nothing to do here
-      })
+      });
     },
     resetOrder(){
+
       let order = this.get('order');
-      this.set('orderItems', []);
-      this.set('viewOrder', {items: {},totalAmount: 0});
+
+      order.get('orderitems').invoke('unloadRecord');
+      order.unloadRecord();
 
       order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);
+
+
     },
     removeItemFromOrder(orderitem) {
       const order = orderitem.get('order');
       const totalAmount = order.get('totalAmount');
 
-      order.set('totalAmount', totalAmount - (orderitem.get('price') * orderitem.get('count')));
+      order.set('totalAmount', totalAmount -  orderitem.get('price') * orderitem.get('count'));
       this.store.deleteRecord(orderitem);
     },
     printBill(orderId){
@@ -154,9 +155,6 @@ export default Ember.Controller.extend({
       if(!$('.modal').hasClass('hidden')){
         this.toggleProperty('triggerModal');
       }
-    },
-    socketConnected() {
-      //on Connection
     }
   }
 });
