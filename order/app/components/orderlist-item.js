@@ -17,7 +17,7 @@ export default Ember.Component.extend({
       this.get('deleteOrderItem')(this.get('index'));
     },
     removeItemFromOrder(){
-      this.get('removeItemFromOrder')(this.get('data'));
+      this.get('removeItemFromOrder')(this.get('orderitem'));
     }
   }
 });

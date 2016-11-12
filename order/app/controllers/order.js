@@ -22,6 +22,7 @@ export default Ember.Controller.extend({
   barKeeper: false,
   user: null,
   actualOrder: null,
+
   viewOrder: {
     items: {},
     totalAmount: 0
@@ -126,19 +127,12 @@ export default Ember.Controller.extend({
       order.set('user', this.get('user'));
       this.set('order', order);
     },
-    removeItemFromOrder(data) {
-      let viewOrder = _.cloneDeep(this.get('viewOrder'));
-      let items = this.get('orderItems');
-      let toDelete = [];
-      delete(viewOrder.items[data.identifier]);
-      for(let i = items.length-1; i >= 0; i--){
-        if(items[i].get('item.id')+items[i].get('extras') == data.identifier){
-          viewOrder.totalAmount -= items[i].get('item.price');
-          items[i].deleteRecord();
-          items.splice(i,1);
-        }
-      }
-      this.set('viewOrder', viewOrder);
+    removeItemFromOrder(orderitem) {
+      const order = orderitem.get('order');
+      const totalAmount = order.get('totalAmount');
+
+      order.set('totalAmount', totalAmount - (orderitem.get('price') * orderitem.get('count')));
+      this.store.deleteRecord(orderitem);
     },
     printBill(orderId){
       this.store.createRecord('print', {order: orderId, isBill: true}).save().then(() => {
