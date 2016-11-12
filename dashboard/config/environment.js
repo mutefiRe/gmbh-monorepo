@@ -46,5 +46,17 @@ module.exports = function(environment) {
 
   }
 
+  ENV['ember-simple-auth'] = {
+    authorizer: 'authorizer:token'
+  };
+
+  ENV['ember-simple-auth-token'] = {
+    authorizationPrefix: ' ',
+    authorizationHeaderName: 'x-access-token',
+    refreshAccessTokens: false,
+    serverTokenEndpoint: (process.env.GMBH_BACKEND || 'http://localhost:8080') + '/authenticate',
+    timeFactor: 1000
+  };
+
   return ENV;
 };
