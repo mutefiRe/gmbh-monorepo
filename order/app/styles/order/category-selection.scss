@@ -9,30 +9,41 @@
   display:flex;
   background-color:$grey;
   border-bottom: 1px solid $grey-dark;
-}
 
-.category-select-field {
-  margin-right:10px;
-  margin-left:10px;
-  width:220px;
-  height:90px;
-  background-color:$blue;
-  border:none;
-  color:$white;
-  font-size:18px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+
+  &-field {
+    position: relative;
+    margin-right:10px;
+    margin-left:10px;
+    width:220px;
+    height:90px;
+    background-color:$blue;
+    border:none;
+    color: $white;
+    font-size:18px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    .content{
+      @include center;
+      text-align: center;
+      .icon{
+       font-size: 35px;
+       margin-bottom: 6px;
+     }
+     .caption{
+      font-size: 18px;
+    }
+  }
+
   &:hover, &:active{
     border:none;
     box-shadow: none;
     background-color:lighten($blue, 5%);
   }
 }
+}
 
 .category-inactive {
   background-color: lighten(desaturate($blue, 50%), 10%);
 }
 
-.category-select-field img {
-  height:30px;
-  vertical-align: middle;
-}
+
