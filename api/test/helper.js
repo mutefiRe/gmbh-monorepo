@@ -12,5 +12,22 @@ module.exports = {
     }).catch(error => {
       done(error);
     });
+  },
+
+  removeTimestamps(body){
+    for(const topLevelKey in body){
+      if (Array.isArray(body[topLevelKey])){
+        for (const record in body[topLevelKey]){
+          delete body[topLevelKey][record].createdAt;
+          delete body[topLevelKey][record].updatedAt;
+        }
+      } else {
+        for (const key in body[topLevelKey]){
+          delete body[topLevelKey].createdAt;
+          delete body[topLevelKey].updatedAt;
+        }
+      }
+    }
+    return body
   }
-}
+};

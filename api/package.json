@@ -14,7 +14,7 @@
   "repository": {},
   "bugs": {},
   "engines": {
-    "node": ">= 0.12.0"
+    "node": ">= 6.9.1"
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test PORT=8081 mocha",

@@ -16,25 +16,20 @@ router.get('/:id', function(req, res){
   });
 });
 
-router.get('/', function(req, res){
-  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(data => {
-    const orderitems = JSON.parse(JSON.stringify(data));
-    for(let i = 0; i < orderitems.length; i++){
-      orderitems[i].item = orderitems[i].item.id;
-    }
-    res.send({'orderitem': orderitems});
+router.get('/', function(req, res, next){
+  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(orderitems => {
+    orderitems = JSON.parse(JSON.stringify(orderitems));
+    res.body = {orderitems};
+    next();
   });
 });
 
-router.post('/', function(req, res){
-  // const io = req.app.get('io');
+router.post('/', function(req, res, next){
   db.Orderitem.create(serialize(req.body.orderitem)).then( orderitem => {
-    const item = JSON.parse(JSON.stringify(orderitem));
-    item.item = item.itemId;
-    item.order = item.orderId;
-    res.send({'orderitem': item});
-    // io.sockets.emit('update', {'orderitem': item});
-  }).catch(err => {
+    orderitem = JSON.parse(JSON.stringify(orderitem));
+    res.body = {orderitem};
+    next();
+  }).catch(error => {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
@@ -43,17 +38,15 @@ router.post('/', function(req, res){
   });
 });
 
-router.put('/:id', function(req, res){
+router.put('/:id', function(req, res, next){
   // const io = req.app.get('io');
   db.Orderitem.update(serialize(req.body.orderitem), {where: {id: req.params.id}})
   .then(() => {
     return db.Orderitem.findById(req.params.id);
   }).then(orderitem => {
-    const item = JSON.parse(JSON.stringify(orderitem));
-    item.item = item.itemId;
-    item.order = item.orderId;
-    res.send({'orderitem': item});
-    // io.sockets.emit('update', {'orderitem': item});
+    orderitem = JSON.parse(JSON.stringify(orderitem));
+    res.body = {orderitem};
+    next();
   }).catch(error => {
     res.status(400).send({
       'errors': {

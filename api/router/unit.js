@@ -5,9 +5,11 @@ const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/unit');
 
-router.get('/:id', function(req, res){
-  db.Unit.find({where: {id: req.params.id}}).then(data => {
-    res.send({'unit': data});
+router.get('/:id', function(req, res, next){
+  db.Unit.find({where: {id: req.params.id}}).then(unit => {
+    unit = JSON.parse(JSON.stringify(unit));
+    res.body = {unit};
+    next();
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -17,9 +19,11 @@ router.get('/:id', function(req, res){
   });
 });
 
-router.get('/', function(req, res){
+router.get('/', function(req, res, next){
   db.Unit.findAll().then(units => {
-    res.send({units});
+    units = JSON.parse(JSON.stringify(units));
+    res.body = {units};
+    next();
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -29,11 +33,12 @@ router.get('/', function(req, res){
   });
 });
 
-router.post('/', function(req, res) {
-  const io = req.app.get('io');
+router.post('/', function(req, res, next) {
   db.Unit.create(serialize(req.body.unit)).then(unit => {
-    res.send({unit});
-    io.sockets.emit("update", {unit});
+    unit = JSON.parse(JSON.stringify(unit));
+    res.body = {unit};
+    res.socket = "update";
+    next();
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -43,14 +48,15 @@ router.post('/', function(req, res) {
   });
 });
 
-router.put('/:id', function(req, res){
-  const io = req.app.get('io');
+router.put('/:id', function(req, res, next){
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
     if (unit === null) throw new Error('unit not found');
     return unit.update(serialize(req.body.unit));
   }).then(unit => {
-    res.send({unit});
-    io.sockets.emit("update", {unit});
+    unit = JSON.parse(JSON.stringify(unit));
+    res.body = {unit};
+    res.socket = "update";
+    next();
   }).catch(error => {
     res.status(400).send({
       'errors': {

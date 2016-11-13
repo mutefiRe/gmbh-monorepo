@@ -75,7 +75,7 @@ module.exports = function(){
   db.Category.create({
     name: "Speisen",
     enabled: true,
-    icon: "food.svg",
+    icon: "food",
     description: "Alle die Guten Sachen",
     showAmount: false,
     printer: "GMBH-WLAN"
@@ -131,7 +131,7 @@ module.exports = function(){
   db.Category.create({
     name: "Alkoholisches",
     enabled: true,
-    icon: "drink-alc.svg",
+    icon: "drink-alc",
     description: "alkohol",
     showAmount: true,
     printer: "GMBH-LAN"
@@ -261,7 +261,7 @@ module.exports = function(){
   db.Category.create({
     name: "Alkoholfreies",
     enabled: true,
-    icon: "drink-anti.svg",
+    icon: "drink-anti",
     description: "Alkoholfreies",
     showAmount: true,
     printer: "GMBH-LAN"

@@ -8,6 +8,8 @@ const serializeOrderitem = require('../serializers/orderitem');
 
 router.get('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}, include: [{model: db.Orderitem}]}).then(order => {
+
+    order = JSON.parse(JSON.stringify(order));
     mapOrderItems(order);
     mapOrderRelations(order);
     res.send({order});
@@ -21,14 +23,14 @@ router.get('/:id', function(req, res){
 });
 
 router.get('/', function(req, res){
-  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(data => {
-    const orders = JSON.parse(JSON.stringify(data));
-    for(let order of orders){
+  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(orders => {
+    orders = JSON.parse(JSON.stringify(orders));
+    for(const order of orders){
       mapOrderItems(order);
       mapOrderRelations(order);
     }
 
-    res.send({'order': orders});
+    res.send({orders});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -42,7 +44,6 @@ router.post('/', function(req, res){
   const requestOrder = serialize(req.body.order);
   const orderitems   = requestOrder.orderitems;
   let   orderId      = null;
-  // const io = req.app.get('io');
   db.Order.create(requestOrder)
   .then( data => {
     orderitems.map(x => {
@@ -62,8 +63,8 @@ router.post('/', function(req, res){
     mapOrderRelations(order);
 
     res.send({order});
-    // io.sockets.emit("update", {'order': order});
   }).catch(error => {
+    throw error;
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
@@ -73,8 +74,6 @@ router.post('/', function(req, res){
 });
 
 router.put('/:id', function(req, res){
-  // const io = req.app.get('io');
-// .then(order => {;
   const requestOrder = serialize(req.body.order);
   db.Order.findById(req.params.id).then(order => {
     return order.update(serialize(req.body.order));
@@ -86,7 +85,6 @@ router.put('/:id', function(req, res){
       promises.push(promise);
     }
     return Promise.all(promises);
-    // we have to change this according orderitem changes?
   }).then(() => {
     return db.Order.findById(req.params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]});
   }).then(data => {
@@ -96,14 +94,14 @@ router.put('/:id', function(req, res){
     mapOrderRelations(order);
 
     res.send({order});
-    // io.sockets.emit("update", {'order': data});
   }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
-    });
+   throw error;
+   res.status(400).send({
+    'errors': {
+      'msg': error && error.errors && error.errors[0].message || error.message
+    }
   });
+ });
 });
 
 router.delete('/:id', function(req, res){

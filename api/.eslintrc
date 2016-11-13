@@ -43,7 +43,7 @@
     "no-redeclare": 2,
     "no-delete-var": 2,
     "no-unused-vars": 1,
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "no-mixed-spaces-and-tabs": ["error"],
     "no-new-object": 1,
     "arrow-parens": [1, "as-needed"],

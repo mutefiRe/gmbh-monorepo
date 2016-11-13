@@ -6,7 +6,7 @@ const db = require('../models/index');
 const serialize = require('../serializers/user');
 
 router.get('/:id', function(req, res) {
-  db.User.find({where: {id: req.params.id}}).then(user => {
+  db.User.find({where: {id: req.params.id}, include: [{model: db.Area}]}).then(user => {
     res.send({user});
   }).catch(error => {
     res.status(400).send({
@@ -18,7 +18,7 @@ router.get('/:id', function(req, res) {
 });
 
 router.get('/', function(req, res) {
-  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printer']}).then(users => {
+  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printer'], include: [{model: db.Area}]}).then(users => {
     res.send({users});
   }).catch(error => {
     res.status(400).send({

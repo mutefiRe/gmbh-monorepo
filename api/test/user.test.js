@@ -2,12 +2,13 @@
 
 const chai     = require('chai');
 const expect   = chai.expect;
-const app      = require('./../server.js');
-const db       = require('./../models/index');
+const app      = require('../server.js');
+const db       = require('../models/index');
 const chaiHttp = require('chai-http');
 const jwt      = require('jsonwebtoken');
 const config   = require('../config/config.js');
-const cleaner  = require('./helper.js');
+
+const { clean, removeTimestamps } = require('./helper.js');
 
 chai.use(chaiHttp);
 
@@ -20,14 +21,17 @@ const token = jwt.sign({
   permission: 1
 }, config.secret, { expiresIn: '24h' });
 
-describe('/unit route', () => {
+describe('/user route', () => {
   before(done => {
-    cleaner.clean(done);
+    clean(done);
   });
-  describe('units exists', () => {
+
+  describe('users exists', () => {
 
     before(done => {
-      db.Unit.bulkCreate([{name: "stk"}, {name: "l"}])
+      db.User.bulkCreate([
+        {username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0},
+        {username: "test2", firstname: "test2", lastname: "test2", password: "test2", permission: 1}])
       .then(() => {
         done();
       }).catch(error => {
@@ -35,36 +39,45 @@ describe('/unit route', () => {
       });
     });
 
-    describe('GET units', () => {
+    describe('GET users', () => {
       const expectedResponse = {
-        "units": [{
-          id: 1,
-          name: "stk"
+        "users": [{
+          "id":         1,
+          "username":   "test1",
+          "firstname":  "test1",
+          "lastname":   "test1",
+          "permission": 0,
+          "printer":    null,
+          "areas":      []
         }, {
-          id: 2,
-          name: "l"
+          "id":         2,
+          "username":   "test2",
+          "firstname":  "test2",
+          "lastname":   "test2",
+          "permission": 1,
+          "printer":    null,
+          "areas":      []
         }]
       };
 
       it('should get one user', done => {
         chai.request(app)
-        .get('/api/units/1')
+        .get('/api/users/1')
         .send({ token })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.unit.name).to.equal("stk");
+          expect(res.body.user.username).to.equal("test1");
           done();
         });
       });
 
-      it('should get all units', done => {
+      it('should get all users', done => {
         chai.request(app)
-        .get('/api/units/')
+        .get('/api/users/')
         .send({ token })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.units.length).to.equal(2);
-          expect(res.body).to.deep.equal(expectedResponse);
+          expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
           done();
         });
       });
@@ -137,4 +150,3 @@ describe('/unit route', () => {
     });
   });
 });
-

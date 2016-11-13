@@ -8,6 +8,7 @@ const db = require('./models/index');
 const bodyParser = require('body-parser');
 const config = require('./config/config');
 const socketioJwt = require('socketio-jwt');
+const finalizer = require('./lib/finalizer');
 
 app.set("io", io);
 app.set("server", server);
@@ -27,9 +28,8 @@ const teapot = require('./router/teapot');
 const data = require('./router/data');
 
 server.listen(process.env.PORT || 8080, function(){
-	console.log(`server listening to ${process.env.PORT || 8080}`);
+  console.log(`server listening to ${process.env.PORT || 8080}`);
 });
-
 
 // Routing
 app.use(bodyParser.json({limit: '5mb'}));
@@ -48,14 +48,15 @@ app.use('/api', api);
 app.use('/teapot', teapot);
 app.use('/data', data);
 
+app.use('/api', finalizer);
 
 // Socket handling
 io.on('connection', function(socket){
 
-  socket.emit("connected", true)
+  socket.emit("connected", true);
 
   socket.on('disconnect', function(){
-  	// console.log('disconnected')
+    // console.log('disconnected')
   });
 });
 

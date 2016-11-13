@@ -1,0 +1,184 @@
+'use strict';
+
+const chai     = require('chai');
+const expect   = chai.expect;
+const app      = require('../server.js');
+const db       = require('../models/index');
+const chaiHttp = require('chai-http');
+const jwt      = require('jsonwebtoken');
+const config   = require('../config/config.js');
+
+const { clean, removeTimestamps } = require('./helper.js');
+
+chai.use(chaiHttp);
+
+const token = jwt.sign({
+  id:         1,
+  username:   "test1",
+  firstname:  "test1",
+  lastname:   "test1",
+  permission: 1
+}, config.secret, { expiresIn: '24h' });
+
+describe('/item route', () => {
+  before(done => {
+    clean(done);
+  });
+  describe('items exists', () => {
+
+    before(done => {
+
+      db.Category.create({
+        name:        "category1",
+        enabled:     true,
+        description: "newCategory",
+        icon:        null,
+        showAmount:  true,
+        printer:     null
+      }).then(() => {
+        return db.Unit.create({name: "unit1"});
+      }).then(() => {
+        return db.Item.bulkCreate([{
+          name:       "item1",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.1,
+          sort:       null,
+          categoryId: 1,
+          unitId:     1
+        }, {
+          name:       "item2",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.1,
+          sort:       null,
+          categoryId: 1,
+          unitId:     1
+        }]);
+      }).then(() => {
+        done();
+      }).catch(error => {
+        done(error);
+      });
+    });
+
+    describe('GET items', () => {
+      const expectedResponse = {
+        "items": [{
+          id:       1,
+          name:     "item1",
+          amount:   0.5,
+          price:    3.5,
+          tax:      0.1,
+          sort:   null,
+          category: 1,
+          unit:     1
+        }, {
+          id:       2,
+          name:     "item2",
+          amount:   0.5,
+          price:    3.5,
+          tax:      0.1,
+          sort:   null,
+          category: 1,
+          unit:     1
+        }]
+      };
+
+      it('should get one item', done => {
+        chai.request(app)
+        .get('/api/items/1')
+        .send({ token })
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.item.name).to.equal("item1");
+          done();
+        });
+      });
+
+      it('should get all items', done => {
+        chai.request(app)
+        .get('/api/items/')
+        .send({ token })
+        .end((err, res) => {
+          expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
+          done();
+        });
+      });
+    });
+
+    describe('POST item', () => {
+      const requestBody = {
+        item: {
+          name:     "newItem",
+          amount:   0.5,
+          price:    3.5,
+          tax:      0.1,
+          sort:   null,
+          category: 1,
+          unit:     1
+        }
+      };
+
+      it('item should exist', done => {
+        chai.request(app)
+        .post('/api/items')
+        .set("x-access-token", token)
+        .send(requestBody)
+        .then(res => {
+          expect(res.status).to.equal(200);
+          expect(res.body.item.name).to.equal("newItem");
+          return db.Item.find({where: {name: "newItem"}});
+        }).then(item => {
+          expect(item).not.to.be.null;
+          expect(item.name).to.eq("newItem");
+          done();
+        }).catch(err => done(err));
+      });
+    });
+
+    describe('PUT item', () => {
+      const requestBody = {
+        item: {
+          name:     "changedItem",
+          amount:   0.5,
+          price:    3.5,
+          tax:      0.1,
+          sort:     null,
+          category: 1,
+          unit:     1
+        }
+      };
+
+      const expectedResponse = {
+        item: {
+          id:       1,
+          name:     "changedItem",
+          amount:   0.5,
+          price:    3.5,
+          tax:      0.1,
+          sort:     null,
+          category: 1,
+          unit:     1
+        }
+      };
+
+      it('item should have changed', done => {
+        chai.request(app)
+        .put('/api/items/1')
+        .set("x-access-token", token)
+        .send(requestBody)
+        .then(res => {
+          expect(res.status).to.equal(200);
+          expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
+          return db.Item.find({where: {name: "changedItem"}});
+        }).then(item => {
+          expect(item).not.to.be.null;
+          expect(item.name).to.eq("changedItem");
+          done();
+        }).catch(err => done(err));
+      });
+    });
+  });
+});
+
