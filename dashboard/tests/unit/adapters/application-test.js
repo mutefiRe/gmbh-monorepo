@@ -1,15 +1,18 @@
-import { describe, it } from 'mocha';
-import { setupTest } from 'ember-mocha';
+import { expect } from 'chai';
+import { describeModule, it } from 'ember-mocha';
 
-describe('Application Adapter', function() {
-  setupTest('adapter:application', {
+describeModule(
+  'adapter:application',
+  'Unit | Adapter | application',
+  {
     // Specify the other units that are required for this test.
-    // needs: ['controller:foo']
-  });
-
-  // Replace this with your real tests.
-  it('exists', function() {
-    var adapter = this.subject();
-    expect(adapter).to.be.ok;
-  });
-});
+    // needs: ['serializer:foo']
+  },
+  function() {
+    // Replace this with your real tests.
+    it('authorizer is set', function() {
+      let adapter = this.subject();
+      expect(adapter.get('authorizer')).to.equal('authorizer:application');
+    });
+  }
+);
