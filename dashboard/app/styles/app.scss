@@ -1,0 +1,33 @@
+$grey-dark: #979797;
+$grey: #ccc;
+$blue: #297D8C;
+$blue-light: #E6FCFF;
+$white: #fff;
+@import './cssreset.scss';
+@import './login.scss';
+
+@font-face {
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Medium.ttf');
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Light.ttf');
+  font-weight: light;
+}
+@font-face {
+  font-family: 'Palanquin';
+  src: url('./fonts/Palanquin-Bold.ttf');
+  font-weight: bold;
+}
+
+body {
+  font-family:'Palanquin', arial, sans-serif;
+  font-size: 14px;
+  background: $blue-light;
+}
+
+* {
+  box-sizing: border-box;
+}
