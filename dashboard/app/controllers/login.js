@@ -10,7 +10,7 @@ export default Ember.Controller.extend({
 
       this.get('session').authenticate(authenticator, credentials)
       .then(()=>{
-        console.log('foo')
+        // logged in
       })
       .catch(reason=> {
         if (reason) {
@@ -18,7 +18,7 @@ export default Ember.Controller.extend({
         } else {
           this.set('errorMessage', 'Server nicht erreichbar.');
         }
-      });;
+      });
     }
   }
 });
