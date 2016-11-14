@@ -4,8 +4,8 @@ const express = require('express');
 const server = require('http').Server(express);
 const io = require('socket.io')(server);
 const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/category');
+const db = require('../../models/index');
+const serialize = require('../../serializers/category');
 
 router.get('/:id', function(req, res){
   db.Category.find({where: {id: req.params.id}}).then(data => {
@@ -20,7 +20,7 @@ router.get('/:id/items', function(req, res){
 })
 
 
-router.get('/', function(req, res) { 
+router.get('/', function(req, res) {
   db.Category.findAll({include: [{model: db.Item}]}).then(data =>
   {
     let categories = JSON.parse(JSON.stringify(data));

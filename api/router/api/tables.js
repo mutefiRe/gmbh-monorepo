@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/table');
+const db = require('../../models/index');
+const serialize = require('../../serializers/table');
 
 router.get('/:id', function(req, res){
   db.Table.find({where: {id: req.params.id}}).then(data => {

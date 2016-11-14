@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/orderitem');
+const db = require('../../models/index');
+const serialize = require('../../serializers/orderitem');
 
 
 router.get('/:id', function(req, res){

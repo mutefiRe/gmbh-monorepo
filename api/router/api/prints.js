@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../models/index');
-const print = require('../print.js');
-const billprinter = require('../config/config').billprinter;
+const db = require('../../models/index');
+const print = require('../../print.js');
+const billprinter = require('../../config/config').billprinter;
 
 router.post('/', function(req, res){
   db.Order.findById(req.body.print.order, {include: [{model: db.Orderitem, include: [{model: db.Item, include: [{model: db.Unit}, {model: db.Category}]}]}, {model: db.Table, include: [{model: db.Area}]}, {model: db.User}]}).then(data =>

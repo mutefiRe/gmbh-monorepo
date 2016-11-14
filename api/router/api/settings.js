@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../models/index');
+const db = require('../../models/index');
 
 router.get('/:id', function(req, res){
   db.Setting.find({where: {id: req.params.id}}).then(data => {

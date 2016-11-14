@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/user');
+const db = require('../../models/index');
+const serialize = require('../../serializers/user');
 
 router.get('/me', function(req, res) {
   db.User.find({

@@ -4,9 +4,9 @@ const express = require('express');
 const server = require('http').Server(express);
 const io = require('socket.io')(server);
 const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/order');
-const print = require('../print.js');
+const db = require('../../models/index');
+const serialize = require('../../serializers/order');
+const print = require('../../print.js');
 
 // GET one order with orderitems
 router.get('/:id', function(req, res){
