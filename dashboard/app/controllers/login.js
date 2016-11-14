@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  session: Ember.inject.service(),
+  session: Ember.inject.service('session'),
 
   actions: {
     authenticate: function() {
@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
       this.get('session')
       .authenticate(authenticator, credentials)
       .then(()=>{
-        // logged in
+        this.send('transitionToLogout');
       })
       .catch(reason=> {
         if (reason) {

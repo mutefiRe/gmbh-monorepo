@@ -2,10 +2,10 @@
   <img src="./assets/images/logo.png">
   <div class="login-form">
     <form {{action 'authenticate' on='submit'}}>
-      <label for="identification">Username</label>
-      {{input id='identification' placeholder='Enter Login' value=identification}}
+      <label for="identification">Benutzername</label>
+      {{input id='identification' placeholder='Benutzername eingeben' value=identification}}
       <label for="password">Passwort</label>
-      {{input id='password' placeholder='Enter Password' type='password' value=password}}
+      {{input id='password' placeholder='Passwort eingeben' type='password' value=password}}
       <button type="submit">anmelden</button>
     </form>
     {{#if errorMessage}}
