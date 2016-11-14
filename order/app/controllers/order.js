@@ -28,7 +28,7 @@ export default Ember.Controller.extend({
   triggerModal: false,
   triggerOrderListSwipe: true,
   init() {
-    const id = this.get('payload.id');
+    const id = this.get('payload').getId();
 
     this.store.find('user', id).then( user => {
       this.set('user', user);
