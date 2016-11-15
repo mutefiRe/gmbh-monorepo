@@ -1,22 +1,22 @@
 # GmBh Frontend
-##MMP2b
+## MMP2b
 
-###Setup
+### Setup
 ```
 npm install
 bower install
 ```
-###Our Server Repo
-[gmbh-backendl](https://www.github.com/gabsi20/gmbh-backend)
+### Our Server Repo
+[gmbh-api](https://gitlab.com/mossss/gmbh-api)
 
-###Contributors###
+### Contributors
 - [Alexander Gabriel](https://www.github.com/gabsi20)
 - [Sebastian Huber](https://www.github.com/godfather27)
 - [Konrad Kleeberger](https://www.github.com/Konkrad)
 - [Josef Krabath](https://www.github.com/josefkrabath)
 - [Daniel Trojer](https://www.github.com/mutefiRe)
 
-###Commit Conventions###
+### Commit Conventions
 - __feat:__     new feature
 - __fix:__      a bug fix
 - __docs:__     Documentation only changes
@@ -26,19 +26,21 @@ bower install
 - __test:__     Adding missing tests
 - __chore:__    Chnages to the build process or auxiliary tools and libraries such as documentation generation
 
-###Contributing
+### Contributing
 
-We love structured branching
+We ❤️ structured branching
 
 [Install GIT-Flow](https://github.com/nvie/gitflow/wiki/Installation)
 
-We love consistent commiting
+We ❤️ consistent commiting
 
 [Install Commitizen](https://www.npmjs.com/package/commitizen)
 
 
-###License###
+### License
+
 ===============
-Copyright (c) 2015 Alexander Gabriel, Sebastian Huber, Konrad Kleeberger, Josef Krabath, Daniel Trojer 
+
+Copyright (c) 2016 Alexander Gabriel, Sebastian Huber, Konrad Kleeberger, Josef Krabath, Daniel Trojer 
 
 Proprietary software
