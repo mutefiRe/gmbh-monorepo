@@ -51,7 +51,8 @@
     "mocha": "^3.1.2",
     "nodemon": "^1.9.1",
     "request": "^2.72.0",
-    "socket.io-client": "^1.4.6"
+    "socket.io-client": "^1.4.6",
+    "eslint-config-mossss": "git@gitlab.com:mossss/eslint-config-mossss.git"
   },
   "config": {
     "commitizen": {
