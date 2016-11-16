@@ -10,9 +10,10 @@ Router.map(function () {
   this.route('order');
 
   // not defined routes ("404")
-  this.route('login', {
-    path: '*path'
-  });
+  // this.route('login', {
+  //   path: '*path'
+  // });
+  this.route('logout');
 });
 
 export default Router;
