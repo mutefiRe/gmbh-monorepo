@@ -14,12 +14,11 @@ export default Ember.Component.extend(RecognizerMixin, {
     return false;
   }),
   orderitems: Ember.computed.filter('order.orderitems.@each.countMarked', function(orderitem) {
-    console.log(orderitem.get('countPaid') + orderitem.get('countMarked') < orderitem.get('count'))
     if (orderitem.get('countPaid') + orderitem.get('countMarked') < orderitem.get('count')) return true;
     return false;
   }),
   markedAmount: Ember.computed('markedOrderitems', function(){
-    let orderitems = this.get('markedOrderitems');
+    const orderitems = this.get('markedOrderitems');
     let sum = 0;
     for (const orderitem of orderitems) {
       sum += orderitem.get('price') * orderitem.get('countMarked');
@@ -27,7 +26,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     return sum;
   }),
   openAmount: Ember.computed('orderitems', function(){
-    let orderitems = this.get('orderitems');
+    const orderitems = this.get('orderitems');
     let sum = 0;
     for (const orderitem of orderitems) {
       sum += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'));
