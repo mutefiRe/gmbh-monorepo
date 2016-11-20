@@ -46,9 +46,22 @@ app.options('*', function(req, res) {
 app.use('/authenticate', authenticate);
 app.use('/api', api);
 app.use('/teapot', teapot);
+
 app.use('/data', data);
 
 app.use('/api', finalizer);
+
+/**
+ * @api {get} check/ Health Check
+ * @apiName HealthCheck
+ * @apiGroup HealthCheck
+
+ * @apiSuccess {String} OK OK
+ */
+app.get('/check', function(req, res){
+  res.status(200).send("OK")
+});
+
 
 // Socket handling
 io.on('connection', function(socket){

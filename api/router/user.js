@@ -1,5 +1,11 @@
 'use strict';
 
+
+const express = require('express');
+const router = express.Router();
+const db = require('../models/index');
+const serialize = require('../serializers/user');
+
 /**
  * @apiDefine userAttributes
  * @apiSuccess {Number}  users.id Autoincremented Identifier of the user
@@ -8,6 +14,7 @@
  * @apiSuccess {String}  users.lastname Lastname of the user
  * @apiSuccess {Number}  users.permission Waiter: 0 Admin: 1
  * @apiSuccess {String}  users.printer Printername on the Server
+ * @apiSuccess {Number[]}  users.areas Areas assigned to the user
  */
 
 /**
@@ -18,17 +25,6 @@
  * @apiParam {String}  users.lastname
  * @apiParam {Number}  users.permission
  * @apiParam {String}  users.printer
- */
-
-const express = require('express');
-const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/user');
-
-/**
- * @apiDefine token
- * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
- * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
  */
 
 /**
@@ -72,6 +68,7 @@ router.get('/:id', function(req, res) {
  * @apiPermission waiter
  * @apiPermission admin
  */
+
 router.get('/', function(req, res) {
   db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printer'], include: [{model: db.Area}]}).then(users => {
     res.send({users});
@@ -113,13 +110,16 @@ router.post('/', function(req, res) {
 });
 
 /**
- * @api {put} api/users/ Update one user
+ * @api {put} api/users/:id Update one user
  * @apiGroup User
  * @apiName UpdateUser
  * @apiUse token
  * @apiParam {Object} users
+ * @apiSuccess {Object} users
  * @apiUse userParams
+ * @apiUse userAttributes
  * @apiParam {String} users.password
+ * @apiParam {Number} id
  *
  * @apiPermission waiter
  * @apiPermission admin

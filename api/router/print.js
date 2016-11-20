@@ -6,6 +6,24 @@ const db = require('../models/index');
 const print = require('../print.js');
 const billprinter = require('../config/config').billprinter;
 
+/**
+ * @api {post} api/print Print order
+ * @apiGroup Print
+ * @apiName PrintOrder
+
+ * @apiParam {Object}  print
+ * @apiParam {Number}  print.order Id of the Order you want to print
+ * @apiParam {Boolean}  print.isBill Flag which decides if a order is printed as bill or as order
+
+  *@apiUse token
+
+ * @apiSuccess {Object} print
+ * @apiSuccess {Number} print.id
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.post('/', function(req, res){
   db.Order.findById(req.body.print.order,
     {include: [{model: db.Orderitem, include: [{model: db.Item,  include: [{model: db.Unit}, {model: db.Category}]}]},

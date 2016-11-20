@@ -18,6 +18,12 @@ const areaPath         = require('./area.js');
 const printPath        = require('./print.js');
 const printerPath      = require('./printer.js');
 
+/**
+ * @apiDefine token
+ * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
+ * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
+ */
+
 router.use(function(req, res, next) {
 
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
