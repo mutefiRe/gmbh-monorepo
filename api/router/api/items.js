@@ -1,15 +1,17 @@
 'use strict';
 
-const express = require('express');
-const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/table');
+const router    = require('express').Router();
+const db        = require('../../models');
+const serialize = require('../../serializers/item');
 
 router.get('/:id', function(req, res, next){
-  db.Table.find({where: {id: req.params.id}}).then(table => {
-    table = JSON.parse(JSON.stringify(table));
-    res.body = {table};
-    next();
+  db.Item.find({where: {id: req.params.id}}).then(item => {
+    if(item === null) throw new Error("item not found");
+    else {
+      item     = JSON.parse(JSON.stringify(item));
+      res.body = {item};
+      next();
+    }
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -20,9 +22,9 @@ router.get('/:id', function(req, res, next){
 });
 
 router.get('/', function(req, res, next){
-  db.Table.findAll({include: [{model: db.Area}]}).then(tables => {
-    tables = JSON.parse(JSON.stringify(tables));
-    res.body = {tables};
+  db.Item.findAll().then(items => {
+    items    = JSON.parse(JSON.stringify(items));
+    res.body = {items};
     next();
   }).catch(error => {
     res.status(400).send({
@@ -34,10 +36,11 @@ router.get('/', function(req, res, next){
 });
 
 router.post('/', function(req, res, next){
-  db.Table.create(serialize(req.body.table)).then(table => {
-    table = JSON.parse(JSON.stringify(table));
-    res.body    = {table};
-    res.socket  = "update";
+
+  db.Item.create(serialize(req.body.item)).then(item => {
+    item = JSON.parse(JSON.stringify(item));
+    res.body = {item};
+    res.socket = "update";
     next();
   }).catch(error => {
     res.status(400).send({
@@ -49,13 +52,13 @@ router.post('/', function(req, res, next){
 });
 
 router.put('/:id', function(req, res, next){
-  db.Table.find({where: {id: req.params.id}}).then(table => {
-    if(table === null) throw new Error('table not found');
-    return table.update(serialize(req.body.table));
-  }).then(table => {
-    table = JSON.parse(JSON.stringify(table));
-    res.body    = {table};
-    res.socket  = "update";
+  db.Item.find({where: {id: req.params.id}}).then(item => {
+    if(item === null) throw new Error("item not found");
+    return item.update(serialize(req.body.item));
+  }).then(item => {
+    item       = JSON.parse(JSON.stringify(item));
+    res.body   = {item};
+    res.socket = "update";
     next();
   }).catch(error => {
     res.status(400).send({
@@ -68,12 +71,9 @@ router.put('/:id', function(req, res, next){
 
 router.delete('/:id', function(req, res){
   const io = req.app.get('io');
-  db.Table.find({where: {id: req.params.id}}).then(table => {
-    if(table === null) throw new Error('table not found');
-    return table.destroy();
-  }).then(() => {
+  db.Item.destroy({where: {id: req.params.id}}).then(() => {
     res.send({});
-    io.sockets.emit("delete", {'type': 'table', 'id': table.id});
+    io.sockets.emit("delete", {'type': 'item', 'id': item.id});
   }).catch(error => {
     res.status(400).send({
       'errors': {

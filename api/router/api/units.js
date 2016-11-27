@@ -1,31 +1,13 @@
 'use strict';
 
-const express   = require('express');
-const router    = express.Router();
-const db        = require('../models/index');
-const serialize = require('../serializers/item');
+const router    = require('express').Router();
+const db        = require('../../models');
+const serialize = require('../../serializers/unit');
 
 router.get('/:id', function(req, res, next){
-  db.Item.find({where: {id: req.params.id}}).then(item => {
-    if(item === null) throw new Error("item not found");
-    else {
-      item     = JSON.parse(JSON.stringify(item));
-      res.body = {item};
-      next();
-    }
-  }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
-    });
-  });
-});
-
-router.get('/', function(req, res, next){
-  db.Item.findAll().then(items => {
-    items    = JSON.parse(JSON.stringify(items));
-    res.body = {items};
+  db.Unit.find({where: {id: req.params.id}}).then(unit => {
+    unit = JSON.parse(JSON.stringify(unit));
+    res.body = {unit};
     next();
   }).catch(error => {
     res.status(400).send({
@@ -36,11 +18,24 @@ router.get('/', function(req, res, next){
   });
 });
 
-router.post('/', function(req, res, next){
+router.get('/', function(req, res, next){
+  db.Unit.findAll().then(units => {
+    units = JSON.parse(JSON.stringify(units));
+    res.body = {units};
+    next();
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
-  db.Item.create(serialize(req.body.item)).then(item => {
-    item = JSON.parse(JSON.stringify(item));
-    res.body = {item};
+router.post('/', function(req, res, next) {
+  db.Unit.create(serialize(req.body.unit)).then(unit => {
+    unit = JSON.parse(JSON.stringify(unit));
+    res.body = {unit};
     res.socket = "update";
     next();
   }).catch(error => {
@@ -53,12 +48,12 @@ router.post('/', function(req, res, next){
 });
 
 router.put('/:id', function(req, res, next){
-  db.Item.find({where: {id: req.params.id}}).then(item => {
-    if(item === null) throw new Error("item not found");
-    return item.update(serialize(req.body.item));
-  }).then(item => {
-    item       = JSON.parse(JSON.stringify(item));
-    res.body   = {item};
+  db.Unit.find({where: {id: req.params.id}}).then(unit => {
+    if (unit === null) throw new Error('unit not found');
+    return unit.update(serialize(req.body.unit));
+  }).then(unit => {
+    unit = JSON.parse(JSON.stringify(unit));
+    res.body = {unit};
     res.socket = "update";
     next();
   }).catch(error => {
@@ -72,9 +67,12 @@ router.put('/:id', function(req, res, next){
 
 router.delete('/:id', function(req, res){
   const io = req.app.get('io');
-  db.Item.destroy({where: {id: req.params.id}}).then(() => {
+  db.Unit.find({where: {id: req.params.id}}).then(unit => {
+    if (unit === null) throw new Error('unit not found');
+    return unit.destroy();
+  }).then(() => {
     res.send({});
-    io.sockets.emit("delete", {'type': 'item', 'id': item.id});
+    io.sockets.emit("delete", {'type': 'unit', 'id': unit.id});
   }).catch(error => {
     res.status(400).send({
       'errors': {

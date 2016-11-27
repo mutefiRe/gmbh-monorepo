@@ -1,10 +1,10 @@
 'use strict';
 
-const express = require('express');
-const router = express.Router();
-const db = require('../models/index');
-const print = require('../print.js');
-const billprinter = require('../config/config').billprinter;
+const express     = require('express');
+const router      = express.Router();
+const db          = require('../../models/index');
+const print       = require('../../print.js');
+const billprinter = require('../../config/config').billprinter;
 
 router.post('/', function(req, res){
   db.Order.findById(req.body.print.order,

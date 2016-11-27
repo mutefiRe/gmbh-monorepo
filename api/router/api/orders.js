@@ -1,10 +1,9 @@
 'use strict';
 
-const express            = require('express');
-const router             = express.Router();
-const db                 = require('../models/index');
-const serialize          = require('../serializers/order');
-const serializeOrderitem = require('../serializers/orderitem');
+const router             = require('express').Router();
+const db                 = require('../../models');
+const serialize          = require('../../serializers/order');
+const serializeOrderitem = require('../../serializers/orderitem');
 
 router.get('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}, include: [{model: db.Orderitem}]}).then(order => {
@@ -64,7 +63,6 @@ router.post('/', function(req, res){
 
     res.send({order});
   }).catch(error => {
-    throw error;
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
@@ -95,13 +93,12 @@ router.put('/:id', function(req, res){
 
     res.send({order});
   }).catch(error => {
-   throw error;
-   res.status(400).send({
-    'errors': {
-      'msg': error && error.errors && error.errors[0].message || error.message
-    }
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
   });
- });
 });
 
 router.delete('/:id', function(req, res){

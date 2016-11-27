@@ -1,9 +1,8 @@
 'use strict';
 
-const express = require('express');
-const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/user');
+const router    = require('express').Router();
+const db        = require('../../models');
+const serialize = require('../../serializers/user');
 
 router.get('/:id', function(req, res) {
   db.User.find({where: {id: req.params.id}, include: [{model: db.Area}]}).then(user => {
