@@ -1,73 +1,92 @@
-'use strict'
+'use strict';
 
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
 const serialize = require('../serializers/organization');
 
-router.use(function timeLog(req, res, next){
-  // console.log('Time: ', Date.now());
-  next();
-})
-
 router.get('/:id', function(req, res){
-  db.Organization.find({where: {id: req.params.id}}).then(data => {
-    if(data === null){
-      res.status(404).send("couldn't find organization")
-      return
+  db.Organization.find({where: {id: req.params.id}}).then(organization => {
+    if(organization === null){
+      res.status(404).send({
+        'errors': {
+          'msg': "organization not found"
+        }
+      });
+      return;
     }
-    res.send(data);
-  })
-})
+    res.send({organization});
+  });
+});
 
 router.get('/', function(req, res){
-  db.Organization.findAll().then(data =>
-  {
-    if(data[0] === undefined){
-      res.status(404).send("couldn't find any organizations")
-      return
+  db.Organization.findAll().then(organizations => {
+    if(organizations[0] === undefined){
+      res.status(404).send({
+        'errors': {
+          'msg': "organizations not found"
+        }
+      });
+      return;
     }
-    res.send(data);
-  })
-})
-
+    res.send({organizations});
+  });
+});
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
-  db.Organization.create(serialize(req.body.organization)).then( data => {
-    res.send({organization: data});
-    io.sockets.emit("update", {organization: data});
-  }).catch(err => {
-    res.status(400).send(err.errors[0].message)
-  })
-})
+  db.Organization.create(serialize(req.body.organization)).then(organization => {
+    res.send({organization});
+    io.sockets.emit("update", {organization});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.put('/:id', function(req, res){
   const io = req.app.get('io');
   db.Organization.find({where: {id: req.params.id}}).then(organization => {
-    if(organization === null){
-      res.status(404).send("couldn't find organization which should be updated")
-      return
+    if(organization === null) {
+      res.status(404).send({
+        'errors': {
+          'msg': "organizations not found"
+        }
+      });
+      return;
     }
     organization.update(serialize(req.body.organization)).then( data => {
       res.send({organization: data});
       io.sockets.emit("update", {organization: data});
-    }).catch(err => {
-      res.status(400).send(err.errors[0].message)
-    })
-  })
-})
+    }).catch(error => {
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
+    });
+  });
+});
 
 router.delete('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Organization.find({where: {id: req.params.id}}).then(organization => {
     if(organization === null){
-      res.status(404).send("couldn't find organization which should be deleted")
-      return
+      res.status(404).send({
+        'errors': {
+          'msg': "organization not found"
+        }
+      });
+      return;
     }
     organization.destroy().then(() => {
-      res.send({})
-    })
-  })
-})
+      res.send({});
+      io.sockets.emit("delete", {'type': 'organization', 'id': organization.id});
+    });
+  });
+});
 
 module.exports = router;

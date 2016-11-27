@@ -1,12 +1,14 @@
-'use strict'
+'use strict';
 
 module.exports = function(data){
-  let orderitem = {
+  const orderitem = {
     extras: data.extras,
-    isPaid: data.isPaid,
     orderId: data.order,
     itemId: data.item,
-    forFree: data.forFree
-  }
+    count:     data.count,
+    countPaid: data.countPaid,
+    countFree: data.countFree,
+    price:     data.price
+  };
   return orderitem;
-}
+};

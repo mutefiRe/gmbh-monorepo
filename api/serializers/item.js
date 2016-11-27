@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 module.exports = function(data){
-  let item = {
+  const item = {
     name : data.name,
     amount : data.amount,
     price : data.price,
@@ -9,6 +9,6 @@ module.exports = function(data){
     categoryId : data.category,
     unitId : data.unit,
     sortId: data.sortId
-  }
+  };
   return item;
-}
+};

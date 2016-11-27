@@ -116,7 +116,7 @@ class Print {
       //workaround for sequelize/postgres. price and other decimal are of type string
       price = (price * 1).toFixed(2);
 
-      if(ord.item.Category.showAmount) {
+      if(ord.item.category.showAmount) {
         orderItem = `${orderItem} ${showAmount(ord.item.amount)}${ord.item.unit.name}`;
       }
 

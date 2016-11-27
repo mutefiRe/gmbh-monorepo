@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
 module.exports = function(data){
-  let user = {
+  const user = {
     username: data.username,
     firstname: data.firstname,
     lastname: data.lastname,
     permission: data.permission,
     password: data.password,
     printer: data.printer
-  }
+  };
   return user;
-}
+};
