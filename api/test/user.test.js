@@ -22,21 +22,15 @@ const token = jwt.sign({
 }, config.secret, { expiresIn: '24h' });
 
 describe('/user route', () => {
-  before(done => {
-    clean(done);
-  });
+  before(clean);
 
   describe('users exists', () => {
 
-    before(done => {
-      db.User.bulkCreate([
+    before(() => {
+      return db.User.bulkCreate([
         {username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0},
-        {username: "test2", firstname: "test2", lastname: "test2", password: "test2", permission: 1}])
-      .then(() => {
-        done();
-      }).catch(error => {
-        done(error);
-      });
+        {username: "test2", firstname: "test2", lastname: "test2", password: "test2", permission: 1}
+      ]);
     });
 
     describe('GET users', () => {
@@ -60,25 +54,23 @@ describe('/user route', () => {
         }]
       };
 
-      it('should get one user', done => {
-        chai.request(app)
+      it('should get one user', () => {
+        return chai.request(app)
         .get('/api/users/1')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body.user.username).to.equal("test1");
-          done();
         });
       });
 
-      it('should get all users', done => {
-        chai.request(app)
+      it('should get all users', () => {
+        return chai.request(app)
         .get('/api/users/')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
-          done();
         });
       });
     });
@@ -95,8 +87,8 @@ describe('/user route', () => {
         }
       };
 
-      it('user should exist', done => {
-        chai.request(app)
+      it('user should exist', () => {
+        return chai.request(app)
         .post('/api/users')
         .set("x-access-token", token)
         .send(requestBody)
@@ -111,8 +103,7 @@ describe('/user route', () => {
           expect(user.lastname).to.eq("lastname");
           expect(user.permission).to.eq(0);
           expect(user.printer).to.eq(null);
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
 
@@ -128,8 +119,8 @@ describe('/user route', () => {
         }
       };
 
-      it('user should have changed', done => {
-        chai.request(app)
+      it('user should have changed', () => {
+        return chai.request(app)
         .put('/api/users/1')
         .set("x-access-token", token)
         .send(requestBody)
@@ -144,8 +135,7 @@ describe('/user route', () => {
           expect(user.lastname).to.eq("lastname");
           expect(user.permission).to.eq(1);
           expect(user.printer).to.eq("test");
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
   });

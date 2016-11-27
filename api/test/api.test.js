@@ -18,41 +18,39 @@ describe('/api route -> check restriction access', () => {
     permission: 1
   }, config.secret, { expiresIn: '24h' });
 
-  it('should response status 200 to api call, when send with token', done => {
-    chai.request(app)
+  it('should response status 200 to api call, when send with token', () => {
+    return chai.request(app)
     .get('/api/')
     .send({ token })
-    .end((err, res) => {
-      expect(err).to.be.null;
+    .then(res => {
       expect(res.status).to.equal(200);
       expect(res.body.msg).equal("you have access to the api");
-      done();
     });
   });
 
-  it('should response status 400 to api call, when send with wrong token', done => {
-    chai.request(app)
+  it('should response status 400 to api call, when send with wrong token', () => {
+    return chai.request(app)
     .get('/api/')
     .send({ token: token + 1 })
-    .end((err, res) => {
+    .catch(res => {
       expect(res.status).equal(400);
-      expect(res.body.errors.msg).equal("invalid signature");
-      done();
+      expect(res.response).to.be.json;
+      expect(res.response.text).to.contain("invalid signature");
     });
   });
 
-  it('should response status 400 to api call, when send without token', done => {
-    chai.request(app)
+  it('should response status 400 to api call, when send without token', () => {
+    return chai.request(app)
     .get('/api/')
     .send({})
-    .end((err, res) => {
+    .catch(res => {
       expect(res.status).to.equal(400);
-      expect(res.body.errors.msg).to.equal("No token provided");
-      done();
+      expect(res.response).to.be.json;
+      expect(res.response.text).to.contain('No token provided');
     });
   });
 
-  it('should response status 400 to api call, when send with expired token', done => {
+  it('should response status 400 to api call, when send with expired token', () => {
     const expiredToken = jwt.sign({
       username: "test",
       firstname: "test",
@@ -60,13 +58,13 @@ describe('/api route -> check restriction access', () => {
       permission: 1
     }, config.secret, { expiresIn: '0' });
 
-    chai.request(app)
+    return chai.request(app)
     .get('/api/')
     .send({ token: expiredToken })
-    .end((err, res) => {
+    .catch(res => {
       expect(res.status).to.equal(400);
-      expect(res.body.errors.msg).to.equal("jwt expired");
-      done();
+      expect(res.response).to.be.json;
+      expect(res.response.text).to.contain("jwt expired");
     });
   });
 });
