@@ -1,13 +1,13 @@
 define({
   "name": "GMBH-API",
   "version": "1.1.0",
-  "description": "API of GMBH",
+  "description": "Made with 🍺",
   "title": "API of GMBH",
   "sampleUrl": false,
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2016-11-20T15:48:17.531Z",
+    "time": "2016-11-27T10:40:35.323Z",
     "url": "http://apidocjs.com",
     "version": "0.16.1"
   }
