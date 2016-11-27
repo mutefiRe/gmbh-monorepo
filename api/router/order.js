@@ -83,9 +83,9 @@ router.get('/:id', function(req, res){
  * @apiPermission waiter
  * @apiPermission admin
  */
- 
+
 router.get('/', function(req, res){
-  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Order}]}).then(orders => {
+  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem}]}).then(orders => {
     orders = JSON.parse(JSON.stringify(orders));
     for(const order of orders){
       mapOrderItems(order);
@@ -186,7 +186,6 @@ router.put('/:id', function(req, res){
 
     res.send({order});
   }).catch(error => {
-   throw error;
    res.status(400).send({
     'errors': {
       'msg': error && error.errors && error.errors[0].message || error.message
@@ -233,8 +232,8 @@ function mapOrderItems(order){
 }
 
 function mapOrderRelations(order){
-  order.order   = order.orderId;
+  order.table   = order.tableId;
   order.user    = order.userId;
-  order.orderId = undefined;
+  order.tableId = undefined;
   order.userId  = undefined;
 }
