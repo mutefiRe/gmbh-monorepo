@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 module.exports = function(data){
-  let unit = {
-    name: data.name,
-  }
+  const unit = {
+    name: data.name
+  };
   return unit;
-}
+};

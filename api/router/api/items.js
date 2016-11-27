@@ -1,80 +1,86 @@
-'use strict'
+'use strict';
 
-const express = require('express');
-const server = require('http').Server(express);
-const io = require('socket.io')(server);
-const router = express.Router();
-const db = require('../../models/index');
+const router    = require('express').Router();
+const db        = require('../../models');
 const serialize = require('../../serializers/item');
 
-
-router.get('/:id', function(req, res){
-  db.Item.find({where: {id: req.params.id}}).then(data => {
-    if(data === null){
-      res.status(404).send("couldn't find item")
-      return
-    }
-    res.send({'item':data});
-  })
-})
-
-router.get('/', function(req, res){
-  db.Item.findAll({include: [{model: db.Unit}]}).then(data =>
-  {
-    let items = JSON.parse(JSON.stringify(data));
-    for(var i = 0; i < items.length; i++){
-      items[i].unit = items[i].unitId
-      items[i].category = items[i].cateteogryId
-    }
-    res.send({'item': items});
-  })
-})
-
-
-
-router.post('/', function(req, res){
-  const io = req.app.get('io');
-  db.Item.create(serialize(req.body.item)).then( data => {
-    res.send({'item':data});
-    io.sockets.emit("update", {'item':data});
-    return db.Category.find({where: {id: data.categoryId}, include: [{model: db.Item}]}).then((catData) =>
-    {
-      let categories = JSON.parse(JSON.stringify(catData));
-      categories.items = categories.items.map(item => item.id);
-      io.sockets.emit("update", {'category': categories});
-    })
-  }).catch(err => {
-    res.status(400).send(err.errors[0].message)
-  })
-})
-
-router.put('/:id', function(req, res){
-  const io = req.app.get('io');
+router.get('/:id', function(req, res, next){
   db.Item.find({where: {id: req.params.id}}).then(item => {
-    if(item === null){
-      res.status(404).send("couldn't find Item which should be updated")
-      return
+    if(item === null) throw new Error("item not found");
+    else {
+      item     = JSON.parse(JSON.stringify(item));
+      res.body = {item};
+      next();
     }
-    item.update(serialize(req.body.item)).then( data => {
-      res.send({'item':data})
-      io.sockets.emit("update", {'item':data})
-    }).catch(err => {
-      res.status(400).send(err.errors[0].message)
-    })
-  })
-})
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
+
+router.get('/', function(req, res, next){
+  db.Item.findAll().then(items => {
+    items    = JSON.parse(JSON.stringify(items));
+    res.body = {items};
+    next();
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
+
+router.post('/', function(req, res, next){
+
+  db.Item.create(serialize(req.body.item)).then(item => {
+    item = JSON.parse(JSON.stringify(item));
+    res.body = {item};
+    res.socket = "update";
+    next();
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
+
+router.put('/:id', function(req, res, next){
+  db.Item.find({where: {id: req.params.id}}).then(item => {
+    if(item === null) throw new Error("item not found");
+    return item.update(serialize(req.body.item));
+  }).then(item => {
+    item       = JSON.parse(JSON.stringify(item));
+    res.body   = {item};
+    res.socket = "update";
+    next();
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.delete('/:id', function(req, res){
-  db.Item.find({where: {id: req.params.id}}).then(item=>{
-    if(item === null){
-      res.status(404).send("couldn't find item which should be deleted")
-      return
-    }
-    item.destroy().then(()=>{
-      res.send({})
-    })
-  })
-})
-
+  const io = req.app.get('io');
+  db.Item.destroy({where: {id: req.params.id}}).then(() => {
+    res.send({});
+    io.sockets.emit("delete", {'type': 'item', 'id': item.id});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 module.exports = router;

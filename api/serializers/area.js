@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 module.exports = function(data){
-  let area = {
+  const area = {
     name: data.name
-  }
+  };
   return area;
-}
+};

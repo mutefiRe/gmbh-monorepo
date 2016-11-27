@@ -1,114 +1,79 @@
-'use strict'
+'use strict';
 
-const express = require('express');
-const router = express.Router();
-const db = require('../../models/index');
+const router    = require('express').Router();
+const db        = require('../../models');
 const serialize = require('../../serializers/user');
 
-router.get('/me', function(req, res) {
-  db.User.find({
-    where: {
-      id: req.decoded.id
-    }
-  }).then(data => {
-    res.send(data);
-  })
-})
-
 router.get('/:id', function(req, res) {
-  db.User.find({
-    where: {
-      id: req.params.id,
-    }
-  }).then(data => {
-    if (data === null) {
-      res.status(404).send({
-        'error': {
-          'msg': "couldn't find user"
-        }
-      })
-      return;
-    }
-    res.send({
-      'user': data
+  db.User.find({where: {id: req.params.id}, include: [{model: db.Area}]}).then(user => {
+    res.send({user});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
     });
-  })
-})
+  });
+});
 
 router.get('/', function(req, res) {
-  db.User.findAll().then(data => {
-    if (data[0] === undefined) {
-      res.status(404).send({
-        'error': {
-          'msg': "couldn't find any users"
-        }
-      })
-      return
-    }
-    res.send({
-      'users': data
+  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printer'], include: [{model: db.Area}]}).then(users => {
+    res.send({users});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
     });
-  })
-})
-
+  });
+});
 
 router.post('/', function(req, res) {
   const io = req.app.get('io');
-  db.User.create(serialize(req.body.user)).then(data => {
-    res.send({user: data});
-    io.sockets.emit("update", {user: data});
-  }).catch(err => {
-    res.status(400).send(err.errors[0].message)
-  })
-})
+  db.User.create(serialize(req.body.user)).then(user => {
+    res.send({user});
+    io.sockets.emit("update", {user});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.put('/:id', function(req, res) {
   const io = req.app.get('io');
-  db.User.find({
-    where: {
-      id: req.params.id
-    }
+  db.User.find({where: {id: req.params.id}}).then(user => {
+    if (user === null) throw new Error('user not found');
+    return user.update(serialize(req.body.user));
   }).then(user => {
-    if (user === null) {
-      res.status(404).send({
-        'error': {
-          'msg': "couldn't find user"
-        }
-      })
-      return
-    }
-    user.update(serialize(req.body.user)).then(data => {
-      res.send({
-        user: data
-      });
-      io.sockets.emit("update", {user: data});
-    }).catch(err => {
-      res.status(404).send({
-        'error': {
-          'msg': err.errors[0].message
-        }
-      })
-    })
-  })
-})
+    res.send({user});
+    io.sockets.emit("update", {user});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.delete('/:id', function(req, res) {
-  db.User.find({
-    where: {
-      id: req.params.id
-    }
-  }).then(user => {
-    if (user === null) {
-      res.status(404).send("couldn't find user which should be deleted")
-      return
-    }
-    user.destroy().then(() => {
-      res.send({});
-    })
-  })
-})
-
-
-
+  const io = req.app.get('io');
+  db.User.find({where: {id: req.params.id}}).then(user => {
+    if (user === null) throw new Error('user not found');
+    return user.destroy();
+  }).then(() => {
+    res.send({});
+    io.sockets.emit("delete", {'type': 'user', 'id': user.id});
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 module.exports = router;

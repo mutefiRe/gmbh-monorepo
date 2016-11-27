@@ -9,8 +9,7 @@ module.exports = function(){
         host:    process.env.GMBH_DB_HOST    || "localhost",
         port:    process.env.GMBH_DB_PORT    || 3306,
         dialect: process.env.GMBH_DB_DIALECT || 'mysql'
-      },
-
+      }
     };
     case 'test':
     return {
@@ -48,7 +47,7 @@ module.exports = function(){
         port:     process.env.GMBH_DB_PORT    || 3306,
         dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
       }
-    }
+    };
     default:
     return {
       database:  process.env.GMBH_DB          || "gmbh",
@@ -59,6 +58,6 @@ module.exports = function(){
         port:     process.env.GMBH_DB_PORT    || 3306,
         dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
       }
-    }
+    };
   }
-}
+};

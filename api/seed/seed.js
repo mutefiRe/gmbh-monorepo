@@ -1,12 +1,10 @@
-'use strict'
+'use strict';
 
 const db = require('../models/index');
-const jwt = require('jsonwebtoken');
-const config = require('../config/config.js')
 const faker = require('faker2');
 
 module.exports = function(){
-  let speisen = [ 'Schnitzel',
+  const speisen = [ 'Schnitzel',
   'Käsekrainer',
   'Schweinebraten',
   'Pommes',
@@ -23,9 +21,9 @@ module.exports = function(){
   'Bananenquiche',
   'Knödel' ];
 
-  let stopwords = ['in','an','auf','mit', 'überbacken mit'];
+  const stopwords = ['in','an','auf','mit', 'überbacken mit'];
 
-  let beilagen = [ 'Salat',
+  const beilagen = [ 'Salat',
   'Püree',
   'Kartoffel',
   'Reis',
@@ -45,7 +43,7 @@ module.exports = function(){
   'Erdäpfelsalat',
   'Pommes' ];
 
-  /*USER*/
+  /* USER */
 
   db.User.create({
     username: "admin",
@@ -72,34 +70,34 @@ module.exports = function(){
     });
   }
 
-  /*FOOD*/
+  /* FOOD */
 
   db.Category.create({
     name: "Speisen",
     enabled: true,
-    icon: "food.svg",
+    icon: "food",
     description: "Alle die Guten Sachen",
     showAmount: false,
     printer: "GMBH-WLAN"
   }).then(cat => {
 
-    let stk = db.Unit.create({
+    db.Unit.create({
       name: "Stk."
     }).then(data => {
       for(let i = 0; i < 25; i++){
         db.Item.create({
-          name: faker.Helpers.randomize(speisen) + " "+ faker.Helpers.randomize(stopwords)+" " + faker.Helpers.randomize(beilagen),
+          name: faker.Helpers.randomize(speisen) + " " + faker.Helpers.randomize(stopwords) + " " + faker.Helpers.randomize(beilagen),
           amount: 1,
           price: faker.Helpers.randomNumber(20),
           tax: 0.1,
           unitId: data.id,
           categoryId: cat.id
-        })
+        });
       }
     });
   });
 
-  /*ORGANISATIONS*/
+  /* ORGANISATIONS */
 
   db.Organization.create({
     uid: "blaaaah",
@@ -128,12 +126,12 @@ module.exports = function(){
     instantPay: true
   });
 
-  /*ALCOHOLICS*/
+  /* ALCOHOLICS */
 
   db.Category.create({
     name: "Alkoholisches",
     enabled: true,
-    icon: "drink-alc.svg",
+    icon: "drink-alc",
     description: "alkohol",
     showAmount: true,
     printer: "GMBH-LAN"
@@ -212,8 +210,9 @@ module.exports = function(){
         unitId: data.id,
         categoryId: cat.id
       }]
-      )
-    })
+      );
+    });
+
     db.Unit.findOrCreate({
       where: {name: 'cl'}
     }).spread(data => {
@@ -253,16 +252,16 @@ module.exports = function(){
         unitId: data.id,
         categoryId: cat.id
       }]
-      )
+      );
     });
   });
 
-  /*NONALCOHOLICS*/
+  /* NONALCOHOLICS */
 
   db.Category.create({
     name: "Alkoholfreies",
     enabled: true,
-    icon: "drink-anti.svg",
+    icon: "drink-anti",
     description: "Alkoholfreies",
     showAmount: true,
     printer: "GMBH-LAN"
@@ -327,7 +326,7 @@ module.exports = function(){
         unitId: data.id,
         categoryId: cat.id
       }]
-      )
+      );
     });
   });
 
@@ -337,11 +336,11 @@ module.exports = function(){
   }).spread(area => {
     for(let i = 0; i < 12; i++){
       db.Table.create({
-        name:"T"+i,
+        name:"T" + i,
         x: 1,
         y: 2,
         areaId: area.id
-      })
+      });
     }
   });
 
@@ -350,12 +349,11 @@ module.exports = function(){
   }).spread(area => {
     for(let i = 0; i < 12; i++){
       db.Table.create({
-        name:"G"+i,
+        name:"G" + i,
         x: 1,
         y: 2,
         areaId: area.id
-      })
+      });
     }
   });
-}
-
+};

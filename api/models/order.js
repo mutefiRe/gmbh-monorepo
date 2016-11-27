@@ -2,8 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   const Order = sequelize.define("order", {
-    totalAmount: {type: DataTypes.DOUBLE,  allowNull: false, unique: false},
-    isPaid:      {type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue:false}
+    totalAmount: {type: DataTypes.DOUBLE,  allowNull: false, unique: false, defaultValue: 0}
   }, {
     classMethods: {
       associate(models) {

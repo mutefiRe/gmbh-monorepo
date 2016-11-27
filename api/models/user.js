@@ -8,12 +8,21 @@ module.exports = function(sequelize, DataTypes) {
     firstname:  {type: DataTypes.STRING,  allowNull: true,  unique: false},
     lastname:   {type: DataTypes.STRING,  allowNull: true,  unique: false},
     password:   {type: DataTypes.STRING,  allowNull: false, unique: false},
-    printer:    {type: DataTypes.STRING,  allowNull: true,  unique: false, defaultValue:null},
+    printer:    {type: DataTypes.STRING,  allowNull: true,  unique: false, defaultValue: null},
     permission: {type: DataTypes.INTEGER, allowNull: false, unique: false, validate: {isNumeric: true, min: 0, max: 2}}
   } , {
     instanceMethods: {
       validPassword(plaintext) {
         return bcrypt.compareSync(plaintext, this.password);
+      },
+      createAuthUser(){
+        return {
+          "id":         this.id,
+          "username":   this.username,
+          "permission": this.permission,
+          "firstname":  this.firstname,
+          "lastname":   this.lastname
+        };
       }
     },
     classMethods: {
@@ -25,11 +34,11 @@ module.exports = function(sequelize, DataTypes) {
         User.belongsToMany(models.Area, {through: 'userarea'});
       }
     }
-  })
+  });
 
   User.hook('beforeValidate', function(user) {
-    user.password = User.generateHash(user.password)
-  })
+    user.password = User.generateHash(user.password);
+  });
 
   return User;
 };

@@ -1,74 +1,73 @@
-'use strict'
+'use strict';
 
-const express = require('express');
-const router = express.Router();
-const db = require('../../models/index');
+const router    = require('express').Router();
+const db        = require('../../models');
 const serialize = require('../../serializers/orderitem');
-
 
 router.get('/:id', function(req, res){
   db.Orderitem.find({where: {id: req.params.id}}).then(data => {
     if(data === null){
-      res.status(404).send("couldn't find item")
-      return
+      res.status(404).send("couldn't find item");
+      return;
     }
     res.send({'item':data});
-  })
-})
+  });
+});
 
-router.get('/', function(req, res){
-  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(data =>
-  {
-    let orderitems = JSON.parse(JSON.stringify(data));
-    for(var i = 0; i < orderitems.length; i++){
-      orderitems[i].item = orderitems[i].item.id
-    }
-    res.send({'orderitem': orderitems});
-  })
-})
+router.get('/', function(req, res, next){
+  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(orderitems => {
+    orderitems = JSON.parse(JSON.stringify(orderitems));
+    res.body = {orderitems};
+    next();
+  });
+});
 
-
-
-router.post('/', function(req, res){
-  const io = req.app.get('io');
+router.post('/', function(req, res, next){
   db.Orderitem.create(serialize(req.body.orderitem)).then( orderitem => {
-    let item = JSON.parse(JSON.stringify(orderitem));
-    item.item = item.itemId;
-    item.order = item.orderId;
-    res.send({'orderitem': item});
- //   io.sockets.emit('update', {'orderitem': item});
-}).catch(err => {
-  res.status(400).send(err)
-})
-})
+    orderitem = JSON.parse(JSON.stringify(orderitem));
+    res.body = {orderitem};
+    next();
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
-router.put('/:id', function(req, res){
-  const io = req.app.get('io');
-  db.Orderitem.update(serialize(req.body.orderitem),{where: {id: req.params.id}})
-  .then( data => {
+router.put('/:id', function(req, res, next){
+  // const io = req.app.get('io');
+  db.Orderitem.update(serialize(req.body.orderitem), {where: {id: req.params.id}})
+  .then(() => {
     return db.Orderitem.findById(req.params.id);
-  }).then((orderitem) => {
-    let item = JSON.parse(JSON.stringify(orderitem));
-    item.item = item.itemId;
-    item.order = item.orderId;;
-    res.send({'orderitem': item});
- //   io.sockets.emit('update', {'orderitem': item});
-}).catch(err => {
-  res.status(400).send(err)
-})
-})
+  }).then(orderitem => {
+    orderitem = JSON.parse(JSON.stringify(orderitem));
+    res.body = {orderitem};
+    next();
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
 
 router.delete('/:id', function(req, res){
-  db.Orderitem.find({where: {id: req.params.id}}).then(item=>{
+  db.Orderitem.find({where: {id: req.params.id}}).then(item => {
     if(item === null){
-      res.status(404).send("couldn't find item which should be deleted")
-      return
+      res.status(404).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
+      return;
     }
-    item.destroy().then(()=>{
-      res.send({})
-    })
-  })
-})
-
+    item.destroy().then(() => {
+      res.send({});
+    });
+  });
+});
 
 module.exports = router;
