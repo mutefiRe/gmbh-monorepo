@@ -34,14 +34,13 @@ export default Ember.Route.extend({
 
     socket.on('update', function (payload) {
       setTimeout(function () {
-          store.pushPayload(payload)
+        store.pushPayload(payload);
       },500);
     });
 
     socket.on('delete', function (payload) {
-
       setTimeout(function () {
-        let record = store.peekRecord(payload.type, payload.id);
+        const record = store.peekRecord(payload.type, payload.id);
         if (record) record.unloadRecord();
       }, 500);
     });
@@ -59,8 +58,18 @@ export default Ember.Route.extend({
     });
 
     return socket;
+  },
+  actions: {
+    transitionToLogin() {
+      this.transitionTo('login');
+    },
+    transitionToLogout() {
+      this.transitionTo('logout');
+    },
+    transitionToOrder() {
+      this.transitionTo('order');
+    }
   }
-
 });
 
 
