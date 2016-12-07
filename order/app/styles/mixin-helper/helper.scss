@@ -18,9 +18,9 @@
   border: none;
 }
 
-@mixin button-hover($background-color){
-  background-color: lighten($background-color,5%);
-  box-shadow: none;
+ @mixin button-hover($background-color){
+  /* background-color: lighten($background-color,5%);
+  box-shadow: none; */
 }
 
 .default-btn{

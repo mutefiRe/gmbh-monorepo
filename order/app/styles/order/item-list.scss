@@ -42,17 +42,17 @@
 
   @media (max-width: 450px) {
     width: 49%;
-    padding-bottom: 49%;
+    padding-bottom: 32.333333%;
     .caption{
-      font-size: 14px;
+      font-size: 12px;
     }
   }
 
 
-  &:hover, &:active {
+/*   &:hover, &:active {
     box-shadow: none;
     background-color:lighten($grey-light, 5%);
-  }
+  } */
 
 
   @include styles();
