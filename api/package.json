@@ -20,8 +20,8 @@
     "node": ">= 6.9.0"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test PORT=8081 mocha test/main.test.js",
-    "test-ci": "NODE_ENV=test-ci mocha test/main.test.js",
+    "test": "cross-env NODE_ENV=test PORT=8081 mocha",
+    "test-ci": "NODE_ENV=test-ci mocha",
     "fix-style": "eslint --fix .",
     "lint": "eslint .",
     "start": "cross-env NODE_ENV=development nodemon server",
