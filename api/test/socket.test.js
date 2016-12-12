@@ -33,9 +33,9 @@ describe('socket basic connection with authentication', () => {
     const client = ioClient.connect(`http://localhost:${process.env.PORT || 8080}`);
     client.once("connect", () => {
         // trigger when reach this -> Authentication failed
-        expect(true).to.equal(false);
-        client.disconnect();
-      });
+      expect(true).to.equal(false);
+      client.disconnect();
+    });
     client.on("error", error => {
       try {
         expect(error.code).to.equal('credentials_required');
@@ -61,8 +61,8 @@ describe('socket basic connection with authentication', () => {
 
     client.once("connect", () => {
         // trigger when reach this -> Authentication failed
-        expect(true).to.equal(false);
-      });
+      expect(true).to.equal(false);
+    });
     client.on("error", error => {
       try {
         expect(error.code).to.equal('invalid_token');

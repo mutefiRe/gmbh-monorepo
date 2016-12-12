@@ -29,7 +29,7 @@ describe('/order route', () => {
     before(done => {
 
       db.User.create({username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0}).then(() => {
-        return db.Unit.create({name: "unit1"})
+        return db.Unit.create({name: "unit1"});
       }).then(() => {
         return db.Category.create({
           name:        "category",
@@ -67,7 +67,7 @@ describe('/order route', () => {
           totalAmount: 4,
           tableId: 1,
           userId:  1
-        })
+        });
       }).then(() => {
         return db.Orderitem.create({
           extras:    "extras",
@@ -77,7 +77,7 @@ describe('/order route', () => {
           price:     3.5,
           itemId:    1,
           orderId:   1
-        })
+        });
       }).then(() => {
         return db.Orderitem.create({
           extras:    null,
@@ -136,7 +136,7 @@ describe('/order route', () => {
         .send({ token })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          removeTimestamps(res.body.order.orderitems)
+          removeTimestamps(res.body.order.orderitems);
           expect(removeTimestamps(res.body.order.orderitems[0])).to.deep.equal(expectedResponse.orders[0].orderitems[0]);
           expect(res.body.order.id).to.equal(1);
           expect(res.body.order.user).to.equal(1);
