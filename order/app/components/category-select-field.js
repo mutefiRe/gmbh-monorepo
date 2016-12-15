@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  tagName: 'button',
-  classNames: ['category-select-field'],
+  tagName: 'div',
+  classNames: ['category-selection-field'],
   classNameBindings: ['myStyle'],
   myStyle: function() {
     if (this.get('actualCategory') === this.get('category') || !this.get('actualCategory')) {

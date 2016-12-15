@@ -18,9 +18,9 @@
   border: none;
 }
 
-@mixin button-hover($background-color){
-  background-color: lighten($background-color,5%);
-  box-shadow: none;
+ @mixin button-hover($background-color){
+  /* background-color: lighten($background-color,5%);
+  box-shadow: none; */
 }
 
 .default-btn{
@@ -222,6 +222,13 @@
   text-align: center;
 }
 
+@mixin center(){
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .space-top {
   margin-top: 1em;
 }
@@ -234,7 +241,7 @@
 .space-left {
   margin-left: 1em;
 }
-
 .error {
   color: $orange;
 }
+
