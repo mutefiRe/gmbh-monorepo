@@ -1,7 +1,5 @@
 {{#if isTabbed}}
-<td class="disabled">{{orderitem.count}} x</td>
-<td class="disabled" style="width= 100%">{{orderitem.item.name}}</td>
-<td class="disabled">Abbrechen</td>
+<td class="disabled" colspan="3">Abbrechen</td>
 <td {{action 'removeItemFromOrder'}}class="disabled">Löschen</td>
 {{else}}
 <td>{{orderitem.count}} x</td>

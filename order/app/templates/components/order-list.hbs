@@ -6,7 +6,7 @@
     {{/each}}
   </table>
 </div>
-<div class="flexcontainer">
+<div class="flexcontainer table_sum">
   {{#unless barKeeper}}
   {{#if order.table.name}}
   <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>
@@ -16,6 +16,7 @@
   {{/unless}}
   <p class="sum">Summe: € {{show-currency order.totalAmount}}</p>
 </div>
+<div class="menu--desktop">
 <div class="flexcontainer">
   {{#if order.table.name}}
   {{#if order.orderitems}}
@@ -36,4 +37,10 @@
 <div class="flexcontainer">
   <button {{action 'goToOrderScreen'}} class="smallbutton default-btn">zurück</button>
   <button {{action 'showModal2'}} class="smallbutton default-btn">Bestellung verwerfen</button>
+</div>
+</div>
+<div class="menu--mobile">
+  <button {{action 'goToOrderScreen'}} class="smallbutton default-btn"><span class="icon icon-return"></span></button>
+  <button {{action 'showModal2'}} class="smallbutton default-btn"><span class="icon icon-garbage"></span></button>
+  <button {{action 'showModal'}} class="smallbutton default-btn"><span class="icon icon-table"></span></button>
 </div>
