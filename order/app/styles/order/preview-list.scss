@@ -1,9 +1,9 @@
 .preview-list {
-  min-width: 65px;
-  width: 10%;
   border-left: 1px solid $grey-dark;
+  width: 60px;
   background-color: $grey-light;
   float: left;
+  overflow-y: scroll;
   li {
     position: relative;
     .caption {
@@ -17,15 +17,14 @@
       font-size: 16px;
       line-height: 16px;
     }
-    margin: 4px 0px 4px 0px;
+    margin: 2.5px;
     background-color:$grey-light;
     list-style-type: none;
-    min-width: 55px;
-    width:100%;
+    width: 55px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow:hidden;
-    height: 50px;
+    padding-bottom: 55px;
     align-self:flex-start;
     @include stylespreview();
   }
