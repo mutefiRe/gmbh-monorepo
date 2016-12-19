@@ -42,5 +42,9 @@
 <div class="menu--mobile">
   <button {{action 'goToOrderScreen'}} class="smallbutton default-btn"><span class="icon icon-return"></span></button>
   <button {{action 'showModal2'}} class="smallbutton default-btn"><span class="icon icon-garbage"></span></button>
-  <button {{action 'showModal'}} class="smallbutton default-btn"><span class="icon icon-table"></span></button>
+  {{#if order.table.name}}
+    <button {{action 'saveOrder'}} class="smallbutton default-btn"><span class="icon icon-send"></span></button>
+  {{else}}
+    <button {{action 'showModal'}} class="smallbutton default-btn"><span class="icon icon-table"></span></button>
+  {{/if}}
 </div>
