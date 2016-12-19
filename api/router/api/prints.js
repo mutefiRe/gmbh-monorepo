@@ -30,7 +30,9 @@ router.post('/', function(req, res){
       print.deliveryNote(orders);
     }
 
-    res.send({'print': { "order" : data.id }});
+    res.send({'print': {
+      "id"    : data.id,
+      "order" : data.id }});
   });
 });
 
