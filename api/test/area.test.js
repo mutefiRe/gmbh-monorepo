@@ -22,18 +22,10 @@ const token = jwt.sign({
 }, config.secret, { expiresIn: '24h' });
 
 describe('/area route', () => {
-  before(done => {
-    clean(done);
-  });
+  before(clean);
   describe('areas exists', () => {
-
-    before(done => {
-      db.Area.bulkCreate([{name: "area1"}, {name: "area2"}])
-      .then(() => {
-        done();
-      }).catch(error => {
-        done(error);
-      });
+    before(() => {
+      return db.Area.bulkCreate([{name: "area1"}, {name: "area2"}]);
     });
 
     describe('GET areas', () => {
@@ -51,26 +43,24 @@ describe('/area route', () => {
         }]
       };
 
-      it('should get one area', done => {
-        chai.request(app)
+      it('should get one area', () => {
+        return chai.request(app)
         .get('/api/areas/1')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body.area.name).to.equal("area1");
-          done();
         });
       });
 
-      it('should get all areas', done => {
-        chai.request(app)
+      it('should get all areas', () => {
+        return chai.request(app)
         .get('/api/areas/')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body.areas.length).to.equal(2);
           expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
-          done();
         });
       });
     });
@@ -82,8 +72,8 @@ describe('/area route', () => {
         }
       };
 
-      it('area should exist', done => {
-        chai.request(app)
+      it('area should exist', () => {
+        return chai.request(app)
         .post('/api/areas')
         .set("x-access-token", token)
         .send(requestBody)
@@ -91,11 +81,11 @@ describe('/area route', () => {
           expect(res.status).to.equal(200);
           expect(res.body.area.name).to.equal("newArea");
           return db.Area.find({where: {name: "newArea"}});
-        }).then(area => {
+        })
+        .then(area => {
           expect(area).not.to.be.null;
           expect(area.name).to.eq("newArea");
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
 
@@ -106,8 +96,8 @@ describe('/area route', () => {
         }
       };
 
-      it('area should have changed', done => {
-        chai.request(app)
+      it('area should have changed', () => {
+        return chai.request(app)
         .put('/api/areas/1')
         .set("x-access-token", token)
         .send(requestBody)
@@ -115,11 +105,11 @@ describe('/area route', () => {
           expect(res.status).to.equal(200);
           expect(res.body.area.name).to.equal("changedArea");
           return db.Area.find({where: {name: "changedArea"}});
-        }).then(area => {
+        })
+        .then(area => {
           expect(area).not.to.be.null;
           expect(area.name).to.eq("changedArea");
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
   });
