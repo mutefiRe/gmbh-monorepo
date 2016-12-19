@@ -1,1 +1,8 @@
-<div>{{#if category.icon}}<img src="./assets/icons/{{category.icon}}">{{/if}}<span>{{category.name}}</span></div>
+<div class="content">
+  {{#if category.icon}}
+    <div class="icon icon-{{category.icon}}" ></div>
+  {{/if}}
+  <span class="caption">
+    {{category.name}}
+  </span>
+</div>

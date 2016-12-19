@@ -1,8 +1,10 @@
+import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(RecognizerMixin,{
   tagName: 'div',
   classNames: ['item-list'],
+  recognizers: 'swipe',
   swipeLeft() {
     this.get('goToOrderList')();
   },

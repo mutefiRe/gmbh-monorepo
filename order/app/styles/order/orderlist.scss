@@ -58,6 +58,72 @@
     padding-top: 10px;
     padding-right: 20px;
   }
+  .menu--mobile{
+    display: none;
+  }
+  .menu--desktop{
+    display: block;
+  }
+  .scrollable {
+    max-height:65%;
+    overflow-y:auto;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+  }
+
+  @media (max-width: 1000px) {
+
+  }
+  @media (max-width: 560px) {
+    padding: 0px;
+    h2{
+      font-size: 14px;
+      padding: 5px;
+      text-align: center;
+      background-color: $grey-light;
+    }
+    .flexcontainer.table_sum{
+      margin-top: 0;
+    }
+    .smallbutton{
+      padding: 0;
+      padding-bottom: 70px;
+      position: relative;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      width: 100%;
+      &:nth-child(2){
+        background-color: $orange-lighter;
+      }
+      &:last-child{
+        @include button($dark, $blue, $white);
+      }
+      span{
+        font-size: 35px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+      }
+    }
+
+    .menu--desktop{
+      display: none;
+    }
+    .menu--mobile{
+      display: flex;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+    .bigbutton{
+      margin-bottom: 0px;
+    }
+    .scrollable{
+      height: calc(100% - 129px);
+      max-height: none;
+    }
+  }
 }
 
 .empty-order {
@@ -67,10 +133,3 @@
   text-align:center;
 }
 
-
-.orderlist .scrollable {
-  max-height:65%;
-  overflow-y:auto;
-  border-bottom: 1px solid black;
-  border-top: 1px solid black;
-}

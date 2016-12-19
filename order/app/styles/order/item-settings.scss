@@ -3,7 +3,8 @@
 
   .button-group{
     @include flexbox-around();
-
+    justify-content: space-between;
+    padding: 20px;
     input {
       text-align: center;
       font-size: 2.57em;
@@ -27,7 +28,8 @@
     }
 
     button {
-      width: 20%;
+      width: 70px;
+      height: 70px;
     }
   }
 
@@ -45,6 +47,14 @@
       font-family:'Palanquin', arial, sans-serif;
       font-weight: bold;
       border: 1px solid $grey-dark;
+    }
+  }
+  @media (max-width: 560px){
+    .extra{
+      padding: 10px;
+    }
+    .button-group{
+      padding: 10px;  
     }
   }
 }

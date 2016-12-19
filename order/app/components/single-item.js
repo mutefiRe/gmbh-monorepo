@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  tagName: 'button',
+  tagName: 'div',
   classNames: ['single-item'],
   classNameBindings: ['myStyle'],
   myStyle: 'style-1',
@@ -22,6 +22,7 @@ export default Ember.Component.extend({
   },
   click() {
     this.get('addItemToOrder')(this.get('item'));
+
   },
   // pan() {
   //   this.triggerAction({action: 'cancel', target: this});

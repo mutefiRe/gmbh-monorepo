@@ -1,8 +1,18 @@
 .table-item{
-  margin-top: 10px;
-  width: 32%;
-  height: 85px;
-  text-align: center;
+ 	display: block;
+	float: left;
+	width: 24%;
+	margin: 0.5%;
+	text-align: center;
+	padding-top: 30px;
+	padding-bottom: 30px;
 
   @include styles();
+
+  @media (max-width: 560px){
+    width: 32.33333%;
+  }
+  @media (max-width: 300px){
+    width: 49%;
+  }
 }

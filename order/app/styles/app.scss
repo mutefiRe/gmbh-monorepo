@@ -59,6 +59,9 @@
     font-size: 14px;
     color: $grey-darker;
   }
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   * {
     box-sizing: border-box;

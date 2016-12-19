@@ -1,18 +1,34 @@
 .table-select{
   width: 100%;
+  height: 100%;
   margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
   .table-mask{
     overflow-y: auto;
     max-height: 470px;
     width:100%;
+    @media (max-height: 680px){
+      max-height: 350px;
+    }
+    @media (max-height: 560px){
+      max-height: 250px;
+    }
   }
 
   button{
     word-break: break-all;
+  }
+  @media (max-width: 560px){
+    .table-mask{
+      @media (max-height: 680px){
+        max-height: 450px;
+      }
+      @media (max-height: 560px){
+        max-height: 350px;
+      }
+      @media (max-height: 460px){
+        max-height: 250px;
+      }
+    }
   }
 
 }
