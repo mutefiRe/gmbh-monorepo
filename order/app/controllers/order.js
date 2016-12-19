@@ -111,7 +111,8 @@ export default Ember.Controller.extend({
         }
         this.toggleProperty('triggerModal');
         goToOrderScreen();
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         // nothing to do here
       });
     },
