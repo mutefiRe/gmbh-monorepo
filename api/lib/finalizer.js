@@ -39,5 +39,5 @@ function mapKeys(object){
 }
 
 function isId(key){
-  return (key.slice(key.length - 2, key.length) === "Id");
+  return key.slice(key.length - 2, key.length) === "Id";
 }

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const express   = require('express');
 const router    = express.Router();
@@ -16,7 +16,7 @@ router.get('/', function(req, res){
     const writer = csvWriter({ headers: ["Produkt", "Verkauft","davon Frei", "Verdienst"]});
     writer.pipe(fs.createWriteStream('products.csv'));
 
-    for(let Orderitem in Orderitems){
+    for(const Orderitem in Orderitems){
       let freecount = 0;
 
       if(Orderitems[Orderitem].forFree){ freecount = 1; }
@@ -31,7 +31,7 @@ router.get('/', function(req, res){
       }
     }
 
-    for(let item in csvItems){
+    for(const item in csvItems){
       writer.write([item,csvItems[item].count, csvItems[item].freecount, csvItems[item].price]);
     }
     writer.end();
@@ -40,7 +40,7 @@ router.get('/', function(req, res){
     writer2.pipe(fs.createWriteStream('categories.csv'));
 
     csvItems = {};
-    for(let Orderitem in Orderitems) {
+    for(const Orderitem in Orderitems) {
       const category = Orderitems[Orderitem].item.category;
       let freecount = 0;
 
@@ -56,7 +56,7 @@ router.get('/', function(req, res){
       }
     }
 
-    for(let item in csvItems){
+    for(const item in csvItems){
       writer2.write([item,csvItems[item].count, csvItems[item].freecount, csvItems[item].price]);
     }
     writer2.end();

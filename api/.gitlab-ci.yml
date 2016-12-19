@@ -1,0 +1,44 @@
+cache:
+  paths:
+  - /root/.yarn-cache
+  - /root/.npm
+
+variables:
+  MYSQL_DATABASE: gmbh_test
+  MYSQL_ROOT_PASSWORD: GMBH
+
+stages:
+  - test
+  - deploy
+
+.job_template: &test_definition
+  image: registry.gitlab.com/mossss/gmbh-api
+  stage: test
+  before_script:
+#  - yarn
+   - eval $(ssh-agent -s)
+   - ssh-add <(echo "$SSH_PRIVATE_KEY")
+   - mkdir -p ~/.ssh
+   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+   - npm install
+
+linting:
+  <<: *test_definition
+  script:
+  - yarn run lint
+
+tests:
+  <<: *test_definition
+  services:
+  - mysql:latest
+  script:
+  - yarn run test-ci
+
+heroku:
+  stage: deploy
+  environment: staging
+  script:
+  - gem install dpl
+  - dpl --provider=heroku --app=gmbh-backend --api-key=$HEROKU_KEY
+  only:
+  - develop
