@@ -1,29 +1,56 @@
-.login-screen {
-  input {
+.login {
+  width: 100%;
+  height: 100%;
+  background: $blue-baby;
+  .wrapper {
+    margin: 0 auto;
+    width: 350px;
     text-align: center;
-    font-size: 2.57em;
-    font-family:'Palanquin', arial, sans-serif;
-    color: $grey-darker;
-    font-weight: bold;
-    border-radius: 3px;
-    border-color: $grey_darker;
-    background: $white;
-    width: 100%;
-  }
+    font-size: 14pt;
 
-  .button-blue {
-    width: 100%;
-  }
+    img {
+      margin: 20px 0;
+    }
 
-  h2 {
-    margin-bottom: 20px;
-  }
+    .login-form {
+      border: 1px solid $grey;
+      border-radius: 3px;
+      padding: 20px;
+      text-align: initial;
+      background: $white;
 
-  div {
-    margin-top: 20px;
-  }
+      label {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
 
-  .error {
-    color: red;
+      input {
+        width: 100%;
+        border: 1px solid $grey-dark;
+        border-radius: 3px;
+        margin: 20px 0;
+        padding: 10px;
+      }
+
+      button {
+        width: 100%;
+        margin: 20px 0 10px 0;
+        padding: 10px;
+        color: $white;
+        background: $blue;
+        border: none;
+        border-radius: 3px;
+      }
+    }
+
+    p {
+      font-size: 12px;
+      margin-top: 20px;
+      color: $blue;
+    }
+
+    .error {
+      text-align: center;
+    }
   }
 }

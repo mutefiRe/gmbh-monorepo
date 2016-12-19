@@ -28,7 +28,7 @@ export default Ember.Controller.extend({
   triggerModal: false,
   triggerOrderListSwipe: true,
   init() {
-    const id = this.get('payload.id');
+    const id = this.get('payload').getId();
 
     this.store.find('user', id).then( user => {
       this.set('user', user);
@@ -116,7 +116,11 @@ export default Ember.Controller.extend({
       });
     },
     resetOrder(){
-
+      let order = this.store.createRecord('order', {});
+      order.set('user', this.get('user'));
+      this.set('order', order);
+    },
+    discardOrder(){
       let order = this.get('order');
 
       order.get('orderitems').invoke('unloadRecord');
@@ -125,8 +129,6 @@ export default Ember.Controller.extend({
       order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);
-
-
     },
     removeItemFromOrder(orderitem) {
       const order = orderitem.get('order');

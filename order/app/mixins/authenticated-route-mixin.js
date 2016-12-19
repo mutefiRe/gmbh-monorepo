@@ -5,7 +5,7 @@ export default Ember.Mixin.create({
   // payload: Ember.inject.service('session-payload'),
   // beforeModel(transition) {
   //   if (this.get('session.isAuthenticated')) {
-  //     const userPermission = this.get('payload.permission');
+  //     const userPermission = this.get('payload').getPermission();
   //     const url = transition.targetName.split('.')[0];
   //     const admin = 0;
   //     const waiter = 1;

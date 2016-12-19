@@ -8,13 +8,13 @@ export default Ember.Component.extend({
     const orderitem = this.get('orderitem');
     switch(this.get('type')){
       case "paid":
-      return orderitem.get('countPaid');
+        return orderitem.get('countPaid');
       case "marked":
-      return orderitem.get('countMarked');
+        return orderitem.get('countMarked');
       case "open":
-      return orderitem.get('count') - orderitem.get('countMarked') - orderitem.get('countPaid');
+        return orderitem.get('count') - orderitem.get('countMarked') - orderitem.get('countPaid');
       default:
-      return orderitem.get('count') - orderitem.get('countMarked') - orderitem.get('countPaid');
+        return orderitem.get('count') - orderitem.get('countMarked') - orderitem.get('countPaid');
     }
   }),
   sum: Ember.computed('computedCount', function(){
@@ -23,11 +23,9 @@ export default Ember.Component.extend({
   click() {
     const orderitem = this.get('orderitem');
     if (this.get('type') === "open" && orderitem.get('countMarked') < orderitem.get('count') - orderitem.get('countPaid')){
-      console.log("incrementProperty");
       orderitem.incrementProperty('countMarked');
     } else if (this.get('type') === "marked" && orderitem.get('countMarked') > 0) {
-      console.log("decrementProperty");
       orderitem.decrementProperty('countMarked');
     }
-  },
+  }
 });

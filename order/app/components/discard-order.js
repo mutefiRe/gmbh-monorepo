@@ -2,8 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   actions: {
-    resetOrder() {
-      this.get('resetOrder')();
+    discardOrder() {
+      this.get('discardOrder')();
       this.triggerAction({
         action: 'close',
         target: this
