@@ -1,0 +1,33 @@
+cache:
+  paths:
+#  - /root/.yarn-cache
+  - /root/.npm
+
+stages:
+  - test
+  - deploy
+
+tests:
+  image: registry.gitlab.com/mossss/gmbh-order:v1
+  stage: test
+  before_script:
+# - yarn
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - npm install
+  - bower install --allow-root
+  script:
+  - ember test
+
+heroku:
+  stage: deploy
+  environment: staging
+  script:
+  - gem install dpl
+  - dpl --provider=heroku --app=gmbh --api-key=$HEROKU_KEY
+  only:
+  - develop
+
+
