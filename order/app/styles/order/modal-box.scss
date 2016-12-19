@@ -43,6 +43,7 @@
     padding: 20px;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     button {
       width: 48%;
@@ -50,6 +51,39 @@
 
     button.big {
       width: 100%;
+    }
+  }
+  @media (max-width: 560px) {
+    width: 100%;
+    .head{
+      padding: 5px;
+      min-height: 0px;
+      h1{
+        font-size: 24px;
+      }
+    }
+    .body{
+      padding: 0px;
+    }
+    .foot{
+      padding: 10px;
+      button{
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 49%;      
+      }
+    }
+  }
+  @media (max-width: 350px){
+    .foot{
+      button{
+        width: 100%;
+        margin-top: 15px;
+        box-shadow: none;
+        &:first-child{
+          margin-top: 0px;
+        }
+      }
     }
   }
 }
