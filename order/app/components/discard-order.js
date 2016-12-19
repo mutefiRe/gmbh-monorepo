@@ -8,7 +8,7 @@ export default Ember.Component.extend({
         action: 'close',
         target: this
       });
-      this.get('swipeOrderList')();
+    //  this.get('swipeOrderList')();
     },
     close() {
       this.get('showModal')('table-select');
