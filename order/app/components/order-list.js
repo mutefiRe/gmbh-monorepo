@@ -61,10 +61,10 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('showModal')('table-select', true);
     },
     showModal2() {
-      this.get('showModal')('discard-order', false);
+      this.get('showModal')('discard-order', true);
     },
     saveOrder() {
-      this.get('saveOrder')(()=>{
+      this.get('saveOrder')(() => {
         if(this.get('settings.firstObject.instantPay')){
           this.triggerAction({
             action: 'gotToOrderDetail',

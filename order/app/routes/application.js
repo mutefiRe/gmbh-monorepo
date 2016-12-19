@@ -53,10 +53,6 @@ export default Ember.Route.extend({
       that.controllerFor('order').send('socketReconnected');
     });
 
-    socket.on('connect', function () {
-   //   that.controllerFor('order').send('socketConnected');
-    });
-
     return socket;
   },
   actions: {
