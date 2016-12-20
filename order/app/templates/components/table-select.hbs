@@ -1,7 +1,42 @@
 {{yield}}
 
+{{#if settings.firstObject.customTables}}
+  <div class="navbar">
+    <button onclick={{action 'changeTab' 'tables'}}>Tische</button>
+    <button onclick={{action 'changeTab' 'guests'}}>Gäste</button>
+    <button onclick={{action 'changeTab' 'new'}}>Neuer Gast</button>
+  </div>
+{{/if}}
+
 <div class="table-mask">
-{{#each sortedTables as |table|}}
-  {{table-item table=table setTable=(action "setTable")}}
-{{/each}}
+{{#if showTables}}
+  {{#each userAreas as |area|}}
+    <h3>{{area.name}}</h3>
+    {{#each area.tables as |table|}}
+      {{table-item table=table setTable=(action "setTable")}}
+    {{/each}}
+  {{/each}}
+
+  {{#each otherAreas as |area|}}
+    <h3>{{area.name}}</h3>
+    {{#each area.tables as |table|}}
+      {{table-item table=table setTable=(action "setTable")}}
+    {{/each}}
+  {{/each}}
+
+  {{#if unassignedTables}}
+    <h3>Nicht zugewiesene Tische</h3>
+  {{/if}}
+  {{#each unassignedTables as |table|}}
+    {{table-item table=table setTable=(action "setTable")}}
+  {{/each}}
+{{else if showGuests}}
+   <button onclick={{action 'changeTab' 'new'}} class= 'table-item button-blue default-btn'>+</button>
+   {{#each customTables as |table|}}
+     {{table-item table=table setTable=(action "setTable")}}
+   {{/each}}
+{{else if showNew}}
+  <div class="input">{{input value=name type='text' autofocus='autofocus'}}</div>
+  <button class="button-blue  button-modal" onclick={{action 'createTable'}}>Erstellen</button>
+{{/if}}
 </div>
