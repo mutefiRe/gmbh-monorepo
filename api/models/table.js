@@ -2,9 +2,10 @@
 
 module.exports = function(sequelize, DataTypes) {
   const Table  = sequelize.define("table", {
-    name: {type: DataTypes.STRING,  allowNull: false, unique: false},
-    x:    {type: DataTypes.INTEGER, allowNull: true,  unique: false},
-    y:    {type: DataTypes.INTEGER, allowNull: true,  unique: false}
+    name:   {type: DataTypes.STRING,  allowNull: false, unique: false},
+    x:      {type: DataTypes.INTEGER, allowNull: true,  unique: false},
+    y:      {type: DataTypes.INTEGER, allowNull: true,  unique: false},
+    custom: {type: DataTypes.BOOLEAN, allowNull: true,  unique: false}
   }, {
     classMethods: {
       associate(models) {
