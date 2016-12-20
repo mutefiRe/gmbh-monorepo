@@ -21,23 +21,14 @@ const token = jwt.sign({
 }, config.secret, { expiresIn: '24h' });
 
 describe('/table route', () => {
-  before(done => {
-    clean(done);
-  });
-
+  before(clean);
   describe('tables exists', () => {
-
-    before(done => {
-
-      db.Area.create({name: "area1"}).then(() => {
-        return db.Table.bulkCreate([
+    before(() => {
+      return db.Area.create({name: "area1"})
+      .then(() => db.Table.bulkCreate([
           {name: "test1", x: 1, y: 1, areaId: 1},
-          {name: "test2",  x: 2, y: 2, areaId: 1}]);
-      }).then(() => {
-        done();
-      }).catch(error => {
-        done(error);
-      });
+          {name: "test2", x: 2, y: 2, areaId: 1}]
+      ));
     });
 
     describe('GET tables', () => {
@@ -45,25 +36,23 @@ describe('/table route', () => {
         "tables": [{id:1, name: "test1", x: 1, y: 1, area: 1}, {id: 2, name: "test2", x: 2, y: 2, area: 1}]
       };
 
-      it('should get one table', done => {
-        chai.request(app)
+      it('should get one table', () => {
+        return chai.request(app)
         .get('/api/tables/1')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body.table.name).to.equal("test1");
-          done();
         });
       });
 
-      it('should get all tables', done => {
-        chai.request(app)
+      it('should get all tables', () => {
+        return chai.request(app)
         .get('/api/tables/')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
-          done();
         });
       });
     });
@@ -78,8 +67,8 @@ describe('/table route', () => {
         }
       };
 
-      it('table should exist', done => {
-        chai.request(app)
+      it('table should exist', () => {
+        return chai.request(app)
         .post('/api/tables')
         .set("x-access-token", token)
         .send(requestBody)
@@ -93,8 +82,7 @@ describe('/table route', () => {
           expect(table.areaId).to.eq(1);
           expect(table.x).to.eq(3);
           expect(table.y).to.eq(3);
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
 
@@ -103,8 +91,8 @@ describe('/table route', () => {
         table: {name: "changedTable", x: 4, y: 4, area: 1}
       };
 
-      it('table should have changed', done => {
-        chai.request(app)
+      it('table should have changed', () => {
+        return chai.request(app)
         .put('/api/tables/1')
         .set("x-access-token", token)
         .send(requestBody)
@@ -118,8 +106,7 @@ describe('/table route', () => {
           expect(table.areaId).to.eq(1);
           expect(table.x).to.eq(4);
           expect(table.y).to.eq(4);
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
   });

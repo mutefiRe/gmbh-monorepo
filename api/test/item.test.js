@@ -21,45 +21,36 @@ const token = jwt.sign({
 }, config.secret, { expiresIn: '24h' });
 
 describe('/item route', () => {
-  before(done => {
-    clean(done);
-  });
+  before(clean);
   describe('items exists', () => {
 
-    before(done => {
-
-      db.Category.create({
+    before(() => {
+      return db.Category.create({
         name:        "category1",
         enabled:     true,
         description: "newCategory",
         icon:        null,
         showAmount:  true,
         printer:     null
-      }).then(() => {
-        return db.Unit.create({name: "unit1"});
-      }).then(() => {
-        return db.Item.bulkCreate([{
-          name:       "item1",
-          amount:     0.5,
-          price:      3.5,
-          tax:        0.1,
-          sort:       null,
-          categoryId: 1,
-          unitId:     1
-        }, {
-          name:       "item2",
-          amount:     0.5,
-          price:      3.5,
-          tax:        0.1,
-          sort:       null,
-          categoryId: 1,
-          unitId:     1
-        }]);
-      }).then(() => {
-        done();
-      }).catch(error => {
-        done(error);
-      });
+      })
+      .then(() => db.Unit.create({name: "unit1"}))
+      .then(() => db.Item.bulkCreate([{
+        name:       "item1",
+        amount:     0.5,
+        price:      3.5,
+        tax:        0.1,
+        sort:       null,
+        categoryId: 1,
+        unitId:     1
+      }, {
+        name:       "item2",
+        amount:     0.5,
+        price:      3.5,
+        tax:        0.1,
+        sort:       null,
+        categoryId: 1,
+        unitId:     1
+      }]));
     });
 
     describe('GET items', () => {
@@ -85,24 +76,22 @@ describe('/item route', () => {
         }]
       };
 
-      it('should get one item', done => {
-        chai.request(app)
+      it('should get one item', () => {
+        return chai.request(app)
         .get('/api/items/1')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body.item.name).to.equal("item1");
-          done();
         });
       });
 
-      it('should get all items', done => {
-        chai.request(app)
+      it('should get all items', () => {
+        return chai.request(app)
         .get('/api/items/')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
-          done();
         });
       });
     });
@@ -120,8 +109,8 @@ describe('/item route', () => {
         }
       };
 
-      it('item should exist', done => {
-        chai.request(app)
+      it('item should exist', () => {
+        return chai.request(app)
         .post('/api/items')
         .set("x-access-token", token)
         .send(requestBody)
@@ -132,8 +121,7 @@ describe('/item route', () => {
         }).then(item => {
           expect(item).not.to.be.null;
           expect(item.name).to.eq("newItem");
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
 
@@ -163,8 +151,8 @@ describe('/item route', () => {
         }
       };
 
-      it('item should have changed', done => {
-        chai.request(app)
+      it('item should have changed', () => {
+        return chai.request(app)
         .put('/api/items/1')
         .set("x-access-token", token)
         .send(requestBody)
@@ -175,8 +163,7 @@ describe('/item route', () => {
         }).then(item => {
           expect(item).not.to.be.null;
           expect(item.name).to.eq("changedItem");
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
   });

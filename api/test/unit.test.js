@@ -22,18 +22,10 @@ const token = jwt.sign({
 }, config.secret, { expiresIn: '24h' });
 
 describe('/unit route', () => {
-  before(done => {
-    clean(done);
-  });
+  before(clean);
   describe('units exists', () => {
-
-    before(done => {
-      db.Unit.bulkCreate([{name: "stk"}, {name: "l"}])
-      .then(() => {
-        done();
-      }).catch(error => {
-        done(error);
-      });
+    before(() => {
+      return db.Unit.bulkCreate([{name: "stk"}, {name: "l"}]);
     });
 
     describe('GET units', () => {
@@ -47,26 +39,24 @@ describe('/unit route', () => {
         }]
       };
 
-      it('should get one user', done => {
-        chai.request(app)
+      it('should get one user', () => {
+        return chai.request(app)
         .get('/api/units/1')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body.unit.name).to.equal("stk");
-          done();
         });
       });
 
-      it('should get all units', done => {
-        chai.request(app)
+      it('should get all units', () => {
+        return chai.request(app)
         .get('/api/units/')
         .send({ token })
-        .end((err, res) => {
+        .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body.units.length).to.equal(2);
           expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
-          done();
         });
       });
     });
@@ -78,8 +68,8 @@ describe('/unit route', () => {
         }
       };
 
-      it('unit should exist', done => {
-        chai.request(app)
+      it('unit should exist', () => {
+        return chai.request(app)
         .post('/api/units')
         .set("x-access-token", token)
         .send(requestBody)
@@ -90,8 +80,7 @@ describe('/unit route', () => {
         }).then(unit => {
           expect(unit).not.to.be.null;
           expect(unit.name).to.eq("cl");
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
 
@@ -102,8 +91,8 @@ describe('/unit route', () => {
         }
       };
 
-      it('unit should have changed', done => {
-        chai.request(app)
+      it('unit should have changed', () => {
+        return chai.request(app)
         .put('/api/units/1')
         .set("x-access-token", token)
         .send(requestBody)
@@ -114,8 +103,7 @@ describe('/unit route', () => {
         }).then(unit => {
           expect(unit).not.to.be.null;
           expect(unit.name).to.eq("ml");
-          done();
-        }).catch(err => done(err));
+        });
       });
     });
   });
