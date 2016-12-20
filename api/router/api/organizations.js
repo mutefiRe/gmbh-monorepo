@@ -1,9 +1,8 @@
 'use strict';
 
-const express = require('express');
-const router = express.Router();
-const db = require('../models/index');
-const serialize = require('../serializers/organization');
+const router    = require('express').Router();
+const db        = require('../../models');
+const serialize = require('../../serializers/organization');
 
 
 /**

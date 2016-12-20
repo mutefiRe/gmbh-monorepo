@@ -5,12 +5,12 @@ const db = require('./models/index');
 const printer = require('printer/lib');
 
 String.prototype.toBytes = function() {
-  const arr = []
-  for (var i=0; i < this.length; i++) {
-    arr.push(this[i].charCodeAt(0))
+  const arr = [];
+  for (let i = 0; i < this.length; i++) {
+    arr.push(this[i].charCodeAt(0));
   }
   return arr;
-}
+};
 
 const PAPER_FULL_CUT = [ 0x1d, 0x56, 0x00 ];
 const PAPER_PART_CUT = [ 0x1d, 0x56, 0x01 ];
@@ -39,26 +39,26 @@ class Print {
   }
 
   deliveryNote(data) {
-    const printers = {}
-    for (let key in data.orderitems) {
+    const printers = {};
+    for (const key in data.orderitems) {
       const ord = data.orderitems[key];
       const printer = ord.item.category.printer;
       if (!printers[printer]) {
-        printers[printer] = {}
+        printers[printer] = {};
       }
-      printers[printer][key] = ord
+      printers[printer][key] = ord;
     }
 
     const order = data;
 
-    for(let printer in printers) {
+    for(const printer in printers) {
       order.orderitems = printers[printer];
-      this.singleDeliveryNote(printer, order)
+      this.singleDeliveryNote(printer, order);
     }
   }
 
   tokenCoin(data, printer) {
-    for(let order of data.orderitems) {
+    for(const order of data.orderitems) {
       this.singleTokenCoin(printer, data.orderitems[order]);
     }
   }
@@ -97,7 +97,7 @@ class Print {
   bill(data, printer){
     const order = this.transformOrder(data);
 
-    const printData = []
+    const printData = [];
     printData.push(CHAR_CODE);
 
     printData.push(leftPadding(`${order.table.name}/${order.table.area.name}`,48), ENTER);
@@ -107,13 +107,13 @@ class Print {
     printData.push(ENTER);
     printData.push(billHeader(), ENTER);
     for (const item in order.orderitems) {
-      const ord = order.orderitems[item]
+      const ord = order.orderitems[item];
       let price = ord.item.price;
       const amount = ord.cnt;
       const sum = (price * amount).toFixed(2);
       let orderItem = ord.item.name;
 
-      //workaround for sequelize/postgres. price and other decimal are of type string
+      // workaround for sequelize/postgres. price and other decimal are of type string
       price = (price * 1).toFixed(2);
 
       if(ord.item.category.showAmount) {
@@ -124,9 +124,9 @@ class Print {
     }
 
     printData.push(ENTER);
-    printData.push(leftPadding('Gesamtsumme:', 28), leftPadding(`${(order.totalAmount * 1).toFixed(2)}`, 20))
+    printData.push(leftPadding('Gesamtsumme:', 28), leftPadding(`${(order.totalAmount * 1).toFixed(2)}`, 20));
 
-    printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.user.firstname} ${order.user.lastname}`,48))
+    printData.push(ENTER, ENTER, centerPadding(`Es bediente Sie ${order.user.firstname} ${order.user.lastname}`,48));
     printData.push(FEED, PAPER_PART_CUT);
 
     printJob(printer, printData);
@@ -138,7 +138,7 @@ class Print {
       orderItem = `${orderItem.toUpperCase().substr(0, 35)} ${showAmount(data.item.amount)}${data.item.unit.name}`;
     }
 
-    const printData = []
+    const printData = [];
     printData.push(CHAR_CODE);
     printData.push(ENTER);
     printData.push(rightPadding('WERTMARKE FÜR', 24), leftPadding(formatDate(data.createdAt), 24), ENTER);
@@ -146,7 +146,7 @@ class Print {
     printData.push(ENTER, ENTER, ENTER);
     printData.push(TXT_2HEIGHT, centerPadding('1x ' + orderItem, 48), TXT_NORMAL);
     printData.push(ENTER, ENTER, ENTER);
-    printData.push(centerPadding('Oberländer Bataillons-Schützenfest', 48))
+    printData.push(centerPadding('Oberländer Bataillons-Schützenfest', 48));
     printData.push(FEED, PAPER_PART_CUT);
     printJob(printer, printData);
   }
@@ -158,16 +158,16 @@ class Print {
 }
 
 function printJob(printerName, data) {
-  console.log(`recieved print job for printer ${printerName}`)
+  console.log(`recieved print job for printer ${printerName}`);
   printer.printDirect({
     data: toPrintBuffer(data),
     printer: printerName,
     type: 'RAW',
     success(jobID){
-      console.log('sent to printer with ID: '+jobID);
+      console.log('sent to printer with ID: ' + jobID);
     },
     error(err){
-      console.log('Printer not working', err)
+      console.log('Printer not working', err);
       console.log(decoder.write(toPrintBuffer(data)));
     }
   });
@@ -186,7 +186,7 @@ function deliveryNoteLine(amount, orderItem, extra) {
   let tmp = rightPadding(`${amount} x`, 7) + ' ' + rightPadding(orderItem) + '\n';
 
   if(extra) {
-    const line_count = Math.round(extra.length / 40) + 1
+    const line_count = Math.round(extra.length / 40) + 1;
     tmp += whitespace8 + next40(0, extra) + '\n';
 
     for (let i = 1; i < line_count; i++) {
@@ -214,7 +214,7 @@ function deliveryNoteHeader() {
 function rightPadding(str, amount) {
   str = String(str);
   const tmp = amount - str.length;
-  const strFactory= '                                                                       ';
+  const strFactory = '                                                                       ';
   if(tmp < 0) {
     return str.substr(0, amount - 3) + '...';
   }
@@ -225,7 +225,7 @@ function rightPadding(str, amount) {
 function leftPadding(str, amount) {
   str = String(str);
   const tmp = amount - str.length;
-  const strFactory= '                                                                       ';
+  const strFactory = '                                                                       ';
   if(tmp < 0) {
     return str.substr(0, amount - 3) + '...';
   }
@@ -236,11 +236,11 @@ function leftPadding(str, amount) {
 function centerPadding(str, amount) {
   str = String(str);
   const tmp = amount - str.length;
-  const strFactory= '                                                                       ';
+  const strFactory = '                                                                       ';
   if(tmp < 0) {
     return str.substr(0, amount);
   } else {
-    const pad = strFactory.substr(0, (amount - str.length)/2);
+    const pad = strFactory.substr(0, (amount - str.length) / 2);
     const tmp = pad.concat(str);
     if(str % 2 === 0) {
       return tmp.concat(str);
@@ -262,7 +262,7 @@ function formatDate(dbdate) {
 function leftZero(str) {
   str = String(str);
   if(str.length < 2) {
-    return '0'+str;
+    return '0' + str;
   }
   return str;
 }
@@ -270,13 +270,13 @@ function leftZero(str) {
 function showAmount(data) {
   switch(data){
     case 0.125:
-    return "1/8";
+      return "1/8";
     case 0.25:
-    return "1/4";
+      return "1/4";
     case 0.75:
-    return "3/4";
+      return "3/4";
     default:
-    return data;
+      return data;
   }
 }
 

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 // Import Modules
 const express    = require('express');
