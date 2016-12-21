@@ -7,5 +7,6 @@ export default DS.Model.extend({
   custom: DS.attr('boolean', {defaultValue: false}),
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
-  area: DS.belongsTo('area')
+  area: DS.belongsTo('area'),
+  orders: DS.hasMany('order')
 });

@@ -16,8 +16,16 @@ export default Ember.Component.extend({
     return table.get('custom') == false && !table.get('area.id');
   }).property('tables'),
   customTables: Ember.computed.filter('tables', function(table){
-    return table.get('custom') == true;
-  }).property('tables.@each.custom'),
+    if (table.get('custom') == true)
+    {
+      let orders = table.get('orders');
+      let openOrders = orders.filter(function(order){
+        return order.totalAmount != 0
+      });
+      return openOrders.get('length') > 0
+    }
+    return false;
+  }).property('tables.@each.custom', 'tables.@each.order'),
   actions: {
     setTable(table) {
       this.set('order.table', table);
@@ -43,7 +51,10 @@ export default Ember.Component.extend({
       }
     },
     createTable(){
-      this.get('store').createRecord('table', {name: this.get('name'), custom: true }).save();
+      this.get('store').createRecord('table', {name: this.get('name'), custom: true }).save().then(table => {
+        this.send('setTable', table);
+      });
+      this.set('name', "")
       this.set('showTables', false);
       this.set('showGuests', true);
       this.set('showNew',    false);
