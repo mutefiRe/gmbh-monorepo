@@ -68,7 +68,7 @@ class Print {
     const printData = [];
     printData.push(CHAR_CODE);
 
-    printData.push(leftPadding(`${order.table.name}/${order.table.area.name}`,48), ENTER);
+    printData.push(leftPadding(`${order.table.name}/${areaName(order.table.area)}`,48), ENTER);
     printData.push(TXT_2HEIGHT, 'Bestellung', TXT_NORMAL, ENTER);
     printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
 
@@ -100,7 +100,7 @@ class Print {
     const printData = [];
     printData.push(CHAR_CODE);
 
-    printData.push(leftPadding(`${order.table.name}/${order.table.area.name}`,48), ENTER);
+    printData.push(leftPadding(`${order.table.name}/${areaName(order.table.area)}`,48), ENTER);
     printData.push(TXT_2HEIGHT, 'RECHNUNG', TXT_NORMAL, ENTER);
     printData.push(rightPadding(`Nr. ${order.id}`, 24), leftPadding(formatDate(order.createdAt), 24), ENTER);
 
@@ -295,6 +295,10 @@ function toPrintBuffer(data) {
     }
   }
   return Buffer.from(result);
+}
+
+function areaName(area) {
+  return area ? area.name : " - "
 }
 
 module.exports = new Print(48);
