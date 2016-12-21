@@ -17,11 +17,13 @@ module.exports = {
         for (const record in body[topLevelKey]){
           delete body[topLevelKey][record].createdAt;
           delete body[topLevelKey][record].updatedAt;
+          delete body[topLevelKey][record].deletedAt;
         }
       } else {
         for (const key in body[topLevelKey]){
           delete body[topLevelKey].createdAt;
           delete body[topLevelKey].updatedAt;
+          delete body[topLevelKey].deletedAt;
         }
       }
     }
