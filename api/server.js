@@ -35,8 +35,7 @@ server.listen(process.env.PORT || 8080, function(){
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 app.all('*', function(req, res, next){
-  res.setHeader('Access-Control-Allow-Origin', process.env.GMBH_FRONTEND  || 'http://localhost:4200'); // allow acces from frontend server
-  res.setHeader('Access-Control-Allow-Origin', process.env.GMBH_DASHBOARD || 'http://localhost:4201'); // allow acces from dashboard server
+  res.setHeader('Access-Control-Allow-Origin', process.env.GMBH_FRONTEND || '*'); // allow acces from frontend server
   next();
 });
 app.options('*', function(req, res) {
