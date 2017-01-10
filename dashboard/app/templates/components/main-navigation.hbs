@@ -1,7 +1,34 @@
-<ul>
-  <li>Daten</li>
-  <li>Statistik</li>
-  <li>Einstellungen</li>
-  <li>User</li>
-</ul>
+<div class="main-navigation">
+  <ul>
+    {{
+      navigation-element
+      title='Dashboard'
+      route='dashboard'
+      activeElement=activeRoute
+      setSubNav=(action "setSubNavigation")
+    }}
+    {{
+      navigation-element
+      title='Daten'
+      route='data'
+      activeElement=activeRoute
+      setSubNav=(action "setSubNavigation")
+    }}
+    {{
+      navigation-element
+      title='Statistiken'
+      route='stats'
+      activeElement=activeRoute
+      setSubNav=(action "setSubNavigation")
+    }}
+    {{
+      navigation-element
+      title='Einstellungen'
+      route='settings'
+      activeElement=activeRoute
+      setSubNav=(action "setSubNavigation")
+    }}
+  </ul>
+</div>
+{{sub-navigation title=activeTitle subRoutes=subRoutes}}
 {{yield}}
