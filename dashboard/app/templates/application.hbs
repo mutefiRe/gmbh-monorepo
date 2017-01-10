@@ -1,0 +1,6 @@
+{{#if session.isAuthenticated}}
+  {{main-navigation}}
+  {{outlet}}
+{{else}}
+  {{outlet}}
+{{/if}}

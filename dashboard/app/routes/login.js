@@ -2,8 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   actions: {
-    transitionToLogout() {
-      this.transitionTo('logout');
+    transitionToDashboard() {
+      this.transitionTo('dashboard');
     }
   }
 });

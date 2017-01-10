@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
       this.get('session')
       .authenticate(authenticator, credentials)
       .then(()=>{
-        this.send('transitionToLogout');
+        this.send('transitionToDashboard');
       })
       .catch(reason=> {
         if (reason) {
