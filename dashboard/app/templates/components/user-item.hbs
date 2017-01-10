@@ -1,0 +1,20 @@
+{{#if selected}}
+<p>{{input value=user.username}}</p>
+<p>{{input value=user.firstname}}</p>
+<p>{{input value=user.lastname}}</p>
+<p>
+  <select onchange={{action "selectPrinter" value="target.value"}}>
+  {{#each printers as |printer|}}
+    <option value="">Kein Drucker</option>
+    <option value="{{printer.id}}" selected={{eq printer.name user.printer.name}}>{{printer.name}}</option>
+  {{/each}}
+  </select>
+</p>
+<p>{{input value=user.firstname}}</p>
+{{else}}
+<p>{{user.username}}</p>
+<p>{{user.firstname}}</p>
+<p>{{user.lastname}}</p>
+<p>{{user.printer.name}}</p>
+<p>{{user.firstname}}</p>
+{{/if}}
