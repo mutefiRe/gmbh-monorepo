@@ -4,8 +4,8 @@
 <p>{{input value=user.lastname}}</p>
 <p>
   <select onchange={{action "selectPrinter" value="target.value"}}>
+  <option value="">Kein Drucker</option>
   {{#each printers as |printer|}}
-    <option value="">Kein Drucker</option>
     <option value="{{printer.id}}" selected={{eq printer.name user.printer.name}}>{{printer.name}}</option>
   {{/each}}
   </select>
