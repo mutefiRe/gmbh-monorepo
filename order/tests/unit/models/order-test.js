@@ -1,17 +1,16 @@
-/* jshint expr:true */
-import {expect} from 'chai';
-import {describeModel, it} from 'ember-mocha';
+import { expect } from 'chai';
+import { describeModel, it } from 'ember-mocha';
 
 describeModel(
-  'user',
-  'Unit | Model | user',
+  'order',
+  'Unit | Model | order',
   {
     // Specify the other units that are required for this test.
-    needs: ['model:area']
+      needs: ['model:user', 'model:table', 'model:orderitem']
   },
-  function () {
+  function() {
     // Replace this with your real tests.
-    it('exists', function () {
+    it('exists', function() {
       let model = this.subject();
       // var store = this.store();
       expect(model).to.be.ok;

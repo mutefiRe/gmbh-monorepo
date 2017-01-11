@@ -1,9 +1,0 @@
-<td>{{input type="text" value=unit.name disabled=isShowingUpdate}}</td>
-{{#if isShowingUpdate}}
-  <td><button {{action "toggle"}}>Bearbeiten</button></td>
-  <td><button {{action "destroyUnit"}}>Löschen</button></td>
-{{else}}
-  <td><button {{action "toggle"}}>Abbrechen</button></td>
-  <td><button {{action "save"}}>Speichern</button></td>
-{{/if}}
-
