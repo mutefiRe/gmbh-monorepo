@@ -1,13 +1,7 @@
-/* jshint expr:true */
 import { expect } from 'chai';
-import {
-  describeModule,
-  it
-} from 'ember-mocha';
+import { describeModule, it } from 'ember-mocha';
 
-describeModule(
-  'route:dashboard/tables',
-  'DashboardTablesRoute',
+describeModule('route:application', 'Unit | Route | application',
   {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']

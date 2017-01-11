@@ -6,7 +6,7 @@ describeModel(
   'Unit | Serializer | order',
   {
     // Specify the other units that are required for this test.
-    needs: ['serializer:order']
+    needs: ['model:user', 'model:table', 'model:orderitem']
   },
   function() {
     // Replace this with your real tests.

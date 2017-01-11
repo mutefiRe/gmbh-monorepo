@@ -1,7 +1,5 @@
 import {expect} from 'chai';
 import {describeModule, it} from 'ember-mocha';
-// import login from 'gmbh/tests/helpers/login'
-import moduleForAcceptance from 'gmbh/tests/helpers/module-for-acceptance';
 import {authenticateSession} from 'gmbh/tests/helpers/ember-simple-auth';
 
 describeModule(

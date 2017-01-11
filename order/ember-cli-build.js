@@ -8,6 +8,10 @@ module.exports = function(defaults) {
     'ember-cli-mocha': {
       useLintTree: false
     },
+    babel: {
+      optional: ['es6.spec.symbols'],
+      includePolyfill: true
+    },
     webfont: {
       path: 'app/webfont-svg/',
       options: {
