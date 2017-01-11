@@ -14,7 +14,8 @@ module.exports = function(environment) {
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
         Date: false
-      }
+      },
+      host: process.env.GMBH_BACKEND || 'http://localhost:8080'
     },
 
     APP: {
