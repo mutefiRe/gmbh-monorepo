@@ -10,7 +10,9 @@ Router.map(function() {
   this.route('login');
   this.route('logout');
   this.route('dashboard');
-  this.route('users');
+  this.route('data', function(){
+    this.route('users');
+  });
 });
 
 export default Router;

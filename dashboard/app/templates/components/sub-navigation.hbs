@@ -1,0 +1,7 @@
+<h2>{{title}}</h2>
+<ul>
+{{#each subRoutes as |subRoute|}}
+  <li>{{#link-to subRoute.firstObject}}{{subRoute.lastObject}}{{/link-to}}</li>
+{{/each}}
+</ul>
+{{yield}}
