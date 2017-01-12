@@ -24,7 +24,7 @@ router.post('/', function(req, res){
       const token = jwt.sign(thisUser.createAuthUser(), config.secret, { expiresIn: '72h' });
       res.send({token});
     }
-    else throw new Error("Authenticat ion failed. Wrong Password");
+    else throw new Error("Authentication failed. Wrong Password");
   }).catch(error => {
     res.status(400).send({
       'errors': {
