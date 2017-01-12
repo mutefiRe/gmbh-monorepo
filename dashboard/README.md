@@ -14,11 +14,7 @@ You will need the following things properly installed on your computer.
 * [PhantomJS](http://phantomjs.org/)
 
 ## Installation
-
-* `git clone <repository-url>` this repository
-* `cd admin`
-* `npm install`
-* `bower install`
+[Setup Documentation](https://gitlab.com/mossss/gmbh-order/wikis/setup-(node,-bower,-mysql))
 
 ## Running / Development
 
