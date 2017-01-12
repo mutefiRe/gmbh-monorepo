@@ -1,56 +1,46 @@
-import Mirage from 'ember-cli-mirage';
+export default function() {
 
-export default function () {
-  const ERROR_CODE = 403;
-  const PAYLOAD = 'eyJpZCI6MSwiaWF0IjoxNDYyODIxODM2LCJleHAiOjE0NjI5MDgyMzZ9';
-  const PAYLOAD_ADMIN = 'eyJpZCI6MSwicGVybWlzc2lvbiI6MH0';
-  const PAYLOAD_WAITER = 'eyJpZCI6MSwicGVybWlzc2lvbiI6MX0';
+  // These comments are here to help you get started. Feel free to delete them.
 
-  this.namespace = '/api';
-  this.urlPrefix = 'http://localhost:8080';
+  /*
+    Config (with defaults).
 
-  this.get('/areas');
-  this.get('/areas/:id');
-  this.get('/categories');
-  this.get('/categories/:id');
-  this.get('/items');
-  this.get('/items/:id');
-  this.get('/orderitems');
-  this.get('/orderitems/:id');
-  this.get('/orders');
-  this.get('/orders/:id');
-  this.get('/tables');
-  this.get('/tables/:id');
-  this.get('/units');
-  this.get('/units/:id');
-  this.get('/users');
+    Note: these only affect routes defined *after* them!
+  */
 
-  this.get('/users/:id', ({users}, request) => {
-    console.log('user', {user: users.find(request.params.id)});
+  this.urlPrefix = 'http://localhost:8080';    // make this `http://localhost:8080`, for example, if your API is on a different server
+  this.timing = 400;      // delay for each request, automatically set to 0 during testing
 
-    return {user: users.find(request.params.id)};
+  /*
+    Shorthand cheatsheet:
+
+    this.get('/posts');
+    this.post('/posts');
+    this.get('/posts/:id');
+    this.put('/posts/:id'); // or this.patch
+    this.del('/posts/:id');
+
+    http://www.ember-cli-mirage.com/docs/v0.2.x/shorthands/
+  */
+  this.post('/authenticate', () => {
+    return {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3RuYW1lIjoiMTIzNDU2Nzg5MCIsImxhc3RuYW1lIjoiSm9obiBEb2UiLCJ1c2VybmFtZSI6IndhaXRlcl8xIiwicGFzc3dvcmQiOiJhYmMiLCJwZXJtaXNzaW9uIjoxLCJwcmludGVyIjoidGVzdCJ9.i_QVYHeQ0z52hgD2tdNjxBU-FnCIC5kJE6U97Ozvi2g"};
   });
 
-  this.get('/users/:id', {id: 2, username: 'admin', permission: 0});
+  this.namespace = '/api';    // make this `api`, for example, if your API is namespaced
 
-  this.post('http://localhost:8080/authenticate', function (db, req) {
-    switch (JSON.parse(req.requestBody).username) {
-      case 'no':
-      return new Mirage.Response(ERROR_CODE, {}, {error: 'User not foud'});
-      case 'admin':
-      return {
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_ADMIN + '.Xlfhc0DpyJLHPVJp3fp1ZWZT-K9GQmwWZ52X6WVLi8M'
-      };
-      case 'waiter':
-      return {
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_WAITER + '.KWMu1UJLrqHdO_n9h9x_itkDHExNXC91JxtyMbXPE_c'
-      };
-      default:
-      return {
-        token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.' + PAYLOAD + '.QTVEuD2rlKRHREQhViVSf32pF0aAO7X9b5Zx1EwkN-g'
-      };
-    }
+  this.get('/categories', 'categories');
+  this.get('/tables', 'tables');
+  this.get('/areas', 'areas');
+  this.get('/units', 'units');
+  this.get('/settings', 'settings');
+  this.get('/orders', 'settings');
+
+  this.get('users/:id', ({ users }, request) => {
+    return users.find(request.params.id);
   });
 
-  this.passthrough('http://localhost:8080/socket.io');
+  this.get('items', ({ items }, request) => {
+    console.log(items.all())
+    return items.all();
+  });
 }
