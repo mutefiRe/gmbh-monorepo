@@ -1,11 +1,6 @@
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
-
-const {
-  Component
-} = Ember;
-
 export default Ember.Component.extend(RecognizerMixin, {
   recognizers: 'swipe',
   classNames: ['order-overview'],
