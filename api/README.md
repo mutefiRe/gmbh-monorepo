@@ -4,7 +4,7 @@
 ## MMP2b
 
 ### Setup
-
+[Setup Documentation](https://gitlab.com/mossss/gmbh-order/wikis/setup-(node,-bower,-mysql))
 #### Database
 Install MySQL on your platfrom
 We need to set up a Production, Development and Test Database
