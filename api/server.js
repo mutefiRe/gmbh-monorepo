@@ -1,18 +1,19 @@
 'use strict';
 
 // Import Modules
-const app = require('express')();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
-const db = require('./models/index');
+const express    = require('express');
+const app        = express();
+const server     = require('http').Server(app);
+const io         = require('socket.io')(server);
+const db         = require('./models/index');
 const bodyParser = require('body-parser');
-const config = require('./config/config');
-const socketioJwt = require('socketio-jwt');
+const config     = require('./config/config');
+const jwtSocket  = require('socketio-jwt');
 
 app.set("io", io);
 app.set("server", server);
 
-io.use(socketioJwt.authorize({
+io.use(jwtSocket.authorize({
   secret: config.secret,
   handshake: true
 }));
@@ -45,7 +46,22 @@ app.options('*', function(req, res) {
 app.use('/authenticate', authenticate);
 app.use('/api', api);
 app.use('/teapot', teapot);
+
 app.use('/data', data);
+
+app.use('/docs', express.static('docs'))
+
+/**
+ * @api {get} check/ Health Check
+ * @apiName HealthCheck
+ * @apiGroup HealthCheck
+
+ * @apiSuccess {String} OK OK
+ */
+
+app.get('/check', function(req, res){
+  res.status(200).send("OK")
+});
 
 // Socket handling
 io.on('connection', function(socket){

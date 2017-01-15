@@ -3,6 +3,42 @@
 const router    = require('express').Router();
 const db        = require('../../models');
 
+/**
+ * @apiDefine userAttributes
+ * @apiSuccess {Number}  users.id Autoincremented Identifier of the user
+ * @apiSuccess {String}  users.username Username
+ * @apiSuccess {String}  users.firstname Firstname of the user
+ * @apiSuccess {String}  users.lastname Lastname of the user
+ * @apiSuccess {Number}  users.permission Waiter: 0 Admin: 1
+ * @apiSuccess {String}  users.printer Printername on the Server
+ * @apiSuccess {Number[]}  users.areas Areas assigned to the user
+ */
+
+/**
+ * @apiDefine userParams
+ * @apiParam {Number}  users.id
+ * @apiParam {String}  users.username
+ * @apiParam {String}  users.firstname
+ * @apiParam {String}  users.lastname
+ * @apiParam {Number}  users.permission
+ * @apiParam {String}  users.printer
+ */
+
+/**
+ * @api {get} api/users/:id Request User
+ * @apiGroup User
+ * @apiName GetUser
+ * @apiParam {Number} id Users unique ID.
+
+  *@apiUse token
+
+ * @apiSuccess {Object} users User
+ * @apiUse userAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.get('/:id', function(req, res) {
   db.User.find({where: {id: req.params.id}, include: [{model: db.Area}]}).then(user => {
     res.send({user});
@@ -15,6 +51,21 @@ router.get('/:id', function(req, res) {
   });
 });
 
+/**
+ * @api {get} api/users Request all users
+ * @apiGroup User
+ * @apiName GetUsers
+
+ * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
+ * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
+
+ * @apiSuccess {Object[]} users User
+ * @apiUse userAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.get('/', function(req, res) {
   db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printer'], include: [{model: db.Area}]}).then(users => {
     res.send({users});
@@ -26,6 +77,20 @@ router.get('/', function(req, res) {
     });
   });
 });
+
+
+/**
+ * @api {post} api/users/ Create one user
+ * @apiGroup User
+ * @apiName PostUser
+ * @apiUse token
+ * @apiParam {Object} users
+ * @apiUse userParams
+ * @apiParam {String} users.password
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.post('/', function(req, res) {
   const io = req.app.get('io');
@@ -40,6 +105,22 @@ router.post('/', function(req, res) {
     });
   });
 });
+
+/**
+ * @api {put} api/users/:id Update one user
+ * @apiGroup User
+ * @apiName UpdateUser
+ * @apiUse token
+ * @apiParam {Object} users
+ * @apiSuccess {Object} users
+ * @apiUse userParams
+ * @apiUse userAttributes
+ * @apiParam {String} users.password
+ * @apiParam {Number} id
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.put('/:id', function(req, res) {
   const io = req.app.get('io');
@@ -57,6 +138,17 @@ router.put('/:id', function(req, res) {
     });
   });
 });
+
+/**
+ * @api {delete} api/users/:id Delete one user
+ * @apiGroup User
+ * @apiName DeleteUser
+ * @apiParam {number} id Id
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ * @apiSuccess {object} object empty Object {}
+ */
 
 router.delete('/:id', function(req, res) {
   const io = req.app.get('io');

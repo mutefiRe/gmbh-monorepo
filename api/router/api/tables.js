@@ -4,6 +4,41 @@ const express   = require('express');
 const router    = express.Router();
 const db        = require('../../models');
 
+/**
+ * @apiDefine tableAttributes
+ * @apiSuccess {Number}  tables.id Autoincremented Identifier of the table
+ * @apiSuccess {Number}  tables.area Id of the Area
+ * @apiSuccess {String}  tables.name
+ * @apiSuccess {Number}  tables.x
+ * @apiSuccess {Number}  tables.y
+ * @apiSuccess {Boolean} tables.custom
+ */
+
+/**
+ * @apiDefine tableParams
+ * @apiParam {Number}  tables.id
+ * @apiParam {String}  tables.area Id of the Area
+ * @apiParam {String}  tables.name
+ * @apiParam {Number}  tables.x
+ * @apiParam {Number}  tables.y
+ * @apiParam {Boolean} tables.custom
+ */
+
+/**
+ * @api {get} api/tables/:id Request Table
+ * @apiGroup Table
+ * @apiName GetTable
+ * @apiParam {Number} id Tables unique ID.
+
+  *@apiUse token
+
+ * @apiSuccess {Object} tables Table
+ * @apiUse tableAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.get('/:id', function(req, res){
   db.Table.find({where: {id: req.params.id}}).then(table => {
     res.send({table});
@@ -16,6 +51,21 @@ router.get('/:id', function(req, res){
   });
 });
 
+/**
+ * @api {get} api/tables Request all tables
+ * @apiGroup Table
+ * @apiName Gettables
+
+ * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
+ * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
+
+ * @apiSuccess {Object[]} tables Table
+ * @apiUse tableAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.get('/', function(req, res){
   db.Table.findAll().then(tables => {
     res.send({tables});
@@ -27,6 +77,19 @@ router.get('/', function(req, res){
     });
   });
 });
+
+/**
+ * @api {post} api/tables/ Create one table
+ * @apiGroup Table
+ * @apiName PostTable
+ * @apiUse token
+ * @apiParam {Object} tables
+ * @apiUse tableParams
+ * @apiUse tableAttributes
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
@@ -41,6 +104,21 @@ router.post('/', function(req, res){
     });
   });
 });
+
+/**
+ * @api {put} api/tables/:id Update one table
+ * @apiGroup Table
+ * @apiName UpdateTable
+ * @apiUse token
+ * @apiParam {Object} tables
+ * @apiUse tableAttributes
+ * @apiSuccess {Object} tables
+ * @apiParam {Number} id
+ * @apiUse tableParams
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.put('/:id', function(req, res){
   const io = req.app.get('io');
@@ -58,6 +136,17 @@ router.put('/:id', function(req, res){
     });
   });
 });
+
+/**
+ * @api {delete} api/tables/:id Delete one table
+ * @apiGroup Table
+ * @apiName DeleteTable
+ * @apiParam {number} id Id
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ * @apiSuccess {object} object empty Object {}
+ */
 
 router.delete('/:id', function(req, res){
   const io = req.app.get('io');

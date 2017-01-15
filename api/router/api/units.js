@@ -3,6 +3,33 @@
 const router    = require('express').Router();
 const db        = require('../../models');
 
+/**
+ * @apiDefine unitAttributes
+ * @apiSuccess {Number}  units.id Autoincremented Identifier of the unit
+ * @apiSuccess {String}  units.name Name of the unit (e.g. "Stk.")
+ */
+
+/**
+ * @apiDefine unitParams
+ * @apiParam {Number}  units.id
+ * @apiParam {String}  units.name
+ */
+
+/**
+ * @api {get} api/units/:id Request Unit
+ * @apiGroup Unit
+ * @apiName GetUnit
+ * @apiParam {Number} id units unique ID.
+
+  *@apiUse token
+
+ * @apiSuccess {Object} units Unit
+ * @apiUse unitAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.get('/:id', function(req, res){
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
     res.send({unit});
@@ -15,6 +42,21 @@ router.get('/:id', function(req, res){
   });
 });
 
+/**
+ * @api {get} api/units Request all units
+ * @apiGroup Unit
+ * @apiName Getunits
+
+ * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
+ * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
+
+ * @apiSuccess {Object[]} units Unit
+ * @apiUse unitAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.get('/', function(req, res){
   db.Unit.findAll().then(units => {
     res.send({units});
@@ -26,6 +68,19 @@ router.get('/', function(req, res){
     });
   });
 });
+
+/**
+ * @api {post} api/units/ Create one unit
+ * @apiGroup Unit
+ * @apiName PostUnit
+ * @apiUse token
+ * @apiParam {Object} units
+ * @apiUse unitParams
+ * @apiUse unitAttributes
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.post('/', function(req, res) {
   const io = req.app.get('io');
@@ -40,6 +95,21 @@ router.post('/', function(req, res) {
     });
   });
 });
+
+/**
+ * @api {put} api/units/:id Update one unit
+ * @apiGroup Unit
+ * @apiName UpdateUnit
+ * @apiUse token
+ * @apiUse unitParams
+ * @apiParam {Object} units
+ * @apiUse unitAttributes
+ * @apiSuccess {Object} units
+ * @apiParam {Number} id
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.put('/:id', function(req, res){
   const io = req.app.get('io');
@@ -57,6 +127,17 @@ router.put('/:id', function(req, res){
     });
   });
 });
+
+/**
+ * @api {delete} api/units/:id Delete one unit
+ * @apiGroup Unit
+ * @apiName DeleteUnit
+ * @apiParam {number} id Id
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ * @apiSuccess {object} object empty Object {}
+ */
 
 router.delete('/:id', function(req, res){
   const io = req.app.get('io');
