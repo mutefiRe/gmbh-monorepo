@@ -28,6 +28,7 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res) {
+  const io = req.app.get('io');
   db.Unit.create(req.body.unit).then(unit => {
     res.send({unit});
     io.sockets.emit("update", {unit});
@@ -41,6 +42,7 @@ router.post('/', function(req, res) {
 });
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
     if (unit === null) throw new Error('unit not found');
     return unit.update(req.body.unit);

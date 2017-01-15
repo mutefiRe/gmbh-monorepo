@@ -60,8 +60,7 @@ describe('/category route', () => {
           icon:        null,
           showAmount:  true,
           printer:     null,
-          category:    null,
-          items:       [1]
+          categoryId:  null
         }, {
           id:          2,
           name:        "category2",
@@ -70,8 +69,7 @@ describe('/category route', () => {
           icon:        "icon.jpg",
           showAmount:  false,
           printer:     "kitchen",
-          category:    null,
-          items:       []
+          categoryId:  null
         }]
       };
 
@@ -133,7 +131,7 @@ describe('/category route', () => {
           icon:        "icon.jpg",
           showAmount:  true,
           printer:     "kitchen",
-          category:    2
+          categoryId:  2
         }
       };
 
@@ -146,7 +144,7 @@ describe('/category route', () => {
           icon:        "icon.jpg",
           showAmount:  true,
           printer:     "kitchen",
-          category:    2
+          categoryId:  2
         }
       };
 

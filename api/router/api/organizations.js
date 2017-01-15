@@ -34,8 +34,8 @@ router.get('/', function(req, res){
 router.post('/', function(req, res){
   const io = req.app.get('io');
   db.Organization.create(req.body.organization).then(organization => {
-    res.send({organization});
     io.sockets.emit("update", {organization});
+    res.send({organization});
   }).catch(error => {
     res.status(400).send({
       'errors': {

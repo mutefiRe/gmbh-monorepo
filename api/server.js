@@ -8,7 +8,6 @@ const db = require('./models/index');
 const bodyParser = require('body-parser');
 const config = require('./config/config');
 const socketioJwt = require('socketio-jwt');
-const finalizer = require('./lib/finalizer');
 
 app.set("io", io);
 app.set("server", server);
@@ -47,8 +46,6 @@ app.use('/authenticate', authenticate);
 app.use('/api', api);
 app.use('/teapot', teapot);
 app.use('/data', data);
-
-app.use('/api', finalizer);
 
 // Socket handling
 io.on('connection', function(socket){

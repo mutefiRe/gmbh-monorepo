@@ -18,7 +18,7 @@ router.get('/:id', function(req, res){
 });
 
 router.get('/', function(req, res){
-  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(orders => {
+  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem}]}).then(orders => {
     orders = JSON.parse(JSON.stringify(orders));
 
     res.send({orders});
@@ -71,7 +71,7 @@ router.put('/:id', function(req, res){
     }
     return Promise.all(promises);
   }).then(() => {
-    return db.Order.findById(req.params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]});
+    return db.Order.findById(req.params.id, {include: [{model: db.Orderitem}]});
   }).then(order => {
     res.send({order});
   }).catch(error => {

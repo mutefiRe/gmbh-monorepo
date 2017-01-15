@@ -4,7 +4,7 @@ const router    = require('express').Router();
 const db        = require('../../models');
 
 router.get('/:id', function(req, res){
-  db.Area.find({where: {id: req.params.id}}).then(ara => {
+  db.Area.find({where: {id: req.params.id}}).then(area => {
     res.send({area});
   });
 });

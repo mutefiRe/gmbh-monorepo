@@ -17,7 +17,7 @@ router.get('/:id', function(req, res){
 });
 
 router.get('/', function(req, res){
-  db.Table.findAll({include: [{model: db.Area}]}).then(tables => {
+  db.Table.findAll().then(tables => {
     res.send({tables});
   }).catch(error => {
     res.status(400).send({
@@ -29,9 +29,10 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Table.create(req.body.table).then(table => {
-    res.send({table});
     io.sockets.emit("update", {table});
+    res.send({table});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -42,6 +43,7 @@ router.post('/', function(req, res){
 });
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Table.find({where: {id: req.params.id}}).then(table => {
     if(table === null) throw new Error('table not found');
     return table.update(req.body.table);

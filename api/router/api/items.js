@@ -3,7 +3,7 @@
 const router    = require('express').Router();
 const db        = require('../../models');
 
-router.get('/:id', function(req, res, next){
+router.get('/:id', function(req, res){
   db.Item.find({where: {id: req.params.id}}).then(item => {
     if(item === null) throw new Error("item not found");
     else {
@@ -18,7 +18,7 @@ router.get('/:id', function(req, res, next){
   });
 });
 
-router.get('/', function(req, res, next){
+router.get('/', function(req, res){
   db.Item.findAll().then(items => {
     res.send({items});
   }).catch(error => {
@@ -31,6 +31,7 @@ router.get('/', function(req, res, next){
 });
 
 router.post('/', function(req, res){
+  const io = req.app.get('io');
   db.Item.create(req.body.item).then(item => {
     res.send({item});
     io.sockets.emit("update", {item});
@@ -44,6 +45,7 @@ router.post('/', function(req, res){
 });
 
 router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Item.find({where: {id: req.params.id}}).then(item => {
     if(item === null) throw new Error("item not found");
     return item.update(req.body.item);
