@@ -2,7 +2,6 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/area');
 
 router.get('/:id', function(req, res){
   db.Area.find({where: {id: req.params.id}}).then(data => {
@@ -29,7 +28,7 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
-  db.Area.create(serialize(req.body.area)).then(area => {
+  db.Area.create(req.body.area).then(area => {
     res.send({area});
     io.sockets.emit("update", {area});
   }).catch(error => {
@@ -45,7 +44,7 @@ router.put('/:id', function(req, res){
   const io = req.app.get('io');
   db.Area.find({where: {id: req.params.id}}).then(area => {
     if (area === null) throw new Error("area not found");
-    return area.update(serialize(req.body.area));
+    return area.update(req.body.area);
   }).then(area => {
     res.send({area});
     io.sockets.emit("update", {area});

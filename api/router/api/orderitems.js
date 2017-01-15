@@ -2,7 +2,6 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/orderitem');
 
 router.get('/:id', function(req, res){
   db.Orderitem.find({where: {id: req.params.id}}).then(data => {
@@ -23,7 +22,7 @@ router.get('/', function(req, res, next){
 });
 
 router.post('/', function(req, res, next){
-  db.Orderitem.create(serialize(req.body.orderitem)).then( orderitem => {
+  db.Orderitem.create(req.body.orderitem).then( orderitem => {
     orderitem = JSON.parse(JSON.stringify(orderitem));
     res.body = {orderitem};
     next();
@@ -38,7 +37,7 @@ router.post('/', function(req, res, next){
 
 router.put('/:id', function(req, res, next){
   // const io = req.app.get('io');
-  db.Orderitem.update(serialize(req.body.orderitem), {where: {id: req.params.id}})
+  db.Orderitem.update(req.body.orderitem, {where: {id: req.params.id}})
   .then(() => {
     return db.Orderitem.findById(req.params.id);
   }).then(orderitem => {

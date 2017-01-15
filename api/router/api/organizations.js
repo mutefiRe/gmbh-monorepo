@@ -2,7 +2,6 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/organization');
 
 router.get('/:id', function(req, res){
   db.Organization.find({where: {id: req.params.id}}).then(organization => {
@@ -34,7 +33,7 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
-  db.Organization.create(serialize(req.body.organization)).then(organization => {
+  db.Organization.create(req.body.organization).then(organization => {
     res.send({organization});
     io.sockets.emit("update", {organization});
   }).catch(error => {
@@ -57,7 +56,7 @@ router.put('/:id', function(req, res){
       });
       return;
     }
-    organization.update(serialize(req.body.organization)).then( data => {
+    organization.update(req.body.organization).then( data => {
       res.send({organization: data});
       io.sockets.emit("update", {organization: data});
     }).catch(error => {

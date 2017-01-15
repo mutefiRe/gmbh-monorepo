@@ -2,13 +2,11 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/category');
 
 router.get('/:id', function(req, res, next){
   db.Category.find({where: {id: req.params.id}, include: [{model: db.Item}]}).then(category => {
     category   = JSON.parse(JSON.stringify(category));
-    res.body   = {category};
-    next();
+    res.send({category});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -21,7 +19,7 @@ router.get('/:id', function(req, res, next){
 router.get('/', function(req, res, next) {
   db.Category.findAll({include: [{model: db.Item}]}).then(categories => {
     categories = JSON.parse(JSON.stringify(categories));
-    res.body   = {categories};
+    res.send({categories});
     next();
   }).catch(error => {
     res.status(400).send({
@@ -33,7 +31,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next){
-  db.Category.create(serialize(req.body.category)).then(category => {
+  db.Category.create(req.body.category).then(category => {
     category   = JSON.parse(JSON.stringify(category));
     res.body   = {category};
     res.socket = "update";
@@ -51,7 +49,7 @@ router.put('/:id', function(req, res, next){
   db.Category.find({where: {id: req.params.id}})
   .then(category => {
     if (category === null) throw new "category not found";
-    return category.update(serialize(req.body.category));
+    return category.update(req.body.category);
   }).then(category => {
     category   = JSON.parse(JSON.stringify(category));
     res.body   = {category};

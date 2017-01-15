@@ -2,8 +2,6 @@
 
 const router             = require('express').Router();
 const db                 = require('../../models');
-const serialize          = require('../../serializers/order');
-const serializeOrderitem = require('../../serializers/orderitem');
 
 router.get('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}, include: [{model: db.Orderitem}]}).then(order => {
@@ -40,16 +38,15 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-  const requestOrder = serialize(req.body.order);
+  const requestOrder = req.body.order;
   const orderitems   = requestOrder.orderitems;
   let   orderId      = null;
   db.Order.create(requestOrder)
-  .then( data => {
+  .then( order => {
     orderitems.map(x => {
-      x.orderId = data.id;
-      x.itemId  = x.item;
+      x.orderId = order.id;
     });
-    orderId = data.id;
+    orderId = order.id;
     return db.Orderitem.bulkCreate(orderitems);
   })
   .then(() => {
@@ -58,8 +55,8 @@ router.post('/', function(req, res){
   .then(data => {
     const order = JSON.parse(JSON.stringify(data));
 
-    mapOrderItems(order);
-    mapOrderRelations(order);
+   // mapOrderItems(order);
+   // mapOrderRelations(order);
 
     res.send({order});
   }).catch(error => {
@@ -72,13 +69,13 @@ router.post('/', function(req, res){
 });
 
 router.put('/:id', function(req, res){
-  const requestOrder = serialize(req.body.order);
+  const requestOrder = req.body.order;
   db.Order.findById(req.params.id).then(order => {
-    return order.update(serialize(req.body.order));
+    return order.update(req.body.order);
   }).then(() => {
     const promises = [];
     for(const orderitem of requestOrder.orderitems){
-      const promise = db.Orderitem.update(serializeOrderitem(orderitem), {where: {id: orderitem.id}});
+      const promise = db.Orderitem.update(orderitem, {where: {id: orderitem.id}});
 
       promises.push(promise);
     }

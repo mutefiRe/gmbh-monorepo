@@ -11,6 +11,7 @@ function finalizer(req, res){
 module.exports = finalizer;
 
 function mapIds(res){
+  return res.body;
   const body = res.body;
   const firstKey = Object.keys(body)[0];
   const first = body[firstKey];
@@ -19,7 +20,6 @@ function mapIds(res){
   } else {
     mapKeys(first);
   }
-  return body;
 }
 
 function flatten(a){

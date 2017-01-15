@@ -2,7 +2,6 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/user');
 
 router.get('/:id', function(req, res) {
   db.User.find({where: {id: req.params.id}, include: [{model: db.Area}]}).then(user => {
@@ -30,7 +29,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
   const io = req.app.get('io');
-  db.User.create(serialize(req.body.user)).then(user => {
+  db.User.create(req.body.user).then(user => {
     res.send({user});
     io.sockets.emit("update", {user});
   }).catch(error => {
@@ -46,7 +45,7 @@ router.put('/:id', function(req, res) {
   const io = req.app.get('io');
   db.User.find({where: {id: req.params.id}}).then(user => {
     if (user === null) throw new Error('user not found');
-    return user.update(serialize(req.body.user));
+    return user.update(req.body.user);
   }).then(user => {
     res.send({user});
     io.sockets.emit("update", {user});

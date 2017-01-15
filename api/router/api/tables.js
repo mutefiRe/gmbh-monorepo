@@ -3,7 +3,6 @@
 const express   = require('express');
 const router    = express.Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/table');
 
 router.get('/:id', function(req, res, next){
   db.Table.find({where: {id: req.params.id}}).then(table => {
@@ -34,7 +33,7 @@ router.get('/', function(req, res, next){
 });
 
 router.post('/', function(req, res, next){
-  db.Table.create(serialize(req.body.table)).then(table => {
+  db.Table.create(req.body.table).then(table => {
     table = JSON.parse(JSON.stringify(table));
     res.body    = {table};
     res.socket  = "update";
@@ -51,7 +50,7 @@ router.post('/', function(req, res, next){
 router.put('/:id', function(req, res, next){
   db.Table.find({where: {id: req.params.id}}).then(table => {
     if(table === null) throw new Error('table not found');
-    return table.update(serialize(req.body.table));
+    return table.update(req.body.table);
   }).then(table => {
     table = JSON.parse(JSON.stringify(table));
     res.body    = {table};

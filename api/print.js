@@ -41,12 +41,12 @@ class Print {
   deliveryNote(data) {
     const printers = {};
     for (const key in data.orderitems) {
-      const ord = data.orderitems[key];
-      const printer = ord.item.category.printer;
+      const orderitem = data.orderitems[key];
+      const printer = orderitem.item.category.printer;
       if (!printers[printer]) {
         printers[printer] = {};
       }
-      printers[printer][key] = ord;
+      printers[printer][key] = orderitem;
     }
 
     const order = data;

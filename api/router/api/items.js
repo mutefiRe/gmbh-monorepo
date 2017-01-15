@@ -2,7 +2,6 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/item');
 
 router.get('/:id', function(req, res, next){
   db.Item.find({where: {id: req.params.id}}).then(item => {
@@ -37,7 +36,7 @@ router.get('/', function(req, res, next){
 
 router.post('/', function(req, res, next){
 
-  db.Item.create(serialize(req.body.item)).then(item => {
+  db.Item.create(req.body.item).then(item => {
     item = JSON.parse(JSON.stringify(item));
     res.body = {item};
     res.socket = "update";
@@ -54,7 +53,7 @@ router.post('/', function(req, res, next){
 router.put('/:id', function(req, res, next){
   db.Item.find({where: {id: req.params.id}}).then(item => {
     if(item === null) throw new Error("item not found");
-    return item.update(serialize(req.body.item));
+    return item.update(req.body.item);
   }).then(item => {
     item       = JSON.parse(JSON.stringify(item));
     res.body   = {item};
