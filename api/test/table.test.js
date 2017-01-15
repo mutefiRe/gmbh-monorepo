@@ -33,7 +33,7 @@ describe('/table route', () => {
 
     describe('GET tables', () => {
       const expectedResponse = {
-        "tables": [{id:1, name: "test1", x: 1, y: 1, area: 1, temporary: false}, {id: 2, name: "test2", x: 2, y: 2, area: 1, temporary: false}]
+        "tables": [{id:1, name: "test1", x: 1, y: 1, area: 1, custom: false}, {id: 2, name: "test2", x: 2, y: 2, area: 1, custom: false}]
       };
 
       it('should get one table', () => {
@@ -60,11 +60,11 @@ describe('/table route', () => {
     describe('POST table', () => {
       const requestBody = {
         table: {
-          name:      "newTable",
-          area:      1,
-          x:         3,
-          y:         3,
-          temporary: null
+          name: "newTable",
+          area: 1,
+          x:    3,
+          y:    3,
+          custom: false
         }
       };
 
