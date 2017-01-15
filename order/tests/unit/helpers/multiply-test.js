@@ -11,7 +11,7 @@ import {
 describe('MultiplyHelper', function() {
   // Replace this with your real tests.
   it('works', function() {
-    let result = multiply(42);
+    let result = multiply([1,2]);
     expect(result).to.be.ok;
   });
 });
