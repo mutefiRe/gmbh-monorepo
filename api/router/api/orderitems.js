@@ -13,19 +13,15 @@ router.get('/:id', function(req, res){
   });
 });
 
-router.get('/', function(req, res, next){
+router.get('/', function(req, res){
   db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(orderitems => {
-    orderitems = JSON.parse(JSON.stringify(orderitems));
-    res.body = {orderitems};
-    next();
+    res.send(orderitems);
   });
 });
 
-router.post('/', function(req, res, next){
+router.post('/', function(req, res){
   db.Orderitem.create(req.body.orderitem).then( orderitem => {
-    orderitem = JSON.parse(JSON.stringify(orderitem));
-    res.body = {orderitem};
-    next();
+    res.send({orderitem});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -35,15 +31,13 @@ router.post('/', function(req, res, next){
   });
 });
 
-router.put('/:id', function(req, res, next){
+router.put('/:id', function(req, res){
   // const io = req.app.get('io');
   db.Orderitem.update(req.body.orderitem, {where: {id: req.params.id}})
   .then(() => {
     return db.Orderitem.findById(req.params.id);
   }).then(orderitem => {
-    orderitem = JSON.parse(JSON.stringify(orderitem));
-    res.body = {orderitem};
-    next();
+    res.send({orderitem});
   }).catch(error => {
     res.status(400).send({
       'errors': {

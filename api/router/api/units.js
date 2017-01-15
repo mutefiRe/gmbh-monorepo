@@ -3,11 +3,9 @@
 const router    = require('express').Router();
 const db        = require('../../models');
 
-router.get('/:id', function(req, res, next){
+router.get('/:id', function(req, res){
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
-    unit = JSON.parse(JSON.stringify(unit));
-    res.body = {unit};
-    next();
+    res.send({unit});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -17,11 +15,9 @@ router.get('/:id', function(req, res, next){
   });
 });
 
-router.get('/', function(req, res, next){
+router.get('/', function(req, res){
   db.Unit.findAll().then(units => {
-    units = JSON.parse(JSON.stringify(units));
-    res.body = {units};
-    next();
+    res.send({units});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -31,12 +27,10 @@ router.get('/', function(req, res, next){
   });
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res) {
   db.Unit.create(req.body.unit).then(unit => {
-    unit = JSON.parse(JSON.stringify(unit));
-    res.body = {unit};
-    res.socket = "update";
-    next();
+    res.send({unit});
+    io.sockets.emit("update", {unit});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -46,15 +40,13 @@ router.post('/', function(req, res, next) {
   });
 });
 
-router.put('/:id', function(req, res, next){
+router.put('/:id', function(req, res){
   db.Unit.find({where: {id: req.params.id}}).then(unit => {
     if (unit === null) throw new Error('unit not found');
     return unit.update(req.body.unit);
   }).then(unit => {
-    unit = JSON.parse(JSON.stringify(unit));
-    res.body = {unit};
-    res.socket = "update";
-    next();
+    res.send({unit});
+    io.sockets.emit("update", {unit});
   }).catch(error => {
     res.status(400).send({
       'errors': {

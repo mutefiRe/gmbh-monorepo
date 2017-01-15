@@ -33,9 +33,9 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
   const io = req.app.get('io');
-  db.Setting.create(req.body.setting).then( data => {
-    res.send({setting: data});
-    io.sockets.emit("update", {setting: data});
+  db.Setting.create(req.body.setting).then(setting => {
+    res.send({setting});
+    io.sockets.emit("update", {setting});
   }).catch(err => {
     res.status(400).send({
       'errors': {

@@ -75,17 +75,17 @@ class Print {
     printData.push(ENTER);
     printData.push(deliveryNoteHeader(), ENTER);
 
-    for (const item in order.orderitems) {
-      const ord = order.orderitems[item];
-      const extra = ord.extras;
-      const amount = ord.cnt;
-      let orderItem = ord.item.name;
+    for (const key in order.orderitems) {
+      const orderitem = order.orderitems[key];
+      const extra = orderitem.extras;
+      const amount = orderitem.count;
+      let orderItemString = orderitem.item.name;
 
-      if(ord.item.category.showAmount) {
-        orderItem = `${orderItem} ${showAmount(ord.item.amount)}${ord.item.unit.name}`;
+      if(orderitem.item.category.showAmount) {
+        orderItemString = `${orderItemString} ${showAmount(orderitem.item.amount)}${orderitem.item.unit.name}`;
       }
 
-      printData.push(deliveryNoteLine(amount, orderItem, extra));
+      printData.push(deliveryNoteLine(amount, orderItemString, extra));
       printData.push(ENTER);
     }
 
@@ -106,21 +106,21 @@ class Print {
 
     printData.push(ENTER);
     printData.push(billHeader(), ENTER);
-    for (const item in order.orderitems) {
-      const ord = order.orderitems[item];
-      let price = ord.item.price;
-      const amount = ord.cnt;
+    for (const key in order.orderitems) {
+      const orderitem = order.orderitems[key];
+      let price = orderitem.item.price;
+      const amount = orderitem.count;
       const sum = (price * amount).toFixed(2);
-      let orderItem = ord.item.name;
+      let orderItemString = orderitem.item.name;
 
       // workaround for sequelize/postgres. price and other decimal are of type string
       price = (price * 1).toFixed(2);
 
-      if(ord.item.category.showAmount) {
-        orderItem = `${orderItem} ${showAmount(ord.item.amount)}${ord.item.unit.name}`;
+      if(orderitem.item.category.showAmount) {
+        orderItemString = `${orderItemString} ${showAmount(orderitem.item.amount)}${orderitem.item.unit.name}`;
       }
 
-      printData.push(billLine(amount, orderItem, price, sum), ENTER);
+      printData.push(billLine(amount, orderItemString, price, sum), ENTER);
     }
 
     printData.push(ENTER);
@@ -133,9 +133,9 @@ class Print {
   }
 
   singleTokenCoin(printer, data) {
-    let orderItem = data.item.name.toUpperCase().substr(0, 46);
+    let orderItemString = data.item.name.toUpperCase().substr(0, 46);
     if(data.item.category.showAmount) {
-      orderItem = `${orderItem.toUpperCase().substr(0, 35)} ${showAmount(data.item.amount)}${data.item.unit.name}`;
+      orderItemString = `${orderItemString.toUpperCase().substr(0, 35)} ${showAmount(data.item.amount)}${data.item.unit.name}`;
     }
 
     const printData = [];
@@ -144,7 +144,7 @@ class Print {
     printData.push(rightPadding('WERTMARKE FÜR', 24), leftPadding(formatDate(data.createdAt), 24), ENTER);
 
     printData.push(ENTER, ENTER, ENTER);
-    printData.push(TXT_2HEIGHT, centerPadding('1x ' + orderItem, 48), TXT_NORMAL);
+    printData.push(TXT_2HEIGHT, centerPadding('1x ' + orderItemString, 48), TXT_NORMAL);
     printData.push(ENTER, ENTER, ENTER);
     printData.push(centerPadding('Oberländer Bataillons-Schützenfest', 48));
     printData.push(FEED, PAPER_PART_CUT);

@@ -7,8 +7,6 @@ router.get('/:id', function(req, res){
   db.Order.find({where: {id: req.params.id}, include: [{model: db.Orderitem}]}).then(order => {
 
     order = JSON.parse(JSON.stringify(order));
-    mapOrderItems(order);
-    mapOrderRelations(order);
     res.send({order});
   }).catch(error => {
     res.status(400).send({
@@ -22,10 +20,6 @@ router.get('/:id', function(req, res){
 router.get('/', function(req, res){
   db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem},{model: db.Table}]}).then(orders => {
     orders = JSON.parse(JSON.stringify(orders));
-    for(const order of orders){
-      mapOrderItems(order);
-      mapOrderRelations(order);
-    }
 
     res.send({orders});
   }).catch(error => {
@@ -55,9 +49,6 @@ router.post('/', function(req, res){
   .then(data => {
     const order = JSON.parse(JSON.stringify(data));
 
-   // mapOrderItems(order);
-   // mapOrderRelations(order);
-
     res.send({order});
   }).catch(error => {
     res.status(400).send({
@@ -76,18 +67,12 @@ router.put('/:id', function(req, res){
     const promises = [];
     for(const orderitem of requestOrder.orderitems){
       const promise = db.Orderitem.update(orderitem, {where: {id: orderitem.id}});
-
       promises.push(promise);
     }
     return Promise.all(promises);
   }).then(() => {
     return db.Order.findById(req.params.id, {include: [{model: db.Orderitem, include: [{model: db.Item}]}]});
-  }).then(data => {
-    const order = JSON.parse(JSON.stringify(data));
-
-    mapOrderItems(order);
-    mapOrderRelations(order);
-
+  }).then(order => {
     res.send({order});
   }).catch(error => {
     res.status(400).send({
@@ -113,20 +98,3 @@ router.delete('/:id', function(req, res){
 });
 
 module.exports = router;
-
-function mapOrderItems(order){
-  order.orderitems.map(x => {
-
-    x.item    = x.itemId;
-    x.order   = x.orderId;
-    x.itemId  = undefined;
-    x.orderId = undefined;
-  });
-}
-
-function mapOrderRelations(order){
-  order.table   = order.tableId;
-  order.user    = order.userId;
-  order.tableId = undefined;
-  order.userId  = undefined;
-}

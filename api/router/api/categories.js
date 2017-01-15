@@ -1,9 +1,9 @@
 'use strict';
 
-const router    = require('express').Router();
-const db        = require('../../models');
+const router = require('express').Router();
+const db     = require('../../models');
 
-router.get('/:id', function(req, res, next){
+router.get('/:id', function(req, res){
   db.Category.find({where: {id: req.params.id}, include: [{model: db.Item}]}).then(category => {
     category   = JSON.parse(JSON.stringify(category));
     res.send({category});
@@ -16,11 +16,10 @@ router.get('/:id', function(req, res, next){
   });
 });
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   db.Category.findAll({include: [{model: db.Item}]}).then(categories => {
     categories = JSON.parse(JSON.stringify(categories));
     res.send({categories});
-    next();
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -30,12 +29,11 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.post('/', function(req, res, next){
+router.post('/', function(req, res){
   db.Category.create(req.body.category).then(category => {
     category   = JSON.parse(JSON.stringify(category));
-    res.body   = {category};
-    res.socket = "update";
-    next();
+    res.send({category});
+    io.sockets.emit("update", {category});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -45,16 +43,15 @@ router.post('/', function(req, res, next){
   });
 });
 
-router.put('/:id', function(req, res, next){
+router.put('/:id', function(req, res){
   db.Category.find({where: {id: req.params.id}})
   .then(category => {
     if (category === null) throw new "category not found";
     return category.update(req.body.category);
   }).then(category => {
     category   = JSON.parse(JSON.stringify(category));
-    res.body   = {category};
-    res.socket = "update";
-    next();
+    res.send({category});
+    io.sockets.emit("update", {category});
   }).catch(error => {
     res.status(400).send({
       'errors': {
