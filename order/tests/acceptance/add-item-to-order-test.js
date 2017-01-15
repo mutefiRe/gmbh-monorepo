@@ -36,15 +36,12 @@ describe('Acceptance | add item to order', function() {
 
   it('can click on item', function() {
     loggedIn();
-
-    pauseTest();
     andThen(() => {
-      console.log(find("div.single-item"))
-
-      click("div.single-item");
       expect(currentURL()).to.equal('/order');
-      //console.log(find('.preview-list li:first'));
-      expect(find('.preview-list>li:first-child').text()).to.equal('blaah');
+      click("div.single-item:first-child");
+      andThen(() => {
+        expect(find('.preview-list>li:first-child').html()).to.equal('<div class="caption">1T</div>');
+      });
     });
   });
 });
