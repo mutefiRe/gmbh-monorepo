@@ -10,11 +10,13 @@ describe('Acceptance | add item to order', function() {
   beforeEach(function() {
     application = startApp();
 
+    const category = server.create('category');
+    const unit     = server.create('unit');
+    server.create('item', {category, unit});
+    server.createList('item', 10, {category, unit});
+
     server.create('user');
     server.create('area');
-    const category = server.create('category');
-    const unit = server.create('unit');
-    const item = server.createList('item', 10, {category, unit});
     server.create('setting');
     server.create('table');
     server.create('printer');
@@ -35,12 +37,13 @@ describe('Acceptance | add item to order', function() {
   it('can click on item', function() {
     loggedIn();
 
-
+    pauseTest();
     andThen(() => {
       console.log(find("div.single-item"))
-      click("div.single-item:first-child");
+
+      click("div.single-item");
       expect(currentURL()).to.equal('/order');
-      console.log(find('.preview-list li:first'));
+      //console.log(find('.preview-list li:first'));
       expect(find('.preview-list>li:first-child').text()).to.equal('blaah');
     });
   });

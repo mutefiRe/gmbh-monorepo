@@ -28,7 +28,14 @@ export default function() {
 
   this.namespace = '/api';    // make this `api`, for example, if your API is namespaced
 
-  this.get('/categories', 'categories');
+  this.get('/categories', ({categories}, request) => {
+    return categories.all();
+  });
+
+  this.get('/units', ({units}, request) => {
+    return units.all();
+  });
+
   this.get('/tables', 'tables');
   this.get('/areas', 'areas');
   this.get('/units', 'units');
@@ -40,7 +47,17 @@ export default function() {
   });
 
   this.get('items', ({ items }, request) => {
-    console.log(items.all())
-    return items.all();
+    // return items.all();
+    return {
+      items: [{
+        id: 1,
+        name: "test",
+        price: 5,
+        tax: 0.2,
+        amount: 0.5,
+        unitId:1,
+        categoryId: 1
+      }]
+    };
   });
 }

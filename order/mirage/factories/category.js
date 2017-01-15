@@ -5,7 +5,7 @@ export default Factory.extend({
     return `category ${i}`;
   },
   enabled() {
-    return faker.random.boolean();
+    return true;
   },
   description: 'Lorem ipsum dolor sit amet.',
   createdAt() {
@@ -18,6 +18,6 @@ export default Factory.extend({
     return faker.random.boolean();
   },
   icon() {
-    return faker.random.arrayElement(['drink-alc.svg', 'drink-anti.svg', 'food.svg']);
+    return faker.random.arrayElement(['drink-alc', 'drink-anti', 'food']);
   }
 });
