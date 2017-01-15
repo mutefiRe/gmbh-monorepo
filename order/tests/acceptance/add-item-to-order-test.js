@@ -40,7 +40,7 @@ describe('Acceptance | add item to order', function() {
       expect(currentURL()).to.equal('/order');
       click("div.single-item:first-child");
       andThen(() => {
-        expect(find('.preview-list>li:first-child').html()).to.equal('<div class="caption">1T</div>');
+        expect(find('.preview-list>li:first-child').html()).to.equal('<div class="caption">1I</div>');
       });
     });
   });

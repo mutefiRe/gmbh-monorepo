@@ -46,18 +46,5 @@ export default function() {
     return users.find(request.params.id);
   });
 
-  this.get('items', ({ items }, request) => {
-    // return items.all();
-    return {
-      items: [{
-        id: 1,
-        name: "test",
-        price: 5,
-        tax: 0.2,
-        amount: 0.5,
-        unitId:1,
-        categoryId: 1
-      }]
-    };
-  });
+  this.get('items', 'items');
 }
