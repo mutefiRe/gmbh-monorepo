@@ -56,23 +56,23 @@ describe('/item route', () => {
     describe('GET items', () => {
       const expectedResponse = {
         "items": [{
-          id:       1,
-          name:     "item1",
-          amount:   0.5,
-          price:    3.5,
-          tax:      0.1,
-          sort:   null,
-          category: 1,
-          unit:     1
+          id:         1,
+          name:       "item1",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.1,
+          sort:       null,
+          categoryId: 1,
+          unitId:     1
         }, {
-          id:       2,
-          name:     "item2",
-          amount:   0.5,
-          price:    3.5,
-          tax:      0.1,
-          sort:   null,
-          category: 1,
-          unit:     1
+          id:         2,
+          name:       "item2",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.1,
+          sort:       null,
+          categoryId: 1,
+          unitId:     1
         }]
       };
 
@@ -99,13 +99,13 @@ describe('/item route', () => {
     describe('POST item', () => {
       const requestBody = {
         item: {
-          name:     "newItem",
-          amount:   0.5,
-          price:    3.5,
-          tax:      0.1,
-          sort:   null,
-          category: 1,
-          unit:     1
+          name:       "newItem",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.1,
+          sort:       null,
+          categoryId: 1,
+          unitId:     1
         }
       };
 
@@ -128,26 +128,26 @@ describe('/item route', () => {
     describe('PUT item', () => {
       const requestBody = {
         item: {
-          name:     "changedItem",
-          amount:   0.5,
-          price:    3.5,
-          tax:      0.1,
-          sort:     null,
-          category: 1,
-          unit:     1
+          name:       "changedItem",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.1,
+          sort:       null,
+          categoryId: 1,
+          unitId:     1
         }
       };
 
       const expectedResponse = {
         item: {
-          id:       1,
-          name:     "changedItem",
-          amount:   0.5,
-          price:    3.5,
-          tax:      0.1,
-          sort:     null,
-          category: 1,
-          unit:     1
+          id:         1,
+          name:       "changedItem",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.1,
+          sort:       null,
+          categoryId: 1,
+          unitId:     1
         }
       };
 

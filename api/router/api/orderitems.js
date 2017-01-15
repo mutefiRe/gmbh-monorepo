@@ -2,7 +2,6 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/orderitem');
 
 /**
  * @apiDefine orderitemAttributes
@@ -53,6 +52,7 @@ router.get('/:id', function(req, res){
   });
 });
 
+
 /**
  * @api {get} api/orderitems Request all orderitems
  * @apiGroup Orderitem
@@ -68,11 +68,9 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res, next){
+router.get('/', function(req, res){
   db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(orderitems => {
-    orderitems = JSON.parse(JSON.stringify(orderitems));
-    res.body = {orderitems};
-    next();
+    res.send(orderitems);
   });
 });
 
@@ -88,11 +86,9 @@ router.get('/', function(req, res, next){
  * @apiPermission waiter
  */
 
-router.post('/', function(req, res, next){
-  db.Orderitem.create(serialize(req.body.orderitem)).then( orderitem => {
-    orderitem = JSON.parse(JSON.stringify(orderitem));
-    res.body = {orderitem};
-    next();
+router.post('/', function(req, res){
+  db.Orderitem.create(req.body.orderitem).then( orderitem => {
+    res.send({orderitem});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -115,15 +111,12 @@ router.post('/', function(req, res, next){
  * @apiPermission waiter
  */
 
-router.put('/:id', function(req, res, next){
-  // const io = req.app.get('io');
-  db.Orderitem.update(serialize(req.body.orderitem), {where: {id: req.params.id}})
+router.put('/:id', function(req, res){
+  db.Orderitem.update(req.body.orderitem, {where: {id: req.params.id}})
   .then(() => {
     return db.Orderitem.findById(req.params.id);
   }).then(orderitem => {
-    orderitem = JSON.parse(JSON.stringify(orderitem));
-    res.body = {orderitem};
-    next();
+    res.send({orderitem});
   }).catch(error => {
     res.status(400).send({
       'errors': {

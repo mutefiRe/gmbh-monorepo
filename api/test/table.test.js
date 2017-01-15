@@ -33,7 +33,7 @@ describe('/table route', () => {
 
     describe('GET tables', () => {
       const expectedResponse = {
-        "tables": [{id:1, name: "test1", x: 1, y: 1, area: 1, custom: false}, {id: 2, name: "test2", x: 2, y: 2, area: 1, custom: false}]
+        "tables": [{id:1, name: "test1", x: 1, y: 1, areaId: 1, custom: false}, {id: 2, name: "test2", x: 2, y: 2, areaId: 1, custom: false}]
       };
 
       it('should get one table', () => {
@@ -61,9 +61,9 @@ describe('/table route', () => {
       const requestBody = {
         table: {
           name: "newTable",
-          area: 1,
-          x:    3,
-          y:    3,
+          areaId: 1,
+          x:      3,
+          y:      3,
           custom: false
         }
       };
@@ -89,7 +89,7 @@ describe('/table route', () => {
 
     describe('PUT table', () => {
       const requestBody = {
-        table: {name: "changedTable", x: 4, y: 4, area: 1}
+        table: {name: "changedTable", x: 4, y: 4, areaId: 1}
       };
 
       it('table should have changed', () => {

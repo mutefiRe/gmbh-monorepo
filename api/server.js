@@ -9,7 +9,6 @@ const db         = require('./models/index');
 const bodyParser = require('body-parser');
 const config     = require('./config/config');
 const jwtSocket  = require('socketio-jwt');
-const finalizer  = require('./lib/finalizer');
 
 app.set("io", io);
 app.set("server", server);
@@ -50,8 +49,8 @@ app.use('/teapot', teapot);
 
 app.use('/data', data);
 
-app.use('/api', finalizer);
 app.use('/docs', express.static('docs'))
+
 /**
  * @api {get} check/ Health Check
  * @apiName HealthCheck
@@ -59,10 +58,10 @@ app.use('/docs', express.static('docs'))
 
  * @apiSuccess {String} OK OK
  */
+
 app.get('/check', function(req, res){
   res.status(200).send("OK")
 });
-
 
 // Socket handling
 io.on('connection', function(socket){

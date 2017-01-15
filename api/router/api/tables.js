@@ -3,7 +3,6 @@
 const express   = require('express');
 const router    = express.Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/table');
 
 /**
  * @apiDefine tableAttributes
@@ -12,6 +11,7 @@ const serialize = require('../../serializers/table');
  * @apiSuccess {String}  tables.name
  * @apiSuccess {Number}  tables.x
  * @apiSuccess {Number}  tables.y
+ * @apiSuccess {Boolean} tables.custom
  */
 
 /**
@@ -21,6 +21,7 @@ const serialize = require('../../serializers/table');
  * @apiParam {String}  tables.name
  * @apiParam {Number}  tables.x
  * @apiParam {Number}  tables.y
+ * @apiParam {Boolean} tables.custom
  */
 
 /**
@@ -38,11 +39,9 @@ const serialize = require('../../serializers/table');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res, next){
+router.get('/:id', function(req, res){
   db.Table.find({where: {id: req.params.id}}).then(table => {
-    table = JSON.parse(JSON.stringify(table));
-    res.body = {table};
-    next();
+    res.send({table});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -67,11 +66,9 @@ router.get('/:id', function(req, res, next){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res, next){
-  db.Table.findAll({include: [{model: db.Area}]}).then(tables => {
-    tables = JSON.parse(JSON.stringify(tables));
-    res.body = {tables};
-    next();
+router.get('/', function(req, res){
+  db.Table.findAll().then(tables => {
+    res.send({tables});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -94,12 +91,11 @@ router.get('/', function(req, res, next){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res, next){
-  db.Table.create(serialize(req.body.table)).then(table => {
-    table = JSON.parse(JSON.stringify(table));
-    res.body    = {table};
-    res.socket  = "update";
-    next();
+router.post('/', function(req, res){
+  const io = req.app.get('io');
+  db.Table.create(req.body.table).then(table => {
+    io.sockets.emit("update", {table});
+    res.send({table});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -124,15 +120,14 @@ router.post('/', function(req, res, next){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res, next){
+router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Table.find({where: {id: req.params.id}}).then(table => {
     if(table === null) throw new Error('table not found');
-    return table.update(serialize(req.body.table));
+    return table.update(req.body.table);
   }).then(table => {
-    table = JSON.parse(JSON.stringify(table));
-    res.body    = {table};
-    res.socket  = "update";
-    next();
+    res.send({table});
+    io.sockets.emit("update", {table});
   }).catch(error => {
     res.status(400).send({
       'errors': {

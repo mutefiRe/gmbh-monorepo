@@ -2,7 +2,6 @@
 
 const router    = require('express').Router();
 const db        = require('../../models');
-const serialize = require('../../serializers/item');
 
 /**
  * @apiDefine itemAttributes
@@ -43,13 +42,11 @@ const serialize = require('../../serializers/item');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res, next){
+router.get('/:id', function(req, res){
   db.Item.find({where: {id: req.params.id}}).then(item => {
     if(item === null) throw new Error("item not found");
     else {
-      item     = JSON.parse(JSON.stringify(item));
-      res.body = {item};
-      next();
+      res.send({item});
     }
   }).catch(error => {
     res.status(400).send({
@@ -75,11 +72,9 @@ router.get('/:id', function(req, res, next){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res, next){
+router.get('/', function(req, res){
   db.Item.findAll().then(items => {
-    items    = JSON.parse(JSON.stringify(items));
-    res.body = {items};
-    next();
+    res.send({items});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -102,13 +97,11 @@ router.get('/', function(req, res, next){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res, next){
-
-  db.Item.create(serialize(req.body.item)).then(item => {
-    item = JSON.parse(JSON.stringify(item));
-    res.body = {item};
-    res.socket = "update";
-    next();
+router.post('/', function(req, res){
+  const io = req.app.get('io');
+  db.Item.create(req.body.item).then(item => {
+    res.send({item});
+    io.sockets.emit("update", {item});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -133,15 +126,14 @@ router.post('/', function(req, res, next){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res, next){
+router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Item.find({where: {id: req.params.id}}).then(item => {
     if(item === null) throw new Error("item not found");
-    return item.update(serialize(req.body.item));
+    return item.update(req.body.item);
   }).then(item => {
-    item       = JSON.parse(JSON.stringify(item));
-    res.body   = {item};
-    res.socket = "update";
-    next();
+    res.send({item});
+    io.sockets.emit("update", {item});
   }).catch(error => {
     res.status(400).send({
       'errors': {

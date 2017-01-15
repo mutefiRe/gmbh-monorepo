@@ -85,8 +85,8 @@ describe('/order route', () => {
         "orders": [{
           id:          1,
           totalAmount: 10.5,
-          table:       1,
-          user:        1,
+          tableId:       1,
+          userId:        1,
           orderitems: [{
             id:        1,
             extras:    "extras",
@@ -94,8 +94,8 @@ describe('/order route', () => {
             countFree: 0,
             countPaid: 0,
             price:     3.5,
-            item:      1,
-            order:     1
+            itemId:      1,
+            orderId:     1
           }]
         }, {
           id:          2,
@@ -109,8 +109,8 @@ describe('/order route', () => {
             countFree: 0,
             countPaid: 0,
             price:     3.5,
-            item:      1,
-            order:     1
+            itemId:      1,
+            orderId:     1
           }]
         }]
       };
@@ -124,8 +124,8 @@ describe('/order route', () => {
           removeTimestamps(res.body.order.orderitems);
           expect(removeTimestamps(res.body.order.orderitems[0])).to.deep.equal(expectedResponse.orders[0].orderitems[0]);
           expect(res.body.order.id).to.equal(1);
-          expect(res.body.order.user).to.equal(1);
-          expect(res.body.order.table).to.equal(1);
+          expect(res.body.order.userId).to.equal(1);
+          expect(res.body.order.tableId).to.equal(1);
         });
       });
 
@@ -136,8 +136,8 @@ describe('/order route', () => {
         .then(res => {
           expect(removeTimestamps(res.body.orders[0].orderitems)).to.deep.equal(expectedResponse.orders[0].orderitems);
           expect(res.body.orders[0].id).to.equal(1);
-          expect(res.body.orders[0].user).to.equal(1);
-          expect(res.body.orders[0].table).to.equal(1);
+          expect(res.body.orders[0].userId).to.equal(1);
+          expect(res.body.orders[0].tableId).to.equal(1);
         });
       });
     });
@@ -146,16 +146,16 @@ describe('/order route', () => {
       const requestBody = {
         order: {
           totalAmount: 15.0,
-          table:       1,
-          user:        1,
+          tableId:     1,
+          userId:      1,
           orderitems:  [{
             extras:    null,
             count:     3,
             countFree: 0,
             countPaid: 1,
             price:     3.5,
-            item:      1,
-            order:     1
+            itemId:    1,
+            orderId:   1
           }]
         }
       };
@@ -164,8 +164,8 @@ describe('/order route', () => {
         order: {
           id:          3,
           totalAmount: 15.0,
-          table:       1,
-          user:        1,
+          tableId:     1,
+          userId:      1,
           orderitems: [{
             id:        3,
             extras:    null,
@@ -173,8 +173,8 @@ describe('/order route', () => {
             countFree: 0,
             countPaid: 1,
             price:     3.5,
-            item:      1,
-            order:     3
+            itemId:    1,
+            orderId:   3
           }]
         }
       };
@@ -201,8 +201,8 @@ describe('/order route', () => {
         order: {
           id:          1,
           totalAmount: 0.0,
-          table:       1,
-          user:        1,
+          tableId:     1,
+          userId:      1,
           orderitems: [{
             id:        1,
             extras:    null,
@@ -210,8 +210,8 @@ describe('/order route', () => {
             countFree: 0,
             countPaid: 3,
             price:     3.5,
-            item:      1,
-            order:     1
+            itemId:    1,
+            orderId:   1
           }]
         }
       };
@@ -220,8 +220,8 @@ describe('/order route', () => {
         order: {
           id:          1,
           totalAmount: 0.0,
-          table:       1,
-          user:        1,
+          tableId:     1,
+          userId:      1,
           orderitems: [{
             id:        1,
             extras:    null,
@@ -229,8 +229,8 @@ describe('/order route', () => {
             countFree: 0,
             countPaid: 3,
             price:     3.5,
-            item:      1,
-            order:     1
+            itemId:    1,
+            orderId:   1
           }]
         }
       };

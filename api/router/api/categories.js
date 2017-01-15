@@ -1,8 +1,7 @@
 'use strict';
 
-const router    = require('express').Router();
-const db        = require('../../models');
-const serialize = require('../../serializers/category');
+const router = require('express').Router();
+const db     = require('../../models');
 
 /**
  * @apiDefine categoryAttributes
@@ -44,11 +43,10 @@ const serialize = require('../../serializers/category');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res, next){
-  db.Category.find({where: {id: req.params.id}, include: [{model: db.Item}]}).then(category => {
-    category   = JSON.parse(JSON.stringify(category));
-    res.body   = {category};
-    next();
+router.get('/:id', function(req, res){
+  db.Category.find({where: {id: req.params.id}}).then(category => {
+    res.send({category});
+
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -73,11 +71,9 @@ router.get('/:id', function(req, res, next){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res, next) {
-  db.Category.findAll({include: [{model: db.Item}]}).then(categories => {
-    categories = JSON.parse(JSON.stringify(categories));
-    res.body   = {categories};
-    next();
+router.get('/', function(req, res) {
+  db.Category.findAll().then(categories => {
+    res.send({categories});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -101,12 +97,11 @@ router.get('/', function(req, res, next) {
  * @apiPermission admin
  */
 
-router.post('/', function(req, res, next){
-  db.Category.create(serialize(req.body.category)).then(category => {
-    category   = JSON.parse(JSON.stringify(category));
-    res.body   = {category};
-    res.socket = "update";
-    next();
+router.post('/', function(req, res){
+  const io = req.app.get('io');
+  db.Category.create(req.body.category).then(category => {
+    res.send({category});
+    io.sockets.emit("update", {category});
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -130,16 +125,15 @@ router.post('/', function(req, res, next){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res, next){
+router.put('/:id', function(req, res){
+  const io = req.app.get('io');
   db.Category.find({where: {id: req.params.id}})
   .then(category => {
     if (category === null) throw new "category not found";
-    return category.update(serialize(req.body.category));
+    return category.update(req.body.category);
   }).then(category => {
-    category   = JSON.parse(JSON.stringify(category));
-    res.body   = {category};
-    res.socket = "update";
-    next();
+    res.send({category});
+    io.sockets.emit("update", {category});
   }).catch(error => {
     res.status(400).send({
       'errors': {
