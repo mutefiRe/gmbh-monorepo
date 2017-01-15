@@ -4,7 +4,7 @@
 ## MMP2b
 
 ### Setup
-
+[Setup Documentation](https://gitlab.com/mossss/gmbh-order/wikis/setup-(node,-bower,-mysql))
 #### Database
 Install MySQL on your platfrom
 We need to set up a Production, Development and Test Database
@@ -33,6 +33,25 @@ Testing our API Funktionality is easy with Postman.
 Check it out: [get Postman](http://www.getpostman.com/)
 
 We have prepared the Requests for you: [shared Collection](https://www.getpostman.com/collections/e5f341bd489ee40b27df)
+
+### API Documentation
+We use apiDocs for documentation purpose.
+You can find the documentation under the docs folder or just type /docs on running server.
+
+#### Generation of documentation on changes
+When we change something on the api, we have to update the docs also.
+
+First you have to install
+```
+npm install -g apidoc
+```
+
+Just run in root.
+
+```
+apidocs -i . -o docs -e nodemodules
+```
+
 
 ### Contributors
 - [Alexander Gabriel](https://www.github.com/gabsi20)

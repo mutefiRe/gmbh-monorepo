@@ -6,6 +6,12 @@ const config         = require('../config/config');
 const fs             = require("fs");
 const normalizedPath = require("path").join(__dirname, "api");
 
+/**
+ * @apiDefine token
+ * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
+ * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
+ */
+
 router.use(function(req, res, next) {
 
   const token = req.body.token || req.query.token || req.headers['x-access-token'];

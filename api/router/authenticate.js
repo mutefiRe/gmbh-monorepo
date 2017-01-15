@@ -6,6 +6,15 @@ const db      = require('../models/index');
 const jwt     = require('jsonwebtoken');
 const config  = require('../config/config.js');
 
+/**
+ * @api {post} authenticate/ Get token for user
+ * @apiGroup Authentication
+ * @apiName Authentication
+ * @apiParam {String} username
+ * @apiParam {String} password
+ * @apiSuccess {String} token JSONWebToken
+ */
+
 router.post('/', function(req, res){
   db.User.findOne({where: {
     username: req.body.username

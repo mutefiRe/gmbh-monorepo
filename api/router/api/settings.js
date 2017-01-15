@@ -3,6 +3,39 @@
 const router = require('express').Router();
 const db     = require('../../models');
 
+/**
+ * @apiDefine settingAttributes
+ * @apiSuccess {Number}  settings.id Autoincremented Identifier of the setting
+ * @apiSuccess {String}  settings.name
+ * @apiSuccess {Date}  settings.beginDate
+ * @apiSuccess {Date}  settings.endDate
+ * @apiSuccess {Boolean}  settings.instantPay
+ */
+
+/**
+ * @apiDefine settingParams
+ * @apiParam {Number}  settings.id
+ * @apiParam {String}  settings.name
+ * @apiParam {String}  settings.beginDate
+ * @apiParam {Number}  settings.endDate
+ * @apiParam {Number}  settings.instantPay
+ */
+
+/**
+ * @api {get} api/settings/:id Request Setting
+ * @apiGroup Setting
+ * @apiName GetSetting
+ * @apiParam {Number} id Settings unique ID.
+
+  *@apiUse token
+
+ * @apiSuccess {Object} settings Setting
+ * @apiUse settingAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.get('/:id', function(req, res){
   db.Setting.find({where: {id: req.params.id}}).then(setting => {
     if(setting === null){
@@ -16,6 +49,21 @@ router.get('/:id', function(req, res){
     res.send({setting});
   });
 });
+
+/**
+ * @api {get} api/settings Request all settings
+ * @apiGroup Setting
+ * @apiName Getsettings
+
+ * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
+ * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
+
+ * @apiSuccess {Object[]} settings Setting
+ * @apiUse settingAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.get('/', function(req, res){
   db.Setting.findAll().then(setting => {
@@ -31,6 +79,19 @@ router.get('/', function(req, res){
   });
 });
 
+/**
+ * @api {post} api/settings/ Create one setting
+ * @apiGroup Setting
+ * @apiName PostSetting
+ * @apiUse token
+ * @apiParam {Object} settings
+ * @apiUse settingParams
+ * @apiUse settingAttributes
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
 router.post('/', function(req, res){
   const io = req.app.get('io');
   db.Setting.create(req.body.setting).then( data => {
@@ -44,6 +105,21 @@ router.post('/', function(req, res){
     });
   });
 });
+
+/**
+ * @api {put} api/settings/:id Update one setting
+ * @apiGroup Setting
+ * @apiName UpdateSetting
+ * @apiUse token
+ * @apiParam {Object} settings
+ * @apiParam {Number} id
+ * @apiUse settingParams
+ * @apiSuccess {Object} settings
+ * @apiUse settingAttributes
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
 
 router.put('/:id', function(req, res){
   const io = req.app.get('io');
@@ -68,6 +144,17 @@ router.put('/:id', function(req, res){
     });
   });
 });
+
+/**
+ * @api {delete} api/settings/:id Delete one setting
+ * @apiGroup Setting
+ * @apiName DeleteSetting
+ * @apiParam {number} id Id
+ *
+ * @apiPermission waiter
+ * @apiPermission admin
+ * @apiSuccess {object} object empty Object {}
+ */
 
 router.delete('/:id', function(req, res){
   db.Setting.find({where: {id: req.params.id}}).then(setting => {
