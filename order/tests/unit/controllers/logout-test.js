@@ -15,7 +15,9 @@ describeModule(
   function() {
     // Replace this with your real tests.
     it('exists', function() {
-      let controller = this.subject();
+      let controller = this.subject({
+        init() {}
+      });
       expect(controller).to.be.ok;
     });
   }
