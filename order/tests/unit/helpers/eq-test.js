@@ -11,7 +11,7 @@ import {
 describe('EqHelper', function() {
   // Replace this with your real tests.
   it('works', function() {
-    let result = eq(42);
-    expect(true).to.be.ok;
+    let result = eq(1, 1);
+    expect(result).to.be.ok;
   });
 });

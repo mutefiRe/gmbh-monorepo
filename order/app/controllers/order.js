@@ -29,7 +29,6 @@ export default Ember.Controller.extend({
   triggerOrderListSwipe: true,
   init() {
     const id = this.get('payload').getId();
-
     this.store.find('user', id).then( user => {
       this.set('user', user);
       const order = this.store.createRecord('order', {});
