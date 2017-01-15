@@ -2,10 +2,7 @@
 ## MMP2b
 
 ### Setup
-```
-npm install
-bower install
-```
+[Setup Documentation](https://gitlab.com/mossss/gmbh-order/wikis/setup-(node,-bower,-mysql))
 ### Our Server Repo
 [gmbh-api](https://gitlab.com/mossss/gmbh-api)
 
