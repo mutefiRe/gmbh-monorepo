@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     name:      {type: DataTypes.STRING,  allowNull: false, unique: false},
     x:         {type: DataTypes.INTEGER, allowNull: true,  unique: false},
     y:         {type: DataTypes.INTEGER, allowNull: true,  unique: false},
-    temporary: {type: DataTypes.BOOLEAN, allowNull: true,  unique: false}
+    temporary: {type: DataTypes.BOOLEAN, allowNull: true,  unique: false, defaultValue: false}
   }, {
     classMethods: {
       associate(models) {
