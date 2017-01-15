@@ -26,10 +26,12 @@ const billprinter = require('../config/config').billprinter;
 
 router.post('/', function(req, res){
   db.Order.findById(req.body.print.order,
-    {include: [{model: db.Orderitem, include: [{model: db.Item,  include: [{model: db.Unit}, {model: db.Category}]}]},
-    {model: db.Table, include: [{model: db.Area}]},
-    {model: db.User}]
-  }).then(data => {
+    {
+      include: [{model: db.Orderitem, include: [{model: db.Item,  include: [{model: db.Unit}, {model: db.Category}]}]},
+      {model: db.Table, include: [{model: db.Area}]},
+      {model: db.User}]
+    }
+  ).then(data => {
     const isBill = req.body.print.isBill;
     const orders = JSON.parse(JSON.stringify(data));
     const userPrinter = data.user.dataValues.printer;
