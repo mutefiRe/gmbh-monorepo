@@ -6,7 +6,7 @@ describeModel(
   'Unit | Model | table',
   {
     // Specify the other units that are required for this test.
-      needs: ['model:user', 'model:area']
+      needs: ['model:area', 'model:order']
   },
   function() {
     // Replace this with your real tests.
