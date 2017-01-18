@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { describeModule, it } from 'ember-mocha';
+import { it, describe } from 'mocha';
+import { setupTest } from 'ember-mocha';
 
 const sessionStub = Ember.Service.extend({
   getId(){
@@ -7,20 +8,19 @@ const sessionStub = Ember.Service.extend({
   }
 });
 
-describeModule('controller:order', 'Unit | Controller | order',
-  {
+describe('Unit | Controller | order', function() {
+  setupTest('controller:order', {
     // Specify the other units that are required for this test.
      needs: ['model:user']
-  },
-  function() {
-    beforeEach(function() {
-      this.register('service:session-payload', sessionStub);
-      this.inject.service('session-payload')
-    });
-    // Replace this with your real tests.
-    it('exists', function() {
-      let controller = this.subject();
-      expect(controller).to.be.ok;
-    });
-  }
-);
+  });
+
+  beforeEach(function() {
+    this.register('service:session-payload', sessionStub);
+    this.inject.service('session-payload')
+  });
+  // Replace this with your real tests.
+  it('exists', function() {
+    let controller = this.subject();
+    expect(controller).to.be.ok;
+  });
+});

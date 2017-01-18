@@ -1,30 +1,25 @@
 /* jshint expr:true */
 import { expect } from 'chai';
-import {
-  describeComponent,
-  it
-} from 'ember-mocha';
+import { it, describe } from 'mocha';
+import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describeComponent(
-  'show-loading-modal',
-  'Integration: ShowLoadingModalComponent',
-  {
+describe('Integration: ShowLoadingModalComponent', function() {
+  setupComponentTest('show-loading-modal', {
     integration: true
-  },
-  function() {
-    it('renders', function() {
-      // Set any properties with this.set('myProperty', 'value');
-      // Handle any actions with this.on('myAction', function(val) { ... });
-      // Template block usage:
-      // this.render(hbs`
-      //   {{#show-loading-modal}}
-      //     template content
-      //   {{/show-loading-modal}}
-      // `);
+  });
 
-      this.render(hbs`{{show-loading-modal}}`);
-      expect(this.$()).to.have.length(1);
-    });
-  }
-);
+  it('renders', function() {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    // Template block usage:
+    // this.render(hbs`
+    //   {{#show-loading-modal}}
+    //     template content
+    //   {{/show-loading-modal}}
+    // `);
+
+    this.render(hbs`{{show-loading-modal}}`);
+    expect(this.$()).to.have.length(1);
+  });
+});
