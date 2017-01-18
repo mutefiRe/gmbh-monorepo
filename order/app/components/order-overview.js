@@ -4,8 +4,12 @@ import Ember from 'ember';
 export default Ember.Component.extend(RecognizerMixin, {
   recognizers: 'swipe',
   classNames: ['order-overview'],
-  sortProps: ['isPaid', 'createdAt:desc'],
-  sortedOrders: Ember.computed.sort('orders', 'sortProps'),
+  sortBy: ['createdAt:desc'],
+  sortedOrders: Ember.computed.sort('orders', 'sortBy'),
+  openOrders: Ember.computed.filter('sortedOrders', order => {
+    return order.get('orderitems').every(unpaidItem);
+  }).property('orders.@each.orderitems'),
+  paidOrders: Ember.computed.setDiff('sortedOrders', 'openOrders').property('orders.@each.orderitems'),
   classNameBindings: ['SwipeChange'],
   SwipeChange: function () {
     if ((this.get('swipeHelper.order-overview.active') && this.get('swipeHelper.order-screen.last')) || (this.get('swipeHelper.order-overview.active') && this.get('swipeHelper.order-detail.last'))) {
@@ -39,3 +43,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     }
   }
 });
+
+function unpaidItem(item) {
+  return item.get('countPaid') < item.get('count');
+}

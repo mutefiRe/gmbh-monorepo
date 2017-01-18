@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   classNames: ['order-detail-view-item'],
   classNameBindings: ['css'],
   tagName: 'tr',
-  computedCount: Ember.computed('orderitem.countMarked', function(){
+  computedCount: Ember.computed('orderitem.countMarked', 'orderitem.countPaid', function(){
     const orderitem = this.get('orderitem');
     switch(this.get('type')){
       case "paid":

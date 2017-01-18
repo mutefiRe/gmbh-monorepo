@@ -4,12 +4,16 @@ export default Ember.Component.extend({
   classNames: ['order-overview-item'],
   tagName: 'tr',
   classNameBindings: ['paid'],
-  paid: function(){
-    if(this.get('order.isPaid')){
-      return "paid";
-    }
-    return "notpaid";
-  }.property('order.isPaid'),
+  openAmount: Ember.computed('order.orderitems.@each.countPaid', function(){
+    let total = 0;
+    this.get('order.orderitems').forEach(orderitem => {
+      total += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'))
+    })
+    return total;
+  }),
+  paid: Ember.computed('openAmount', function(){
+    return this.get('openAmount') === 0 ? "paid" : "notpaid"
+  }),
   click(){
     this.set('actualOrder', this.get('order'));
     this.triggerAction({

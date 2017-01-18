@@ -9,6 +9,13 @@ export default Ember.Component.extend(RecognizerMixin, {
   recognizers: 'swipe',
   classNames: ['orderlist'],
   tagName: 'div',
+  openAmount: Ember.computed('order.orderitems.@each.countPaid', function(){
+    let total = 0;
+    this.get('order.orderitems').forEach(orderitem => {
+      total += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'))
+    })
+    return total;
+  }),
   classNameBindings: ['SwipeChange'],
   SwipeChange: function () {
     if(this.get('settings.firstObject.instantPay')){

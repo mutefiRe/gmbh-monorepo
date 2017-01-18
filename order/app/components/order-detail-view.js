@@ -33,6 +33,9 @@ export default Ember.Component.extend(RecognizerMixin, {
     }
     return sum;
   }),
+  open: Ember.computed('openAmount', function(){
+    return this.get('openAmount') > 0 ? true : false;
+  }),
   forFree: false,
   SwipeChange: function () {
     if(this.get('settings.firstObject.instantPay')){
@@ -102,6 +105,7 @@ export default Ember.Component.extend(RecognizerMixin, {
 
       orderitems.forEach(item => {
         item.set('countPaid', item.get('count'));
+        item.set('countMarked', 0);
         if (forFree) item.set('countFree', item.get('count'));
       });
 

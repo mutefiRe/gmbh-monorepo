@@ -53,18 +53,20 @@ export default Ember.Controller.extend({
     },
     addItemToOrder(item, extras = null) {
       const order = this.get('order');
-      const totalAmount = order.get('totalAmount');
 
-      const orderItem = order.get('orderitems')
+      const orderitem = order.get('orderitems')
       .filterBy('item.id', item.id)
       .filterBy('extras', extras);
 
-      if (orderItem.length === 0) {
-        this.store.createRecord('orderitem', {order: this.get('order'), item, extras, price: item.get('price')});
+      if (orderitem.length === 0) {
+        let newOrderitem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras, price: item.get('price')});
+        if (newOrderitem.get('price') == 0) newOrderitem.set('countPaid', 1);
+
       } else {
-        orderItem[0].incrementProperty('count');
+        orderitem[0].incrementProperty('count');
+        if(orderitem[0].get('price') == 0) orderitem[0].incrementProperty('countPaid')
       }
-      order.set('totalAmount', totalAmount + item.get('price'));
+
     },
 
     showModal(activeType, buttons, item) {
