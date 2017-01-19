@@ -90,10 +90,10 @@
       margin-top: 0px;
       margin-bottom: 0px;
       width: 100%;
-      &:nth-child(2){
+      &--orange{
         background-color: $orange-lighter;
       }
-      &:last-child{
+      &--blue{
         @include button($dark, $blue, $white);
       }
       span{
