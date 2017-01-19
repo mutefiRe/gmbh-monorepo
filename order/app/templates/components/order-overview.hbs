@@ -3,10 +3,10 @@
 <div class="scrollable">
   <table>
     {{#each sortedOrders as |order|}}
-    {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "gotToOrderDetail")}}
+    {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
     {{/each}}
   </table>
 </div>
 <div class="flexcontainer">
-  <button {{action "goToOrderScreen"}} class="default-btn bigbutton">zurück</button>
+  <button {{action "backButton"}} class="default-btn bigbutton">zurück</button>
 </div>
