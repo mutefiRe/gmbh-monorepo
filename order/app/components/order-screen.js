@@ -1,26 +1,14 @@
-import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
-const {
-  Component
-} = Ember;
-
-export default Ember.Component.extend(RecognizerMixin, {
-  recognizers: 'swipe',
-  classNames: ['order-screen'],
-  classNameBindings: ['SwipeChange'],
-  SwipeChange: function () {
-    if (this.get('swipeHelper.order-screen.active') && this.get('swipeHelper.order-list.last')) {
-      return 'slide-right-in';
-    } else if (this.get('swipeHelper.order-screen.last') && this.get('swipeHelper.order-list.active')) {
-      return 'slide-left-out';
-    } else if (this.get('swipeHelper.order-screen.last') && this.get('swipeHelper.order-overview.active')) {
-      return 'slide-right-out';
-    } else if(this.get('swipeHelper.order-screen.active') && this.get('swipeHelper.order-overview.last')) {
-      return 'slide-left-in';
-    }
-    return 'none';
-  }.property('swipeHelper.order-screen.active'),
+export default Ember.Component.extend({
+  pageTransitions: Ember.inject.service('pagetransitions'),
+  classNames: ['order-screen','screen','isActive'],
+  goToOrderList() {
+    this.get('pageTransitions').toScreen({screen: 'orderlist', from: 'right'});
+  },
+  goToOrderOverview() {
+    this.get('pageTransitions').toScreen({screen: 'order-overview', from: 'left'});
+  },
   actions: {
     changeCategory(category) {
       this.get('changeCategory')(category);
@@ -32,18 +20,10 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('showModal')(modalType, buttons, item);
     },
     goToOrderList() {
-      this.set('swipeHelper.order-list.active', true);
-      this.set('swipeHelper.order-list.last', false);
-      this.set('swipeHelper.order-screen.active', false);
-      this.set('swipeHelper.order-screen.last', true);
-      this.set('swipeHelper.order-overview.last', false);
+      this.goToOrderList();
     },
     goToOrderOverview() {
-      this.set('swipeHelper.order-overview.active', true);
-      this.set('swipeHelper.order-overview.last', false);
-      this.set('swipeHelper.order-screen.active', false);
-      this.set('swipeHelper.order-screen.last', true);
-      this.set('swipeHelper.order-list.last', false);
+      this.goToOrderOverview();
     }
   }
 });

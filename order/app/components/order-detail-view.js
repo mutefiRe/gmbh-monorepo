@@ -2,9 +2,9 @@ import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
 export default Ember.Component.extend(RecognizerMixin, {
-  classNames:        ['order-detail-view'],
+  pageTransitions: Ember.inject.service('pagetransitions'),
+  classNames:        ['order-detail-view','screen'],
   recognizers:       'swipe',
-  classNameBindings: ['SwipeChange'],
   paidOrderitems: Ember.computed.filter('order.orderitems', function(orderitem) {
     if (orderitem.get('countPaid') > 0) return true;
     return false;
@@ -34,40 +34,21 @@ export default Ember.Component.extend(RecognizerMixin, {
     return sum;
   }),
   forFree: false,
-  SwipeChange: function () {
-    if(this.get('settings.firstObject.instantPay')){
-      if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-list.last')) {
-        return 'slide-left-in';
-      }
-    } else {
-      if (this.get('swipeHelper.order-detail.last') && this.get('swipeHelper.order-overview.active')) {
-        return 'slide-right-out';
-      }
-    }
-    if (this.get('swipeHelper.order-detail.active') && this.get('swipeHelper.order-overview.last')) {
-      return 'slide-left-in';
-    }
-    return 'none';
-  }.property('swipeHelper.order-detail.active'),
-
   swipeRight() {
-    this.triggerAction({
-      action: 'goToOrderOverview',
-      target: this
-    });
+    this.goToOrderOverview();
+  },
+  goToOrderScreen() {
+    this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'right'});
+  },
+  goToOrderOverview() {
+    this.get('pageTransitions').toScreen({screen: 'order-overview', from: 'left'});
   },
   actions: {
     goToOrderScreen() {
-      this.set('swipeHelper.order-screen.active', true);
-      this.set('swipeHelper.order-screen.last', false);
-      this.set('swipeHelper.order-detail.active', false);
-      this.set('swipeHelper.order-detail.last', true);
+      this.goToOrderScreen();
     },
     goToOrderOverview() {
-      this.set('swipeHelper.order-overview.active', true);
-      this.set('swipeHelper.order-overview.last', false);
-      this.set('swipeHelper.order-detail.active', false);
-      this.set('swipeHelper.order-detail.last', true);
+      this.goToOrderOverview();
     },
     paySelected(){
       this.triggerAction({action: 'showLoadingModal'})
