@@ -40,5 +40,6 @@ heroku:
   script:
   - gem install dpl
   - dpl --provider=heroku --app=gmbh-backend --api-key=$HEROKU_KEY
+  - "curl -n -X POST https://api.heroku.com/apps/gmbh-backend/ps -H \"Accept: application/json\" -H \"Authorization: Bearer ${HEROKU_KEY}\" -d \"command=node seed\""
   only:
   - develop
