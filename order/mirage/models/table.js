@@ -1,6 +1,6 @@
 import { Model, belongsTo, hasMany } from 'ember-cli-mirage';
 
 export default Model.extend({
-  area: belongsTo('area'),
-  user: hasMany('order')
+  area:   belongsTo('area'),
+  orders: hasMany('order')
 });
