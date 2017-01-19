@@ -35,12 +35,12 @@
   {{/if}}
 </div>
 <div class="flexcontainer">
-  <button {{action 'goToOrderScreen'}} class="smallbutton default-btn">zurück</button>
+  <button {{action 'returnButton'}} class="smallbutton default-btn">zurück</button>
   <button {{action 'showModal2'}} class="smallbutton default-btn">Bestellung verwerfen</button>
 </div>
 </div>
 <div class="menu--mobile">
-  <button {{action 'goToOrderScreen'}} class="smallbutton default-btn"><span class="icon icon-return"></span></button>
+  <button {{action 'returnButton'}} class="smallbutton default-btn"><span class="icon icon-return"></span></button>
   <button {{action 'showModal2'}} class="smallbutton default-btn"><span class="icon icon-garbage"></span></button>
   {{#if order.table.name}}
     <button {{action 'saveOrder'}} class="smallbutton default-btn"><span class="icon icon-send"></span></button>
