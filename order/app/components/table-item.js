@@ -9,7 +9,7 @@ export default Ember.Component.extend({
     this._super();
     const numberOfStyles = 4;
 
-    const areaId = this.get('table').get('area').get('id')
+    const areaId = this.get('table').get('area').get('id');
     this.set('styleType', `style-${(areaId ? areaId : 1 % numberOfStyles)}`);
   },
   click() {

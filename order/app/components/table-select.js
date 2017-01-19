@@ -7,10 +7,10 @@ export default Ember.Component.extend({
   showGuests: false,
   showNew: false,
   userAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') == this.get('currentUser').id
+    return area.get('user.id') == this.get('currentUser').id;
   }).property('areas'),
   otherAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') != this.get('currentUser').id
+    return area.get('user.id') != this.get('currentUser').id;
   }).property('areas'),
   unassignedTables: Ember.computed.filter('tables', function(table){
     return table.get('custom') == false && !table.get('area.id');
@@ -20,9 +20,9 @@ export default Ember.Component.extend({
     {
       let orders = table.get('orders');
       let openOrders = orders.filter(function(order){
-        return order.totalAmount != 0
+        return order.totalAmount != 0;
       });
-      return openOrders.get('length') > 0
+      return openOrders.get('length') > 0;
     }
     return false;
   }).property('tables.@each.custom', 'tables.@each.order'),
@@ -48,13 +48,14 @@ export default Ember.Component.extend({
           this.set('showGuests', false);
           this.set('showNew',    true);
           break;
+        default:
       }
     },
     createTable(){
       this.get('store').createRecord('table', {name: this.get('name'), custom: true }).save().then(table => {
         this.send('setTable', table);
       });
-      this.set('name', "")
+      this.set('name', "");
       this.set('showTables', false);
       this.set('showGuests', true);
       this.set('showNew',    false);

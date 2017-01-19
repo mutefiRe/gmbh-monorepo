@@ -13,8 +13,8 @@ export default Ember.Component.extend(RecognizerMixin, {
   openAmount: Ember.computed('order.orderitems.@each.countPaid', function(){
     let total = 0;
     this.get('order.orderitems').forEach(orderitem => {
-      total += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'))
-    })
+      total += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'));
+    });
     return total;
   }),
   swipeRight() {

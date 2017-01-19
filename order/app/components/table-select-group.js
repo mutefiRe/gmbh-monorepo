@@ -19,15 +19,15 @@ function naturalStringCompare(a, b){
   // If String is the same, fall back to id
   if (aPhrases == bPhrases) {
     if (a.get('id') < b.get('id')) return 1;
-    return -1;
-  };
+    return - 1;
+  }
 
   // Go through Prases: e.g. Terasse20 => Phrase 1: Terasse, Phrase 2: 20
   for (let i = 0; i < aPhrases.length && i < bPhrases.length; i++)
   {
     if (aPhrases[i] == bPhrases[i]) continue;
     if (tryParseCompare(aPhrases[i], bPhrases[i])) return 1;
-    return -1;
+    return - 1;
   }
 }
 

@@ -52,7 +52,7 @@ export default Ember.Controller.extend({
 
       } else {
         orderitem[0].incrementProperty('count');
-        if(orderitem[0].get('price') == 0) orderitem[0].incrementProperty('countPaid')
+        if(orderitem[0].get('price') == 0) orderitem[0].incrementProperty('countPaid');
       }
 
     },
@@ -98,7 +98,7 @@ export default Ember.Controller.extend({
         this.toggleProperty('triggerModal');
         goToOrderScreen();
       }).catch((err) => {
-        console.log(err)
+        console.log(err);
         // nothing to do here
       });
     },

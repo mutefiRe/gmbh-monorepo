@@ -54,10 +54,10 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.goToOrderOverview();
     },
     paySelected(){
-      this.triggerAction({action: 'showLoadingModal'})
+      this.triggerAction({action: 'showLoadingModal'});
       const orderitems = this.get('markedOrderitems');
       const forFreeOrder = this.get('forFree');
-      let promises = []
+      let promises = [];
       for(let orderitem of orderitems){
         orderitem.set('countPaid', orderitem.get('countPaid') + orderitem.get('countMarked'));
         if (forFreeOrder) orderitem.set('countFree', orderitem.get('countFree') + orderitem.get('countMarked'));
@@ -70,12 +70,12 @@ export default Ember.Component.extend(RecognizerMixin, {
       order.set('isPaid', this.get('openAmount') == 0);
       order.set('totalAmount', this.get('openAmount'));
       order.save().then(() => {
-        this.triggerAction({action: 'triggerModal'})
-        this.set('forFree', false)
+        this.triggerAction({action: 'triggerModal'});
+        this.set('forFree', false);
       }).catch((err) => {
         this.get('order.orderitems').forEach((item) => {
           item.rollbackAttributes();
-        })
+        });
         this.get('order').rollbackAttributes();
       });
     },

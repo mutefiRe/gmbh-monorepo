@@ -6,7 +6,7 @@ import { setupModelTest } from 'ember-mocha';
 describe('Unit | Model | print', function() {
   setupModelTest('print', {
     // Specify the other units that are required for this test.
-      needs: []
+    needs: []
   });
 
   // Replace this with your real tests.

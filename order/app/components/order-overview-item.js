@@ -7,12 +7,12 @@ export default Ember.Component.extend({
   openAmount: Ember.computed('order.orderitems.@each.countPaid', function(){
     let total = 0;
     this.get('order.orderitems').forEach(orderitem => {
-      total += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'))
-    })
+      total += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'));
+    });
     return total;
   }),
   paid: Ember.computed('openAmount', function(){
-    return this.get('openAmount') === 0 ? "paid" : "notpaid"
+    return this.get('openAmount') === 0 ? "paid" : "notpaid";
   }),
   click(){
     this.set('actualOrder', this.get('order'));

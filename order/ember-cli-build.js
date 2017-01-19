@@ -1,12 +1,11 @@
-/*jshint node:true*/
 /* global require, module */
-var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
-  var app = new EmberApp(defaults, {
-    hinting: false,
-    'ember-cli-mocha': {
-      useLintTree: false
+  const app = new EmberApp(defaults, {
+    babel: {
+      optional: ['es6.spec.symbols'],
+      includePolyfill: true
     },
     babel: {
       optional: ['es6.spec.symbols'],

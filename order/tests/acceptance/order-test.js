@@ -65,9 +65,9 @@ describe('Acceptance | order screen', function() {
       andThen(() => {
         click("div.table-mask > button:first");
         andThen(() => {
-          expect(find("div.menu--desktop span").html()).to.equal("Bestellung ist leer!")
-        })
-      })
+          expect(find("div.menu--desktop span").html()).to.equal("Bestellung ist leer!");
+        });
+      });
     });
   });
 
@@ -79,9 +79,9 @@ describe('Acceptance | order screen', function() {
       andThen(() => {
         click("div.table-mask > button:first"); // Erster Tisch
         andThen(() => {
-          expect(find("div.menu--desktop button.bigbutton:first").html()).to.equal("Abschicken")
-        })
-      })
+          expect(find("div.menu--desktop button.bigbutton:first").html()).to.equal("Abschicken");
+        });
+      });
     });
   });
 });
