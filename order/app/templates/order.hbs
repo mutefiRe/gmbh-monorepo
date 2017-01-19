@@ -4,7 +4,7 @@
 
 {{#modal-box triggerModal=triggerModal headline=modalHeadline modalButtons=modalButtons}}
 
-{{component modalType currentUser=model.currentUser tables=model.Tables order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem discardOrder=(action "discardOrder")}}
+{{component modalType currentUser=model.currentUser tables=model.Tables settings=model.Settings areas=model.Areas order=order showModal=(action "showModal") addItemToOrder=(action "addItemToOrder") modalItem=modalItem discardOrder=(action "discardOrder")}}
 {{/modal-box}}
 
 {{order-list barKeeper=barKeeper settings=model.Settings order=order removeItemFromOrder=(action 'removeItemFromOrder') saveOrder=(action "saveOrder") showModal=(action "showModal")}}
