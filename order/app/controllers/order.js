@@ -5,12 +5,6 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   actualCategory: false,
-  swipeHelper: {
-    'order-overview': {active: false, last: false},
-    'order-screen': {active: true, last: false},
-    'order-list': {active: false, last: true},
-    'order-detail': {active: false, last: false}
-  },
   modalType: 'table-select',
   modalHeadline: 'Tisch auswählen',
   modalButtons: true,
@@ -20,13 +14,7 @@ export default Ember.Controller.extend({
   barKeeper: false,
   user: null,
   actualOrder: null,
-
-  viewOrder: {
-    items: {},
-    totalAmount: 0
-  },
   triggerModal: false,
-  triggerOrderListSwipe: true,
   init() {
     const id = this.get('payload').getId();
     this.store.find('user', id).then( user => {
@@ -94,9 +82,6 @@ export default Ember.Controller.extend({
       this.set('modalItem', null);
       this.set('modalHeadline', 'verarbeite Daten');
       this.toggleProperty('triggerModal');
-    },
-    swipeOrderList() {
-      this.toggleProperty('triggerOrderListSwipe');
     },
     saveOrder(goToOrderScreen) {
       const order = this.get('order');

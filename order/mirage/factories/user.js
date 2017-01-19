@@ -2,7 +2,7 @@ import {Factory, faker} from 'ember-cli-mirage';
 
 export default Factory.extend({
   username(i) {
-    return `user_${i}`;
+    return `waiter_${i}`;
   },
   firstname() {
     return faker.name.firstName();
@@ -12,6 +12,6 @@ export default Factory.extend({
   },
   password: 'abc',
   permission() {
-    return faker.random.number(1);
+    return 1;
   }
 });

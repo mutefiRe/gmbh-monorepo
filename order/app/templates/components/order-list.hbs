@@ -1,50 +1,67 @@
 <h2>Bestellung</h2>
 <div class="scrollable">
   <table>
-    {{#each order.orderitems as |orderitem|}}
-    {{orderlist-item orderitem=orderitem removeItemFromOrder=(action 'removeItemFromOrder')}}
-    {{/each}}
+  {{#each order.orderitems as |orderitem|}}
+    {{orderlist-item
+      orderitem=orderitem
+      removeItemFromOrder=(action 'removeItemFromOrder')
+    }}
+  {{/each}}
   </table>
 </div>
 <div class="flexcontainer table_sum">
   {{#unless barKeeper}}
-  {{#if order.table.name}}
-  <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>
-  {{else}}
-  <button {{action 'showModal'}} class="tablebutton required">Tisch auswählen</button>
-  {{/if}}
+    {{#if order.table.name}}
+      <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>
+    {{else}}
+      <button {{action 'showModal'}} class="tablebutton required">Tisch auswählen</button>
+    {{/if}}
   {{/unless}}
   <p class="sum">Summe: € {{show-currency openAmount}}</p>
 </div>
 <div class="menu--desktop">
-<div class="flexcontainer">
-  {{#if order.table.name}}
-  {{#if order.orderitems}}
-  <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
-  {{else}}
-  <span class="empty-order default-btn">Bestellung ist leer!</span>
-  {{/if}}
-  {{else if barKeeper}}
-  {{#if order.orderitems}}
-  <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
-  {{else}}
-  <span class="empty-order default-btn">Bestellung ist leer!</span>
-  {{/if}}
-  {{else}}
-  <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
-  {{/if}}
-</div>
-<div class="flexcontainer">
-  <button {{action 'goToOrderScreen'}} class="smallbutton default-btn">zurück</button>
-  <button {{action 'showModal2'}} class="smallbutton default-btn">Bestellung verwerfen</button>
-</div>
+  <div class="flexcontainer">
+    {{#if order.table.name}}
+      {{#if order.orderitems}}
+        <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+      {{else}}
+        <span class="empty-order default-btn">Bestellung ist leer!</span>
+      {{/if}}
+    {{else if barKeeper}}
+      {{#if order.orderitems}}
+        <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+      {{else}}
+        <span class="empty-order default-btn">Bestellung ist leer!</span>
+      {{/if}}
+    {{else}}
+      <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
+    {{/if}}
+  </div>
+  <div class="flexcontainer">
+    <button {{action 'returnButton'}} class="smallbutton default-btn">zurück</button>
+    <button {{action 'showModal2'}} class="smallbutton default-btn">Bestellung verwerfen</button>
+  </div>
 </div>
 <div class="menu--mobile">
-  <button {{action 'goToOrderScreen'}} class="smallbutton default-btn"><span class="icon icon-return"></span></button>
-  <button {{action 'showModal2'}} class="smallbutton default-btn"><span class="icon icon-garbage"></span></button>
+  <button {{action 'returnButton'}} class="smallbutton default-btn">
+    <span class="icon icon-return"></span>
+  </button>
+  <button {{action 'showModal2'}} class="smallbutton smallbutton--orange default-btn">
+    <span class="icon icon-garbage"></span>
+  </button>
   {{#if order.table.name}}
-    <button {{action 'saveOrder'}} class="smallbutton default-btn"><span class="icon icon-send"></span></button>
+    {{#if order.orderitems}}
+      <button {{action 'saveOrder'}} class="smallbutton smallbutton--blue default-btn">
+        <span class="icon icon-send"></span>
+      </button>
+    {{else}}
+      <button {{action 'returnButton'}} class="smallbutton default-btn">
+        <span class="icon icon-prohibited"></span>
+      </button>
+    {{/if}}
   {{else}}
-    <button {{action 'showModal'}} class="smallbutton default-btn"><span class="icon icon-table"></span></button>
+    <button {{action 'showModal'}} class="smallbutton smallbutton--blue default-btn">
+      <span class="icon icon-table"></span>
+    </button>
   {{/if}}
 </div>

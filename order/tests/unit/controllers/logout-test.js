@@ -1,24 +1,19 @@
 /* jshint expr:true */
 import { expect } from 'chai';
-import {
-  describeModule,
-  it
-} from 'ember-mocha';
+import { it, describe } from 'mocha';
+import { setupTest } from 'ember-mocha';
 
-describeModule(
-  'controller:logout',
-  'LogoutController',
-  {
+describe('LogoutController', function() {
+  setupTest('controller:logout', {
     // Specify the other units that are required for this test.
     needs: ['service:session']
-  },
-  function() {
-    // Replace this with your real tests.
-    it('exists', function() {
-      let controller = this.subject({
-        init() {}
-      });
-      expect(controller).to.be.ok;
+  });
+
+  // Replace this with your real tests.
+  it('exists', function() {
+    let controller = this.subject({
+      init() {}
     });
-  }
-);
+    expect(controller).to.be.ok;
+  });
+});

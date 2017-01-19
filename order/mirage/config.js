@@ -1,56 +1,21 @@
-import Mirage from 'ember-cli-mirage';
+export default function() {
 
-export default function () {
-  const ERROR_CODE = 403;
-  const PAYLOAD = 'eyJpZCI6MSwiaWF0IjoxNDYyODIxODM2LCJleHAiOjE0NjI5MDgyMzZ9';
-  const PAYLOAD_ADMIN = 'eyJpZCI6MSwicGVybWlzc2lvbiI6MH0';
-  const PAYLOAD_WAITER = 'eyJpZCI6MSwicGVybWlzc2lvbiI6MX0';
+  this.urlPrefix = 'http://localhost:8080';    // make this `http://localhost:8080`, for example, if your API is on a different server
+  this.timing = 400;      // delay for each request, automatically set to 0 during testing
 
-  this.namespace = '/api';
-  this.urlPrefix = 'http://localhost:8080';
+  this.post('/authenticate', () => {
+    return {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3RuYW1lIjoiMTIzNDU2Nzg5MCIsImxhc3RuYW1lIjoiSm9obiBEb2UiLCJ1c2VybmFtZSI6IndhaXRlcl8xIiwicGFzc3dvcmQiOiJhYmMiLCJwZXJtaXNzaW9uIjoxLCJwcmludGVyIjoidGVzdCJ9.i_QVYHeQ0z52hgD2tdNjxBU-FnCIC5kJE6U97Ozvi2g"};
+  });
 
-  this.get('/areas');
-  this.get('/areas/:id');
+  this.namespace = 'api';    // make this `api`, for example, if your API is namespaced
+
   this.get('/categories');
-  this.get('/categories/:id');
-  this.get('/items');
-  this.get('/items/:id');
-  this.get('/orderitems');
-  this.get('/orderitems/:id');
-  this.get('/orders');
-  this.get('/orders/:id');
-  this.get('/tables');
-  this.get('/tables/:id');
   this.get('/units');
-  this.get('/units/:id');
-  this.get('/users');
-
-  this.get('/users/:id', ({users}, request) => {
-    console.log('user', {user: users.find(request.params.id)});
-
-    return {user: users.find(request.params.id)};
-  });
-
-  this.get('/users/:id', {id: 2, username: 'admin', permission: 0});
-
-  this.post('http://localhost:8080/authenticate', function (db, req) {
-    switch (JSON.parse(req.requestBody).username) {
-      case 'no':
-      return new Mirage.Response(ERROR_CODE, {}, {error: 'User not foud'});
-      case 'admin':
-      return {
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_ADMIN + '.Xlfhc0DpyJLHPVJp3fp1ZWZT-K9GQmwWZ52X6WVLi8M'
-      };
-      case 'waiter':
-      return {
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + PAYLOAD_WAITER + '.KWMu1UJLrqHdO_n9h9x_itkDHExNXC91JxtyMbXPE_c'
-      };
-      default:
-      return {
-        token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.' + PAYLOAD + '.QTVEuD2rlKRHREQhViVSf32pF0aAO7X9b5Zx1EwkN-g'
-      };
-    }
-  });
-
-  this.passthrough('http://localhost:8080/socket.io');
+  this.get('/users/:id');
+  this.get('/tables');
+  this.get('/areas');
+  this.get('/units');
+  this.get('/settings');
+  this.get('/orders');
+  this.get('/items');
 }
