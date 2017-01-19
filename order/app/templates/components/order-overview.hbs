@@ -2,8 +2,12 @@
 <h2>Bestellungen</h2>
 <div class="scrollable">
   <table>
-    {{#each sortedOrders as |order|}}
-    {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
+    {{#each openOrders as |order|}}
+      {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
+    {{/each}}
+
+    {{#each paidOrders as |order|}}
+      {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
     {{/each}}
   </table>
 </div>

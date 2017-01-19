@@ -1,9 +1,13 @@
 <td>{{computedCount}} x</td>
-<td colspan="2">{{orderitem.item.name}} {{orderitem.countMarked }}
+<td colspan="2">{{orderitem.item.name}}
   {{#if orderitem.item.category.showAmount}} {{show-amount orderitem.item.amount}} {{orderitem.item.unit.name}}{{/if}}<span> {{orderitem.extras}}</span>
 </td>
-{{#if orderitem.forFree}}
-<td>FREI</td>
-{{else}}
-<td>€ {{show-currency sum}}</td>
-{{/if}}
+
+<td>
+€ {{show-currency sum}}
+  {{#if (eq type "paid")}}
+    {{#if orderitem.countFree}}
+      ({{orderitem.countFree}} mit Gutschein)
+    {{/if}}
+  {{/if}}
+</td>

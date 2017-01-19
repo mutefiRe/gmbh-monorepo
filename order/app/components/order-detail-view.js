@@ -33,6 +33,9 @@ export default Ember.Component.extend(RecognizerMixin, {
     }
     return sum;
   }),
+  open: Ember.computed('openAmount', function(){
+    return this.get('openAmount') > 0;
+  }),
   forFree: false,
   swipeRight() {
     this.goToOrderOverview();
@@ -64,7 +67,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       let order = this.get('order');
       let items = order.get('orderitems');
 
-      order.set('isPaid', this.get('openAmount') == 0 ? true : false);
+      order.set('isPaid', this.get('openAmount') == 0);
       order.set('totalAmount', this.get('openAmount'));
       order.save().then(() => {
         this.triggerAction({action: 'triggerModal'})
@@ -83,6 +86,7 @@ export default Ember.Component.extend(RecognizerMixin, {
 
       orderitems.forEach(item => {
         item.set('countPaid', item.get('count'));
+        item.set('countMarked', 0);
         if (forFree) item.set('countFree', item.get('count'));
       });
 

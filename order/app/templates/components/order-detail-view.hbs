@@ -1,16 +1,16 @@
 <div class="flexcontainer">
   <h2>Bestellung #{{order.id}}</h2>
-  {{#if order.isPaid}}
-  <h2 class="isPaid">bezahlt</h2>
+  {{#if open}}
+    <h2 class="notPaid">offen</h2>
   {{else}}
-  <h2 class="notPaid">offen</h2>
+    <h2 class="isPaid">bezahlt</h2>
   {{/if}}
 </div>
 
-{{#if order.isPaid}}
-<h3>Bezahlte Posten</h3>
+{{#if open}}
+  <h3>Offene Posten</h3>
 {{else}}
-<h3>Offene Posten</h3>
+  <h3>Bezahlte Posten</h3>
 {{/if}}
 <br>
 <div class="scrollable">
@@ -50,7 +50,9 @@
 <br>
 {{/if}}
 <div>
-  {{input id="voucher" type="checkbox" checked=forFree}} <label for="voucher">Mit Gutschein bezahlen</label>
+  {{#if open}}
+    {{input id="voucher" type="checkbox" checked=forFree}} <label for="voucher">Mit Gutschein bezahlen</label>
+  {{/if}}
 </div>
 {{#if markedOrderitems}}
 <div class="flexcontainer">
@@ -65,10 +67,10 @@
     zurück
     {{/if}}
   </button>
-  {{#if order.isPaid}}
-  <button {{action "printBill"}} class="smallbutton-blue">Rechnung drucken</button>
+  {{#if open}}
+    <button {{action 'payAll'}} class="smallbutton-blue">Alles bezahlen</button>
   {{else}}
-  <button {{action 'payAll'}} class="smallbutton-blue">Alles bezahlen</button>
+    <button {{action "printBill"}} class="smallbutton-blue">Rechnung drucken</button>
   {{/if}}
 </div>
 <div class="flexcontainer">
