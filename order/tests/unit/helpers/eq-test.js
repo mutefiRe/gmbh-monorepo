@@ -1,17 +1,16 @@
 /* jshint expr:true */
 import { expect } from 'chai';
-import {
-  describe,
-  it
-} from 'mocha';
-import {
-  eq
-} from 'gmbh/helpers/eq';
+import { describe, it } from 'mocha';
+import { eq } from 'gmbh/helpers/eq';
 
 describe('EqHelper', function() {
-  // Replace this with your real tests.
-  it('works', function() {
-    let result = eq(1, 1);
-    expect(result).to.be.ok;
+  it('equal values leads to true', function() {
+    let result = eq([1, 1]);
+    expect(result).to.equal(true);
+  });
+
+  it('different values leads to false', function() {
+    let result = eq([1, 2]);
+    expect(result).to.equal(false);
   });
 });
