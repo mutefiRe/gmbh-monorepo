@@ -5,7 +5,7 @@ import { setupModelTest } from 'ember-mocha';
 describe('Unit | Model | orderitem', function() {
   setupModelTest('orderitem', {
     // Specify the other units that are required for this test.
-      needs: ['model:order', 'model:item']
+    needs: ['model:order', 'model:item']
   });
 
   // Replace this with your real tests.

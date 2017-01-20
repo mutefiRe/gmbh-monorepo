@@ -16,7 +16,7 @@ App = Ember.Application.extend({
 loadInitializers(App, config.modulePrefix);
 
 Ember.onerror = function(error) {
-  console.log(error)
+  console.log(error);
   /* Ember.$.ajax('/error-notification', {
     type: 'POST',
     data: {

@@ -5,7 +5,7 @@ import { setupModelTest } from 'ember-mocha';
 describe('Unit | Model | area', function() {
   setupModelTest('area', {
     // Specify the other units that are required for this test.
-      needs: ['model:table', 'model:user']
+    needs: ['model:table', 'model:user']
   });
 
   // Replace this with your real tests.

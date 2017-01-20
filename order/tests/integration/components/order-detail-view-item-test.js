@@ -1,4 +1,3 @@
-/* jshint expr:true */
 import { expect } from 'chai';
 import { it, describe } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
@@ -6,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration: OrderDetailViewItemComponent', function() {
   setupComponentTest('order-detail-view-item', {
-    integration: true,
+    integration: true
   });
 
   beforeEach(function() {
@@ -14,9 +13,9 @@ describe('Integration: OrderDetailViewItemComponent', function() {
       countPaid: 5,
       countMarked: 2,
       count: 100
-    })
-    this.set('item', item)
-    this.set('type', 'paid')
+    });
+    this.set('item', item);
+    this.set('type', 'paid');
   });
   it('renders', function() {
     // Set any properties with this.set('myProperty', 'value');
