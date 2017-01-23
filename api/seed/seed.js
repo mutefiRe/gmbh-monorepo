@@ -59,6 +59,14 @@ module.exports = function(){
     password: "abc",
     permission: 1
   });
+  db.User.create({
+    username: "printer",
+    firstname: "die GmBh",
+    lastname: " Buam",
+    password: "abc",
+    printer: "GMBH-WLAN",
+    permission: 1
+  });
 
   for(let i = 0; i < 50; i++){
     db.User.create({
