@@ -58,9 +58,12 @@ class Print {
   }
 
   tokenCoin(data, printer) {
-    for(const order of data.orderitems) {
-      this.singleTokenCoin(printer, data.orderitems[order]);
-    }
+    const tokens = data.orderitems.map(this.singleTokenCoin);
+    let printSequence = [];
+    tokens.forEach((token) => {
+      printSequence = printSequence.concat(token);
+    })
+    printJob(printer, printSequence);
   }
 
   singleDeliveryNote(printer, data) {
@@ -132,7 +135,7 @@ class Print {
     printJob(printer, printData);
   }
 
-  singleTokenCoin(printer, data) {
+  singleTokenCoin(data) {
     let orderItemString = data.item.name.toUpperCase().substr(0, 46);
     if(data.item.category.showAmount) {
       orderItemString = `${orderItemString.toUpperCase().substr(0, 35)} ${showAmount(data.item.amount)}${data.item.unit.name}`;
@@ -148,7 +151,11 @@ class Print {
     printData.push(ENTER, ENTER, ENTER);
     printData.push(centerPadding('Oberländer Bataillons-Schützenfest', 48));
     printData.push(FEED, PAPER_PART_CUT);
-    printJob(printer, printData);
+    let printSequence = printData;
+    for(let i = 0; i < data.count - 1; i++) {
+      printSequence = printSequence.concat(printData);
+    }
+    return printSequence;
   }
 
   transformOrder(data){
