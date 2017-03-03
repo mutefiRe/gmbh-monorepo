@@ -131,7 +131,8 @@ module.exports = function(){
     name: "Testsetting",
     begin_date: "nodate",
     end_date: "nodate",
-    instantPay: true
+    instantPay: true,
+    customTables: true
   });
 
   /* ALCOHOLICS */
