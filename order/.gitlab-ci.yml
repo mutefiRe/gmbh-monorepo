@@ -1,7 +1,7 @@
 cache:
   paths:
-#  - /root/.yarn-cache
-  - /root/.npm
+  - /root/.yarn-cache
+  - node_modules/
 
 stages:
   - test
@@ -9,15 +9,14 @@ stages:
   - deploy
 
 tests:
-  image: registry.gitlab.com/mossss/gmbh-order:v1
+  image: registry.gitlab.com/mossss/gmbh-order:v2
   stage: test
   before_script:
-# - yarn
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SSH_PRIVATE_KEY")
   - mkdir -p ~/.ssh
   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-  - npm install
+  - yarn
   - bower install --allow-root
   script:
   - ember test
