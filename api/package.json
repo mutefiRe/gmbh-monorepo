@@ -50,13 +50,13 @@
     "chai-http": "^3.0.0",
     "cz-conventional-changelog": "^1.1.5",
     "eslint": "^3.10.0",
-    "eslint-config-mossss": "git@gitlab.com:mossss/eslint-config-mossss.git",
     "faker2": "^0.5.0",
     "mocha": "^3.1.2",
     "nodemon": "^1.9.1",
     "proxyquire": "^1.7.11",
     "request": "^2.72.0",
-    "socket.io-client": "^1.4.6"
+    "socket.io-client": "^1.4.6",
+    "eslint-config-mossss": "git+ssh://git@gitlab.com:mossss/eslint-config-mossss.git"
   },
   "config": {
     "commitizen": {
