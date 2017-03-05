@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/index');
-const print = require('../print.js');
+const print = require('../printer/print.js');
 const billprinter = require('../config/config').billprinter;
 
 /**
