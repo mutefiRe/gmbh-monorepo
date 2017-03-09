@@ -1,7 +1,7 @@
 cache:
   paths:
   - /root/.yarn-cache
-  - /root/.npm
+  - node_modules/
 
 variables:
   MYSQL_DATABASE: gmbh_test
@@ -12,15 +12,14 @@ stages:
   - deploy
 
 .job_template: &test_definition
-  image: registry.gitlab.com/mossss/gmbh-api:v1
+  image: registry.gitlab.com/mossss/gmbh-api:v2
   stage: test
   before_script:
-#  - yarn
    - eval $(ssh-agent -s)
    - ssh-add <(echo "$SSH_PRIVATE_KEY")
    - mkdir -p ~/.ssh
    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-   - npm install
+   - yarn
 
 linting:
   <<: *test_definition
