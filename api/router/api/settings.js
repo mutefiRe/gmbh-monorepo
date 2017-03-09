@@ -10,6 +10,7 @@ const db     = require('../../models');
  * @apiSuccess {Date}  settings.beginDate
  * @apiSuccess {Date}  settings.endDate
  * @apiSuccess {Boolean}  settings.instantPay
+ * @apiSuccess {Boolean}  settings.customTables
  */
 
 /**
@@ -18,7 +19,8 @@ const db     = require('../../models');
  * @apiParam {String}  settings.name
  * @apiParam {String}  settings.beginDate
  * @apiParam {Number}  settings.endDate
- * @apiParam {Number}  settings.instantPay
+ * @apiParam {Boolean}  settings.instantPay
+ * @apiParam {Boolean}  settings.CustomTables
  */
 
 /**
