@@ -132,7 +132,8 @@ module.exports = function(){
     begin_date: "nodate",
     end_date: "nodate",
     instantPay: true,
-    customTables: true
+    customTables: false,
+    receiptPrinter: "GMBH-WLAN"
   });
 
   /* ALCOHOLICS */
@@ -143,7 +144,7 @@ module.exports = function(){
     icon: "drink-alc",
     description: "alkohol",
     showAmount: true,
-    printer: "GMBH-LAN"
+    printer: "GMBH-WLAN"
   }).then(cat => {
     db.Unit.findOrCreate({
       where: {name: 'l'}
@@ -273,7 +274,7 @@ module.exports = function(){
     icon: "drink-anti",
     description: "Alkoholfreies",
     showAmount: true,
-    printer: "GMBH-LAN"
+    printer: "GMBH-WLAN"
   }).then(cat => {
     db.Unit.findOrCreate({
       where: {name: 'l'}
