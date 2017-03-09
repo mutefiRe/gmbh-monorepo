@@ -124,7 +124,8 @@ module.exports = function(){
     begin_date: "nodate",
     end_date: "nodate",
     instantPay: true,
-    customTables: true
+    customTables: false,
+    receiptPrinter: "GMBH-WLAN"
   });
 
   /* ALCOHOLICS */
