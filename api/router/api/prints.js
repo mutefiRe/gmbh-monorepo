@@ -37,7 +37,11 @@ function processPrint(req, data){
   if(isBill && userPrinter) {
     print.bill(orders, userPrinter);
   } else if(isBill) {
-    print.bill(orders, billprinter);
+    db.Setting.findAll().then((settings) => {
+      return JSON.parse(JSON.stringify(settings))[0].receiptPrinter;
+    }).then((billPrinter) => {
+      print.bill(orders, billPrinter);
+    })
   } else if(userPrinter) {
     print.tokenCoin(orders, userPrinter);
   } else {
