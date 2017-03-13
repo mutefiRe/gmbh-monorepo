@@ -9,7 +9,7 @@ describeModule('service:session-payload', 'Unit | Service | session payload',
   function() {
     // Replace this with your real tests.
     it('exists', function() {
-      let service = this.subject();
+      const service = this.subject();
       expect(service).to.be.ok;
     });
   }

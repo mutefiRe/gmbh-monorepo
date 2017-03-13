@@ -11,7 +11,7 @@ describeModule(
   function() {
     // Replace this with your real tests.
     it('authorizer is set', function() {
-      let adapter = this.subject();
+      const adapter = this.subject();
       expect(adapter.get('authorizer')).to.equal('authorizer:application');
     });
   }

@@ -12,10 +12,10 @@ export default Ember.Controller.extend({
   actions: {
     logout() {
       this.get('session').invalidate()
-      .then(()=>{
+      .then(() => {
         this.send('transitionToLogin');
       })
-      .catch(err=>{
+      .catch(err => {
         this.set('errorMessage', err.error || err || 'Server nicht erreichbar.');
       });
     }

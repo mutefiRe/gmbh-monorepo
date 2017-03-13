@@ -9,7 +9,7 @@ describeModule('controller:user', 'Unit | Controller | user',
   function() {
     // Replace this with your real tests.
     it('exists', function() {
-      let controller = this.subject();
+      const controller = this.subject();
       expect(controller).to.be.ok;
     });
   }
