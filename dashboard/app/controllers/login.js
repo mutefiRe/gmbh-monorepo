@@ -4,16 +4,16 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
 
   actions: {
-    authenticate: function() {
-      let credentials = this.getProperties('identification', 'password'),
+    authenticate() {
+      const credentials = this.getProperties('identification', 'password'),
         authenticator = 'authenticator:jwt';
 
       this.get('session')
       .authenticate(authenticator, credentials)
-      .then(()=>{
+      .then(() => {
         this.send('transitionToDashboard');
       })
-      .catch(reason=> {
+      .catch(reason => {
         if (reason) {
           this.set('errorMessage', reason.error || reason);
         } else {
