@@ -11,12 +11,13 @@ export default function(name, options = {}) {
       this.application = startApp();
 
       if (options.beforeEach) {
-        return options.beforeEach.apply(this, arguments);
+        return Reflect.apply(options.beforeEach, this, arguments);
       }
     },
 
     afterEach() {
-      const afterEach = options.afterEach && options.afterEach.apply(this, arguments);
+      const afterEach = options.afterEach && Reflect.apply(options.afterEach, this, arguments);
+
       return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }
   });

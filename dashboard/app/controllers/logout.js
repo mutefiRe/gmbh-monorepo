@@ -1,9 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  session: Ember.inject.service('session'),
-  errorMessage: null,
-
+  session: Ember.inject.service(),
   init() {
     if(!this.get('session.isAuthenticated')){
       this.send('transitionToLogin');
@@ -11,12 +9,10 @@ export default Ember.Controller.extend({
   },
   actions: {
     logout() {
-      this.get('session').invalidate()
+      this.get('session')
+      .invalidate()
       .then(() => {
         this.send('transitionToLogin');
-      })
-      .catch(err => {
-        this.set('errorMessage', err.error || err || 'Server nicht erreichbar.');
       });
     }
   }
