@@ -1,17 +1,17 @@
 import { expect } from 'chai';
-import { describeModule, it } from 'ember-mocha';
+import { it, describe } from 'mocha';
+import { setupTest } from 'ember-mocha';
 // import { currentSession } from 'admin/tests/helpers/ember-simple-auth';
 
-describeModule('controller:login', 'Unit | Controller | login',
-  {
+describe('Unit | Controller | login', function() {
+  setupTest('controller:login', {
     // Specify the other units that are required for this test.
     // needs: ['controller:login']
-  },
-  function() {
-    // Replace this with your real tests.
-    it('has no error message @ init', function() {
-      const controller = this.subject();
-      expect(controller.get('errorMessage')).to.equal(undefined);
-    });
-  }
-);
+  });
+
+  // Replace this with your real tests.
+  it('has no error message @ init', function() {
+    const controller = this.subject();
+    expect(controller.get('errorMessage')).to.equal(undefined);
+  });
+});

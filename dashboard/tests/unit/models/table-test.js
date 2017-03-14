@@ -1,19 +1,17 @@
 import { expect } from 'chai';
-import { describeModel, it } from 'ember-mocha';
+import { it, describe } from 'mocha';
+import { setupModelTest } from 'ember-mocha';
 
-describeModel(
-  'table',
-  'Unit | Model | table',
-  {
+describe('Unit | Model | table', function() {
+  setupModelTest('table', {
     // Specify the other units that are required for this test.
-    needs: []
-  },
-  function() {
-    // Replace this with your real tests.
-    it('exists', function() {
-      const model = this.subject();
-      // var store = this.store();
-      expect(model).to.be.ok;
-    });
-  }
-);
+    needs: ['model:user', 'model:area', 'model:order']
+  });
+
+  // Replace this with your real tests.
+  it('exists', function() {
+    const model = this.subject();
+    // var store = this.store();
+    expect(model).to.be.ok;
+  });
+});

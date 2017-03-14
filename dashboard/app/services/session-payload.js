@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Service.extend({
-  session: Ember.inject.service('session'),
+  session: Ember.inject.service(),
   getId(){
     const authenticator = Ember.getOwner(this).lookup('authenticator:jwt');
     const authenticated = this.get('session.isAuthenticated');
