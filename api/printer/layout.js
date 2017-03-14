@@ -60,7 +60,7 @@ class layout {
     printData.push(util.rpad(t.quantity, 7), ' ', util.rpad(t.item, 20),' ', util.lpad(t.price, 9), ' ', util.lpad(t.sum, 9), ENTER)
     order.orderitems.forEach((orderitem) => {
       let price = orderitem.item.price;
-      const sum = (price * orderitem.item.amount).toFixed(2);
+      const sum = (price * orderitem.count).toFixed(2);
       let name = orderitem.item.name;
 
       // workaround for sequelize/postgres. price and other decimal are of type string
@@ -73,8 +73,10 @@ class layout {
       printData.push(util.rpad(orderitem.count + ' x', 7), ' ', util.rpad(name, 20), ' ', util.lpad(price, 9), ' ', util.lpad(sum, 9), ENTER);
     });
 
+    const totalSum = order.orderitems.reduce((acc, orderitem) => acc + orderitem.count * orderitem.item.price, 0);
+
     printData.push(ENTER);
-    printData.push(util.lpad(t.totalSum, 28), util.lpad(`${(order.totalAmount * 1).toFixed(2)}`, 20));
+    printData.push(util.lpad(t.totalSum, 28), util.lpad(`${totalSum.toFixed(2)}`, 20));
 
     printData.push(ENTER, ENTER, util.cpad(`${t.waiterIntro} ${order.user.firstname} ${order.user.lastname}`,48));
     printData.push(FEED, PAPER_PART_CUT);
