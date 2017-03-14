@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
       this.get('session')
       .authenticate(authenticator, credentials)
       .then(() => {
-        this.send('transitionToDashboard');
+        this.send('transitionToIndex');
       })
       .catch(reason => {
         if (reason) {
