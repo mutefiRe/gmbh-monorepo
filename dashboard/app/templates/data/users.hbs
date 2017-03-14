@@ -1,6 +1,0 @@
-{{outlet}}
-{{#each model.users as |user|}}
-  <div onclick={{action 'select' user}} style="width: calc(33% - 4px); float:left; height: 250px; box-sizing:border-box; border:2px solid black; margin:2px;">
-    {{user-item user=user printers=model.printers selected=(eq selectedUser user)}}
-  </div>
-{{/each}}
