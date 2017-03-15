@@ -8,6 +8,5 @@ module.exports = {
   deliveryNoteTitle: 'Bestellung',
   billTitle: 'RECHNUNG',
   waiterIntro: 'Es bediente Sie',
-  tokenCoin: 'WERTMARKE FÜR',
-  festival: 'Oberländer Bataillons-Schützenfest'
+  tokenCoin: 'WERTMARKE FÜR'
 };

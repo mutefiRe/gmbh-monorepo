@@ -77,7 +77,7 @@ describe('util test cpad', () => {
   });
 });
 
-describe.only('util test formatDate', () => {
+describe('util test formatDate', () => {
   it('should correctly format time with leading zero', () => {
     const result = util.formatDate(new Date(3666 * 1000));
     expect(result).to.be.equal('01:01 01.01');

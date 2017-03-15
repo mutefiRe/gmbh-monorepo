@@ -82,7 +82,7 @@ class layout {
     return printData.reduce((a,b) => a.concat(b));
   }
 
-  tokenCoin(order) {
+  tokenCoin(order, eventName) {
     const printData = [];
     let item = order.item.name.toUpperCase().substr(0, 46);
     if(order.item.category.showAmount) {
@@ -96,7 +96,7 @@ class layout {
     printData.push(ENTER, ENTER, ENTER);
     printData.push(TXT_2HEIGHT, util.cpad('1x ' + item, 48), TXT_NORMAL);
     printData.push(ENTER, ENTER, ENTER);
-    printData.push(util.cpad(t.festival, 48));
+    printData.push(util.cpad(eventName, 48));
     printData.push(FEED, PAPER_PART_CUT);
 
     let printSequence = printData;
