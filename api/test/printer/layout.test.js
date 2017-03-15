@@ -328,7 +328,7 @@ describe('should format tokenCoin', () => {
         }
       }
     };
-    const result = layout.tokenCoin(item)
+    const result = layout.tokenCoin(item, "GMBH")
       .filter((item) => {
         if(typeof item !== 'string') {
           return false;
@@ -344,7 +344,7 @@ describe('should format tokenCoin', () => {
       '1x BIER', '\n',
       '\n',
       '\n',
-      'Oberländer Bataillons-Schützenfest',
+      'GMBH',
       '\n\n\n\n\n\n\n',
       '\n',
       'WERTMARKE FÜR', '\n',
@@ -354,7 +354,7 @@ describe('should format tokenCoin', () => {
       '1x BIER', '\n',
       '\n',
       '\n',
-      'Oberländer Bataillons-Schützenfest',
+      'GMBH',
       '\n\n\n\n\n\n\n'
     ]);
   });
@@ -377,7 +377,7 @@ describe('should format tokenCoin', () => {
         }
       }
     };
-    const result = layout.tokenCoin(item)
+    const result = layout.tokenCoin(item, "GMBH")
       .filter((item) => {
         if(typeof item !== 'string') {
           return false;
@@ -393,7 +393,7 @@ describe('should format tokenCoin', () => {
       '1x BIER', '\n',
       '\n',
       '\n',
-      'Oberländer Bataillons-Schützenfest',
+      'GMBH',
       '\n\n\n\n\n\n\n'
     ]);
   });

@@ -10,13 +10,25 @@ chai.use(chaiHttp);
 describe('/authenticate route', () => {
 
   before(() => {
-    return db.User.create({
-      username: "test",
-      firstname: "max",
-      lastname: "mustermann",
-      password: "test",
-      permission: 0
-    });
+    return Promise.all([
+      db.User.create({
+        username: "test",
+        firstname: "max",
+        lastname: "mustermann",
+        password: "test",
+        permission: 0
+      }),
+      db.Setting.create({
+        name: "Testsetting",
+        begin_date: "nodate",
+        end_date: "nodate",
+        instantPay: true,
+        customTables: false,
+        receiptPrinter: "GMBH-WLAN",
+        eventName: "GMBH",
+        expiresTime: "72h"
+      })
+    ])
   });
 
   describe('with valid username', () => {

@@ -22,8 +22,8 @@ class Print {
     })
   }
 
-  tokenCoin(data, printer) {
-    const tokens = data.orderitems.map(layout.tokenCoin);
+  tokenCoin(data, printer, eventName) {
+    const tokens = data.orderitems.map((order) => layout.tokenCoin(order, eventName));
     let printSequence = [];
     tokens.forEach((token) => {
       printSequence = printSequence.concat(token);

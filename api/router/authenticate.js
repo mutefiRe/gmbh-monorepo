@@ -21,8 +21,12 @@ router.post('/', function(req, res){
   }}).then(thisUser => {
     if (!thisUser) throw new Error("Authentication failed. Wrong Username");
     else if (thisUser.validPassword(req.body.password)) {
-      const token = jwt.sign(thisUser.createAuthUser(), config.secret, { expiresIn: '72h' });
-      res.send({token});
+      db.Setting.findAll().then((settings) => {
+        return JSON.parse(JSON.stringify(settings))[0].expiresTime;
+      }).then((expiresTime) => {
+        const token = jwt.sign(thisUser.createAuthUser(), config.secret, { expiresTime });
+        res.send({token});
+      });
     }
     else throw new Error("Authentication failed. Wrong Password");
   }).catch(error => {

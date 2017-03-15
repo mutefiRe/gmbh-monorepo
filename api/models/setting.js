@@ -7,7 +7,9 @@ module.exports = function(sequelize, DataTypes) {
     endDate:        {type: DataTypes.DATE,    allowNull: true,  unique: false},
     customTables:   {type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue: false },
     instantPay:     {type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue: true },
-    receiptPrinter: {type: DataTypes.STRING,  allowNull: false, unique: false}
+    receiptPrinter: {type: DataTypes.STRING,  allowNull: false, unique: false},
+    eventName:      {type: DataTypes.STRING,  allowNull: false, unique: false},
+    expiresTime:    {type: DataTypes.STRING,  allowNull: false, unique: false, defaultValue: "72h"}
   });
   return Setting;
 };

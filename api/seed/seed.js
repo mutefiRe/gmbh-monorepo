@@ -133,7 +133,9 @@ module.exports = function(){
     end_date: "nodate",
     instantPay: true,
     customTables: false,
-    receiptPrinter: "GMBH-WLAN"
+    receiptPrinter: "GMBH-WLAN",
+    eventName: "GMBH",
+    expiresTime: "72h"
   });
 
   /* ALCOHOLICS */
