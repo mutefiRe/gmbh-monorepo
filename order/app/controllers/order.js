@@ -1,24 +1,27 @@
 import Ember from 'ember';
+import { storageFor } from 'ember-local-storage';
 
 export default Ember.Controller.extend({
-  classNames:     ['order'],
-  session:        Ember.inject.service('session'),
-  payload:        Ember.inject.service('session-payload'),
+  classNames: ['order'],
+  session: Ember.inject.service('session'),
+  payload: Ember.inject.service('session-payload'),
   actualCategory: false,
-  modalType:      'table-select',
-  modalHeadline:  'Tisch auswählen',
-  modalButtons:   true,
-  order:          null,
-  modalItem:      null,
-  orderItems:     [],
-  barKeeper:      false,
-  user:           null,
-  actualOrder:    null,
-  triggerModal:   false,
-  connection:     true,
+  modalType: 'table-select',
+  modalHeadline: 'Tisch auswählen',
+  modalButtons: true,
+  order: null,
+  modalItem: null,
+  orderItems: [],
+  barKeeper: false,
+  user: null,
+  actualOrder: null,
+  triggerModal: false,
+  connection: true,
+  orderStorage: storageFor('orders'),
+  payStorage:   storageFor('pay'),
   init() {
     const id = this.get('payload').getId();
-    this.store.find('user', id).then( user => {
+    this.store.find('user', id).then(user => {
       this.set('user', user);
       const order = this.store.createRecord('order', {});
       order.set('user', user);
@@ -26,7 +29,7 @@ export default Ember.Controller.extend({
 
       if (this.get('user.printer')) {
         this.set('barKeeper', true);
-        this.store.findAll('table').then( table => {
+        this.store.findAll('table').then(table => {
           order.set('table', table.get('firstObject'));
         });
       }
@@ -44,18 +47,17 @@ export default Ember.Controller.extend({
       const order = this.get('order');
 
       const orderitem = order.get('orderitems')
-      .filterBy('item.id', item.id)
-      .filterBy('extras', extras);
+        .filterBy('item.id', item.id)
+        .filterBy('extras', extras);
 
       if (orderitem.length === 0) {
-        const newOrderitem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras, price: item.get('price')});
+        const newOrderitem = this.store.createRecord('orderitem', { order: this.get('order'), item, extras, price: item.get('price') });
         if (newOrderitem.get('price') === 0) newOrderitem.set('countPaid', 1);
 
       } else {
         orderitem[0].incrementProperty('count');
-        if(orderitem[0].get('price') === 0) orderitem[0].incrementProperty('countPaid');
+        if (orderitem[0].get('price') === 0) orderitem[0].incrementProperty('countPaid');
       }
-
     },
 
     showModal(activeType, buttons, item) {
@@ -87,29 +89,43 @@ export default Ember.Controller.extend({
     saveOrder(goToOrderScreen) {
       const order = this.get('order');
       this.send('showLoadingModal');
-      order.save()
-      .then(() => {
-        order.get('orderitems').filterBy('id', null).invoke('unloadRecord');
+
+      if (this.get('connection')) {
+        order.save()
+          .then(() => {
+            order.get('orderitems').filterBy('id', null).invoke('unloadRecord');
+            this.send('resetOrder');
+            return this.store.createRecord('print', { order: order.id, isBill: false }).save();
+          }).then(() => {
+            if (this.get('model.Settings.firstObject.instantPay')) {
+              this.set('actualOrder', order);
+            }
+            this.toggleProperty('triggerModal');
+            goToOrderScreen();
+          }).catch(err => {
+            console.log(err);
+            // nothing to do here
+            // push to offline storage queue / hoodie
+          });
+      } else {
+        const serializedOrder = order.serialize();
+        serializedOrder.id = order.id;
+        this.get('orderStorage').addObject(serializedOrder);
         this.send('resetOrder');
-        return this.store.createRecord('print',{order: order.id, isBill: false}).save();
-      }).then(() => {
-        if(this.get('model.Settings.firstObject.instantPay')){
+        if (this.get('model.Settings.firstObject.instantPay')) {
           this.set('actualOrder', order);
         }
+
         this.toggleProperty('triggerModal');
         goToOrderScreen();
-      }).catch(err => {
-        console.log(err);
-        // nothing to do here
-        // push to offline storage queue / hoodie
-      });
+      }
     },
-    resetOrder(){
+    resetOrder() {
       const order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);
     },
-    discardOrder(){
+    discardOrder() {
       let order = this.get('order');
 
       order.get('orderitems').invoke('unloadRecord');
@@ -123,15 +139,15 @@ export default Ember.Controller.extend({
       const order = orderitem.get('order');
       const totalAmount = order.get('totalAmount');
 
-      order.set('totalAmount', totalAmount -  orderitem.get('price') * orderitem.get('count'));
+      order.set('totalAmount', totalAmount - orderitem.get('price') * orderitem.get('count'));
       this.store.deleteRecord(orderitem);
     },
-    printBill(orderId){
-      this.store.createRecord('print', {order: orderId, isBill: true}).save().then(() => {
+    printBill(orderId) {
+      this.store.createRecord('print', { order: orderId, isBill: true }).save().then(() => {
         this.toggleProperty('triggerModal');
       });
     },
-    triggerModal(){
+    triggerModal() {
       this.toggleProperty('triggerModal');
     },
     socketDisconnected() {
@@ -139,6 +155,35 @@ export default Ember.Controller.extend({
     },
     socketReconnected() {
       this.set('connection', true);
+
+      const promises = this.get('orderStorage').recordsPromises(this.store);
+
+      Promise.all(promises).then(() => {
+        this.get('orderStorage').clear();
+
+        const duplicated = [];
+        const payStorage = this.get('payStorage').getArray();
+
+        return payStorage.reverse().map(order => {
+          if (duplicated.includes(order.id)) return null;
+          duplicated.push(order.id);
+          const orderRecord = this.store.peekRecord('order', order.id);
+          orderRecord.set("totalAmount", order.totalAmount);
+          orderRecord.orderitems = order.orderitems.map(orderitem => {
+            const orderitemRecord     = this.store.peekRecord('orderitem', orderitem.id);
+            orderitemRecord.count     = orderitem.count;
+            orderitemRecord.countFree = orderitem.countFree;
+            orderitemRecord.countPaid = orderitem.countPaid;
+            return orderitemRecord;
+          });
+          return orderRecord.save();
+        });
+      }).then(() => {
+        this.get('payStorage').clear();
+        console.log("all paid");
+      }).catch(err => {
+        console.log(err);
+      });
     }
   }
 });

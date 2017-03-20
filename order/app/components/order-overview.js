@@ -5,11 +5,14 @@ export default Ember.Component.extend(RecognizerMixin, {
   pageTransitions: Ember.inject.service('pagetransitions'),
   recognizers: 'swipe',
   sortBy: ['createdAt:desc'],
-  sortedOrders: Ember.computed.sort('orders', 'sortBy'),
-  openOrders: Ember.computed.filter('sortedOrders', order => {
-    return order.get('orderitems').every(unpaidItem);
+  filteredOrders: Ember.computed.filter('orders', function(order){
+    return order.id !== this.get('order.id');
+  }),
+  sortedOrders: Ember.computed.sort('filteredOrders', 'sortBy'),
+  paidOrders: Ember.computed.filter('sortedOrders', function(order) {
+    return !order.get('orderitems').every(unpaidItem);
   }).property('orders.@each.orderitems'),
-  paidOrders: Ember.computed.setDiff('sortedOrders', 'openOrders').property('orders.@each.orderitems'),
+  openOrders: Ember.computed.setDiff('sortedOrders', 'paidOrders').property('orders.@each.orderitems'),
   classNames: ['order-overview','screen'],
   swipeLeft() {
     this.gotToOrderscreen();
@@ -30,6 +33,6 @@ export default Ember.Component.extend(RecognizerMixin, {
   }
 });
 
-function unpaidItem(item) {
-  return item.get('countPaid') < item.get('count');
+function unpaidItem(orderitem) {
+  return orderitem.get('countPaid') >= orderitem.get('count');
 }

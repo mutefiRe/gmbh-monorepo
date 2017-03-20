@@ -5,5 +5,6 @@ export default DS.RESTSerializer.extend({
     if (relationship === 'belongsTo') {
       return `${key}Id`;
     }
+    return key;
   }
 });
