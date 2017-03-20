@@ -8,5 +8,15 @@ export default DS.Model.extend({
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
   area: DS.belongsTo('area'),
-  orders: DS.hasMany('order')
+  orders: DS.hasMany('order'),
+  orderitems: Ember.computed('orders', function(){
+    const final = new Array();
+    const orders = this.get('orders');
+    orders.toArray().map( order => {
+      order.get('orderitems').toArray().map( (orderitem) => { 
+        final.push(orderitem); 
+      } );
+    });
+    return final;
+  })
 });
