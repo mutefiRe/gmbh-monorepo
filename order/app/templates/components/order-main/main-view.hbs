@@ -1,5 +1,5 @@
 {{yield}}
-{{category-selection categories=categories actualCategory=actualCategory changeCategory=(action "changeCategory")}}
+{{order-main/category/main-container categories=categories actualCategory=actualCategory changeCategory=(action "changeCategory")}}
 <div class="item-and-preview-list">
   {{item-list category=actualCategory categories=categories items=items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") goToOrderList=(action "goToOrderList") goToOrderOverview=(action "goToOrderOverview")}}
   {{order-main/preview/main-container order=order goToOrderList=(action "goToOrderList") goToOrderOverview=(action "goToOrderOverview")}}
