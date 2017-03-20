@@ -19,7 +19,7 @@ tests:
   - yarn
   - bower install --allow-root
   script:
-  - ember test
+  - yarn test
 
 heroku:
   stage: deploy
