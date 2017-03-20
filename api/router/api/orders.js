@@ -1,7 +1,7 @@
 'use strict';
 
-const router             = require('express').Router();
-const db                 = require('../../models');
+const router = require('express').Router();
+const db = require('../../models');
 
 /**
  * @apiDefine orderAttributes
@@ -50,11 +50,11 @@ const db                 = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Order.find({where: {id: req.params.id}, include: [{model: db.Orderitem}]}).then(order => {
+router.get('/:id', function (req, res) {
+  db.Order.find({ where: { id: req.params.id }, include: [{ model: db.Orderitem }] }).then(order => {
 
     order = JSON.parse(JSON.stringify(order));
-    res.send({order});
+    res.send({ order });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -79,11 +79,11 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res){
-  db.Order.findAll({where: {userId: req.decoded.id}, include: [{model: db.Orderitem}]}).then(orders => {
+router.get('/', function (req, res) {
+  db.Order.findAll({ where: { userId: req.decoded.id }, include: [{ model: db.Orderitem }] }).then(orders => {
     orders = JSON.parse(JSON.stringify(orders));
 
-    res.send({orders});
+    res.send({ orders });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -106,31 +106,35 @@ router.get('/', function(req, res){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res){
-  const requestOrder = req.body.order;
-  const orderitems   = requestOrder.orderitems;
-  let   orderId      = null;
-  db.Order.create(requestOrder)
-  .then( order => {
-    orderitems.map(x => {
-      x.orderId = order.id;
-    });
-    orderId = order.id;
-    return db.Orderitem.bulkCreate(orderitems);
-  })
-  .then(() => {
-    return db.Order.findById(orderId, {include: [{model: db.Orderitem}]});
-  })
-  .then(data => {
-    const order = JSON.parse(JSON.stringify(data));
+router.post('/', function (req, res) {
 
-    res.send({order});
-  }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
-    });
+  db.Order.find({ where: { id: req.body.order.id } }).then(order => {
+    if (order) {
+      res.send({order});
+    } else {
+      const requestOrder = req.body.order;
+      const orderitems = requestOrder.orderitems;
+      let orderId = null;
+      db.Order.create(requestOrder).then(order => {
+        orderitems.map(x => {
+          x.orderId = order.id;
+        });
+        orderId = order.id;
+        return db.Orderitem.bulkCreate(orderitems);
+      }).then(() => {
+        return db.Order.findById(orderId, { include: [{ model: db.Orderitem }] });
+      }).then(data => {
+        const order = JSON.parse(JSON.stringify(data));
+
+        res.send({ order });
+      }).catch(error => {
+        res.status(400).send({
+          'errors': {
+            'msg': error && error.errors && error.errors[0].message || error.message
+          }
+        });
+      });
+    }
   });
 });
 
@@ -150,21 +154,21 @@ router.post('/', function(req, res){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res){
+router.put('/:id', function (req, res) {
   const requestOrder = req.body.order;
   db.Order.findById(req.params.id).then(order => {
     return order.update(req.body.order);
   }).then(() => {
     const promises = [];
-    for(const orderitem of requestOrder.orderitems){
-      const promise = db.Orderitem.update(orderitem, {where: {id: orderitem.id}});
+    for (const orderitem of requestOrder.orderitems) {
+      const promise = db.Orderitem.update(orderitem, { where: { id: orderitem.id } });
       promises.push(promise);
     }
     return Promise.all(promises);
   }).then(() => {
-    return db.Order.findById(req.params.id, {include: [{model: db.Orderitem}]});
+    return db.Order.findById(req.params.id, { include: [{ model: db.Orderitem }] });
   }).then(order => {
-    res.send({order});
+    res.send({ order });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -185,8 +189,8 @@ router.put('/:id', function(req, res){
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res){
-  db.Order.find({where: {id: req.params.id}}).then(order => {
+router.delete('/:id', function (req, res) {
+  db.Order.find({ where: { id: req.params.id } }).then(order => {
     return order.destroy();
   }).then(() => {
     res.send({});
