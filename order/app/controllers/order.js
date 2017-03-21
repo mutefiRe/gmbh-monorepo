@@ -60,35 +60,10 @@ export default Ember.Controller.extend({
       }
     },
 
-    showModal(activeType, buttons, item) {
-      this.set('modalType', activeType);
-      this.set('modalButtons', buttons);
-      this.set('modalItem', item);
-      switch (activeType) {
-        case 'table-select':
-          this.set('modalHeadline', 'Tisch auswählen');
-          break;
-        case 'item-settings':
-          this.set('modalHeadline', this.get('modalItem').get('name'));
-          break;
-        case 'discard-order':
-          this.set('modalHeadline', 'Bestellung verwerfen?');
-          break;
-        default:
-          break;
-      }
-      this.toggleProperty('triggerModal');
-    },
-    showLoadingModal() {
-      this.set('modalType', 'show-loading-modal');
-      this.set('modalButtons', false);
-      this.set('modalItem', null);
-      this.set('modalHeadline', 'verarbeite Daten');
-      this.toggleProperty('triggerModal');
-    },
     saveOrder(goToOrderScreen) {
       const order = this.get('order');
-      this.send('showLoadingModal');
+      this.get('modal')
+        .showModal({ activeType: 'loading-box' });
 
       if (this.get('connection')) {
         order.save()
@@ -100,7 +75,7 @@ export default Ember.Controller.extend({
             if (this.get('model.Settings.firstObject.instantPay')) {
               this.set('actualOrder', order);
             }
-            this.toggleProperty('triggerModal');
+            this.get('modal').closeModal();
             goToOrderScreen();
           }).catch(err => {
             console.log(err);
@@ -115,8 +90,7 @@ export default Ember.Controller.extend({
         if (this.get('model.Settings.firstObject.instantPay')) {
           this.set('actualOrder', order);
         }
-
-        this.toggleProperty('triggerModal');
+        this.get('modal').closeModal();
         goToOrderScreen();
       }
     },
@@ -142,19 +116,18 @@ export default Ember.Controller.extend({
       order.set('totalAmount', totalAmount - orderitem.get('price') * orderitem.get('count'));
       this.store.deleteRecord(orderitem);
     },
-    printBill(orderId) {
-      this.store.createRecord('print', { order: orderId, isBill: true }).save().then(() => {
-        this.toggleProperty('triggerModal');
+    printBill(orderId){
+      this.get('modal').showModal({ activeType: 'loading-box' });
+      this.store.createRecord('print', {order: orderId, isBill: true}).save().then(() => {
+        this.get('modal').closeModal();
       });
-    },
-    triggerModal() {
-      this.toggleProperty('triggerModal');
     },
     socketDisconnected() {
       this.set('connection', false);
     },
     socketReconnected() {
       this.set('connection', true);
+
       const promises = this.get('orderStorage').recordsPromises(this.store);
 
       Promise.all(promises).then(() => {
@@ -175,6 +148,8 @@ export default Ember.Controller.extend({
       }).catch(err => {
         console.log(err);
       });
+    },
+    showLoadingModal(){
     }
   },
   createOrderitemRecord(orderitem){

@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
   classNames: ['order-screen','screen','isActive'],
   goToOrderList() {
@@ -17,7 +18,7 @@ export default Ember.Component.extend({
       this.get('addItemToOrder')(item);
     },
     showModal(modalType, buttons, item) {
-      this.get('showModal')(modalType, buttons, item);
+      this.get('modal').showModal({ modalType, buttons, item });
     },
     goToOrderList() {
       this.goToOrderList();
