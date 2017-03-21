@@ -16,12 +16,12 @@
 <div class="scrollable">
   <table>
     {{#each orderitems as |orderitem|}}
-    {{order-detail-view-item orderitem=orderitem type="open" css="notpaid"}}
+    {{pay-detail/single-item orderitem=orderitem type="open" css="notpaid"}}
     {{/each}}
   </table>
   <table>
     {{#each paidOrderitems as |orderitem|}}
-    {{order-detail-view-item orderitem=orderitem type="paid" css="paid"}}
+    {{pay-detail/single-item orderitem=orderitem type="paid" css="paid"}}
     {{/each}}
   </table>
 </div>
@@ -38,7 +38,7 @@
 <div class="scrollable-pay">
   <table>
     {{#each markedOrderitems as |orderitem|}}
-    {{order-detail-view-item orderitem=orderitem type="marked" css="topay"}}
+    {{pay-detail/single-item orderitem=orderitem type="marked" css="topay"}}
     {{/each}}
   </table>
 </div>

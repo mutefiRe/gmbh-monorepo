@@ -1,20 +1,21 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  classNames: ['order'],
-  session: Ember.inject.service('session'),
-  payload: Ember.inject.service('session-payload'),
+  classNames:     ['order'],
+  session:        Ember.inject.service('session'),
+  payload:        Ember.inject.service('session-payload'),
   actualCategory: false,
-  modalType: 'table-select',
-  modalHeadline: 'Tisch auswählen',
-  modalButtons: true,
-  order: null,
-  modalItem: null,
-  orderItems: [],
-  barKeeper: false,
-  user: null,
-  actualOrder: null,
-  triggerModal: false,
+  modalType:      'table-select',
+  modalHeadline:  'Tisch auswählen',
+  modalButtons:   true,
+  order:          null,
+  modalItem:      null,
+  orderItems:     [],
+  barKeeper:      false,
+  user:           null,
+  actualOrder:    null,
+  triggerModal:   false,
+  connection:     true,
   init() {
     const id = this.get('payload').getId();
     this.store.find('user', id).then( user => {
@@ -47,12 +48,12 @@ export default Ember.Controller.extend({
       .filterBy('extras', extras);
 
       if (orderitem.length === 0) {
-        let newOrderitem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras, price: item.get('price')});
-        if (newOrderitem.get('price') == 0) newOrderitem.set('countPaid', 1);
+        const newOrderitem = this.store.createRecord('orderitem', {order: this.get('order'), item, extras, price: item.get('price')});
+        if (newOrderitem.get('price') === 0) newOrderitem.set('countPaid', 1);
 
       } else {
         orderitem[0].incrementProperty('count');
-        if(orderitem[0].get('price') == 0) orderitem[0].incrementProperty('countPaid');
+        if(orderitem[0].get('price') === 0) orderitem[0].incrementProperty('countPaid');
       }
 
     },
@@ -97,13 +98,14 @@ export default Ember.Controller.extend({
         }
         this.toggleProperty('triggerModal');
         goToOrderScreen();
-      }).catch((err) => {
+      }).catch(err => {
         console.log(err);
         // nothing to do here
+        // push to offline storage queue / hoodie
       });
     },
     resetOrder(){
-      let order = this.store.createRecord('order', {});
+      const order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);
     },
@@ -133,17 +135,10 @@ export default Ember.Controller.extend({
       this.toggleProperty('triggerModal');
     },
     socketDisconnected() {
-      this.set('modalHeadline', 'Verbindungsfehler');
-      this.set('modalType', 'error-screen');
-      this.set('modalButtons', false);
-      if($('.modal').hasClass('hidden')){
-        this.toggleProperty('triggerModal');
-      }
+      this.set('connection', false);
     },
     socketReconnected() {
-      if(!$('.modal').hasClass('hidden')){
-        this.toggleProperty('triggerModal');
-      }
+      this.set('connection', true);
     }
   }
 });
