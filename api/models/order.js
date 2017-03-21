@@ -6,9 +6,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate(models) {
-        Order.belongsTo(models.User,    {onDelete: 'RESTRICT'});
-        Order.belongsTo(models.Table,   {onDelete: 'RESTRICT'});
-        Order.hasMany(models.Orderitem, {onDelete: 'RESTRICT'});
+        Order.belongsTo(models.User,    {onDelete: 'NO ACTION'});
+        Order.belongsTo(models.Table,   {onDelete: 'NO ACTION'});
+        Order.hasMany(models.Orderitem, {onDelete: 'NO ACTION'});
       }
     }
   });

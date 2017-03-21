@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate(models) {
         Category.hasMany(models.Category,   { as: 'children', foreignKey: "categoryId" });
-        Category.hasMany(models.Item,       { onDelete: 'RESTRICT'});
+        Category.hasMany(models.Item,       { onDelete: 'NO ACTION'});
         Category.belongsTo(models.Category, { as: 'father', foreignKey: "categoryId" });
       }
     }

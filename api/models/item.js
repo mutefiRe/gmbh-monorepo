@@ -10,8 +10,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate(models) {
-        Item.belongsTo(models.Unit, {onDelete: 'RESTRICT'});
-        Item.belongsTo(models.Category, {onDelete: 'RESTRICT'});
+        Item.belongsTo(models.Unit, {onDelete: 'NO ACTION'});
+        Item.belongsTo(models.Category, {onDelete: 'NO ACTION'});
       }
     }
   });
