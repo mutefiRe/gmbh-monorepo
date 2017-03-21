@@ -2,25 +2,26 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   store: Ember.inject.service('store'),
+  modal: Ember.inject.service(),
   classNames: ['table-select'],
   showTables: true,
   showGuests: false,
   showNew: false,
   userAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') == this.get('currentUser').id;
+    return area.get('user.id') === this.get('currentUser').id;
   }).property('areas'),
   otherAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') != this.get('currentUser').id;
+    return area.get('user.id') !== this.get('currentUser').id;
   }).property('areas'),
   unassignedTables: Ember.computed.filter('tables', function(table){
-    return table.get('custom') == false && !table.get('area.id');
+    return table.get('custom') === false && !table.get('area.id');
   }).property('tables'),
   customTables: Ember.computed.filter('tables', function(table){
-    if (table.get('custom') == true)
+    if (table.get('custom') === true)
     {
-      let orders = table.get('orders');
-      let openOrders = orders.filter(function(order){
-        return order.totalAmount != 0;
+      const orders = table.get('orders');
+      const openOrders = orders.filter(function(order){
+        return order.totalAmount !== 0;
       });
       return openOrders.get('length') > 0;
     }
@@ -29,7 +30,7 @@ export default Ember.Component.extend({
   actions: {
     setTable(table) {
       this.set('order.table', table);
-      this.get('showModal')('table-select');
+      this.get('modal').closeModal();
     },
     changeTab(tab) {
       switch(tab) {
@@ -52,9 +53,12 @@ export default Ember.Component.extend({
       }
     },
     createTable(){
-      this.get('store').createRecord('table', {name: this.get('name'), custom: true }).save().then(table => {
-        this.send('setTable', table);
-      });
+      this.get('store')
+        .createRecord('table', { name: this.get('name'), custom: true })
+        .save()
+        .then(table => {
+          this.send('setTable', table);
+        });
       this.set('name', "");
       this.set('showTables', false);
       this.set('showGuests', true);

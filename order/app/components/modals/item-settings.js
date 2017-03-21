@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  modal: Ember.inject.service(),
   classNames: ['item-settings'],
   amount: 1,
   actions: {
@@ -18,13 +19,10 @@ export default Ember.Component.extend({
       for (let i = 0; i < this.get('amount'); i += 1) {
         this.get('addItemToOrder')(this.get('modalItem'), this.get('extra'));
       }
-      this.triggerAction({
-        action: 'close',
-        target: this
-      });
+      this.get('modal').closeModal();
     },
     close() {
-      this.get('showModal')('table-select');
+      this.get('modal').closeModal();
       this.set('amount', 1);
     }
   }

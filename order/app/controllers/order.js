@@ -4,17 +4,13 @@ export default Ember.Controller.extend({
   classNames:     ['order'],
   session:        Ember.inject.service('session'),
   payload:        Ember.inject.service('session-payload'),
+  modal:          Ember.inject.service('modal'),
   actualCategory: false,
-  modalType:      'table-select',
-  modalHeadline:  'Tisch auswählen',
-  modalButtons:   true,
   order:          null,
-  modalItem:      null,
   orderItems:     [],
   barKeeper:      false,
   user:           null,
   actualOrder:    null,
-  triggerModal:   false,
   connection:     true,
   init() {
     const id = this.get('payload').getId();
@@ -55,38 +51,11 @@ export default Ember.Controller.extend({
         orderitem[0].incrementProperty('count');
         if(orderitem[0].get('price') === 0) orderitem[0].incrementProperty('countPaid');
       }
-
-    },
-
-    showModal(activeType, buttons, item) {
-      this.set('modalType', activeType);
-      this.set('modalButtons', buttons);
-      this.set('modalItem', item);
-      switch (activeType) {
-        case 'table-select':
-          this.set('modalHeadline', 'Tisch auswählen');
-          break;
-        case 'item-settings':
-          this.set('modalHeadline', this.get('modalItem').get('name'));
-          break;
-        case 'discard-order':
-          this.set('modalHeadline', 'Bestellung verwerfen?');
-          break;
-        default:
-          break;
-      }
-      this.toggleProperty('triggerModal');
-    },
-    showLoadingModal() {
-      this.set('modalType', 'show-loading-modal');
-      this.set('modalButtons', false);
-      this.set('modalItem', null);
-      this.set('modalHeadline', 'verarbeite Daten');
-      this.toggleProperty('triggerModal');
     },
     saveOrder(goToOrderScreen) {
       const order = this.get('order');
-      this.send('showLoadingModal');
+      this.get('modal')
+        .showModal({ activeType: 'loading-box' });
       order.save()
       .then(() => {
         order.get('orderitems').filterBy('id', null).invoke('unloadRecord');
@@ -96,7 +65,7 @@ export default Ember.Controller.extend({
         if(this.get('model.Settings.firstObject.instantPay')){
           this.set('actualOrder', order);
         }
-        this.toggleProperty('triggerModal');
+        this.get('modal').closeModal();
         goToOrderScreen();
       }).catch(err => {
         console.log(err);
@@ -127,18 +96,19 @@ export default Ember.Controller.extend({
       this.store.deleteRecord(orderitem);
     },
     printBill(orderId){
+      this.get('modal').showModal({ activeType: 'loading-box' });
       this.store.createRecord('print', {order: orderId, isBill: true}).save().then(() => {
-        this.toggleProperty('triggerModal');
+        this.get('modal').closeModal();
       });
-    },
-    triggerModal(){
-      this.toggleProperty('triggerModal');
     },
     socketDisconnected() {
       this.set('connection', false);
     },
     socketReconnected() {
       this.set('connection', true);
+    },
+    showLoadingModal(){
+      this.get('modal').showModal({ activeType: 'loading-box' });
     }
   }
 });

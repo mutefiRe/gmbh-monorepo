@@ -2,9 +2,10 @@ import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
 export default Ember.Component.extend(RecognizerMixin, {
+  modal:           Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
-  classNames:        ['order-detail-view','screen'],
-  recognizers:       'swipe',
+  classNames:      ['order-detail-view','screen'],
+  recognizers:     'swipe',
   paidOrderitems: Ember.computed.filter('order.orderitems', function(orderitem) {
     if (orderitem.get('countPaid') > 0) return true;
     return false;
@@ -54,7 +55,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.goToOrderOverview();
     },
     paySelected(){
-      this.triggerAction({action: 'showLoadingModal'});
+      this.get('modal').showModal({ activeType: 'loading-box' });
       const orderitems = this.get('markedOrderitems');
       const forFreeOrder = this.get('forFree');
       let promises = [];
@@ -70,7 +71,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       order.set('isPaid', this.get('openAmount') == 0);
       order.set('totalAmount', this.get('openAmount'));
       order.save().then(() => {
-        this.triggerAction({action: 'triggerModal'});
+        this.get('modal').closeModal();
         this.set('forFree', false);
       }).catch((err) => {
         this.get('order.orderitems').forEach((item) => {
@@ -80,7 +81,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       });
     },
     payAll() {
-      this.triggerAction({action: 'showLoadingModal'});
+      this.get('modal').showModal({ activeType: 'loading-box' });
       const orderitems = this.get('order.orderitems');
       const forFree = this.get('forFree');
 
@@ -95,7 +96,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       order.set('isPaid', true);
       order.set('totalAmount', 0);
       order.save().then(() => {
-        this.triggerAction({action: 'triggerModal'});
+        this.get('modal').closeModal();
         this.set('forFree', false);
       }).catch(() => {
         this.get('order.orderitems').forEach(item => {
@@ -105,7 +106,6 @@ export default Ember.Component.extend(RecognizerMixin, {
       });
     },
     printBill() {
-      this.triggerAction({action: 'showLoadingModal'});
       this.get('printBill')(this.get('order').id);
     }
   }
