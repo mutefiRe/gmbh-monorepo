@@ -17,7 +17,7 @@ export default Ember.Controller.extend({
   actualOrder: null,
   triggerModal: false,
   connection: true,
-  orderStorage: storageFor('orders'),
+  orderStorage: storageFor('order'),
   payStorage:   storageFor('pay'),
   init() {
     const id = this.get('payload').getId();
@@ -109,7 +109,7 @@ export default Ember.Controller.extend({
           });
       } else {
         const serializedOrder = order.serialize();
-        serializedOrder.id = order.id;
+        serializedOrder.id    = order.id;
         this.get('orderStorage').addObject(serializedOrder);
         this.send('resetOrder');
         if (this.get('model.Settings.firstObject.instantPay')) {
@@ -155,7 +155,6 @@ export default Ember.Controller.extend({
     },
     socketReconnected() {
       this.set('connection', true);
-
       const promises = this.get('orderStorage').recordsPromises(this.store);
 
       Promise.all(promises).then(() => {
@@ -167,15 +166,7 @@ export default Ember.Controller.extend({
         return payStorage.reverse().map(order => {
           if (duplicated.includes(order.id)) return null;
           duplicated.push(order.id);
-          const orderRecord = this.store.peekRecord('order', order.id);
-          orderRecord.set("totalAmount", order.totalAmount);
-          orderRecord.orderitems = order.orderitems.map(orderitem => {
-            const orderitemRecord     = this.store.peekRecord('orderitem', orderitem.id);
-            orderitemRecord.count     = orderitem.count;
-            orderitemRecord.countFree = orderitem.countFree;
-            orderitemRecord.countPaid = orderitem.countPaid;
-            return orderitemRecord;
-          });
+          const orderRecord = this.createOrderRecord(order);
           return orderRecord.save();
         });
       }).then(() => {
@@ -185,5 +176,20 @@ export default Ember.Controller.extend({
         console.log(err);
       });
     }
+  },
+  createOrderitemRecord(orderitem){
+    const orderitemRecord = this.store.peekRecord('orderitem', orderitem.id);
+    orderitemRecord.set('count',     orderitem.count);
+    orderitemRecord.set('countFree', orderitem.countFree);
+    orderitemRecord.set('countPaid', orderitem.countPaid);
+    return orderitemRecord;
+  },
+  createOrderRecord(order){
+    const orderRecord = this.store.peekRecord('order', order.id);
+    orderRecord.set("totalAmount", order.totalAmount);
+    order.orderitems.map(orderitem => {
+      return this.createOrderitemRecord(orderitem);
+    });
+    return orderRecord;
   }
 });
