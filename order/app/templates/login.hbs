@@ -3,11 +3,11 @@
     <img src="./assets/images/logo.png">
     <div class="login-form">
       <form {{action 'authenticate' on='submit'}}>
-        <label for="identification">Benutzername</label>
-        {{input id='identification' placeholder='Benutzername eingeben' value=identification}}
-        <label for="password">Passwort</label>
-        {{input id='password' placeholder='Passwort eingeben' type='password' value=password}}
-        <button type="submit">anmelden</button>
+        <label for="identification">{{t "input.username"}}</label>
+        {{input id='identification' placeholder=(t "input.enterUsername") value=identification}}
+        <label for="password">{{t "input.password"}}</label>
+        {{input id='password' placeholder=(t "input.enterPassword") type='password' value=password}}
+        <button type="submit">{{t "button.login"}}</button>
       </form>
       {{#if errorMessage}}
         <div class="error">
@@ -15,7 +15,7 @@
         </div>
       {{/if}}
     </div>
-    <p>© 2016 moßß OG - made with 🍺</p>
+    <p>{{t "copyright"}}</p>
   </div>
 </div>
 {{outlet}}

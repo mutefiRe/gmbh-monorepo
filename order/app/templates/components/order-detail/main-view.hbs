@@ -1,4 +1,4 @@
-<h2>Bestellung</h2>
+<h2>{{t "order.order" count=1}}</h2>
 <div class="scrollable">
   <table>
   {{#each order.orderitems as |orderitem|}}
@@ -12,34 +12,34 @@
 <div class="flexcontainer table_sum">
   {{#unless user.isCashier}}
     {{#if order.table.name}}
-      <button {{action 'showModal'}} class="tablebutton">Tisch: {{order.table.name}}</button>
+      <button {{action 'showModal'}} class="tablebutton">{{t "order.table" count=1}}: {{order.table.name}}</button>
     {{else}}
-      <button {{action 'showModal'}} class="tablebutton required">Tisch auswählen</button>
+      <button {{action 'showModal'}} class="tablebutton required">{{t "button.selectTable"}}</button>
     {{/if}}
   {{/unless}}
-  <p class="sum">Summe: € {{show-currency openAmount}}</p>
+  <p class="sum">{{t "order.sum"}}: € {{show-currency openAmount}}</p>
 </div>
 <div class="menu--desktop">
   <div class="flexcontainer">
     {{#if order.table.name}}
       {{#if order.orderitems}}
-        <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+        <button {{action 'saveOrder'}} class="bigbutton default-btn">{{t "button.submit"}}</button>
       {{else}}
-        <span class="empty-order default-btn">Bestellung ist leer!</span>
+        <span class="empty-order default-btn">{{t "order.empty"}}</span>
       {{/if}}
     {{else if user.isCashier}}
       {{#if order.orderitems}}
-        <button {{action 'saveOrder'}} class="bigbutton default-btn">Abschicken</button>
+        <button {{action 'saveOrder'}} class="bigbutton default-btn">{{t "button.submit"}}</button>
       {{else}}
-        <span class="empty-order default-btn">Bestellung ist leer!</span>
+        <span class="empty-order default-btn">{{t "order.empty"}}</span>
       {{/if}}
     {{else}}
-      <button {{action 'showModal'}} class="bigbutton default-btn">Tisch auswählen</button>
+      <button {{action 'showModal'}} class="bigbutton default-btn">{{t "button.selectTable"}}</button>
     {{/if}}
   </div>
   <div class="flexcontainer">
-    <button {{action 'returnButton'}} class="smallbutton default-btn">zurück</button>
-    <button {{action 'showModal2'}} class="smallbutton default-btn">Bestellung verwerfen</button>
+    <button {{action 'returnButton'}} class="smallbutton default-btn">{{t "button.back"}}</button>
+    <button {{action 'showModal2'}} class="smallbutton default-btn">{{t "button.discardOrder"}}</button>
   </div>
 </div>
 <div class="menu--mobile">

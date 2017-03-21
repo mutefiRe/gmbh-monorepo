@@ -65,5 +65,10 @@ module.exports = function (environment) {
 
   }
 
+  ENV.i18n = {
+    defaultLocale: 'de'
+  };
+
+
   return ENV;
 };

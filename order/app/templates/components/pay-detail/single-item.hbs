@@ -7,7 +7,7 @@
 € {{show-currency sum}}
   {{#if (eq type "paid")}}
     {{#if orderitem.countFree}}
-      ({{orderitem.countFree}} mit Gutschein)
+      ({{orderitem.countFree}} {{t "order.withVoucher"}})
     {{/if}}
   {{/if}}
 </td>
