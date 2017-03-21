@@ -3,11 +3,11 @@
 <div class="scrollable">
   <table>
     {{#each paidOrders as |order|}}
-      {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
+      {{pay-main/single-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
     {{/each}}
 
     {{#each openOrders as |order|}}
-      {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
+      {{pay-main/single-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
     {{/each}}
   </table>
 </div>
