@@ -9,17 +9,17 @@
     <div class="scrollable">
       <table>
         {{#each openOrders as |order|}}
-          {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
+          {{pay-main/single-order order=order actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
         {{/each}}
 
         {{#each paidOrders as |order|}}
-          {{order-overview-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
+          {{pay-main/single-order order=order actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
         {{/each}}
       </table>
     </div>
-<div class="flexcontainer">
-<button {{action "backButton"}} class="default-btn bigbutton">zurück</button>
-</div>
+    <div class="flexcontainer">
+      <button {{action "backButton"}} class="default-btn bigbutton">zurück</button>
+    </div>
   </div>
 {{/if}}
 {{#if (eq filter "tables")}}
@@ -27,15 +27,13 @@
     <h2>Tables</h2>
     <div class="scrollable">
       {{#each tables as |table|}}
-        {{#if table.orderitems}}
-          <div>Table: {{table.name}}<br>
-            {{#each table.orderitems as |item|}}
-              {{item.id}}
-            {{/each}}
-          </div>
-        {{/if}}
-        
+        {{#unless (eq table.openAmount 0) }}
+          {{pay-main/single-table table=table actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
+        {{/unless}}
       {{/each}}
+    </div>
+    <div class="flexcontainer">
+      <button {{action "backButton"}} class="default-btn bigbutton">zurück</button>
     </div>
   </div>
 {{/if}}

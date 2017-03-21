@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  modal: Ember.inject.service(), 
   tagName: 'div',
   classNames: ['single-item'],
   classNameBindings: ['myStyle'],
@@ -14,7 +15,8 @@ export default Ember.Component.extend({
   },
   actions: {
     showModal() {
-      this.get('showModal')('item-settings', false, this.get('item'));
+      this.get('modal')
+        .showModal({ activeType: 'item-settings', item: this.get('item') });
     },
     cancel() {
       Ember.run.cancel(this.get('pressed'));
@@ -24,9 +26,6 @@ export default Ember.Component.extend({
     this.get('addItemToOrder')(this.get('item'));
 
   },
-  // pan() {
-  //   this.triggerAction({action: 'cancel', target: this});
-  // },
   touchStart() {
     const runLater = Ember.run.later(this, function () {
       this.triggerAction({action: 'showModal', target: this});

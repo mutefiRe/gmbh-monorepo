@@ -3,8 +3,8 @@ import { it, describe } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration: ErrorScreenComponent', function() {
-  setupComponentTest('error-screen', {
+describe('Integration: ShowLoadingModalComponent', function() {
+  setupComponentTest('loading-box', {
     integration: true
   });
 
@@ -13,12 +13,12 @@ describe('Integration: ErrorScreenComponent', function() {
     // Handle any actions with this.on('myAction', function(val) { ... });
     // Template block usage:
     // this.render(hbs`
-    //   {{#error-screen}}
+    //   {{#show-loading-modal}}
     //     template content
-    //   {{/error-screen}}
+    //   {{/show-loading-modal}}
     // `);
 
-    this.render(hbs`{{error-screen}}`);
+    this.render(hbs`{{loading-box}}`);
     expect(this.$()).to.have.length(1);
   });
 });
