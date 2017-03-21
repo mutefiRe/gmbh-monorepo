@@ -2,7 +2,7 @@
 <div class="scrollable">
   <table>
   {{#each order.orderitems as |orderitem|}}
-    {{orderlist-item
+    {{order-detail/single-item
       orderitem=orderitem
       removeItemFromOrder=(action 'removeItemFromOrder')
     }}
