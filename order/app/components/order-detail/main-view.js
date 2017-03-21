@@ -1,11 +1,8 @@
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
 
-const {
-  Component
-} = Ember;
-
 export default Ember.Component.extend(RecognizerMixin, {
+  modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
   recognizers: 'swipe',
   classNames: ['orderlist','screen'],
@@ -34,10 +31,12 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('deleteOrderItem')(index);
     },
     showModal() {
-      this.get('showModal')('table-select', true);
+      this.get('modal')
+        .showModal({ activeType: 'table-select', buttons: true });
     },
     showModal2() {
-      this.get('showModal')('discard-order', true);
+      this.get('modal')
+        .showModal({ activeType: 'discard-order'});
     },
     saveOrder() {
       this.get('saveOrder')(() => {
