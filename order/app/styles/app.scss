@@ -21,16 +21,15 @@
   @import 'mixin-helper/helper.scss';
   @import 'order/order';
   @import 'order/order-main/category.scss';
+  @import 'order/order-main/preview.scss';
   @import 'order/order-main/product.scss';
   @import 'order/order-detail/order-detail.scss';
+  @import 'order/pay-main/pay-main.scss';
+  @import 'order/pay-detail/pay-detail.scss';
   @import 'order/modal-box.scss';
   @import 'order/table-select.scss';
   @import 'order/table-item.scss';
-  @import 'order/order-main/preview.scss';
   @import 'order/item-settings.scss';
-  @import 'order/pay-main/pay-main.scss';
-  @import 'order/order-detail-view.scss';
-  @import 'order/order-detail-view-item.scss';
   @import 'admin/dashboard.scss';
 
   @import 'login.scss';

@@ -18,8 +18,8 @@ export default Ember.Component.extend(RecognizerMixin, {
   goToOrderMain() {
     this.get('pageTransitions').toScreen({screen: 'order-main', from: 'right'});
   },
-  goToOrderDetail() {
-    this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
+  goToPayMain() {
+    this.get('pageTransitions').toScreen({screen: 'pay-detail', from: 'right'});
   },
   actions: {
     filterButtonOrder() {
@@ -32,7 +32,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.goToOrderMain();
     },
     orderClick() {
-      this.goToOrderDetail();
+      this.goToPayMain();
     }
   }
 });

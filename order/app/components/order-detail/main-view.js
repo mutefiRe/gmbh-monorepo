@@ -20,8 +20,8 @@ export default Ember.Component.extend(RecognizerMixin, {
   goToOrderMain() {
     this.get('pageTransitions').toScreen({screen: 'order-main', from: 'left'});
   },
-  goToOrderDetail() {
-    this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
+  goToPayDetail() {
+    this.get('pageTransitions').toScreen({screen: 'pay-detail', from: 'right'});
   },
   actions: {
     returnButton(){
@@ -41,7 +41,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     saveOrder() {
       this.get('saveOrder')(() => {
         if(this.get('settings.firstObject.instantPay')){
-          this.goToOrderDetail();
+          this.goToPayDetail();
         } else {
           this.goToOrderMain();
         }

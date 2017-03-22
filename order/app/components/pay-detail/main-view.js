@@ -4,7 +4,7 @@ import Ember from 'ember';
 export default Ember.Component.extend(RecognizerMixin, {
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
-  classNames: ['order-detail-view', 'screen'],
+  classNames: ['pay-detail', 'screen'],
   recognizers: 'swipe',
   type: Ember.computed('order', function () {
     return this.get('order.constructor.modelName');
