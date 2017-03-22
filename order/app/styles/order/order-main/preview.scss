@@ -1,10 +1,10 @@
-.preview-list {
+.preview {
   border-left: 1px solid $grey-dark;
   width: 60px;
   background-color: $grey-light;
   float: left;
   overflow-y: scroll;
-  li {
+  &_single-item{
     position: relative;
     .caption {
       color: #fff;

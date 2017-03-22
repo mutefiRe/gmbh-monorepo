@@ -1,4 +1,4 @@
-.orderlist{
+.order-detail{
   background: $white;
   margin: 0 auto;
   position: absolute;
@@ -122,6 +122,61 @@
       max-height: none;
     }
   }
+
+  &_single-item {
+    border: 1px solid $grey-dark;
+    &:first-child {
+        border-top: 0px;
+    }
+    &:last-child {
+        border-bottom: 0px;
+    }
+    @media (max-width: 560px) {
+        border-left: 0px;
+        border-right: 0px;
+    }
+    td {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        font-weight: bold;
+        &:first-child {
+            text-align: left;
+            padding: 20px;
+            width: 85px;
+        }
+        &:nth-child(2) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            span {
+                font-weight: normal;
+            }
+        }
+        &:last-child {
+            text-align: right;
+            padding: 20px;
+            width: 120px;
+        }
+        &.disabled {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            font-weight: bold;
+            &:first-child {
+                text-align: right;
+                padding-left: 20px;
+                background: $grey-light;
+            }
+            &:last-child {
+                text-align: right;
+                padding-right: 20px;
+                min-width: 100px;
+                color: $white;
+                background: $orange;
+            }
+        }
+    }
+}
+
 }
 
 .empty-order {

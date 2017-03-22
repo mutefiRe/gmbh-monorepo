@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'li',
+  classNames: ['preview_single-item'],
   classNameBindings: ['myStyle'],
   myStyle: 'style-1',
   init() {

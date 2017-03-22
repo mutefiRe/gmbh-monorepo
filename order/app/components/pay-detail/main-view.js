@@ -5,7 +5,7 @@ import { storageFor } from 'ember-local-storage';
 export default Ember.Component.extend(RecognizerMixin, {
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
-  classNames: ['order-detail-view', 'screen'],
+  classNames: ['pay-detail', 'screen'],
   recognizers: 'swipe',
   connection: true,
   type: Ember.computed('order', function () {
@@ -36,20 +36,20 @@ export default Ember.Component.extend(RecognizerMixin, {
   forFree: false,
   payStorage: storageFor('pay'),
   swipeRight() {
-    this.goToOrderOverview();
+    this.goToPayMain();
   },
-  goToOrderScreen() {
-    this.get('pageTransitions').toScreen({ screen: 'order-screen', from: 'right' });
+  goToOrderMain() {
+    this.get('pageTransitions').toScreen({ screen: 'order-main', from: 'right' });
   },
-  goToOrderOverview() {
-    this.get('pageTransitions').toScreen({ screen: 'order-overview', from: 'left' });
+  goToPayMain() {
+    this.get('pageTransitions').toScreen({ screen: 'pay-main', from: 'left' });
   },
   actions: {
-    goToOrderScreen() {
-      this.goToOrderScreen();
+    goToOrderMain() {
+      this.goToOrderMain();
     },
-    goToOrderOverview() {
-      this.goToOrderOverview();
+    goToPayMain() {
+      this.goToPayMain();
     },
     paySelected() {
       this.get('modal').showModal({ activeType: 'loading-box' });

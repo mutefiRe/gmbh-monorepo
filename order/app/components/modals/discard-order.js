@@ -7,7 +7,7 @@ export default Ember.Component.extend({
     discardOrder() {
       this.get('discardOrder')();
       this.get('modal').closeModal();
-      this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'left'});
+      this.get('pageTransitions').toScreen({screen: 'order-main', from: 'left'});
     },
     close() {
       this.get('modal').closeModal();

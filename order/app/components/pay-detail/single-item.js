@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['order-detail-view-item'],
+  classNames: ['pay-detail_single-item'],
   classNameBindings: ['css'],
   tagName: 'tr',
   computedCount: Ember.computed('orderitem.countMarked', 'orderitem.countPaid', function(){

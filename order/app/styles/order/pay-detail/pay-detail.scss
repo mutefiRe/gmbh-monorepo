@@ -1,0 +1,126 @@
+.pay-detail {
+    background: $white;
+    margin: 0 auto;
+    padding: 40px;
+    width: 100%;
+    height: 100%;
+    padding-top: 0;
+    h2 {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    .notPaid {
+        color: $blue-light;
+    }
+    .isPaid {
+        color: $grey-dark;
+    }
+    table {
+        width: 100%;
+        table-layout: fixed;
+    }
+    .smallbutton-blue {
+        @include button($dark, $blue, $white);
+        &:active {
+            @include button-hover($blue);
+        }
+        padding: 20px;
+        width: 48%;
+    }
+    .smallbutton-grey {
+        @include button($light, $grey, $grey-darker);
+        &:active {
+            @include button-hover($grey);
+        }
+        padding: 20px;
+        width: 48%;
+    }
+    .bigbutton {
+        @include button($dark, $blue, $white);
+        &:active {
+            @include button-hover($blue);
+        }
+        padding: 20px;
+        width: 100%;
+    }
+    .flexcontainer {
+        @include flexbox();
+        margin-top: 20px;
+    }
+    .tablebutton {
+        font-weight: bold;
+        padding: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        color: $grey-darker;
+        border: none;
+    }
+    .required {
+        background-color: $orange-lighter;
+    }
+    .sum {
+        font-weight: bold;
+        padding-top: 10px;
+        padding-right: 20px;
+    }
+    .scrollable-pay {
+        margin-top: 1%;
+        margin-bottom: 1%;
+        max-height: 18%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+    }
+    .scrollable {
+        margin-bottom: 2%;
+        max-height: 32%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+    }
+    input[type=checkbox] {
+        width: 25px;
+        height: 25px;
+    }
+    &_single-item {
+        border: 1px solid $grey-dark;
+        &.topay {
+            background-color: $blue-lighter;
+        }
+        &.paid {
+            background-color: lighten($grey-dark, 40);
+            color: lighten($grey-dark, 10)
+        }
+        &:active {
+            background-color: $grey-light;
+        }
+        td {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            font-weight: bold;
+            &:first-child {
+                text-align: left;
+                padding-left: 20px;
+                width: 15%;
+            }
+            &:nth-child(2) {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 68%;
+                padding-left: 10px;
+                span {
+                    font-weight: normal;
+                }
+            }
+            &:last-child {
+                text-align: right;
+                padding-right: 20px;
+                width: 17%;
+                min-width: 100px;
+            }
+        }
+    }
+}

@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'div',
-  classNames: ['category-selection-field'],
+  classNames: ['category_single-item'],
   classNameBindings: ['myStyle'],
   myStyle: function() {
     if (this.get('actualCategory') === this.get('category') || !this.get('actualCategory')) {

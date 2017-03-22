@@ -5,7 +5,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
   recognizers: 'swipe',
-  classNames: ['orderlist','screen'],
+  classNames: ['order-detail','screen'],
   tagName: 'div',
   openAmount: Ember.computed('order.orderitems.@each.countPaid', function(){
     let total = 0;
@@ -15,17 +15,17 @@ export default Ember.Component.extend(RecognizerMixin, {
     return total;
   }),
   swipeRight() {
-    this.goToOrderScreen();
+    this.goToOrderMain();
   },
-  goToOrderScreen() {
-    this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'left'});
+  goToOrderMain() {
+    this.get('pageTransitions').toScreen({screen: 'order-main', from: 'left'});
   },
-  goToOrderDetail() {
-    this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
+  goToPayDetail() {
+    this.get('pageTransitions').toScreen({screen: 'pay-detail', from: 'right'});
   },
   actions: {
     returnButton(){
-      this.goToOrderScreen();
+      this.goToOrderMain();
     },
     deleteOrderItem(index) {
       this.get('deleteOrderItem')(index);
@@ -41,9 +41,9 @@ export default Ember.Component.extend(RecognizerMixin, {
     saveOrder() {
       this.get('saveOrder')(() => {
         if(this.get('settings.firstObject.instantPay')){
-          this.goToOrderDetail();
+          this.goToPayDetail();
         } else {
-          this.goToOrderScreen();
+          this.goToOrderMain();
         }
       });
     },
