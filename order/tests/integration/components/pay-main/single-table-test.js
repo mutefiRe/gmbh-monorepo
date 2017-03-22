@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import { it, describe } from 'mocha';
+import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration: ShowLoadingModalComponent', function() {
-  setupComponentTest('show-loading-modal', {
+describe('Integration | Component | pay main/single table', function() {
+  setupComponentTest('pay-main/single-table', {
     integration: true
   });
 
@@ -13,12 +13,12 @@ describe('Integration: ShowLoadingModalComponent', function() {
     // Handle any actions with this.on('myAction', function(val) { ... });
     // Template block usage:
     // this.render(hbs`
-    //   {{#show-loading-modal}}
+    //   {{#pay-main/single-table}}
     //     template content
-    //   {{/show-loading-modal}}
+    //   {{/pay-main/single-table}}
     // `);
 
-    this.render(hbs`{{show-loading-modal}}`);
+    this.render(hbs`{{pay-main/single-table}}`);
     expect(this.$()).to.have.length(1);
   });
 });

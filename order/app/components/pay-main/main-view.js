@@ -11,16 +11,23 @@ export default Ember.Component.extend(RecognizerMixin, {
   }).property('orders.@each.orderitems'),
   paidOrders: Ember.computed.setDiff('sortedOrders', 'openOrders').property('orders.@each.orderitems'),
   classNames: ['order-overview','screen'],
+  filter: "orders",
   swipeLeft() {
     this.gotToOrderscreen();
   },
   gotToOrderscreen() {
     this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'right'});
   },
-  gotToOrderDetail() {
+  gotToOrderDetail() {  
     this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
   },
   actions: {
+    filterButtonOrder() {
+      this.set('filter', "orders");
+    },
+    filterButtonTables() {
+      this.set('filter', "tables");
+    },
     backButton() {
       this.gotToOrderscreen();
     },

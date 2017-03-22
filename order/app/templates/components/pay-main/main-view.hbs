@@ -1,16 +1,39 @@
 {{yield}}
-<h2>Bestellungen</h2>
-<div class="scrollable">
-  <table>
-    {{#each openOrders as |order|}}
-      {{pay-main/single-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
-    {{/each}}
+<div class="order-overview__switch flexcontainer">
+ <button {{action "filterButtonOrder"}} class="default-btn bigbutton">Bestellungen</button>
+ <button {{action "filterButtonTables"}} class="default-btn bigbutton">Tische</button>
+</div>
+{{#if (eq filter "orders")}}
+  <div class="orders">
+    <h2>Bestellungen</h2>
+    <div class="scrollable">
+      <table>
+        {{#each openOrders as |order|}}
+          {{pay-main/single-order order=order actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
+        {{/each}}
 
-    {{#each paidOrders as |order|}}
-      {{pay-main/single-item order=order actualOrder=actualOrder gotToOrderDetail=(action "orderClick")}}
-    {{/each}}
-  </table>
-</div>
-<div class="flexcontainer">
-  <button {{action "backButton"}} class="default-btn bigbutton">zurück</button>
-</div>
+        {{#each paidOrders as |order|}}
+          {{pay-main/single-order order=order actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
+        {{/each}}
+      </table>
+    </div>
+    <div class="flexcontainer">
+      <button {{action "backButton"}} class="default-btn bigbutton">zurück</button>
+    </div>
+  </div>
+{{/if}}
+{{#if (eq filter "tables")}}
+  <div class="tables">
+    <h2>Tables</h2>
+    <div class="scrollable">
+      {{#each tables as |table|}}
+        {{#unless (eq table.openAmount 0) }}
+          {{pay-main/single-table table=table actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
+        {{/unless}}
+      {{/each}}
+    </div>
+    <div class="flexcontainer">
+      <button {{action "backButton"}} class="default-btn bigbutton">zurück</button>
+    </div>
+  </div>
+{{/if}}

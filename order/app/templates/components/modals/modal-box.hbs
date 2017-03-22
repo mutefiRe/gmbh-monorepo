@@ -1,11 +1,11 @@
 <div class="modal-box">
   <div class="head">
-    <h1>{{headline}}</h1>
+    <h1>{{modal.headline}}</h1>
   </div>
   <div class="body">
     {{yield}}
   </div>
-  {{#if modalButtons}}
+  {{#if modal.modalButtons}}
     <div class="foot">
         <button {{action 'close'}} class="button-grey big default-btn">Abbrechen</button>
     </div>

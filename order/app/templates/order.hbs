@@ -9,28 +9,22 @@
   changeCategory=(action "changeCategory")
   items=model.Items
   addItemToOrder=(action "addItemToOrder")
-  showModal=(action "showModal")
   order=order
   swipeHelper=swipeHelper
 }}
 
-{{#modal-box
-  triggerModal=triggerModal
-  headline=modalHeadline
-  modalButtons=modalButtons
-}}
-  {{component modalType
+{{#modals/modal-box}}
+  {{component modal.modalType
     currentUser=model.currentUser
     tables=model.Tables
     settings=model.Settings
     areas=model.Areas
     order=order
-    showModal=(action "showModal")
     addItemToOrder=(action "addItemToOrder")
-    modalItem=modalItem
+    modalItem=modal.modalItem
     discardOrder=(action "discardOrder")
   }}
-{{/modal-box}}
+{{/modals/modal-box}}
 
 {{order-detail/main-view
   barKeeper=barKeeper
@@ -38,7 +32,6 @@
   order=order
   removeItemFromOrder=(action 'removeItemFromOrder')
   saveOrder=(action "saveOrder")
-  showModal=(action "showModal")
 }}
 
 
@@ -46,6 +39,7 @@
   settings=model.Settings
   actualOrder=actualOrder
   orders=model.Orders
+  tables=model.Tables
   swipeHelper=swipeHelper
 }}
 

@@ -1,27 +1,25 @@
 <div class="flexcontainer">
-  <h2>Bestellung #{{order.id}}</h2>
+  {{#if (eq type 'table')}}
+    <h2>Tisch {{order.name}}</h2>
+  {{else}}
+    <h2>Bestellung #{{order.id}}</h2>
+  {{/if}}
   {{#if open}}
     <h2 class="notPaid">offen</h2>
   {{else}}
     <h2 class="isPaid">bezahlt</h2>
   {{/if}}
 </div>
-
-{{#if open}}
-  <h3>Offene Posten</h3>
-{{else}}
-  <h3>Bezahlte Posten</h3>
-{{/if}}
 <br>
 <div class="scrollable">
   <table>
     {{#each orderitems as |orderitem|}}
-    {{pay-detail/single-item orderitem=orderitem type="open" css="notpaid"}}
+      {{pay-detail/single-item orderitem=orderitem type="open" css="notpaid"}}
     {{/each}}
   </table>
   <table>
     {{#each paidOrderitems as |orderitem|}}
-    {{pay-detail/single-item orderitem=orderitem type="paid" css="paid"}}
+      {{pay-detail/single-item orderitem=orderitem type="paid" css="paid"}}
     {{/each}}
   </table>
 </div>
