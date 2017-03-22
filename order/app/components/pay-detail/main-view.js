@@ -37,20 +37,20 @@ export default Ember.Component.extend(RecognizerMixin, {
   }),
   forFree: false,
   swipeRight() {
-    this.goToOrderOverview();
+    this.goToPayMain();
   },
   goToOrderScreen() {
     this.get('pageTransitions').toScreen({ screen: 'order-screen', from: 'right' });
   },
-  goToOrderOverview() {
-    this.get('pageTransitions').toScreen({ screen: 'order-overview', from: 'left' });
+  goToPayMain() {
+    this.get('pageTransitions').toScreen({ screen: 'pay-main', from: 'left' });
   },
   actions: {
     goToOrderScreen() {
       this.goToOrderScreen();
     },
-    goToOrderOverview() {
-      this.goToOrderOverview();
+    goToPayMain() {
+      this.goToPayMain();
     },
     paySelected() {
       this.get('modal').showModal({ activeType: 'loading-box' });

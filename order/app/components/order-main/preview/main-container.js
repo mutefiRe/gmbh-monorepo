@@ -7,7 +7,7 @@ export default Ember.Component.extend({
     this.get('goToOrderList')();
   },
   swipeRight() {
-    this.get('goToOrderOverview')();
+    this.get('goToPayMain')();
   },
   click() {
     this.get('goToOrderList')();

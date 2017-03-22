@@ -10,15 +10,15 @@ export default Ember.Component.extend(RecognizerMixin, {
     return order.get('orderitems').every(unpaidItem);
   }).property('orders.@each.orderitems'),
   paidOrders: Ember.computed.setDiff('sortedOrders', 'openOrders').property('orders.@each.orderitems'),
-  classNames: ['order-overview','screen'],
+  classNames: ['pay-main','screen'],
   filter: "orders",
   swipeLeft() {
-    this.gotToOrderscreen();
+    this.goToOrderscreen();
   },
-  gotToOrderscreen() {
+  goToOrderscreen() {
     this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'right'});
   },
-  gotToOrderDetail() {  
+  goToOrderDetail() {
     this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
   },
   actions: {
@@ -29,10 +29,10 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('filter', "tables");
     },
     backButton() {
-      this.gotToOrderscreen();
+      this.goToOrderscreen();
     },
     orderClick() {
-      this.gotToOrderDetail();
+      this.goToOrderDetail();
     }
   }
 });

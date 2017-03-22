@@ -9,7 +9,7 @@ export default Ember.Component.extend(RecognizerMixin,{
     this.get('goToOrderList')();
   },
   swipeRight() {
-    this.get('goToOrderOverview')();
+    this.get('goToPayMain')();
   },
   actions: {
     addItemToOrder(item) {
@@ -21,8 +21,8 @@ export default Ember.Component.extend(RecognizerMixin,{
     goToOrderList() {
       this.get('goToOrderList')();
     },
-    goToOrderOverview() {
-      this.get('goToOrderOverview')();
+    goToPayMain() {
+      this.get('goToPayMain')();
     }
   }
 });

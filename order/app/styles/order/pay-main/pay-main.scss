@@ -1,0 +1,86 @@
+.pay-main {
+    background: $white;
+    margin: 0 auto;
+    padding: 40px;
+    padding-top: 20px;
+    width: 100%;
+    height: 100%;
+    h2 {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    table {
+        width: 100%;
+    }
+    .bigbutton {
+        @include button($dark, $grey, $grey-darker);
+        &:active {
+            @include button-hover($grey);
+        }
+        width: 100%;
+    }
+    .flexcontainer {
+        @include flexbox();
+        margin-top: 20px;
+    }
+    .tablebutton {
+        font-weight: bold;
+        padding: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        color: $grey-darker;
+        border: none;
+    }
+    .required {
+        background-color: $orange-lighter;
+    }
+    .sum {
+        font-weight: bold;
+        padding-top: 10px;
+        padding-right: 20px;
+    }
+    .scrollable {
+        max-height: 74%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+    }
+    &-item {
+        border: 1px solid $grey-dark;
+        .spacer {
+            display: inline-block;
+            padding-left: 20px;
+        }
+        &.notpaid {
+            background-color: $blue-lighter;
+        }
+        &.paid {
+            background-color: $grey-light;
+        }
+        td {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-weight: normal;
+            font-size: 1em;
+            &:first-child {
+                padding-left: 20px;
+                font-weight: bold;
+                font-size: 1.28em;
+                width: 30%;
+            }
+            &:nth-child(2) {
+                width: 50%;
+            }
+            &:last-child {
+                padding-right: 20px;
+                font-weight: bold;
+                text-align: right;
+                font-size: 1.28em;
+                width: 20%;
+            }
+        }
+    }
+}

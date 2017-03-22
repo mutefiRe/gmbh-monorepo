@@ -7,8 +7,8 @@ export default Ember.Component.extend({
   goToOrderList() {
     this.get('pageTransitions').toScreen({screen: 'orderlist', from: 'right'});
   },
-  goToOrderOverview() {
-    this.get('pageTransitions').toScreen({screen: 'order-overview', from: 'left'});
+  goToPayMain() {
+    this.get('pageTransitions').toScreen({screen: 'pay-main', from: 'left'});
   },
   actions: {
     changeCategory(category) {
@@ -23,8 +23,8 @@ export default Ember.Component.extend({
     goToOrderList() {
       this.goToOrderList();
     },
-    goToOrderOverview() {
-      this.goToOrderOverview();
+    goToPayMain() {
+      this.goToPayMain();
     }
   }
 });
