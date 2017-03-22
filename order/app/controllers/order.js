@@ -95,7 +95,7 @@ export default Ember.Controller.extend({
     },
     socketReconnected() {
       this.set('connection', true);
-      this.syncOfflineStorages()
+      if (this.get('order.user') && this.get('order.table')) this.syncOfflineStorages();
     }
   },
   syncOfflineStorages() {
@@ -122,6 +122,8 @@ export default Ember.Controller.extend({
     this.get('goToOrderMain')();
   },
   saveOrderAPI(order) {
+    this.syncOfflineStorages();
+
     order.save().then(() => {
       return this.handleAPISaveAndPrint(order);
     }).then(() => {
