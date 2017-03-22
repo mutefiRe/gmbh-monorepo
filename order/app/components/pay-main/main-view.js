@@ -21,7 +21,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   gotToOrderscreen() {
     this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'right'});
   },
-  gotToOrderDetail() {  
+  gotToOrderDetail() {
     this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
   },
   actions: {
@@ -39,13 +39,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     }
   }
 });
-
-<<<<<<< HEAD
 function unpaidItem(orderitem) {
   return orderitem.get('countPaid') >= orderitem.get('count');
 }
-=======
-function unpaidItem(item) {
-  return item.get('countPaid') < item.get('count');
-}
->>>>>>> develop
+

@@ -5,20 +5,16 @@ export default Ember.Controller.extend({
   classNames: ['order'],
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
+  modal: Ember.inject.service('modal'),
   actualCategory: false,
-  modalType: 'table-select',
-  modalHeadline: 'Tisch auswählen',
-  modalButtons: true,
   order: null,
-  modalItem: null,
   orderItems: [],
   barKeeper: false,
   user: null,
   actualOrder: null,
-  triggerModal: false,
   connection: true,
   orderStorage: storageFor('order'),
-  payStorage:   storageFor('pay'),
+  payStorage: storageFor('pay'),
   init() {
     const id = this.get('payload').getId();
     this.store.find('user', id).then(user => {
@@ -59,40 +55,12 @@ export default Ember.Controller.extend({
         if (orderitem[0].get('price') === 0) orderitem[0].incrementProperty('countPaid');
       }
     },
-
     saveOrder(goToOrderScreen) {
+      this.set('goToOrderScreen', goToOrderScreen);
       const order = this.get('order');
-      this.get('modal')
-        .showModal({ activeType: 'loading-box' });
 
-      if (this.get('connection')) {
-        order.save()
-          .then(() => {
-            order.get('orderitems').filterBy('id', null).invoke('unloadRecord');
-            this.send('resetOrder');
-            return this.store.createRecord('print', { order: order.id, isBill: false }).save();
-          }).then(() => {
-            if (this.get('model.Settings.firstObject.instantPay')) {
-              this.set('actualOrder', order);
-            }
-            this.get('modal').closeModal();
-            goToOrderScreen();
-          }).catch(err => {
-            console.log(err);
-            // nothing to do here
-            // push to offline storage queue / hoodie
-          });
-      } else {
-        const serializedOrder = order.serialize();
-        serializedOrder.id    = order.id;
-        this.get('orderStorage').addObject(serializedOrder);
-        this.send('resetOrder');
-        if (this.get('model.Settings.firstObject.instantPay')) {
-          this.set('actualOrder', order);
-        }
-        this.get('modal').closeModal();
-        goToOrderScreen();
-      }
+      this.get('modal').showModal({ activeType: 'loading-box' });
+      this.get('connection') ? this.saveOrderAPI(order) : this.saveOrderOffline(order)
     },
     resetOrder() {
       const order = this.store.createRecord('order', {});
@@ -116,9 +84,9 @@ export default Ember.Controller.extend({
       order.set('totalAmount', totalAmount - orderitem.get('price') * orderitem.get('count'));
       this.store.deleteRecord(orderitem);
     },
-    printBill(orderId){
+    printBill(orderId) {
       this.get('modal').showModal({ activeType: 'loading-box' });
-      this.store.createRecord('print', {order: orderId, isBill: true}).save().then(() => {
+      this.store.createRecord('print', { order: orderId, isBill: true }).save().then(() => {
         this.get('modal').closeModal();
       });
     },
@@ -127,44 +95,51 @@ export default Ember.Controller.extend({
     },
     socketReconnected() {
       this.set('connection', true);
-
-      const promises = this.get('orderStorage').recordsPromises(this.store);
-
-      Promise.all(promises).then(() => {
-        this.get('orderStorage').clear();
-
-        const duplicated = [];
-        const payStorage = this.get('payStorage').getArray();
-
-        return payStorage.reverse().map(order => {
-          if (duplicated.includes(order.id)) return null;
-          duplicated.push(order.id);
-          const orderRecord = this.createOrderRecord(order);
-          return orderRecord.save();
-        });
-      }).then(() => {
-        this.get('payStorage').clear();
-        console.log("all paid");
-      }).catch(err => {
-        console.log(err);
-      });
-    },
-    showLoadingModal(){
+      this.syncOfflineStorages()
     }
   },
-  createOrderitemRecord(orderitem){
-    const orderitemRecord = this.store.peekRecord('orderitem', orderitem.id);
-    orderitemRecord.set('count',     orderitem.count);
-    orderitemRecord.set('countFree', orderitem.countFree);
-    orderitemRecord.set('countPaid', orderitem.countPaid);
-    return orderitemRecord;
-  },
-  createOrderRecord(order){
-    const orderRecord = this.store.peekRecord('order', order.id);
-    orderRecord.set("totalAmount", order.totalAmount);
-    order.orderitems.map(orderitem => {
-      return this.createOrderitemRecord(orderitem);
+  syncOfflineStorages() {
+    const promises = this.get('orderStorage').recordsPromises();
+
+    Promise.all(promises).then(() => {
+      this.get('orderStorage').clear();
+      return this.get('payStorage').recordsPromises();
+    }).then(() => {
+      this.get('payStorage').clear();
+    }).catch(err => {
+      console.log(err);
     });
-    return orderRecord;
+  },
+  saveOrderOffline(order) {
+    const serializedOrder = order.serialize();
+    serializedOrder.id = order.id;
+    this.get('orderStorage').addObject(serializedOrder);
+    this.send('resetOrder');
+    if (this.get('model.Settings.firstObject.instantPay')) {
+      this.set('actualOrder', order);
+    }
+    this.get('modal').closeModal();
+    this.get('goToOrderScreen')();
+  },
+  saveOrderAPI(order) {
+    order.save().then(() => {
+      return this.handleAPISaveAndPrint(order);
+    }).then(() => {
+      this.finishSaveProcess(order);
+    }).catch(err => {
+      console.log(err);
+    });
+  },
+  handleAPISaveAndPrint(order) {
+    order.get('orderitems').filterBy('id', null).invoke('unloadRecord');
+    this.send('resetOrder');
+    return this.store.createRecord('print', { order: order.id, isBill: false }).save();
+  },
+  finishSaveProcess(order) {
+    if (this.get('model.Settings.firstObject.instantPay')) {
+      this.set('actualOrder', order);
+    }
+    this.get('modal').closeModal();
+    this.get('goToOrderScreen')();
   }
 });
