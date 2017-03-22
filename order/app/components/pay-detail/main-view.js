@@ -39,15 +39,15 @@ export default Ember.Component.extend(RecognizerMixin, {
   swipeRight() {
     this.goToPayMain();
   },
-  goToOrderScreen() {
-    this.get('pageTransitions').toScreen({ screen: 'order-screen', from: 'right' });
+  goToOrderMain() {
+    this.get('pageTransitions').toScreen({ screen: 'order-main', from: 'right' });
   },
   goToPayMain() {
     this.get('pageTransitions').toScreen({ screen: 'pay-main', from: 'left' });
   },
   actions: {
-    goToOrderScreen() {
-      this.goToOrderScreen();
+    goToOrderMain() {
+      this.goToOrderMain();
     },
     goToPayMain() {
       this.goToPayMain();

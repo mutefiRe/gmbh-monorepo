@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
-  classNames: ['order-screen','screen','isActive'],
+  classNames: ['order-main','screen','isActive'],
   goToOrderList() {
     this.get('pageTransitions').toScreen({screen: 'orderlist', from: 'right'});
   },

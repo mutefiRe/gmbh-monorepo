@@ -13,10 +13,10 @@ export default Ember.Component.extend(RecognizerMixin, {
   classNames: ['pay-main','screen'],
   filter: "orders",
   swipeLeft() {
-    this.goToOrderscreen();
+    this.goToOrderMain();
   },
-  goToOrderscreen() {
-    this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'right'});
+  goToOrderMain() {
+    this.get('pageTransitions').toScreen({screen: 'order-main', from: 'right'});
   },
   goToOrderDetail() {
     this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
@@ -29,7 +29,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.set('filter', "tables");
     },
     backButton() {
-      this.goToOrderscreen();
+      this.goToOrderMain();
     },
     orderClick() {
       this.goToOrderDetail();

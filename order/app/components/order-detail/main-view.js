@@ -15,17 +15,17 @@ export default Ember.Component.extend(RecognizerMixin, {
     return total;
   }),
   swipeRight() {
-    this.goToOrderScreen();
+    this.goToOrderMain();
   },
-  goToOrderScreen() {
-    this.get('pageTransitions').toScreen({screen: 'order-screen', from: 'left'});
+  goToOrderMain() {
+    this.get('pageTransitions').toScreen({screen: 'order-main', from: 'left'});
   },
   goToOrderDetail() {
     this.get('pageTransitions').toScreen({screen: 'order-detail-view', from: 'right'});
   },
   actions: {
     returnButton(){
-      this.goToOrderScreen();
+      this.goToOrderMain();
     },
     deleteOrderItem(index) {
       this.get('deleteOrderItem')(index);
@@ -43,7 +43,7 @@ export default Ember.Component.extend(RecognizerMixin, {
         if(this.get('settings.firstObject.instantPay')){
           this.goToOrderDetail();
         } else {
-          this.goToOrderScreen();
+          this.goToOrderMain();
         }
       });
     },
