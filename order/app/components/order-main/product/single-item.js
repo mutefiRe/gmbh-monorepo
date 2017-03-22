@@ -1,9 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  modal: Ember.inject.service(), 
+  modal: Ember.inject.service(),
   tagName: 'div',
-  classNames: ['single-item'],
+  classNames: ['product_single-item'],
   classNameBindings: ['myStyle'],
   myStyle: 'style-1',
   clickDelay: 500,

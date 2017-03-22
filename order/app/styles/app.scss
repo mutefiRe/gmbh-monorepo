@@ -20,14 +20,14 @@
   @import 'reset';
   @import 'mixin-helper/helper.scss';
   @import 'order/order';
-  @import 'order/category-selection.scss';
-  @import 'order/item-list.scss';
+  @import 'order/order-main/category.scss';
+  @import 'order/order-main/product.scss';
   @import 'order/orderlist.scss';
   @import 'order/orderlist-item.scss';
   @import 'order/modal-box.scss';
   @import 'order/table-select.scss';
   @import 'order/table-item.scss';
-  @import 'order/preview-list.scss';
+  @import 'order/order-main/preview.scss';
   @import 'order/item-settings.scss';
   @import 'order/pay-main/pay-main.scss';
   @import 'order/order-detail-view.scss';
@@ -119,7 +119,7 @@
     height: 100%;
   }
 
-  .item-and-preview-list {
+  .item-and-preview {
     display: flex;
     align-items: stretch;
     min-height:0;

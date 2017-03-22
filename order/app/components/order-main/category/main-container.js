@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   actualCategory: null,
-  classNames: ['category-selection'],
+  classNames: ['category'],
   tagName: 'div',
   actions: {
     changeCategory(category) {

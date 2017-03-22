@@ -3,7 +3,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend(RecognizerMixin,{
   tagName: 'div',
-  classNames: ['item-list'],
+  classNames: ['product'],
   recognizers: 'swipe',
   swipeLeft() {
     this.get('goToOrderList')();

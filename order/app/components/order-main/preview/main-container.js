@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['preview-list'],
+  classNames: ['preview'],
   tagName: 'ul',
   swipeLeft() {
     this.get('goToOrderList')();

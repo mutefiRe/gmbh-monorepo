@@ -1,6 +1,6 @@
 {{yield}}
 {{order-main/category/main-container categories=categories actualCategory=actualCategory changeCategory=(action "changeCategory")}}
-<div class="item-and-preview-list">
+<div class="item-and-preview">
   {{order-main/product/main-container category=actualCategory categories=categories items=items addItemToOrder=(action "addItemToOrder") showModal=(action "showModal") goToOrderList=(action "goToOrderList") goToPayMain=(action "goToPayMain")}}
   {{order-main/preview/main-container order=order goToOrderList=(action "goToOrderList") goToPayMain=(action "goToPayMain")}}
 </div>
