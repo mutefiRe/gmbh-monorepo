@@ -6,7 +6,7 @@ export default Ember.Component.extend(RecognizerMixin,{
   classNames: ['product'],
   recognizers: 'swipe',
   swipeLeft() {
-    this.get('goToOrderList')();
+    this.get('goToOrderDetail')();
   },
   swipeRight() {
     this.get('goToPayMain')();
@@ -18,8 +18,8 @@ export default Ember.Component.extend(RecognizerMixin,{
     showModal(modalType, buttons, item) {
       this.get('showModal')(modalType, buttons, item);
     },
-    goToOrderList() {
-      this.get('goToOrderList')();
+    goToOrderDetail() {
+      this.get('goToOrderDetail')();
     },
     goToPayMain() {
       this.get('goToPayMain')();

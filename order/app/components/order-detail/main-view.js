@@ -5,7 +5,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
   recognizers: 'swipe',
-  classNames: ['orderlist','screen'],
+  classNames: ['order-detail','screen'],
   tagName: 'div',
   openAmount: Ember.computed('order.orderitems.@each.countPaid', function(){
     let total = 0;

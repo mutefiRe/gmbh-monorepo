@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['orderlist-item'],
+  classNames: ['order-detail_single-item'],
   tagName: 'tr',
   isTabbed: false,
   click(){

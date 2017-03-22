@@ -4,8 +4,8 @@ export default Ember.Component.extend({
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
   classNames: ['order-main','screen','isActive'],
-  goToOrderList() {
-    this.get('pageTransitions').toScreen({screen: 'orderlist', from: 'right'});
+  goToOrderDetail() {
+    this.get('pageTransitions').toScreen({screen: 'order-detail', from: 'right'});
   },
   goToPayMain() {
     this.get('pageTransitions').toScreen({screen: 'pay-main', from: 'left'});
@@ -20,8 +20,8 @@ export default Ember.Component.extend({
     showModal(modalType, buttons, item) {
       this.get('modal').showModal({ modalType, buttons, item });
     },
-    goToOrderList() {
-      this.goToOrderList();
+    goToOrderDetail() {
+      this.goToOrderDetail();
     },
     goToPayMain() {
       this.goToPayMain();

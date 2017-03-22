@@ -4,12 +4,12 @@ export default Ember.Component.extend({
   classNames: ['preview'],
   tagName: 'ul',
   swipeLeft() {
-    this.get('goToOrderList')();
+    this.get('goToOrderDetail')();
   },
   swipeRight() {
     this.get('goToPayMain')();
   },
   click() {
-    this.get('goToOrderList')();
+    this.get('goToOrderDetail')();
   }
 });
