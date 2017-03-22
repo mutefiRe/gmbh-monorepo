@@ -107,34 +107,32 @@ router.get('/', function (req, res) {
  */
 
 router.post('/', function (req, res) {
-
   db.Order.find({ where: { id: req.body.order.id } }).then(order => {
     if (order) {
-      res.send({order});
-    } else {
-      const requestOrder = req.body.order;
-      const orderitems = requestOrder.orderitems;
-      let orderId = null;
-      db.Order.create(requestOrder).then(order => {
-        orderitems.map(x => {
-          x.orderId = order.id;
-        });
-        orderId = order.id;
-        return db.Orderitem.bulkCreate(orderitems);
-      }).then(() => {
-        return db.Order.findById(orderId, { include: [{ model: db.Orderitem }] });
-      }).then(data => {
-        const order = JSON.parse(JSON.stringify(data));
-
-        res.send({ order });
-      }).catch(error => {
-        res.status(400).send({
-          'errors': {
-            'msg': error && error.errors && error.errors[0].message || error.message
-          }
-        });
-      });
+      return res.send({order});
     }
+    const requestOrder = req.body.order;
+    const orderitems = requestOrder.orderitems;
+    let orderId = null;
+    db.Order.create(requestOrder).then(order => {
+      orderitems.map(x => {
+        x.orderId = order.id;
+      });
+      orderId = order.id;
+      return db.Orderitem.bulkCreate(orderitems);
+    }).then(() => {
+      return db.Order.findById(orderId, { include: [{ model: db.Orderitem }] });
+    }).then(data => {
+      const order = JSON.parse(JSON.stringify(data));
+
+      res.send({ order });
+    }).catch(error => {
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
+    });
   });
 });
 
@@ -161,6 +159,8 @@ router.put('/:id', function (req, res) {
   }).then(() => {
     const promises = [];
     for (const orderitem of requestOrder.orderitems) {
+      Reflect.deleteProperty(orderitem, 'createdAt');
+      Reflect.deleteProperty(orderitem, 'createdAt');
       const promise = db.Orderitem.update(orderitem, { where: { id: orderitem.id } });
       promises.push(promise);
     }
