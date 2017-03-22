@@ -38,9 +38,9 @@ describe('Acceptance | order screen', function() {
     loggedIn();
     andThen(() => {
       expect(currentURL()).to.equal('/order');
-      click("div.single-item:first-child");
+      click("div.product_single-item:first-child");
       andThen(() => {
-        expect(find('.preview-list > li:first-child').html()).to.equal('<div class="caption">1I</div>');
+        expect(find('.preview > li:first-child').html()).to.equal('<div class="caption">1I</div>');
       });
     });
   });
@@ -48,12 +48,12 @@ describe('Acceptance | order screen', function() {
   it('can click on different items', function() {
     loggedIn();
     andThen(() => {
-      click("div.single-item:first-child");
-      click("div.single-item:nth-child(2)");
-      click("div.single-item:nth-child(2)");
+      click("div.product_single-item:first-child");
+      click("div.product_single-item:nth-child(2)");
+      click("div.product_single-item:nth-child(2)");
       andThen(() => {
-        expect(find('.preview-list > li:first-child').html()).to.equal('<div class="caption">1I</div>');
-        expect(find('.preview-list > li:nth-child(2)').html()).to.equal('<div class="caption">2I</div>');
+        expect(find('.preview > li:first-child').html()).to.equal('<div class="caption">1I</div>');
+        expect(find('.preview > li:nth-child(2)').html()).to.equal('<div class="caption">2I</div>');
       });
     });
   });
@@ -74,7 +74,7 @@ describe('Acceptance | order screen', function() {
   it('can choose a table in desktop view with item. Send button should appear', function() {
     loggedIn();
     andThen(() => {
-      click("div.single-item:first-child");
+      click("div.product_single-item:first-child");
       click("div.menu--desktop button.bigbutton:first-child"); // Tisch auswählen
       andThen(() => {
         click("div.table-mask > button:first"); // Erster Tisch

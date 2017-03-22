@@ -58,7 +58,7 @@
 </div>
 {{/if}}
 <div class="flexcontainer">
-  <button {{action "goToOrderOverview"}} class="smallbutton-grey">
+  <button {{action "goToPayMain"}} class="smallbutton-grey">
     {{#if settings.firstObject.instantPay}}
     Meine Bestellungen anzeigen
     {{else}}
@@ -73,6 +73,6 @@
 </div>
 <div class="flexcontainer">
   {{#if settings.firstObject.instantPay}}
-  <button {{action 'goToOrderScreen'}} class="bigbutton default-btn">neue Bestellung aufnehmen</button>
+  <button {{action 'goToOrderMain'}} class="bigbutton default-btn">neue Bestellung aufnehmen</button>
   {{/if}}
 </div>

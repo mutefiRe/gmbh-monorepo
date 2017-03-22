@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['order-overview-item'],
+  classNames: ['pay-main_single-order'],
   tagName: 'tr',
   classNameBindings: ['paid'],
   openAmount: Ember.computed('order.orderitems.@each.countPaid', function () {

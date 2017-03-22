@@ -52,7 +52,7 @@ export default Ember.Controller.extend({
         if(orderitem[0].get('price') === 0) orderitem[0].incrementProperty('countPaid');
       }
     },
-    saveOrder(goToOrderScreen) {
+    saveOrder(goToOrderMain) {
       const order = this.get('order');
       this.get('modal')
         .showModal({ activeType: 'loading-box' });
@@ -66,7 +66,7 @@ export default Ember.Controller.extend({
           this.set('actualOrder', order);
         }
         this.get('modal').closeModal();
-        goToOrderScreen();
+        goToOrderMain();
       }).catch(err => {
         console.log(err);
         // nothing to do here

@@ -4,7 +4,7 @@ import Ember from 'ember';
 export default Ember.Component.extend(RecognizerMixin, {
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
-  classNames: ['order-detail-view', 'screen'],
+  classNames: ['pay-detail', 'screen'],
   recognizers: 'swipe',
   type: Ember.computed('order', function () {
     return this.get('order.constructor.modelName');
@@ -37,20 +37,20 @@ export default Ember.Component.extend(RecognizerMixin, {
   }),
   forFree: false,
   swipeRight() {
-    this.goToOrderOverview();
+    this.goToPayMain();
   },
-  goToOrderScreen() {
-    this.get('pageTransitions').toScreen({ screen: 'order-screen', from: 'right' });
+  goToOrderMain() {
+    this.get('pageTransitions').toScreen({ screen: 'order-main', from: 'right' });
   },
-  goToOrderOverview() {
-    this.get('pageTransitions').toScreen({ screen: 'order-overview', from: 'left' });
+  goToPayMain() {
+    this.get('pageTransitions').toScreen({ screen: 'pay-main', from: 'left' });
   },
   actions: {
-    goToOrderScreen() {
-      this.goToOrderScreen();
+    goToOrderMain() {
+      this.goToOrderMain();
     },
-    goToOrderOverview() {
-      this.goToOrderOverview();
+    goToPayMain() {
+      this.goToPayMain();
     },
     paySelected() {
       this.get('modal').showModal({ activeType: 'loading-box' });

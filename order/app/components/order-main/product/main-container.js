@@ -3,13 +3,13 @@ import Ember from 'ember';
 
 export default Ember.Component.extend(RecognizerMixin,{
   tagName: 'div',
-  classNames: ['item-list'],
+  classNames: ['product'],
   recognizers: 'swipe',
   swipeLeft() {
-    this.get('goToOrderList')();
+    this.get('goToOrderDetail')();
   },
   swipeRight() {
-    this.get('goToOrderOverview')();
+    this.get('goToPayMain')();
   },
   actions: {
     addItemToOrder(item) {
@@ -18,11 +18,11 @@ export default Ember.Component.extend(RecognizerMixin,{
     showModal(modalType, buttons, item) {
       this.get('showModal')(modalType, buttons, item);
     },
-    goToOrderList() {
-      this.get('goToOrderList')();
+    goToOrderDetail() {
+      this.get('goToOrderDetail')();
     },
-    goToOrderOverview() {
-      this.get('goToOrderOverview')();
+    goToPayMain() {
+      this.get('goToPayMain')();
     }
   }
 });

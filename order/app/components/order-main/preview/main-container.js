@@ -1,15 +1,15 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['preview-list'],
+  classNames: ['preview'],
   tagName: 'ul',
   swipeLeft() {
-    this.get('goToOrderList')();
+    this.get('goToOrderDetail')();
   },
   swipeRight() {
-    this.get('goToOrderOverview')();
+    this.get('goToPayMain')();
   },
   click() {
-    this.get('goToOrderList')();
+    this.get('goToOrderDetail')();
   }
 });

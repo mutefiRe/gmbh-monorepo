@@ -3,22 +3,13 @@ import { it, describe } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration: CategorySelectFieldComponent', function() {
-  setupComponentTest('category-select-field', {
+describe('Integration: CategorySingleItemComponent', function() {
+  setupComponentTest('order-main/category/single-item', {
     integration: true
   });
 
   it('renders', function() {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-    // Template block usage:
-    // this.render(hbs`
-    //   {{#item-container}}
-    //     template content
-    //   {{/item-container}}
-    // `);
-
-    this.render(hbs`{{category-select-field}}`);
+    this.render(hbs`{{order-main/category/single-item}}`);
     expect(this.$()).to.have.length(1);
   });
 });

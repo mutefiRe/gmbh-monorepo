@@ -3,12 +3,12 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
-  classNames: ['order-screen','screen','isActive'],
-  goToOrderList() {
-    this.get('pageTransitions').toScreen({screen: 'orderlist', from: 'right'});
+  classNames: ['order-main','screen','isActive'],
+  goToOrderDetail() {
+    this.get('pageTransitions').toScreen({screen: 'order-detail', from: 'right'});
   },
-  goToOrderOverview() {
-    this.get('pageTransitions').toScreen({screen: 'order-overview', from: 'left'});
+  goToPayMain() {
+    this.get('pageTransitions').toScreen({screen: 'pay-main', from: 'left'});
   },
   actions: {
     changeCategory(category) {
@@ -20,11 +20,11 @@ export default Ember.Component.extend({
     showModal(modalType, buttons, item) {
       this.get('modal').showModal({ modalType, buttons, item });
     },
-    goToOrderList() {
-      this.goToOrderList();
+    goToOrderDetail() {
+      this.goToOrderDetail();
     },
-    goToOrderOverview() {
-      this.goToOrderOverview();
+    goToPayMain() {
+      this.goToPayMain();
     }
   }
 });

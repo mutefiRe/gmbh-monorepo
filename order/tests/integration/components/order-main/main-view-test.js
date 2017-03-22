@@ -3,22 +3,13 @@ import { it, describe } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration: OrderScreenComponent', function() {
-  setupComponentTest('order-screen', {
+describe('Integration: OrderMainComponent', function() {
+  setupComponentTest('order-main/main-view', {
     integration: true
   });
 
   it('renders', function() {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-    // Template block usage:
-    // this.render(hbs`
-    //   {{#order-screen}}
-    //     template content
-    //   {{/order-screen}}
-    // `);
-
-    this.render(hbs`{{order-screen}}`);
+    this.render(hbs`{{order-main/main-view}}`);
     expect(this.$()).to.have.length(1);
   });
 });

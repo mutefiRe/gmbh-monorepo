@@ -20,19 +20,16 @@
   @import 'reset';
   @import 'mixin-helper/helper.scss';
   @import 'order/order';
-  @import 'order/category-selection.scss';
-  @import 'order/item-list.scss';
-  @import 'order/orderlist.scss';
-  @import 'order/orderlist-item.scss';
+  @import 'order/order-main/category.scss';
+  @import 'order/order-main/preview.scss';
+  @import 'order/order-main/product.scss';
+  @import 'order/order-detail/order-detail.scss';
+  @import 'order/pay-main/pay-main.scss';
+  @import 'order/pay-detail/pay-detail.scss';
   @import 'order/modal-box.scss';
   @import 'order/table-select.scss';
   @import 'order/table-item.scss';
-  @import 'order/preview-list.scss';
   @import 'order/item-settings.scss';
-  @import 'order/order-overview.scss';
-  @import 'order/order-overview-item.scss';
-  @import 'order/order-detail-view.scss';
-  @import 'order/order-detail-view-item.scss';
   @import 'admin/dashboard.scss';
 
   @import 'login.scss';
@@ -116,14 +113,11 @@
       display: flex;
       flex-direction: column;
     }
+    width: 100%;
+    height: 100%;
   }
 
-  .order-screen{
-    width:100%;
-    height:100%;
-  }
-
-  .item-and-preview-list {
+  .item-and-preview {
     display: flex;
     align-items: stretch;
     min-height:0;

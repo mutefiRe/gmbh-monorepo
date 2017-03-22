@@ -4,7 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration: OrderDetailViewItemComponent', function() {
-  setupComponentTest('order-detail-view-item', {
+  setupComponentTest('pay-detail/single-order', {
     integration: true
   });
 
@@ -18,16 +18,7 @@ describe('Integration: OrderDetailViewItemComponent', function() {
     this.set('type', 'paid');
   });
   it('renders', function() {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-    // Template block usage:
-    // this.render(hbs`
-    //   {{#order-detail-view-item}}
-    //     template content
-    //   {{/order-detail-view-item}}
-    // `);
-
-    this.render(hbs`{{order-detail-view-item orderitem=item}}`);
+    this.render(hbs`{{pay-detail/single-order orderitem=item}}`);
     expect(this.$()).to.have.length(1);
   });
 });
