@@ -16,15 +16,17 @@ App = Ember.Application.extend({
 loadInitializers(App, config.modulePrefix);
 
 Ember.onerror = function(error) {
-  console.log(error);
-  /* Ember.$.ajax('/error-notification', {
+  const data = {
+    app: 'order',
+    message: error.message
+  }
+  Ember.$.ajax({
+    url: window.EmberENV.host + '/error',
     type: 'POST',
-    data: {
-      stack: error.stack,
-      otherInformation: 'exception message'
-    }
+    data: JSON.stringify(data),
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json'
   });
-  */
 };
 
 export default App;
