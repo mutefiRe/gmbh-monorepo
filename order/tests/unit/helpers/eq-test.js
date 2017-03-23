@@ -4,12 +4,12 @@ import { eq } from 'gmbh/helpers/eq';
 
 describe('EqHelper', function() {
   it('equal values leads to true', function() {
-    let result = eq([1, 1]);
+    const result = eq([1, 1]);
     expect(result).to.equal(true);
   });
 
   it('different values leads to false', function() {
-    let result = eq([1, 2]);
+    const result = eq([1, 2]);
     expect(result).to.equal(false);
   });
 });
