@@ -7,6 +7,7 @@ export default function() {
     return {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3RuYW1lIjoiMTIzNDU2Nzg5MCIsImxhc3RuYW1lIjoiSm9obiBEb2UiLCJ1c2VybmFtZSI6IndhaXRlcl8xIiwicGFzc3dvcmQiOiJhYmMiLCJwZXJtaXNzaW9uIjoxLCJwcmludGVyIjoidGVzdCJ9.i_QVYHeQ0z52hgD2tdNjxBU-FnCIC5kJE6U97Ozvi2g"};
   });
 
+  this.passthrough('/write-coverage');
   this.namespace = 'api';    // make this `api`, for example, if your API is namespaced
 
   this.get('/categories');
