@@ -8,13 +8,8 @@ const Router = Ember.Router.extend({
 
 Router.map(function () {
   this.route('login'); // domain/login
-  this.route('order');
-
-  // not defined routes ("404")
-  // this.route('login', {
-  //   path: '*path'
-  // });
   this.route('logout');
+  this.route('order', { path: '/*path' });
 });
 
 export default Router;
