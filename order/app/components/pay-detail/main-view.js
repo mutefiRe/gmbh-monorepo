@@ -53,7 +53,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     },
     paySelected() {
       this.get('modal').showModal({ activeType: 'loading-box' });
-      this.payOrderitems();
+      this.payMarkedOrderitems();
       const orders = this.get('type') === 'table' ? this.get('order.orders') : [this.get('order')];
       this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
@@ -74,7 +74,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       orderitem.set('countMarked', 0);
     });
   },
-  payOrderitems(){
+  payMarkedOrderitems(){
     this.get('markedOrderitems').forEach(orderitem => {
       orderitem.set('countPaid', orderitem.get('countPaid') + orderitem.get('countMarked'));
 
