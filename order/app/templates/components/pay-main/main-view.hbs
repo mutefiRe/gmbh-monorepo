@@ -1,18 +1,19 @@
 {{yield}}
-<div class="pay-main__switch ">
- <button {{action "filterButtonOrder"}} class="default-btn">Bestellungen</button>
- <button {{action "filterButtonTables"}} class="default-btn">Tische</button>
+
+<div class="pay-main__switch">
+  <button {{action "filterButtonOrder"}} class="default-btn">Bestellungen</button>
+  <button {{action "filterButtonTables"}} class="default-btn">Tische</button>
 </div>
 {{#if (eq filter "orders")}}
   <div class="orders">
     <h2>Bestellungen</h2>
     <div class="scrollable">
       <table>
-        {{#each openOrders as |order|}}
+        {{#each paidOrders as |order|}}
           {{pay-main/single-order order=order actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
         {{/each}}
 
-        {{#each paidOrders as |order|}}
+        {{#each openOrders as |order|}}
           {{pay-main/single-order order=order actualOrder=actualOrder goToOrderDetail=(action "orderClick")}}
         {{/each}}
       </table>

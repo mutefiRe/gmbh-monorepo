@@ -1,11 +1,13 @@
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import Ember from 'ember';
+import { storageFor } from 'ember-local-storage';
 
 export default Ember.Component.extend(RecognizerMixin, {
   modal: Ember.inject.service(),
   pageTransitions: Ember.inject.service('pagetransitions'),
   classNames: ['pay-detail', 'screen'],
   recognizers: 'swipe',
+  connection: true,
   type: Ember.computed('order', function () {
     return this.get('order.constructor.modelName');
   }),
@@ -23,11 +25,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   }),
   markedAmount: Ember.computed('markedOrderitems', function () {
     const orderitems = this.get('markedOrderitems');
-    let sum = 0;
-    for (const orderitem of orderitems) {
-      sum += orderitem.get('price') * orderitem.get('countMarked');
-    }
-    return sum;
+    return orderitems.reduce((sum, orderitem) => sum + orderitem.get('price') * orderitem.get('countMarked'));
   }),
   openAmount: Ember.computed('order', 'order.openAmount', function () {
     return this.get('order.openAmount');
@@ -36,6 +34,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     return this.get('openAmount') > 0;
   }),
   forFree: false,
+  payStorage: storageFor('pay'),
   swipeRight() {
     this.goToPayMain();
   },
@@ -54,67 +53,56 @@ export default Ember.Component.extend(RecognizerMixin, {
     },
     paySelected() {
       this.get('modal').showModal({ activeType: 'loading-box' });
-      const orderitems = this.get('markedOrderitems');
-      const forFreeOrder = this.get('forFree');
-      for (const orderitem of orderitems) {
-        orderitem.set('countPaid', orderitem.get('countPaid') + orderitem.get('countMarked'));
-        if (forFreeOrder) orderitem.set('countFree', orderitem.get('countFree') + orderitem.get('countMarked'));
-        orderitem.set('countMarked', 0);
-      }
-
-      let orders;
-
-      if (this.get('type') === 'table') {
-        orders = this.get('order.orders');
-      } else {
-        orders = [this.get('order')];
-      }
-
-      const promises = orders.map(order => {
-        order.set('totalAmount', order.get('openAmount'));
-        return order.save();
-      });
-
-      Promise.all(promises).then(() => {
-        this.get('modal').closeModal();
-        this.set('forFree', false);
-      });
+      this.payMarkedOrderitems();
+      const orders = this.get('type') === 'table' ? this.get('order.orders') : [this.get('order')];
+      this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
-
     payAll() {
       this.get('modal').showModal({ activeType: 'loading-box' });
-      const orderitems = this.get('order.orderitems');
-      const forFree = this.get('forFree');
-
-      orderitems.forEach(item => {
-        item.set('countPaid', item.get('count'));
-        item.set('countMarked',  item.get('count'));
-        item.set('countMarked', 0);
-        if (forFree) item.set('countFree', item.get('count'));
-      });
-
-      let orders;
-
-      if (this.get('type') === 'table') {
-        orders = this.get('order.orders');
-      } else {
-        orders = [this.get('order')];
-      }
-
-      const promises = orders.map(order => {
-        order.set('isPaid', true);
-        order.set('totalAmount', 0);
-        return order.save();
-      });
-
-      Promise.all(promises).then(() => {
-        this.get('modal').closeModal();
-        this.set('forFree', false);
-      });
-
+      this.payAllOrderitems();
+      const orders = this.get('type') === 'table' ? this.get('order.orders') : [this.get('order')];
+      this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
     printBill() {
       this.get('printBill')(this.get('order').id);
     }
+  },
+  payAllOrderitems(){
+    this.get('order.orderitems').forEach(orderitem => {
+      orderitem.set('countPaid', orderitem.get('count'));
+      if (this.get('forFree')) orderitem.set('countFree', orderitem.get('count'));
+      orderitem.set('countMarked', 0);
+    });
+  },
+  payMarkedOrderitems(){
+    this.get('markedOrderitems').forEach(orderitem => {
+      orderitem.set('countPaid', orderitem.get('countPaid') + orderitem.get('countMarked'));
+
+      if (this.get('forFree')) orderitem.set('countFree', orderitem.get('countFree') + orderitem.get('countMarked'));
+      orderitem.set('countMarked', 0);
+    });
+  },
+  orderPromises(orders){
+    return orders.map(order => {
+      order.set('isPaid', true);
+      order.set('totalAmount', 0);
+      return order.save();
+    });
+  },
+  saveOrdersOffline(orders){
+    orders.forEach(order => {
+      order.set('totalAmount', order.get('openAmount'));
+      const serializedOrder = order.serialize();
+      serializedOrder.id = order.id;
+      this.get('payStorage').addObject(serializedOrder);
+      this.set('forFree', false);
+      this.get('modal').closeModal();
+    });
+  },
+  saveOrdersAPI(orders){
+    Promise.all(this.orderPromises(orders)).then(() => {
+      this.set('forFree', false);
+      this.get('modal').closeModal();
+    });
   }
 });
