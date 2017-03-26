@@ -13,18 +13,18 @@ router.post('/', function(req, res){
     {model: db.User}]
   }).then(data => {
     processPrint(req, data);
-    res.send(responseData(data.id));
+    res.send(responseData(req.body.print.id, data.id));
   });
 });
 
 module.exports = router;
 
-function responseData(id){
+function responseData(printId, orderId){
   return {
-    'print':
+    print:
     {
-      id,
-      'order' : id
+      id:     printId,
+      order : orderId
     }
   };
 }
