@@ -40,7 +40,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     },
     saveOrder() {
       this.get('saveOrder')(() => {
-        if(this.get('settings.firstObject.instantPay')){
+        if(this.get('settings.firstObject.instantPay') || this.get('user.isCashier')){
           this.goToPayDetail();
         } else {
           this.goToOrderMain();

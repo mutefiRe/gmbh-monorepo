@@ -9,7 +9,6 @@ export default Ember.Controller.extend({
   actualCategory: false,
   order: null,
   orderItems: [],
-  barKeeper: false,
   user: null,
   actualOrder: null,
   connection: true,
@@ -23,8 +22,7 @@ export default Ember.Controller.extend({
       order.set('user', user);
       this.set('order', order);
 
-      if (this.get('user.printer')) {
-        this.set('barKeeper', true);
+      if (this.get('user.isCashier')) {
         this.store.findAll('table').then(table => {
           order.set('table', table.get('firstObject'));
         });
@@ -115,7 +113,7 @@ export default Ember.Controller.extend({
     serializedOrder.id = order.id;
     this.get('orderStorage').addObject(serializedOrder);
     this.send('resetOrder');
-    if (this.get('model.Settings.firstObject.instantPay')) {
+    if (this.get('model.Settings.firstObject.instantPay') || this.get('user.isCashier')) {
       this.set('actualOrder', order);
     }
     this.get('modal').closeModal();
@@ -138,7 +136,7 @@ export default Ember.Controller.extend({
     return this.store.createRecord('print', { order: order.id, isBill: false }).save();
   },
   finishSaveProcess(order) {
-    if (this.get('model.Settings.firstObject.instantPay')) {
+    if (this.get('model.Settings.firstObject.instantPay') || this.get('user.isCashier')) {
       this.set('actualOrder', order);
     }
     this.get('modal').closeModal();
