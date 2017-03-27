@@ -131,7 +131,7 @@ module.exports = function() {
                 " " +
                 faker.Helpers.randomize(beilagen),
               amount: 1,
-              price: faker.Helpers.randomNumber(20),
+              price: faker.Helpers.randomNumber(20) + 1,
               tax: 0.1,
               unitId: data.id,
               categoryId: cat.id
