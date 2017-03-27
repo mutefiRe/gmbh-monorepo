@@ -60,7 +60,7 @@ export default Ember.Controller.extend({
       const order = this.get('order');
 
       this.get('modal').showModal({ activeType: 'loading-box' });
-      this.get('connection') ? this.saveOrderAPI(order) : this.saveOrderOffline(order)
+      this.get('connection') ? this.saveOrderAPI(order) : this.saveOrderOffline(order);
     },
     resetOrder() {
       const order = this.store.createRecord('order', {});

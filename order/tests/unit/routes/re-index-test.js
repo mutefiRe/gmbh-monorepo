@@ -1,15 +1,15 @@
 import { expect } from 'chai';
-import { it, describe } from 'mocha';
+import { describe, it } from 'mocha';
 import { setupTest } from 'ember-mocha';
 
-describe('OrderRoute', function() {
-  setupTest('route:order', {
+describe('Unit | Route | re index', function() {
+  setupTest('route:re-index', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });
 
   it('exists', function() {
-    let route = this.subject();
+    const route = this.subject();
     expect(route).to.be.ok;
   });
 });
