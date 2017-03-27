@@ -58,13 +58,13 @@ module.exports = function() {
     "Chai Latte"
   ];
 
-  const desert = [
+  const dessert = [
     "Schwarzwälder-Kirsch Torte",
     "Topfenstrudel",
     "Apfelstrudel",
     "Guglhupf",
     "Schokomouse",
-    "Deserteis",
+    "Desserteis",
     "Birnenparfait",
     "Bananensplit",
     "Krokantbecher",
@@ -338,11 +338,41 @@ module.exports = function() {
     .then(cat => {
       db.Unit
         .findOrCreate({
-          where: { name: "l" }
+          where: { name: "Stk." }
         })
         .spread(data => {
           db.Item.bulkCreate(
             kaffee.map(x => {
+              return {
+                name: x,
+                amount: 1,
+                price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
+                tax: 0.2,
+                unitId: data.id,
+                categoryId: cat.id
+              };
+            })
+          );
+        });
+    });
+
+  db.Category
+    .create({
+      name: "Dessert",
+      enabled: true,
+      icon: "desserts",
+      description: "Dessert",
+      showAmount: true,
+      printer: "GMBH-WLAN"
+    })
+    .then(cat => {
+      db.Unit
+        .findOrCreate({
+          where: { name: "Stk." }
+        })
+        .spread(data => {
+          db.Item.bulkCreate(
+            dessert.map(x => {
               return {
                 name: x,
                 amount: 1,
@@ -368,7 +398,7 @@ module.exports = function() {
     .then(cat => {
       db.Unit
         .findOrCreate({
-          where: { name: "Stk." }
+          where: { name: "l" }
         })
         .spread(data => {
           db.Item.bulkCreate([
