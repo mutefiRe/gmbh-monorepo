@@ -107,7 +107,7 @@ export default Ember.Controller.extend({
     }).then(() => {
       this.get('payStorage').clear();
     }).catch(err => {
-      console.log(err);
+      console.log(err); //eslint-disable-line
     });
   },
   saveOrderOffline(order) {
@@ -129,7 +129,7 @@ export default Ember.Controller.extend({
     }).then(() => {
       this.finishSaveProcess(order);
     }).catch(err => {
-      console.log(err);
+      console.log(err); //eslint-disable-line
     });
   },
   handleAPISaveAndPrint(order) {

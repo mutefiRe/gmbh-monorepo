@@ -7,8 +7,8 @@ export function showCurrency(params) {
     } else {
       c = Math.abs(c);
     }
-    d = d == undefined ? "." : d;
-    t = t == undefined ? "," : t;
+    d = d === undefined ? "." : d;
+    t = t === undefined ? "," : t;
     let s = n < 0 ? "-" : "";
     let i = parseInt(n = Math.abs(+ n || 0).toFixed(c)) + "";
     s = n < 0 ? "-" : "";
@@ -20,7 +20,7 @@ export function showCurrency(params) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
   }
 
-  let value = swap(params[0],2, ',', '.');
+  const value = swap(params[0],2, ',', '.');
   return value;
 }
 

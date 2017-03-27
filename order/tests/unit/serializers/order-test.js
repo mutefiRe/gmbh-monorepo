@@ -10,9 +10,9 @@ describe('Unit | Serializer | order', function() {
 
   // Replace this with your real tests.
   it('serializes records', function() {
-    let record = this.subject();
+    const record = this.subject();
 
-    let serializedRecord = record.serialize();
+    const serializedRecord = record.serialize();
 
     expect(serializedRecord).to.be.ok;
   });

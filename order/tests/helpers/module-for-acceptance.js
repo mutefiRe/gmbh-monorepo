@@ -11,12 +11,12 @@ export default function(name, options = {}) {
       this.application = startApp();
 
       if (options.beforeEach) {
-        return Reflect.apply(options.beforeEach, this, arguments);
+        return options.beforeEach.apply(this, arguments); //eslint-disable-line
       }
     },
 
     afterEach() {
-      const afterEach = options.afterEach && Reflect.apply(options.afterEach, this, arguments);
+      let afterEach = options.afterEach && options.afterEach.apply(this, arguments); //eslint-disable-line
       return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }
   });
