@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import startApp   from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 
-describe('Acceptance | order screen', function() {
+describe('Acceptance | index screen', function() {
   let application;
 
   beforeEach(function() {
@@ -26,18 +26,18 @@ describe('Acceptance | order screen', function() {
     destroyApp(application);
   });
 
-  it('can visit /order', function() {
+  it('can visit index', function() {
     loggedIn();
 
     andThen(() => {
-      expect(currentURL()).to.equal('/order');
+      expect(currentURL()).to.equal('/');
     });
   });
 
   it('can click on item', function() {
     loggedIn();
     andThen(() => {
-      expect(currentURL()).to.equal('/order');
+      expect(currentURL()).to.equal('/');
       click("div.product_single-item:first-child");
       andThen(() => {
         expect(find('.preview > li:first-child').html()).to.equal('<div class="caption">1I</div>');
