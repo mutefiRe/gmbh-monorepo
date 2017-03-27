@@ -45,6 +45,9 @@ export default Ember.Component.extend(RecognizerMixin, {
     this.get('pageTransitions').toScreen({ screen: 'pay-main', from: 'left' });
   },
   actions: {
+    setActualOrder(table){
+      if (this.get('type') === "order") this.get('setActualOrder')(table);
+    },
     goToOrderMain() {
       this.goToOrderMain();
     },

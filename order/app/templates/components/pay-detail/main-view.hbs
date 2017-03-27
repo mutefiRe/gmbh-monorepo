@@ -25,7 +25,7 @@
 </div>
 
 <div class="flexcontainer">
-  <p class="sum">Tisch: {{order.table.name}}</p>
+  <p {{action "setActualOrder" order.table}} class="sum">Tisch: {{order.table.name}}</p>
   <p class="sum">Summe: € {{show-currency openAmount}}</p>
 </div>
 <br>
