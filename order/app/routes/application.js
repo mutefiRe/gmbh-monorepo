@@ -63,7 +63,7 @@ export default Ember.Route.extend({
       this.transitionTo('logout');
     },
     transitionToOrder() {
-      this.transitionTo('order');
+      this.transitionTo('index');
     }
   }
 });

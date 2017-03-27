@@ -8,8 +8,8 @@ const sessionStub = Ember.Service.extend({
   }
 });
 
-describe('Unit | Controller | order', function() {
-  setupTest('controller:order', {
+describe('Unit | Controller | index', function() {
+  setupTest('controller:index', {
     // Specify the other units that are required for this test.
     needs: ['model:user']
   });

@@ -10,7 +10,7 @@ describe('Unit | Adapter | application', function () {
 
   // Replace this with your real tests.
   it('exists', function () {
-    let adapter = this.subject();
+    const adapter = this.subject();
     expect(adapter).to.be.ok;
   });
 });

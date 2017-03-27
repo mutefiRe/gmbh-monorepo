@@ -10,7 +10,7 @@ describe('Unit | Model | category', function() {
 
   // Replace this with your real tests.
   it('exists', function() {
-    let model = this.subject();
+    const model = this.subject();
     // var store = this.store();
     expect(model).to.be.ok;
   });

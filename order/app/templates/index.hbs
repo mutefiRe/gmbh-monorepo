@@ -1,1 +1,52 @@
 {{outlet}}
+
+{{connection-indicator status=connection}}
+
+{{order-main/main-view
+  settings=model.Settings
+  categories=model.categories
+  actualCategory=actualCategory
+  changeCategory=(action "changeCategory")
+  items=model.Items
+  addItemToOrder=(action "addItemToOrder")
+  order=order
+  swipeHelper=swipeHelper
+}}
+
+{{#modals/modal-box}}
+  {{component modal.modalType
+    currentUser=model.currentUser
+    tables=model.Tables
+    settings=model.Settings
+    areas=model.Areas
+    order=order
+    addItemToOrder=(action "addItemToOrder")
+    modalItem=modal.modalItem
+    discardOrder=(action "discardOrder")
+  }}
+{{/modals/modal-box}}
+
+{{order-detail/main-view
+  user=model.currentUser
+  settings=model.Settings
+  order=order
+  removeItemFromOrder=(action 'removeItemFromOrder')
+  saveOrder=(action "saveOrder")
+}}
+
+
+{{pay-main/main-view
+  settings=model.Settings
+  orders=model.Orders
+  actualOrder=actualOrder
+  order=order
+  tables=model.Tables
+  swipeHelper=swipeHelper
+}}
+
+{{pay-detail/main-view
+  settings=model.Settings
+  order=actualOrder
+  printBill=(action "printBill")
+  connection=connection
+}}
