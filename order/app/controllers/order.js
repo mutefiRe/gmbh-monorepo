@@ -60,7 +60,7 @@ export default Ember.Controller.extend({
       const order = this.get('order');
 
       this.get('modal').showModal({ activeType: 'loading-box' });
-      this.get('connection') ? this.saveOrderAPI(order) : this.saveOrderOffline(order)
+      this.get('connection') ? this.saveOrderAPI(order) : this.saveOrderOffline(order);
     },
     resetOrder() {
       const order = this.store.createRecord('order', {});
@@ -107,7 +107,7 @@ export default Ember.Controller.extend({
     }).then(() => {
       this.get('payStorage').clear();
     }).catch(err => {
-      console.log(err);
+      console.log(err); //eslint-disable-line
     });
   },
   saveOrderOffline(order) {
@@ -129,7 +129,7 @@ export default Ember.Controller.extend({
     }).then(() => {
       this.finishSaveProcess(order);
     }).catch(err => {
-      console.log(err);
+      console.log(err); //eslint-disable-line
     });
   },
   handleAPISaveAndPrint(order) {

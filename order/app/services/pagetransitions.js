@@ -4,7 +4,7 @@ export default Ember.Service.extend({
   routing: Ember.inject.service('-routing'),
   isSwiping: false,
   toScreen(input) {
-    const {screen, from} = input;
+    const {screen} = input;
     if(this.get('routing').hasRoute(screen)){
       this.routeTransition(input, this.get('routing'));
     }else{

@@ -10,7 +10,7 @@ describe('LogoutController', function() {
 
   // Replace this with your real tests.
   it('exists', function() {
-    let controller = this.subject({
+    const controller = this.subject({
       init() {}
     });
     expect(controller).to.be.ok;

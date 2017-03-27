@@ -9,7 +9,7 @@ describe('IndexRoute', function() {
   });
 
   it('exists', function() {
-    let route = this.subject();
+    const route = this.subject();
     expect(route).to.be.ok;
   });
 });
