@@ -332,7 +332,7 @@ module.exports = function() {
       enabled: true,
       icon: "drink-coffee",
       description: "Kaffee",
-      showAmount: true,
+      showAmount: false,
       printer: "GMBH-WLAN"
     })
     .then(cat => {
@@ -362,7 +362,7 @@ module.exports = function() {
       enabled: true,
       icon: "desserts",
       description: "Dessert",
-      showAmount: true,
+      showAmount: false,
       printer: "GMBH-WLAN"
     })
     .then(cat => {
@@ -392,7 +392,7 @@ module.exports = function() {
       enabled: true,
       icon: "drink-anti",
       description: "Alkoholfreies",
-      showAmount: false,
+      showAmount: true,
       printer: "GMBH-WLAN"
     })
     .then(cat => {
