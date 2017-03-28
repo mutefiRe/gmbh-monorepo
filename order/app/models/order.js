@@ -17,5 +17,6 @@ export default DS.Model.extend({
       sum += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'));
     }
     return sum;
-  })
+  }),
+  type: 'order'
 });

@@ -8,9 +8,6 @@ export default Ember.Component.extend(RecognizerMixin, {
   classNames: ['pay-detail', 'screen'],
   recognizers: 'swipe',
   connection: true,
-  type: Ember.computed('order', function () {
-    return this.get('order.constructor.modelName');
-  }),
   paidOrderitems: Ember.computed.filter('order.orderitems.@each.countPaid', function (orderitem) {
     if (orderitem.get('countPaid') > 0) return true;
     return false;
@@ -46,7 +43,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   },
   actions: {
     setActualOrder(table){
-      if (this.get('type') === "order") this.get('setActualOrder')(table);
+      this.set('order', table);
     },
     goToOrderMain() {
       this.goToOrderMain();
@@ -57,7 +54,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     paySelected() {
       this.get('modal').showModal({ activeType: 'loading-box' });
       this.payMarkedOrderitems();
-      const orders = this.get('type') === 'table' ? this.get('order.orders') : [this.get('order')];
+      const orders = this.get('order.type') === 'table' ? this.get('order.orders') : [this.get('order')];
       this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
     payAll() {
