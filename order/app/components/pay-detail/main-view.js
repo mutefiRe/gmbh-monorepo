@@ -60,7 +60,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     payAll() {
       this.get('modal').showModal({ activeType: 'loading-box' });
       this.payAllOrderitems();
-      const orders = this.get('type') === 'table' ? this.get('order.orders') : [this.get('order')];
+      const orders = this.get('order.type') === 'table' ? this.get('order.orders') : [this.get('order')];
       this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
     printBill() {
