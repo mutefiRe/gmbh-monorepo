@@ -5,19 +5,25 @@ export default Ember.Component.extend({
   tagName: 'tr',
   isTabbed: false,
   click(){
-    if(this.get('isTabbed')){
-      this.set('isTabbed',false);
-    }
-    else{
-      this.set('isTabbed',true);
-    }
+    this.set('isTabbed', true);
   },
   actions: {
     deleteOrderItem() {
       this.get('deleteOrderItem')(this.get('index'));
     },
+    closeTabbed() {
+      this.set('isTabbed', false);
+    },
     removeItemFromOrder(){
       this.get('removeItemFromOrder')(this.get('orderitem'));
+    },
+    reduceOrderitemCount(){
+      const count = this.get('orderitem.count');
+      if(count > 1){
+        this.set('orderitem.count', this.get('orderitem.count') - 1);
+      }else{
+        this.send('removeItemFromOrder');
+      }
     }
   }
 });
