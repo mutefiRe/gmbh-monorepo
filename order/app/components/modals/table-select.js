@@ -4,9 +4,7 @@ export default Ember.Component.extend({
   store: Ember.inject.service('store'),
   modal: Ember.inject.service(),
   classNames: ['table-select'],
-  showTables: true,
-  showGuests: false,
-  showNew: false,
+  activeTab: 'tables',
   userAreas: Ember.computed.filter('areas', function(area){
     return area.get('user.id') === this.get('currentUser').id;
   }).property('areas'),
@@ -17,15 +15,7 @@ export default Ember.Component.extend({
     return table.get('custom') === false && !table.get('area.id');
   }).property('tables'),
   customTables: Ember.computed.filter('tables', function(table){
-    if (table.get('custom') === true)
-    {
-      const orders = table.get('orders');
-      const openOrders = orders.filter(function(order){
-        return order.totalAmount !== 0;
-      });
-      return openOrders.get('length') > 0;
-    }
-    return false;
+    return !table.get('custom') ? false : table.get('orderitems').every(filterCustomTable);
   }).property('tables.@each.custom', 'tables.@each.order'),
   actions: {
     setTable(table) {
@@ -33,24 +23,7 @@ export default Ember.Component.extend({
       this.get('modal').closeModal();
     },
     changeTab(tab) {
-      switch(tab) {
-        case "tables":
-          this.set('showTables', true);
-          this.set('showGuests', false);
-          this.set('showNew',    false);
-          break;
-        case "guests":
-          this.set('showTables', false);
-          this.set('showGuests', true);
-          this.set('showNew',    false);
-          break;
-        case "new":
-          this.set('showTables', false);
-          this.set('showGuests', false);
-          this.set('showNew',    true);
-          break;
-        default:
-      }
+      this.set('activeTab', tab);
     },
     createTable(){
       this.get('store')
@@ -60,9 +33,11 @@ export default Ember.Component.extend({
           this.send('setTable', table);
         });
       this.set('name', "");
-      this.set('showTables', false);
-      this.set('showGuests', true);
-      this.set('showNew',    false);
+      this.set('tab', 'tables');
     }
   }
 });
+
+function filterCustomTable(orderitem){
+  return !orderitem.get('count') === 0 || orderitem.get('count') !== orderitem.get('countPaid');
+}
