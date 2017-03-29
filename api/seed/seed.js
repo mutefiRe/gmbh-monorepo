@@ -115,7 +115,8 @@ module.exports = function() {
       icon: "food",
       description: "Alle die Guten Sachen",
       showAmount: false,
-      printer: "GMBH-WLAN"
+      printer: "GMBH-WLAN",
+      color: '#35063E'
     })
     .then(cat => {
       db.Unit
@@ -182,7 +183,8 @@ module.exports = function() {
       icon: "drink-alc",
       description: "alkohol",
       showAmount: true,
-      printer: "GMBH-WLAN"
+      printer: "GMBH-WLAN",
+      color: '#FEAD00'
     })
     .then(cat => {
       db.Unit
@@ -333,7 +335,8 @@ module.exports = function() {
       icon: "drink-coffee",
       description: "Kaffee",
       showAmount: false,
-      printer: "GMBH-WLAN"
+      printer: "GMBH-WLAN",
+      color: '#573200'
     })
     .then(cat => {
       db.Unit
@@ -363,7 +366,8 @@ module.exports = function() {
       icon: "desserts",
       description: "Dessert",
       showAmount: false,
-      printer: "GMBH-WLAN"
+      printer: "GMBH-WLAN",
+      color: '#B80C41'
     })
     .then(cat => {
       db.Unit
@@ -393,7 +397,8 @@ module.exports = function() {
       icon: "drink-anti",
       description: "Alkoholfreies",
       showAmount: true,
-      printer: "GMBH-WLAN"
+      printer: "GMBH-WLAN",
+      color: '#005213'
     })
     .then(cat => {
       db.Unit

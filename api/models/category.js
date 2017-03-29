@@ -8,7 +8,8 @@ module.exports = function(sequelize, DataTypes) {
     description: {type: DataTypes.STRING,  allowNull: false, unique: false},
     icon:        {type: DataTypes.STRING,  allowNull: true,  unique: false},
     showAmount:  {type: DataTypes.BOOLEAN, allowNull: true,  unique: false},
-    printer:     {type: DataTypes.STRING,  allowNull: true,  unique: false}
+    printer:     {type: DataTypes.STRING,  allowNull: true,  unique: false},
+    color:       {type: DataTypes.STRING,  allowNull: true,  unique: false}
   }, {
     classMethods: {
       associate(models) {
