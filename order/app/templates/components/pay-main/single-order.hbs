@@ -1,12 +1,23 @@
 {{yield}}
 {{#if order.id}}
-  <td>Bestellung {{order.showNumber}}</td>
-  <td>
-    Tisch: {{order.table.name}}
-    <span class="spacer"></span>
-    bestellt um: {{show-time order.createdAt}}
-    <span class="spacer"></span>
-    offen: € {{show-currency openAmount}}
-  </td>
+  {{#if order.table}}
+    <td>Bestellung {{order.showNumber}}</td>
+    <td>
+      Tisch: {{order.table.name}}
+      <span class="spacer"></span>
+      bestellt um: {{show-time order.createdAt}}
+      <span class="spacer"></span>
+      offen: € {{show-currency openAmount}}
+    </td>
+    {{else}}
+      <td>Kassabonierung {{order.showNumber}}</td>
+      <td>
+        Kassa
+        <span class="spacer"></span>
+        bestellt um: {{show-time order.createdAt}}
+        <span class="spacer"></span>
+        offen: € {{show-currency openAmount}}
+      </td>
+    {{/if}}
   <td>{{#if (eq paid "paid")}}Bezahlt{{else}}Offen{{/if}}</td>
 {{/if}}

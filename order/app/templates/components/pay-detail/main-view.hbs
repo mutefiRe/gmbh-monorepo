@@ -1,8 +1,12 @@
 <div class="flexcontainer">
-  {{#if (eq type 'table')}}
+  {{#if (eq order.type 'table')}}
     <h2>Tisch {{order.name}}</h2>
   {{else}}
+    {{#if order.table}}
     <h2>Bestellung #{{order.showNumber}}</h2>
+    {{else}}
+    <h2>Kassabonierung #{{order.showNumber}}</h2>
+    {{/if}}
   {{/if}}
   {{#if open}}
     <h2 class="notPaid">offen</h2>
@@ -25,7 +29,13 @@
 </div>
 
 <div class="flexcontainer">
-  <p class="sum">Tisch: {{order.table.name}}</p>
+  {{#if order.table}}
+    <p {{action "setActualOrder" order.table}} class="sum">Tisch: {{order.table.name}}</p>
+  {{else}}
+    {{#unless (eq order.type "table")}}
+    <p>Kassabon</p>
+    {{/unless}}
+  {{/if}}
   <p class="sum">Summe: € {{show-currency openAmount}}</p>
 </div>
 <br>

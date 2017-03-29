@@ -30,6 +30,9 @@ export default Ember.Controller.extend({
     });
   },
   actions: {
+    setActualOrder(table){
+      this.set('actualOrder', table);
+    },
     changeCategory(category) {
       if (this.get('actualCategory') === category) {
         this.set('actualCategory', false);
