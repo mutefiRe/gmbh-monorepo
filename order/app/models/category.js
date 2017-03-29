@@ -13,7 +13,7 @@ export default DS.Model.extend({
   items: DS.hasMany("item"),
   itemsSorting: ["sortId", "name"],
   sortedItems: Ember.computed.sort("items", "itemsSorting"),
-  color: DS.attr("string"),
+  color: DS.attr("string", {defaultValue: '#aabbcc'}),
   textcolor: Ember.computed("color", function() {
     const color = this.get("color");
     const R = parseInt(color.substring(1, 3), 16);
