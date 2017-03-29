@@ -25,7 +25,6 @@ db.sequelize.sync();
 const api = require('./router/api');
 const authenticate = require('./router/authenticate');
 const teapot = require('./router/teapot');
-const data = require('./router/data');
 const error = require('./router/error');
 
 server.listen(process.env.PORT || 8080, function(){
@@ -48,10 +47,9 @@ app.use('/authenticate', authenticate);
 app.use('/api', api);
 app.use('/teapot', teapot);
 
-app.use('/data', data);
 app.use('/error', error);
 
-app.use('/docs', express.static('docs'))
+app.use('/docs', express.static('docs'));
 
 /**
  * @api {get} check/ Health Check
