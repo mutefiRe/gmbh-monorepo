@@ -2,6 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   const Organization = sequelize.define("organization", {
+    id:            {type: DataTypes.UUID,   defaultValue: DataTypes.UUIDV4, primaryKey: true},
     uid:           {type: DataTypes.STRING, allowNull: false,  unique: true},
     name:          {type: DataTypes.STRING, allowNull: false,  unique: false},
     street:        {type: DataTypes.STRING, allowNull: true,   unique: false},
