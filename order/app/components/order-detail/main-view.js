@@ -7,7 +7,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   recognizers: 'swipe',
   classNames: ['order-detail','screen'],
   tagName: 'div',
-  openAmount: Ember.computed('order.orderitems.@each.countPaid', function(){
+  openAmount: Ember.computed('order.orderitems.@each.{countPaid,count}', function(){
     let total = 0;
     this.get('order.orderitems').forEach(orderitem => {
       total += orderitem.get('price') * (orderitem.get('count') - orderitem.get('countPaid'));

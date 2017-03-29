@@ -160,10 +160,13 @@
             padding-top: 20px;
             padding-bottom: 20px;
             font-weight: bold;
-            &:first-child {
-                text-align: right;
-                padding-left: 20px;
+            text-align: center;
+            &:nth-child(2) {
                 background: $grey-light;
+            }
+            &:nth-child(3){
+              background:lighten($orange, 10%);
+              color: $white;
             }
             &:last-child {
                 text-align: right;
