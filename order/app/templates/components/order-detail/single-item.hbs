@@ -1,6 +1,8 @@
 {{#if isTabbed}}
-<td class="disabled" colspan="3">Abbrechen</td>
-<td {{action 'removeItemFromOrder'}}class="disabled">Löschen</td>
+<td>{{orderitem.count}} x</td>
+<td {{action 'closeTabbed' bubbles=false}}class="disabled">schließen</td>
+<td {{action 'reduceOrderitemCount'}} class="disabled">- 1</td>
+<td {{action 'removeItemFromOrder'}} class="disabled">Löschen</td>
 {{else}}
 <td>{{orderitem.count}} x</td>
 <td colspan="2">{{orderitem.item.name}} {{show-amount orderitem.item.amount}}{{orderitem.item.unit.name}}<span> {{orderitem.extras}}</span></td>
