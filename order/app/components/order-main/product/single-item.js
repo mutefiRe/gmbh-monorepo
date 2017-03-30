@@ -4,15 +4,12 @@ export default Ember.Component.extend({
   modal: Ember.inject.service(),
   tagName: 'div',
   classNames: ['product_single-item'],
-  classNameBindings: ['myStyle'],
-  myStyle: 'style-1',
+  attributeBindings: ['style'],
+  style: Ember.computed('category', function(){
+    return 'color: ' + this.get('item.category.textcolor') + '; background-color: ' + this.get('item.category.color');
+  }),
   clickDelay: 500,
-  init() {
-    this._super();
-    const numberOfStyles = 4;
 
-    this.set('myStyle', `style-${(this.get('item.category.id') % numberOfStyles)}`);
-  },
   actions: {
     showModal() {
       this.get('modal')
