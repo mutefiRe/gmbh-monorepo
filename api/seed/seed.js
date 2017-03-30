@@ -477,7 +477,7 @@ module.exports = function() {
 
   db.Area
     .findOrCreate({
-      where: { name: "Terrasse" }
+      where: { name: "Terrasse", color: '#2acb54' }
     })
     .spread(area => {
       for (let i = 0; i < 12; i++) {
@@ -492,7 +492,7 @@ module.exports = function() {
 
   db.Area
     .findOrCreate({
-      where: { name: "Gaststube" }
+      where: { name: "Gaststube", color: '#45b1a4' }
     })
     .spread(area => {
       for (let i = 0; i < 12; i++) {
