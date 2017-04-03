@@ -2127,7 +2127,7 @@ ember-gestures@^0.4.1:
     ember-cli-version-checker "^1.2.0"
     rsvp "^3.1.0"
 
-ember-getowner-polyfill@^1.1.0, ember-getowner-polyfill@^1.1.1:
+ember-getowner-polyfill@^1.1.0, ember-getowner-polyfill@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/ember-getowner-polyfill/-/ember-getowner-polyfill-1.2.2.tgz#cdab739e89cc8f25af0f78735422df1a61193e92"
   dependencies:
@@ -2147,6 +2147,15 @@ ember-hammertime@^1.0.3:
   resolved "https://registry.yarnpkg.com/ember-hammertime/-/ember-hammertime-1.1.2.tgz#8664525554cda1f8097a20068ac92be68cb18c36"
   dependencies:
     ember-cli-babel "^5.1.6"
+
+ember-i18n@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/ember-i18n/-/ember-i18n-5.0.0.tgz#2cbda50fa48ad004b7a494e5701402e7dfb2d626"
+  dependencies:
+    broccoli-funnel "^1.0.6"
+    ember-cli-babel "^5.1.7"
+    ember-cli-version-checker "^1.2.0"
+    ember-getowner-polyfill "^1.2.2"
 
 ember-inflector@^1.9.2, ember-inflector@^1.9.4:
   version "1.11.0"

@@ -5,9 +5,9 @@
   <button class="default-btn button-blue" {{action 'add'}}>+</button>
 </div>
 <div class="extra">
-  {{input value=extra placeholder="Zusatzwunsch"}}
+  {{input value=extra placeholder=(t "input.additionalRequest")}}
 </div>
 <div class="foot">
-  <button {{action 'close'}} class="button-grey default-btn">Abbrechen</button>
-  <button {{action 'addItemsToOrder'}} class="button-blue default-btn">Übernehmen</button>
+  <button {{action 'close'}} class="button-grey default-btn">{{t "button.abort"}}</button>
+  <button {{action 'addItemsToOrder'}} class="button-blue default-btn">{{t "button.confirm"}}</button>
 </div>
