@@ -36,6 +36,7 @@ export default {
       'other': "Tische"
     },
     "sum": "Summe",
+    "selectedSum": "Auswahl",
     "empty": "Bestellung ist leer!",
     "notPaid": "offen",
     "paid": "bezahlt",

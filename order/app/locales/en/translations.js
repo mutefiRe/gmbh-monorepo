@@ -36,6 +36,7 @@ export default {
       'other': "tables"
     },
     "sum": "sum",
+    "selectedSum": "selection",
     "empty": "Order is empty!",
     "notPaid": "not paid",
     "paid": "paid",
