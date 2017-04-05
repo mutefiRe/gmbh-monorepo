@@ -67,7 +67,7 @@ router.get('/:id', function(req, res) {
  */
 
 router.get('/', function(req, res) {
-  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printer'], include: [{model: db.Area}]}).then(users => {
+  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printerId'], include: [{model: db.Area}]}).then(users => {
     res.send({users});
   }).catch(error => {
     res.status(400).send({

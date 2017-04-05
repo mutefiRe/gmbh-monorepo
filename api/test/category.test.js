@@ -23,34 +23,44 @@ const token = jwt.sign({
 describe('/category route', () => {
   before(clean);
   describe('categories exists', () => {
-
+    const printer1 = "277056cb-b639-4365-9532-563ca57d714d";
+    const printer2 = "a0470f0b-6e43-4773-895d-72bc08c19439";
     before(() => {
-      return db.Category.bulkCreate([{
-        id:          1,
-        name:        "category1",
-        enabled:     true,
-        description: "newCategory",
-        icon:        null,
-        showAmount:  true,
-        printer:     null
-      }, {
-        id:          2,
-        name:        "category2",
-        enabled:     false,
-        description: "newCategory",
-        icon:        "icon.jpg",
-        showAmount:  false,
-        printer:     "kitchen",
-        color:       "red"
+      return db.Printer.bulkCreate([{
+        id: printer1,
+        systemName: "test"
+      },{
+        id: printer2,
+        systemName: "test2"
       }])
-      .then(() => db.Item.create({
-        id:         1,
-        name:       "Bier",
-        amount:     0.5,
-        price:      3.5,
-        tax:        0.2,
-        unitId:     null
-      }));
+      .then(() => {
+        return db.Category.bulkCreate([{
+          id:          1,
+          name:        "category1",
+          enabled:     true,
+          description: "newCategory",
+          icon:        null,
+          showAmount:  true,
+          printerId:   null
+        }, {
+          id:          2,
+          name:        "category2",
+          enabled:     false,
+          description: "newCategory",
+          icon:        "icon.jpg",
+          showAmount:  false,
+          printerId:   printer1,
+          color:       "red"
+        }])
+        .then(() => db.Item.create({
+          id:         1,
+          name:       "Bier",
+          amount:     0.5,
+          price:      3.5,
+          tax:        0.2,
+          unitId:     null
+        }));
+      })
     });
 
     describe('GET categories', () => {
@@ -62,7 +72,7 @@ describe('/category route', () => {
           description: "newCategory",
           icon:        null,
           showAmount:  true,
-          printer:     null,
+          printerId:     null,
           categoryId:  null,
           color:       null
         }, {
@@ -72,7 +82,7 @@ describe('/category route', () => {
           description: "newCategory",
           icon:        "icon.jpg",
           showAmount:  false,
-          printer:     "kitchen",
+          printerId:   printer1,
           categoryId:  null,
           color:       "red"
         }]
@@ -107,7 +117,7 @@ describe('/category route', () => {
           description: "newCategory",
           icon:        null,
           showAmount:  true,
-          printer:     null
+          printerId:     null
         }
       };
 
@@ -135,8 +145,8 @@ describe('/category route', () => {
           description: "changedCategory",
           icon:        "icon.jpg",
           showAmount:  true,
-          printer:     "kitchen",
           categoryId:  null,
+          printerId:   printer2,
           color:       "green"
         }
       };
@@ -149,8 +159,8 @@ describe('/category route', () => {
           description: "changedCategory",
           icon:        "icon.jpg",
           showAmount:  true,
-          printer:     "kitchen",
           categoryId:  null,
+          printerId:   printer2,
           color:       "green"
         }
       };

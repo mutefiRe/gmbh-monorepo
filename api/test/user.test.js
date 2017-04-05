@@ -25,12 +25,20 @@ describe('/user route', () => {
   before(clean);
 
   describe('users exists', () => {
-
+    const printer1 = "277056cb-b639-4365-9532-563ca57d714d";
+    const printer2 = "a0470f0b-6e43-4773-895d-72bc08c19439";
     before(() => {
-      return db.User.bulkCreate([
-        {id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0},
+      return db.Printer.bulkCreate([{
+        id: printer1,
+        systemName: "test"
+      },{
+        id: printer2,
+        systemName: "test2"
+      }])
+      .then(db.User.bulkCreate([
+        {id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0, printerId: printer1},
         {id: 2, username: "test2", firstname: "test2", lastname: "test2", password: "test2", permission: 1}
-      ]);
+      ]))
     });
 
     describe('GET users', () => {
@@ -41,7 +49,7 @@ describe('/user route', () => {
           "firstname":  "test1",
           "lastname":   "test1",
           "permission": 0,
-          "printer":    null,
+          "printerId":  printer1,
           "areas":      []
         }, {
           "id":         "2",
@@ -49,7 +57,7 @@ describe('/user route', () => {
           "firstname":  "test2",
           "lastname":   "test2",
           "permission": 1,
-          "printer":    null,
+          "printerId":  null,
           "areas":      []
         }]
       };
@@ -83,7 +91,7 @@ describe('/user route', () => {
           lastname:   "lastname",
           password:   "password",
           permission: 0,
-          printer:    null
+          printerId:  null
         }
       };
 
@@ -102,7 +110,7 @@ describe('/user route', () => {
           expect(user.firstname).to.eq("firstname");
           expect(user.lastname).to.eq("lastname");
           expect(user.permission).to.eq(0);
-          expect(user.printer).to.eq(null);
+          expect(user.printerId).to.eq(null);
         });
       });
     });
@@ -115,7 +123,7 @@ describe('/user route', () => {
           lastname:   "lastname",
           password:   "password",
           permission: 1,
-          printer:    "test"
+          printerId:  printer2
         }
       };
 
@@ -134,7 +142,7 @@ describe('/user route', () => {
           expect(user.firstname).to.eq("firstname");
           expect(user.lastname).to.eq("lastname");
           expect(user.permission).to.eq(1);
-          expect(user.printer).to.eq("test");
+          expect(user.printerId).to.eq(printer2);
         });
       });
     });

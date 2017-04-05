@@ -12,7 +12,7 @@ stages:
   - deploy
 
 .job_template: &test_definition
-  image: registry.gitlab.com/mossss/gmbh-api:v2
+  image: registry.gitlab.com/mossss/gmbh-api:v3
   stage: test
   before_script:
    - eval $(ssh-agent -s)
