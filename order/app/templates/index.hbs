@@ -4,7 +4,7 @@
 
 {{order-main/main-view
   settings=model.Settings
-  categories=model.categories
+  categories=enabledCategories
   actualCategory=actualCategory
   changeCategory=(action "changeCategory")
   items=model.Items
@@ -18,7 +18,7 @@
     currentUser=model.currentUser
     tables=model.Tables
     settings=model.Settings
-    areas=model.Areas
+    areas=enabledAreas
     order=order
     addItemToOrder=(action "addItemToOrder")
     modalItem=modal.modalItem

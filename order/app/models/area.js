@@ -6,7 +6,9 @@ export default DS.Model.extend({
   createdAt: DS.attr('date'),
   tables:    DS.hasMany('table'),
   users:     DS.hasMany('user'),
-  color: DS.attr("string", {defaultValue: '#aabbcc'}),
+  enabled:   DS.attr('boolean', { defaultValue: true }),
+  color:     DS.attr("string", {defaultValue: '#aabbcc'}),
+
   textcolor: Ember.computed("color", function() {
     const color = this.get("color");
     const R = parseInt(color.substring(1, 3), 16);

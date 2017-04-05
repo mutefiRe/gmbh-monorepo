@@ -7,8 +7,9 @@ export default DS.Model.extend({
   lastname:   DS.attr('string'),
   password:   DS.attr('string'),
   permission: DS.attr('permissions'),
-  areas:      DS.hasMany('area'),
   printer:    DS.attr('string'),
+  areas:      DS.hasMany('area'),
+
   isCashier:  Ember.computed('printer', function(){
     return this.get('printer') ? true : false;
   })
