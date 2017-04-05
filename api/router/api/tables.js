@@ -12,6 +12,7 @@ const db        = require('../../models');
  * @apiSuccess {Number}  tables.x
  * @apiSuccess {Number}  tables.y
  * @apiSuccess {Boolean} tables.custom
+ * @apiSuccess {Boolean} tables.enabled
  */
 
 /**
@@ -22,6 +23,7 @@ const db        = require('../../models');
  * @apiParam {Number}  tables.x
  * @apiParam {Number}  tables.y
  * @apiParam {Boolean} tables.custom
+ * @apiParam {Boolean} tables.enabled
  */
 
 /**

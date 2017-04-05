@@ -13,18 +13,20 @@ const db        = require('../../models');
  * @apiSuccess {Number}  items.sort the sort order of the items
  * @apiSuccess {Number}  items.category Id of the cateogry
  * @apiSuccess {Number}  items.unit Id of the unit
+ * @apiSuccess {Boolean}  items.enabled the flag if items should be enabled
  */
 
 /**
  * @apiDefine itemParams
- * @apiSuccess {Number}  items.id Autoincremented Identifier of the item
- * @apiSuccess {String}  items.name Name of the item
- * @apiSuccess {Number}  items.amount Id of the Area
- * @apiSuccess {Number}  items.price Price of one item
- * @apiSuccess {Number}  items.tax Tax of the item
- * @apiSuccess {Number}  items.sort the sort order of the items
- * @apiSuccess {Number}  items.category Id of the cateogry
- * @apiSuccess {Number}  items.unit Id of the unit
+ * @apiParam {Number}  items.id Autoincremented Identifier of the item
+ * @apiParam {String}  items.name Name of the item
+ * @apiParam {Number}  items.amount Id of the Area
+ * @apiParam {Number}  items.price Price of one item
+ * @apiParam {Number}  items.tax Tax of the item
+ * @apiParam {Number}  items.sort the sort order of the items
+ * @apiParam {Number}  items.category Id of the cateogry
+ * @apiParam {Number}  items.unit Id of the unit
+ * @apiParam {Boolean} items.enabled the flag if items should be enabled
  */
 
 /**
