@@ -171,7 +171,8 @@ module.exports = function() {
     customTables: true,
     receiptPrinter: "GMBH-WLAN",
     eventName: "GMBH",
-    expiresTime: "72h"
+    expiresTime: "72h",
+    showItemPrice: true
   });
 
   /* ALCOHOLICS */
