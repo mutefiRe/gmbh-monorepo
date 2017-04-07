@@ -14,6 +14,7 @@ const db     = require('../../models');
  * @apiSuccess {String}  settings.receiptPrinter
  * @apiSuccess {String}  settings.eventName
  * @apiSuccess {String}  settings.expiresTime
+ * @apiSuccess {Boolean}  settings.itemShowPrice
  */
 
 /**
@@ -27,6 +28,7 @@ const db     = require('../../models');
  * @apiSuccess {String}  settings.receiptPrinter
  * @apiSuccess {String}  settings.eventName
  * @apiSuccess {String}  settings.expiresTime
+ * @apiSuccess {Boolean}  settings.itemShowPrice
  */
 
 /**
