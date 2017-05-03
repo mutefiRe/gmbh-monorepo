@@ -46,11 +46,11 @@ export default Ember.Route.extend({
     });
 
     socket.on('disconnect', function () {
-      that.controllerFor('order').send('socketDisconnected');
+      that.controllerFor('index').send('socketDisconnected');
     });
 
     socket.on('reconnect', function () {
-      that.controllerFor('order').send('socketReconnected');
+      that.controllerFor('index').send('socketReconnected');
     });
 
     return socket;
