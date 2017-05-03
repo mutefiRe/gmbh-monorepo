@@ -6,7 +6,9 @@ export default Ember.Controller.extend({
   i18n:     Ember.inject.service(),
 
   headline: Ember.computed('router.currentRouteName', function() {
-    const routeName =  this.get('router.currentRouteName');
-    return this.get('i18n').t(`headlines.${routeName}`);
+    const routeName   =  this.get('router.currentRouteName');
+    const translation = this.get('i18n').t(`headlines.${routeName}`) || routeName;
+
+    return translation;
   })
 });
