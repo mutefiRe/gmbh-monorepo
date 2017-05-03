@@ -10,6 +10,12 @@ Router.map(function() {
   this.route('login');
   this.route('logout');
   this.route('data', function(){});
+  this.route('categories');
+  this.route('users');
+  this.route('printers');
+  this.route('events');
+  this.route('products');
+  this.route('tables');
 });
 
 export default Router;

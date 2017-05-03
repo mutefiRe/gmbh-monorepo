@@ -1,9 +1,9 @@
 /* jshint node: true */
 
 module.exports = function(environment) {
-  var ENV = {
+  const ENV = {
     modulePrefix: 'admin',
-    environment: environment,
+    environment,
     rootURL: '/',
     locationType: 'auto',
     EmberENV: {
@@ -47,7 +47,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    // production env
   }
 
   ENV['ember-simple-auth'] = {
@@ -62,5 +62,8 @@ module.exports = function(environment) {
     timeFactor: 1000
   };
 
+  ENV.i18n = {
+    defaultLocale: 'de'
+  };
   return ENV;
 };
