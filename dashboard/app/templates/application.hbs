@@ -1,5 +1,6 @@
 {{#if session.isAuthenticated}}
-  {{#link-to 'logout'}}Logout{{/link-to}}
+  {{main-header headline=headline}}
+  {{main-navigation}}
 {{else}}
   {{#link-to 'login'}}Login{{/link-to}}
 {{/if}}
