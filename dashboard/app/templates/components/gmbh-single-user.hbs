@@ -1,0 +1,39 @@
+<div class="singleuserbar" {{action "openCloseEditable"}}>
+  <div class="singleusername">{{user.username}}</div>
+  <div class="singleauth">Kaffeefrau</div>
+  <div class="singlepwindicator material-icons">vpn_key</div>
+  <div class="singleeditindicator material-icons">mode_edit</div>
+</div>
+<div class="editsingleuser editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="username">Username</label>
+      <input type="text" name="username" value="{{user.username}}">
+    </div>
+    <div class="input-element">
+      <label for="firstname">Vorname</label>
+      <input type="text" name="firstname" value="{{user.firstname}}">
+    </div>
+    <div class="input-element">
+      <label for="lastame">Nachname</label>
+      <input type="text" name="lastname" value="{{user.lastname}}">
+    </div>
+    <div class="input-element">
+      <label for="authentication">Berechtigung</label>
+      <div class="select-wrapper">
+        <select>
+          <option>Kellner</option>
+          <option>Barmann</option>
+          <option selected>Kaffeefrau</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="input-row align-right">
+    <button class="gray" type="button">Passwort ändern</button>
+    <button class="gray" type="button">Passwort löschen</button>
+  </div>
+  <div class="input-row align-right">
+    <button {{action "saveUser" user}} class="green" type="button">Speichern</button>
+  </div>
+</div>
