@@ -18,7 +18,8 @@ export default Ember.Component.extend({
         $('body').addClass('noscroll');
       }
     },
-    saveUser(/* user) */) {
+    updateUser(user) {
+      user.save();
     }
   }
 });

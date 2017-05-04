@@ -1,6 +1,6 @@
 <div class="singleuserbar" {{action "openCloseEditable"}}>
   <div class="singleusername">{{user.username}}</div>
-  <div class="singleauth">Kaffeefrau</div>
+  <div class="singleauth">{{user.permission}}</div>
   <div class="singlepwindicator material-icons">vpn_key</div>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
@@ -8,23 +8,22 @@
   <div class="input-row">
     <div class="input-element">
       <label for="username">Username</label>
-      <input type="text" name="username" value="{{user.username}}">
+      {{input type="text" value=user.username name="username"}}
     </div>
     <div class="input-element">
       <label for="firstname">Vorname</label>
-      <input type="text" name="firstname" value="{{user.firstname}}">
+      {{input type="text" value=user.firstname name="firstname"}}
     </div>
     <div class="input-element">
       <label for="lastame">Nachname</label>
-      <input type="text" name="lastname" value="{{user.lastname}}">
+      {{input type="text" value=user.lastname name="lastname"}}
     </div>
     <div class="input-element">
       <label for="authentication">Berechtigung</label>
       <div class="select-wrapper">
-        <select>
-          <option>Kellner</option>
-          <option>Barmann</option>
-          <option selected>Kaffeefrau</option>
+        <select onchange={{action (mut user.permission) value="target.value"}}>
+          <option selected={{eq user.permission "Waiter"}}>Waiter</option>
+          <option selected={{eq user.permission "Admin"}}>Admin</option>
         </select>
       </div>
     </div>
@@ -34,6 +33,6 @@
     <button class="gray" type="button">Passwort löschen</button>
   </div>
   <div class="input-row align-right">
-    <button {{action "saveUser" user}} class="green" type="button">Speichern</button>
+    <button {{action "updateUser" user}} class="green" type="button">Speichern</button>
   </div>
 </div>

@@ -1,1 +1,12 @@
-{{outlet}}
+<main>
+  <div class="list-description">
+    <p>Name</p>
+    <p>Berechtigung</p>
+    <p>Passwort</p>
+  </div>
+  <div class="content">
+    {{#each model as |letter|}}
+      {{gmbh-userlist users=letter.data letter=letter.letter}}
+    {{/each}}
+  </div>
+</main>
