@@ -1,30 +1,30 @@
-           <div class="single-product" {{action "openCloseEditable"}}>
-              <p>{{product.name}}</p>
-              <div class="singleeditindicator material-icons">mode_edit</div>
-            </div>
-            <div class="editsingleproduct editarea">
-              <div class="input-row">
-                <div class="input-element">
-                  <label for="name">Name</label>
-                  <input type="text" name="name" value="{{product.name}}">
-                </div>
-                <div class="input-element">
-                  <label for="name">Preis</label>
-                  <input type="text" name="price" value="{{product.price}}">
-                </div>
-                <div class="input-element">
-                  <label for="name">Mehrwertssteuer</label>
-                  <input type="text" name="mwst" value="{{product.tax}}">
-                </div>
-                <div class="input-element">
-                  <label for="color">Kategorie</label>
-                  <div class="select-wrapper">
-                    <select name="color">
-                      <option value="eis">Eis</option>
-                      <option value="donuts" selected>Donuts</option>
-                      <option value="bier">Bier</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
+<div class="single-product" {{action "openCloseEditable"}}>
+  <p>{{product.name}}</p>
+  <div class="singleeditindicator material-icons">mode_edit</div>
+</div>
+  <div class="editsingleproduct editarea">
+    <div class="input-row">
+      <div class="input-element">
+        <label for="name">Name</label>
+        <input type="text" name="name" value="{{product.name}}">
+      </div>
+      <div class="input-element">
+        <label for="name">Preis</label>
+        <input type="text" name="price" value="{{product.price}}">
+      </div>
+      <div class="input-element">
+        <label for="name">Mehrwertssteuer</label>
+        <input type="text" name="mwst" value="{{product.tax}}">
+      </div>
+      <div class="input-element">
+        <label for="color">Kategorie</label>
+        <div class="select-wrapper">
+          <select name="color">
+            {{#each categories as |category|}}
+              <option value="{{category.name}}">{{category.name}}</option>
+            {{/each}}
+          </select>
+      </div>
+    </div>
+  </div>
+</div>
