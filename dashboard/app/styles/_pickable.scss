@@ -1,0 +1,30 @@
+.pickable-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+.pickable-wrapper {
+	&:hover {
+		background: $lightergray;
+	}
+}
+
+.pickable {
+	width: 30px;
+	height: 30px;
+	margin: 10px;
+
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.color {
+	border-radius: 100%;
+	background: $simpleblue;
+
+	p {
+		display: none;
+	}
+}
