@@ -1,0 +1,13 @@
+.colorselector {
+	select {
+		padding-left: 30px;
+	}
+	.colordot {
+		width: 20px;
+		height: 20px;
+		display: block;
+		background: $simpleblue;
+		border-radius: 100%;
+		position: absolute;
+	}
+}
