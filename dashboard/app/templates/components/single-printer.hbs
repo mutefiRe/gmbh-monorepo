@@ -1,0 +1,16 @@
+<div class="single-printer" {{action 'toggleEditable'}}>
+  <p>{{printer.name}}</p>
+  <div class="singleprintindicator material-icons">print</div>
+</div>
+<div class="editsingleproduct editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">Name</label>
+      <input type="text" name="name" value="{{printer.name}}">
+    </div>
+    <div class="input-element">
+    <label for="name">Modell</label>
+    <input disabled="" type="text" name="type" value="{{printer.name}}">
+    </div>
+  </div>
+</div>

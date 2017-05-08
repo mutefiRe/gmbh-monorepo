@@ -1,1 +1,11 @@
-{{outlet}}
+<main>
+  <div class="content">
+    <ul class="editable product-list">
+      {{#each model.products as |product|}}
+        {{single-product product=product categories=model.categories}}
+      {{/each}}
+    </ul>
+  </div>
+</main>
+
+{{main-controlbar}}

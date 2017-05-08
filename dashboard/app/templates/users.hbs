@@ -1,1 +1,21 @@
-{{outlet}}
+<main>
+  <div class="list-description">
+    <p>Name</p>
+    <p>Berechtigung</p>
+    <p>Passwort</p>
+  </div>
+  <div class="content">
+    {{#each alphabeticUserGroup as |userGroup|}}
+      <div class="entriesbyletter">
+        <h2>{{userGroup.letter}}</h2>
+        <ul class="userlist editable">
+          {{#each userGroup.users as |user|}}
+            {{single-user user=user}}
+          {{/each}}
+        </ul>
+      </div>
+    {{/each}}
+  </div>
+</main>
+
+{{main-controlbar}}

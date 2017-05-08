@@ -1,0 +1,49 @@
+nav {
+	position: fixed;
+	height: 90px;
+	bottom: 0;
+	background: #fff;
+	width: 100%;
+	text-align: center;
+	padding: $defaultpadding 0 0;
+	box-shadow: #{$boxshadow};
+	z-index: $botmidlevel;
+
+	@media #{$desktop} {
+		position: static;
+		background: none;
+		box-shadow: none;
+		width: $leftcolwidth;
+		min-width: $leftcolwidth;
+		text-align: left;
+		font-weight: $bold;
+		padding: 0;
+	}
+
+	@media #{$largedesktop} {
+		width: $leftcolwidthlarge;
+		min-width: $leftcolwidthlarge;
+	}
+
+	a {
+		text-decoration: none;
+		color: $darkgray;
+
+		@media #{$desktop} {
+				display: block;
+				padding: $defaultpadding 0 $defaultpadding $doublepadding;
+			}
+
+		.material-icons {
+			vertical-align: middle;
+		}
+
+		.linktext {
+			display: none;
+
+			@media #{$desktop} {
+				display: inline;
+			}	
+		}
+	}
+}

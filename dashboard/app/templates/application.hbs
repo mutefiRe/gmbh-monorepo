@@ -1,7 +1,11 @@
 {{#if session.isAuthenticated}}
   {{main-header headline=headline}}
-  {{main-navigation}}
 {{else}}
   {{#link-to 'login'}}Login{{/link-to}}
 {{/if}}
-{{outlet}}
+<div class="wrapper">
+  {{#if session.isAuthenticated}}
+    {{main-navigation}}
+  {{/if}}
+  {{outlet}}
+</div>

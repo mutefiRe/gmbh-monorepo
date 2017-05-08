@@ -1,0 +1,41 @@
+<div class="single-category" {{action "toggleEditable"}}>
+            <div class="material-icons">face</div>
+              <p>{{category.name}}</p>
+              <div class="singleeditindicator material-icons">mode_edit</div>
+            </div>
+            <div class="editsinglecategory editarea">
+              <div class="input-row">
+                <div class="input-element">
+                  <label for="name">Name</label>
+                  <input type="text" name="name" value="{{category.name}}">
+                </div>
+                <div class="input-element">
+                  <label for="icon">Icon</label>
+                  <div class="select-wrapper">
+                    <select class="material-icons" name="icon">
+                      <option value="face">face</option>
+                      <option value="sms">sms</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="input-element">
+                  <label for="printer">Drucker</label>
+                  <div class="select-wrapper">
+                    <select name="printer">
+                      <option value="glump" selected>Glumpad</option>
+                      <option value="hinig">Hinig</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="input-element">
+                  <label for="color">Farbe</label>
+                  <div class="select-wrapper">
+                    <select name="color">
+                      <option value="donaublue">donaublau</option>
+                      <option value="yellowfromtheegg" selected>Is gelbe vom Ei</option>
+                      <option value="freshcoral">koralle</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>

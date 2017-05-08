@@ -1,0 +1,23 @@
+button {
+	width: 100%;
+	color: #fff;
+	border: none;
+    outline: none;
+    font-size: $basefontsize;
+    font-weight: $regular;
+    margin-right: 50px;
+    height: 45px;
+    margin-bottom: 15px;
+
+    @media #{$desktop} {
+    	margin-bottom: 0;
+    }
+
+	&.gray{
+		background: $inputgray;
+	}
+
+	&.green {
+		background: $gardengreen;
+	}
+}

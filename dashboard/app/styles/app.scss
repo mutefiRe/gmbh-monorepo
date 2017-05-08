@@ -1,39 +1,103 @@
-$black: #000;
-$grey-darker: #2D2D2D;
-$grey-dark: #979797;
-$grey: #ccc;
-$blue: #297D8C;
-$blue-light: #E6FCFF;
-$white: #fff;
-@import './reset.scss';
-@import './login.scss';
+@import './_variables.scss';
+@import './_editable.scss';
+@import './_mainnavigation.scss';
+@import './_header.scss';
+@import './_userlistentries.scss';
+@import './_categorylistentries.scss';
+@import './_productlistentries.scss';
+@import './_printerlistentries.scss';
+@import './_addentrybar.scss';
+@import './_input.scss';
+@import './_button.scss';
 
-@font-face {
-  font-family: 'Palanquin';
-  src: url('./fonts/Palanquin-Medium.ttf');
-  font-weight: normal;
-}
-@font-face {
-  font-family: 'Palanquin';
-  src: url('./fonts/Palanquin-Light.ttf');
-  font-weight: light;
-}
-@font-face {
-  font-family: 'Palanquin';
-  src: url('./fonts/Palanquin-Bold.ttf');
-  font-weight: bold;
-}
-
-body, html {
-  height: 100%;
-}
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 body {
-  font-family:'Palanquin', arial, sans-serif;
-  font-size: 14px;
-  background: $blue-light;
+  margin: 0 0 $mobilestaticbarheight 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Roboto, Helvetica, Arial, sans-serif;
+  font-size: $mobilefontsize;
+  color: $darkgray;
+
+  &.noscroll {
+    overflow: hidden;
+
+    @media #{$desktop} {
+      overflow: visible;
+    }
+  }
+
+  @media #{$desktop} {
+    margin: 0 0 60px 0;
+    font-size: $basefontsize;
+    background: $almostwhite;
+
+  }
 }
 
-* {
-  box-sizing: border-box;
+.wrapper {
+  @media #{$desktop} {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+main {
+  padding: 0 $defaultpadding;
+
+  @media #{$desktop} {
+    flex-grow: 1;
+    padding: 0 $doublepadding*2 0 0 ;
+  }
+
+  .content {
+    @media #{$desktop} {
+      background: #fff;
+      box-shadow: #{$greatboxshadow};
+      padding-bottom: $defaultpadding;
+    }
+  }
+
+  .list-description {
+    display: none;
+
+    @media #{$desktop} {
+      display: flex;
+      flex-direction: row;
+    }
+
+    p {
+      margin-top: 0;
+      width: $listmiddlecol;
+      font-size: $smallfontsize;
+
+      &:first-child {
+        width: $listleftcol;
+      }
+
+      &:last-child {
+        width: $listrightcol;
+      }
+    }
+  }
+}
+
+footer {
+  display: none;
+}
+
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
 }

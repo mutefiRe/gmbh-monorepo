@@ -1,1 +1,11 @@
-{{outlet}}
+<main>
+  <div class="content">
+    <ul class="editable printer-list">
+      {{#each model as |printer|}}
+        {{single-printer printer=printer}}
+      {{/each}}
+    </ul>
+  </div>
+</main>
+
+{{main-controlbar}}
