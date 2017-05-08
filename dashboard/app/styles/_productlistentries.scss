@@ -11,7 +11,7 @@
 	}
 
 	li {
-		display: block;
+		display: flex;
 		width: calc(50% - 5px);
 		margin: 0 0 10px 0;
 
@@ -21,7 +21,9 @@
 	}
 
 	.single-product {
-		display: inline-block;
+		display: flex;
+    align-items: center;
+    justify-content: center;
 		text-align: center;
 		background: $lightgray;
 		box-sizing: border-box;
