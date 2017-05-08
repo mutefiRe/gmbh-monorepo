@@ -3,8 +3,8 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration | Component | gmbh single product', function() {
-  setupComponentTest('gmbh-single-product', {
+describe('Integration | Component | main controlbar', function() {
+  setupComponentTest('main-controlbar', {
     integration: true
   });
 
@@ -13,12 +13,12 @@ describe('Integration | Component | gmbh single product', function() {
     // Handle any actions with this.on('myAction', function(val) { ... });
     // Template block usage:
     // this.render(hbs`
-    //   {{#gmbh-single-product}}
+    //   {{#main-controlbar}}
     //     template content
-    //   {{/gmbh-single-product}}
+    //   {{/main-controlbar}}
     // `);
 
-    this.render(hbs`{{gmbh-single-product}}`);
+    this.render(hbs `{{main-controlbar}}`);
     expect(this.$()).to.have.length(1);
   });
 });

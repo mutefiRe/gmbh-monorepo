@@ -1,7 +1,11 @@
 <main>
   <div class="content">
-    {{gmbh-printerlist printers=model}}
+    <ul class="editable printer-list">
+      {{#each model as |printer|}}
+        {{single-printer printer=printer}}
+      {{/each}}
+    </ul>
   </div>
 </main>
 
-{{gmbh-controlbar}}
+{{main-controlbar}}

@@ -1,7 +1,11 @@
 <main>
   <div class="content">
-    {{gmbh-productlist products=model.products categories=model.categories}}
+    <ul class="editable product-list">
+      {{#each model.products as |product|}}
+        {{single-product product=product categories=model.categories}}
+      {{/each}}
+    </ul>
   </div>
 </main>
 
-{{gmbh-controlbar}}
+{{main-controlbar}}

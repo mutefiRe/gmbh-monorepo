@@ -3,8 +3,8 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration | Component | gmbh printerlist', function() {
-  setupComponentTest('gmbh-printerlist', {
+describe('Integration | Component | single printer', function() {
+  setupComponentTest('single-printer', {
     integration: true
   });
 
@@ -13,12 +13,12 @@ describe('Integration | Component | gmbh printerlist', function() {
     // Handle any actions with this.on('myAction', function(val) { ... });
     // Template block usage:
     // this.render(hbs`
-    //   {{#gmbh-printerlist}}
+    //   {{#single-printer}}
     //     template content
-    //   {{/gmbh-printerlist}}
+    //   {{/single-printer}}
     // `);
 
-    this.render(hbs`{{gmbh-printerlist}}`);
+    this.render(hbs `{{single-printer}}`);
     expect(this.$()).to.have.length(1);
   });
 });

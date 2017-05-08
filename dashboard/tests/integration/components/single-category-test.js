@@ -3,8 +3,8 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration | Component | gmbh controlbar', function() {
-  setupComponentTest('gmbh-controlbar', {
+describe('Integration | Component | single category', function() {
+  setupComponentTest('single-category', {
     integration: true
   });
 
@@ -13,12 +13,12 @@ describe('Integration | Component | gmbh controlbar', function() {
     // Handle any actions with this.on('myAction', function(val) { ... });
     // Template block usage:
     // this.render(hbs`
-    //   {{#gmbh-controlbar}}
+    //   {{#gmbh-single-category}}
     //     template content
-    //   {{/gmbh-controlbar}}
+    //   {{/gmbh-single-category}}
     // `);
 
-    this.render(hbs`{{gmbh-controlbar}}`);
+    this.render(hbs `{{single-category}}`);
     expect(this.$()).to.have.length(1);
   });
 });
