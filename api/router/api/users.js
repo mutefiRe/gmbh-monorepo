@@ -126,6 +126,7 @@ router.put('/:id', function(req, res) {
   const io = req.app.get('io');
   db.User.find({where: {id: req.params.id}}).then(user => {
     if (user === null) throw new Error('user not found');
+    if (req.body.user.password === null) Reflect.deleteProperty(req.body.user, 'password');
     return user.update(req.body.user);
   }).then(user => {
     res.send({user});
