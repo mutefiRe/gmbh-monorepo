@@ -80,11 +80,19 @@ describe('util test cpad', () => {
 describe('util test formatDate', () => {
   it('should correctly format time with leading zero', () => {
     const result = util.formatDate(new Date(3666 * 1000));
-    expect(result).to.be.equal('01:01 01.01');
+    if (process.env.NODE_ENV === "test") {
+      expect(result).to.be.equal('02:01 01.01');
+    } else {
+      expect(result).to.be.equal('01:01 01.01');
+    }
   });
 
   it('should correctly format time', () => {
     const result = util.formatDate('2017-12-25T22:38:26.229Z');
-    expect(result).to.be.equal('22:38 25.12');
+    if (process.env.NODE_ENV === "test") {
+      expect(result).to.be.equal('23:38 25.12');
+    } else {
+      expect(result).to.be.equal('22:38 25.12');
+    }
   });
 });

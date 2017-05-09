@@ -28,15 +28,15 @@ describe('/user route', () => {
 
     before(() => {
       return db.User.bulkCreate([
-        {username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0},
-        {username: "test2", firstname: "test2", lastname: "test2", password: "test2", permission: 1}
+        {id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0},
+        {id: 2, username: "test2", firstname: "test2", lastname: "test2", password: "test2", permission: 1}
       ]);
     });
 
     describe('GET users', () => {
       const expectedResponse = {
         "users": [{
-          "id":         1,
+          "id":         "1",
           "username":   "test1",
           "firstname":  "test1",
           "lastname":   "test1",
@@ -44,7 +44,7 @@ describe('/user route', () => {
           "printer":    null,
           "areas":      []
         }, {
-          "id":         2,
+          "id":         "2",
           "username":   "test2",
           "firstname":  "test2",
           "lastname":   "test2",

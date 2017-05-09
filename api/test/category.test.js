@@ -26,6 +26,7 @@ describe('/category route', () => {
 
     before(() => {
       return db.Category.bulkCreate([{
+        id:          1,
         name:        "category1",
         enabled:     true,
         description: "newCategory",
@@ -33,43 +34,47 @@ describe('/category route', () => {
         showAmount:  true,
         printer:     null
       }, {
+        id:          2,
         name:        "category2",
         enabled:     false,
         description: "newCategory",
         icon:        "icon.jpg",
         showAmount:  false,
-        printer:     "kitchen"
+        printer:     "kitchen",
+        color:       "red"
       }])
       .then(() => db.Item.create({
+        id:         1,
         name:       "Bier",
         amount:     0.5,
         price:      3.5,
         tax:        0.2,
-        unitId:     null,
-        categoryId: 1
+        unitId:     null
       }));
     });
 
     describe('GET categories', () => {
       const expectedResponse = {
         "categories": [{
-          id:          1,
+          id:          "1",
           name:        "category1",
           enabled:     true,
           description: "newCategory",
           icon:        null,
           showAmount:  true,
           printer:     null,
-          categoryId:  null
+          categoryId:  null,
+          color:       null
         }, {
-          id:          2,
+          id:          "2",
           name:        "category2",
           enabled:     false,
           description: "newCategory",
           icon:        "icon.jpg",
           showAmount:  false,
           printer:     "kitchen",
-          categoryId:  null
+          categoryId:  null,
+          color:       "red"
         }]
       };
 
@@ -131,20 +136,22 @@ describe('/category route', () => {
           icon:        "icon.jpg",
           showAmount:  true,
           printer:     "kitchen",
-          categoryId:  2
+          categoryId:  null,
+          color:       "green"
         }
       };
 
       const expectedResponse = {
         category: {
-          id:          1,
+          id:          "1",
           name:        "changedCategory",
           enabled:     false,
           description: "changedCategory",
           icon:        "icon.jpg",
           showAmount:  true,
           printer:     "kitchen",
-          categoryId:  2
+          categoryId:  null,
+          color:       "green"
         }
       };
 

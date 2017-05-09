@@ -246,7 +246,7 @@ describe('layout deliveryNote test', () => {
 });
 
 describe('layout bill test', () => {
-  it.only('should format bill', () => {
+  it('should format bill', () => {
     const items = [{
       "id": 9,
       "extras": null,

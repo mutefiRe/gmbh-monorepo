@@ -25,9 +25,10 @@ describe('/order route', () => {
   describe('orders exists', () => {
 
     before(() => {
-      return db.User.create({username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0})
-      .then(() => db.Unit.create({name: "unit1"}))
+      return db.User.create({id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0})
+      .then(() => db.Unit.create({id: 1, name: "unit1"}))
       .then(() => db.Category.create({
+        id:          1,
         name:        "category",
         enabled:     true,
         description: "newCategory",
@@ -36,6 +37,7 @@ describe('/order route', () => {
         printer:     null
       }))
       .then(() => db.Item.create({
+        id:         1,
         name:       "item",
         amount:     0.5,
         price:      3.5,
@@ -45,22 +47,24 @@ describe('/order route', () => {
         unitId:     1
       }))
       .then(() => db.Table.create({
+        id:   1,
         name: "table",
         x:    1,
         y:    1,
         areaId: null
       }))
       .then(() => db.Order.create({
-        totalAmount: 10.5,
-        tableId: 1,
-        userId:  1
+        id:          1,
+        tableId:     1,
+        userId:      1
       }))
       .then(() => db.Order.create({
-        totalAmount: 4,
-        tableId: 1,
-        userId:  1
+        id:          2,
+        tableId:     1,
+        userId:      1
       }))
       .then(() => db.Orderitem.create({
+        id:        1,
         extras:    "extras",
         count:     3,
         countFree: 0,
@@ -70,6 +74,7 @@ describe('/order route', () => {
         orderId:   1
       }))
       .then(() => db.Orderitem.create({
+        id:        2,
         extras:    null,
         count:     2,
         countFree: 0,
@@ -83,34 +88,35 @@ describe('/order route', () => {
     describe('GET orders', () => {
       const expectedResponse = {
         "orders": [{
-          id:          1,
+          id:          "1",
+          number:      1,
           totalAmount: 10.5,
-          tableId:       1,
-          userId:        1,
+          tableId:       "1",
+          userId:        "1",
           orderitems: [{
-            id:        1,
+            id:        "1",
             extras:    "extras",
             count:     3,
             countFree: 0,
             countPaid: 0,
             price:     3.5,
-            itemId:      1,
-            orderId:     1
+            itemId:      "1",
+            orderId:     "1"
           }]
         }, {
-          id:          2,
+          id:          "2",
           totalAmount: 10.5,
-          table:       1,
-          user:        1,
+          tableId:       "1",
+          userId:        "1",
           orderitems: [{
-            id:        2,
+            id:        "2",
             extras:    null,
             count:     3,
             countFree: 0,
             countPaid: 0,
             price:     3.5,
-            itemId:      1,
-            orderId:     1
+            itemId:      "1",
+            orderId:     "1"
           }]
         }]
       };
@@ -121,11 +127,11 @@ describe('/order route', () => {
         .send({ token })
         .then(res => {
           expect(res.status).to.equal(200);
-          removeTimestamps(res.body.order.orderitems);
-          expect(removeTimestamps(res.body.order.orderitems[0])).to.deep.equal(expectedResponse.orders[0].orderitems[0]);
-          expect(res.body.order.id).to.equal(1);
-          expect(res.body.order.userId).to.equal(1);
-          expect(res.body.order.tableId).to.equal(1);
+          removeTimestamps(res.body.order);
+          expect(res.body.order.orderitems[0]).to.deep.equal(expectedResponse.orders[0].orderitems[0]);
+          expect(res.body.order.id).to.equal('1');
+          expect(res.body.order.userId).to.equal('1');
+          expect(res.body.order.tableId).to.equal('1');
         });
       });
 
@@ -135,9 +141,9 @@ describe('/order route', () => {
         .send({ token })
         .then(res => {
           expect(removeTimestamps(res.body.orders[0].orderitems)).to.deep.equal(expectedResponse.orders[0].orderitems);
-          expect(res.body.orders[0].id).to.equal(1);
-          expect(res.body.orders[0].userId).to.equal(1);
-          expect(res.body.orders[0].tableId).to.equal(1);
+          expect(res.body.orders[0].id).to.equal('1');
+          expect(res.body.orders[0].userId).to.equal('1');
+          expect(res.body.orders[0].tableId).to.equal('1');
         });
       });
     });
@@ -145,10 +151,12 @@ describe('/order route', () => {
     describe('POST order', () => {
       const requestBody = {
         order: {
+          id:          5,
           totalAmount: 15.0,
           tableId:     1,
           userId:      1,
           orderitems:  [{
+            id:        10,
             extras:    null,
             count:     3,
             countFree: 0,
@@ -162,19 +170,20 @@ describe('/order route', () => {
 
       const expectedResponse = {
         order: {
-          id:          3,
+          id:          "5",
+          number:      3,
           totalAmount: 15.0,
-          tableId:     1,
-          userId:      1,
+          tableId:     "1",
+          userId:      "1",
           orderitems: [{
-            id:        3,
+            id:        "10",
             extras:    null,
             count:     3,
             countFree: 0,
             countPaid: 1,
             price:     3.5,
-            itemId:    1,
-            orderId:   3
+            itemId:    "1",
+            orderId:   "5"
           }]
         }
       };
@@ -188,7 +197,7 @@ describe('/order route', () => {
           expect(res.status).to.equal(200);
           removeTimestamps(res.body.order.orderitems);
           expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
-          return db.Order.find({where: {id: 3}});
+          return db.Order.find({where: {id: "5"}});
         }).then(order => {
           expect(order).not.to.be.null;
           expect(order.totalAmount).to.eq(15);
@@ -201,8 +210,8 @@ describe('/order route', () => {
         order: {
           id:          1,
           totalAmount: 0.0,
-          tableId:     1,
-          userId:      1,
+          tableId:     "1",
+          userId:      "1",
           orderitems: [{
             id:        1,
             extras:    null,
@@ -210,27 +219,28 @@ describe('/order route', () => {
             countFree: 0,
             countPaid: 3,
             price:     3.5,
-            itemId:    1,
-            orderId:   1
+            itemId:    "1",
+            orderId:   "1"
           }]
         }
       };
 
       const expectedResponse = {
         order: {
-          id:          1,
+          id:          "1",
+          number:      1,
           totalAmount: 0.0,
-          tableId:     1,
-          userId:      1,
+          tableId:     "1",
+          userId:      "1",
           orderitems: [{
-            id:        1,
+            id:        "1",
             extras:    null,
             count:     3,
             countFree: 0,
             countPaid: 3,
             price:     3.5,
-            itemId:    1,
-            orderId:   1
+            itemId:    "1",
+            orderId:   "1"
           }]
         }
       };
