@@ -28,7 +28,7 @@
     "lint": "eslint .",
     "start": "cross-env NODE_ENV=development nodemon server",
     "production": "cross-env NODE_ENV=production node server",
-    "docs": "node_modules/apidoc/bin/apidoc -i . -o ../gmbh-api-docs/ -e node_modules"
+    "docs": "node_modules/apidoc/bin/apidoc -i . -o docs/ -e node_modules"
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
