@@ -14,6 +14,12 @@ export default Ember.Controller.extend({
   connection: true,
   orderStorage: storageFor('order'),
   payStorage: storageFor('pay'),
+  enabledCategories: Ember.computed.filter('model.categories', function(category){
+    return category.get('enabled');
+  }),
+  enabledAreas: Ember.computed.filter('model.Areas', function(area){
+    return area.get('enabled');
+  }),
   init() {
     const id = this.get('payload').getId();
     this.store.find('user', id).then(user => {

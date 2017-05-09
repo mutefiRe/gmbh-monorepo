@@ -7,5 +7,6 @@ export default DS.Model.extend({
   tax:      DS.attr('number'),
   sortId:   DS.attr('number'),
   unit:     DS.belongsTo('unit'),
-  category: DS.belongsTo('category')
+  category: DS.belongsTo('category'),
+  enabled:  DS.attr('boolean')
 });

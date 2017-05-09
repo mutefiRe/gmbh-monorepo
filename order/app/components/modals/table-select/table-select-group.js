@@ -2,7 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: '',
-  sortedTables: Ember.computed.sort('tables', naturalStringCompare),
+  enabledTables: Ember.computed.filter('tables', function(table){
+    return table.get('enabled');
+  }),
+  sortedTables: Ember.computed.sort('enabledTables', naturalStringCompare),
   actions: {
     setTable(table) {
       this.get('setTable')(table);

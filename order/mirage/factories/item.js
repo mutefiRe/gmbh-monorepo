@@ -12,5 +12,8 @@ export default Factory.extend({
   },
   tax() {
     return faker.random.number(20);
+  },
+  enabled() {
+    return true;
   }
 });
