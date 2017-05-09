@@ -43,7 +43,7 @@ When we change something on the api, we have to update the docs also.
 
 Just run in root folder.
 
-```js
+```
 npm run docs
 ```
 
