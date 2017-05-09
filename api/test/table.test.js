@@ -24,16 +24,16 @@ describe('/table route', () => {
   before(clean);
   describe('tables exists', () => {
     before(() => {
-      return db.Area.create({name: "area1"})
+      return db.Area.create({id: 1, name: "area1"})
       .then(() => db.Table.bulkCreate([
-          {name: "test1", x: 1, y: 1, areaId: 1},
-          {name: "test2", x: 2, y: 2, areaId: 1}]
+          {id: 1, name: "test1", x: 1, y: 1, areaId: "1"},
+          {id: 2, name: "test2", x: 2, y: 2, areaId: "1", enabled: false}]
       ));
     });
 
     describe('GET tables', () => {
       const expectedResponse = {
-        "tables": [{id:1, name: "test1", x: 1, y: 1, areaId: 1, custom: false}, {id: 2, name: "test2", x: 2, y: 2, areaId: 1, custom: false}]
+        "tables": [{id: "1", name: "test1", x: 1, y: 1, areaId: "1", custom: false, enabled: true}, {id: "2", name: "test2", x: 2, y: 2, areaId: "1", custom: false, enabled: false}]
       };
 
       it('should get one table', () => {
@@ -80,7 +80,7 @@ describe('/table route', () => {
         }).then(table => {
           expect(table).not.to.be.null;
           expect(table.name).to.eq("newTable");
-          expect(table.areaId).to.eq(1);
+          expect(table.areaId).to.eq("1");
           expect(table.x).to.eq(3);
           expect(table.y).to.eq(3);
         });
@@ -104,7 +104,7 @@ describe('/table route', () => {
         }).then(table => {
           expect(table).not.to.be.null;
           expect(table.name).to.eq("changedTable");
-          expect(table.areaId).to.eq(1);
+          expect(table.areaId).to.eq("1");
           expect(table.x).to.eq(4);
           expect(table.y).to.eq(4);
         });

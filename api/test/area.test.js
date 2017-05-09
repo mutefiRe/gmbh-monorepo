@@ -25,21 +25,26 @@ describe('/area route', () => {
   before(clean);
   describe('areas exists', () => {
     before(() => {
-      return db.Area.bulkCreate([{name: "area1"}, {name: "area2"}]);
+      return db.Area.bulkCreate([{id: 1, name: "area1", enabled: false}, {id: 2, name: "area2", color: "blue"}]);
     });
 
     describe('GET areas', () => {
       const expectedResponse = {
         "areas": [{
-          id:     1,
+          id:     "1",
           name:   "area1",
           tables: [],
-          users:  []
+          users:  [],
+          color:  null,
+          enabled: false
         }, {
-          id:     2,
+          id:     "2",
           name:   "area2",
           tables: [],
-          users:  []
+          users:  [],
+          color:  "blue",
+          enabled: true
+
         }]
       };
 

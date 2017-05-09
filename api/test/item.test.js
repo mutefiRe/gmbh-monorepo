@@ -26,6 +26,7 @@ describe('/item route', () => {
 
     before(() => {
       return db.Category.create({
+        id:          1,
         name:        "category1",
         enabled:     true,
         description: "newCategory",
@@ -33,46 +34,50 @@ describe('/item route', () => {
         showAmount:  true,
         printer:     null
       })
-      .then(() => db.Unit.create({name: "unit1"}))
+      .then(() => db.Unit.create({id: 1, name: "unit1"}))
       .then(() => db.Item.bulkCreate([{
+        id:         "1",
         name:       "item1",
         amount:     0.5,
         price:      3.5,
         tax:        0.1,
         sort:       null,
-        categoryId: 1,
-        unitId:     1
+        categoryId: "1",
+        unitId:     "1"
       }, {
+        id:         "2",
         name:       "item2",
         amount:     0.5,
         price:      3.5,
         tax:        0.1,
         sort:       null,
-        categoryId: 1,
-        unitId:     1
+        categoryId: "1",
+        unitId:     "1"
       }]));
     });
 
     describe('GET items', () => {
       const expectedResponse = {
         "items": [{
-          id:         1,
+          id:         "1",
           name:       "item1",
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
           sort:       null,
-          categoryId: 1,
-          unitId:     1
+          categoryId: "1",
+          unitId:     "1",
+          enabled:    true
         }, {
-          id:         2,
+          id:         "2",
           name:       "item2",
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
           sort:       null,
-          categoryId: 1,
-          unitId:     1
+          categoryId: "1",
+          unitId:     "1",
+          enabled:    true
         }]
       };
 
@@ -104,8 +109,8 @@ describe('/item route', () => {
           price:      3.5,
           tax:        0.1,
           sort:       null,
-          categoryId: 1,
-          unitId:     1
+          categoryId: "1",
+          unitId:     "1"
         }
       };
 
@@ -133,21 +138,23 @@ describe('/item route', () => {
           price:      3.5,
           tax:        0.1,
           sort:       null,
-          categoryId: 1,
-          unitId:     1
+          categoryId: "1",
+          unitId:     "1",
+          enabled:    false
         }
       };
 
       const expectedResponse = {
         item: {
-          id:         1,
+          id:         "1",
           name:       "changedItem",
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
           sort:       null,
-          categoryId: 1,
-          unitId:     1
+          categoryId: "1",
+          unitId:     "1",
+          enabled:    false
         }
       };
 

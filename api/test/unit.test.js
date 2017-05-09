@@ -25,16 +25,16 @@ describe('/unit route', () => {
   before(clean);
   describe('units exists', () => {
     before(() => {
-      return db.Unit.bulkCreate([{name: "stk"}, {name: "l"}]);
+      return db.Unit.bulkCreate([{id: "1", name: "stk"}, {id: "2", name: "l"}]);
     });
 
     describe('GET units', () => {
       const expectedResponse = {
         "units": [{
-          id: 1,
+          id: "1",
           name: "stk"
         }, {
-          id: 2,
+          id: "2",
           name: "l"
         }]
       };
