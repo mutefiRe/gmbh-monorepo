@@ -1,11 +1,10 @@
 {{yield}}
 <div class="pay-main__switch ">
- <button {{action "filterButtonOrder"}} class="default-btn">{{t "order.order" count=2}}</button>
- <button {{action "filterButtonTables"}} class="default-btn">{{t "order.table" count=2}}</button>
+ <button {{action "filterButtonOrder"}} class="default-btn {{if (eq filter 'orders') 'active' ''}}">{{t "order.order" count=2}}</button>
+ <button {{action "filterButtonTables"}} class="default-btn {{if (eq filter 'tables') 'active' ''}}">{{t "order.table" count=2}}</button>
 </div>
 {{#if (eq filter "orders")}}
   <div class="orders">
-    <h2>{{t "order.order" count=2}}</h2>
     <div class="scrollable">
       <table>
         {{#each paidOrders as |order|}}
@@ -17,14 +16,10 @@
         {{/each}}
       </table>
     </div>
-    <div class="flexcontainer">
-      <button {{action "backButton"}} class="default-btn bigbutton">{{t "button.back"}}</button>
-    </div>
   </div>
 {{/if}}
 {{#if (eq filter "tables")}}
   <div class="tables">
-    <h2>{{t "order.table" count=2}}</h2>
     <div class="scrollable">
       {{#each tables as |table|}}
         {{#unless (eq table.openAmount 0) }}
@@ -32,8 +27,13 @@
         {{/unless}}
       {{/each}}
     </div>
-    <div class="flexcontainer">
-      <button {{action "backButton"}} class="default-btn bigbutton">{{t "button.back"}}</button>
-    </div>
   </div>
 {{/if}}
+ <div class="flexcontainer desktop">
+      <button {{action "backButton"}} class="default-btn bigbutton">{{t "button.back"}}</button>
+    </div>
+    <div class="flexcontainer mobile">
+      <button {{action "backButton"}} class="default-btn bigbutton">
+        <span class="icon icon-return"></span>
+      </button>
+    </div>

@@ -2,22 +2,11 @@
 {{#if order.id}}
   {{#if order.table}}
     <td>{{t "order.order" count=1}} {{order.showNumber}}</td>
-    <td>
-      {{t "order.table" count=1}}: {{order.table.name}}
-      <span class="spacer"></span>
-      {{t "order.orderedAt"}}: {{show-time order.createdAt}}
-      <span class="spacer"></span>
-      {{t "order.notPaid"}}: € {{show-currency openAmount}}
-    </td>
-    {{else}}
-      <td>{{t "order.register"}} {{order.showNumber}}</td>
-      <td>
-        {{t "order.register"}}
-        <span class="spacer"></span>
-        {{t "order.orderedAt"}}: {{show-time order.createdAt}}
-        <span class="spacer"></span>
-        {{t "order.notPaid"}}: € {{show-currency openAmount}}
-      </td>
-    {{/if}}
+  {{else}}
+    <td>{{t "order.register"}} {{order.showNumber}}</td>
+  {{/if}}
+  <td>{{order.table.name}}</td>
+  <td>{{show-time order.createdAt}}</td>
+  <td>€ {{show-currency openAmount}}</td>
   <td>{{#if (eq paid "paid")}}{{t "order.paid"}}{{else}}{{t "order.notPaid"}}{{/if}}</td>
 {{/if}}

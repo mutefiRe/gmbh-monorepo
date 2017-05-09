@@ -1,134 +1,219 @@
 .pay-main {
-    background: $white;
-    margin: 0 auto;
-    padding: 40px;
+  background: $white;
+  margin: 0 auto;
+  padding: 40px;
+  padding-top: 20px;
+  width: 100%;
+  height: 100%;
+  &__switch {
+    button {
+      @include button($dark, $grey, $grey-darker);
+      &:active {
+        @include button-hover($grey);
+      }
+      width: 49.6%;
+      &.active {
+        background: $orange-lighter;
+      }
+      margin-bottom: 20px;
+    }
+  }
+  h2 {
     padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  table {
     width: 100%;
+  }
+  .bigbutton {
+    @include button($dark, $grey, $grey-darker);
+    &:active {
+      @include button-hover($grey);
+    }
+    width: 100%;
+  }
+  .flexcontainer {
+    @include flexbox();
+    margin-top: 20px;
+    &.mobile {
+      display: none;
+    }
+    &.desktop {
+      display: flex;
+    }
+  }
+  .tablebutton {
+    font-weight: bold;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: $grey-darker;
+    border: none;
+  }
+  .required {
+    background-color: $orange-lighter;
+  }
+  .sum {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-right: 20px;
+  }
+  .scrollable {
     height: 100%;
-    &__switch{
-      button{
-        @include button($dark, $grey, $grey-darker);
-        &:active {
-            @include button-hover($grey);
-        }
-        width: 49%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .orders,
+  .tables {
+    height: calc(100% - 162px);
+  }
+  &_single-order {
+    border: 1px solid $grey-dark;
+    .spacer {
+      display: inline-block;
+      padding-left: 20px;
+    }
+    &.notpaid {
+      background-color: $blue-lighter;
+    }
+    &.paid {
+      background-color: $grey-light;
+    }
+    td {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-weight: normal;
+      font-size: 1em;
+      &:first-child {
+        padding-left: 20px;
+        font-weight: bold;
+        font-size: 1.28em;
+        width: 30%;
+      }
+      &:nth-child(2) {
+        width: 50%;
+      }
+      &:last-child {
+        padding-right: 20px;
+        font-weight: bold;
+        text-align: right;
+        font-size: 1.28em;
+        width: 20%;
       }
     }
-    h2 {
-        padding-top: 20px;
-        padding-bottom: 20px;
+  }
+  &_single-table {
+    position: relative;
+    width: 15.666666666666%;
+    margin: 0.5%;
+    padding-bottom: 8%;
+    .caption {
+      @include center;
+      font-size: 16px;
+      text-align: center;
     }
-    table {
-        width: 100%;
+    overflow:hidden;
+    transition: 400ms;
+    float: left;
+    @media (max-width: 1200px) {
+      width: 19%;
+      padding-bottom: 12%;
     }
-    .bigbutton {
+    @media (max-width: 1000px) {
+      width: 24%;
+      padding-bottom: 14%;
+    }
+    @media (max-width: 700px) {
+      width: 32.33333%;
+      padding-bottom: 18%;
+      .caption {
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 450px) {
+      width: 49%;
+      padding-bottom: 32.333333%;
+      .caption {
+        font-size: 12px;
+      }
+    }
+  }
+  @media (max-width: 560px) {
+    padding: 0px;
+    &__switch {
+      button {
         @include button($dark, $grey, $grey-darker);
         &:active {
-            @include button-hover($grey);
+          @include button-hover($grey);
         }
-        width: 100%;
-    }
-    .flexcontainer {
-        @include flexbox();
-        margin-top: 20px;
-    }
-    .tablebutton {
-        font-weight: bold;
-        padding: 10px;
-        padding-left: 20px;
-        padding-right: 20px;
-        color: $grey-darker;
-        border: none;
-    }
-    .required {
-        background-color: $orange-lighter;
-    }
-    .sum {
-        font-weight: bold;
-        padding-top: 10px;
-        padding-right: 20px;
+        font-size: 14px;
+        padding: 5px;
+        margin: 0;
+        text-align: center;
+        width: 50%;
+        float: left;
+      }
     }
     .scrollable {
-        max-height: 74%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        border-bottom: 1px solid black;
-        border-top: 1px solid black;
-    }
-    .orders, .tables{
       height: 100%;
     }
-    &_single-order {
-        border: 1px solid $grey-dark;
-        .spacer {
-            display: inline-block;
-            padding-left: 20px;
+    .flexcontainer {
+      &.mobile {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        box-shadow: 0;
+        height: 70px;
+        span {
+          font-size: 35px;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
         }
-        &.notpaid {
-            background-color: $blue-lighter;
-        }
-        &.paid {
-            background-color: $grey-light;
-        }
-        td {
-            padding-top: 20px;
-            padding-bottom: 20px;
-            padding-left: 10px;
-            padding-right: 10px;
-            font-weight: normal;
-            font-size: 1em;
-            &:first-child {
-                padding-left: 20px;
-                font-weight: bold;
-                font-size: 1.28em;
-                width: 30%;
-            }
-            &:nth-child(2) {
-                width: 50%;
-            }
-            &:last-child {
-                padding-right: 20px;
-                font-weight: bold;
-                text-align: right;
-                font-size: 1.28em;
-                width: 20%;
-            }
-        }
-    }
-    &_single-table{
-      position: relative;
-      width: 15.666666666666%;
-      margin: 0.5%;
-      padding-bottom: 8%;
-      .caption {
-          @include center;
-          font-size: 16px;
-          text-align: center;
       }
-      overflow:hidden;
-      transition: 400ms;
-      float: left;
-      @media (max-width: 1200px) {
-            width: 19%;
-            padding-bottom: 12%;
-        }
-        @media (max-width: 1000px) {
-            width: 24%;
-            padding-bottom: 14%;
-        }
-        @media (max-width: 700px) {
-            width: 32.33333%;
-            padding-bottom: 18%;
-            .caption {
-                font-size: 14px;
-            }
-        }
-        @media (max-width: 450px) {
-            width: 49%;
-            padding-bottom: 32.333333%;
-            .caption {
-                font-size: 12px;
-            }
-        }
+      &.desktop {
+        display: none;
+      }
     }
+    .orders,
+    .tables {
+      height: calc(100% - 88px);
+    }
+    &_single-order {
+      border: 0;
+      border-top: 1px $grey-dark solid;
+      .spacer {
+        display: inline-block;
+        padding-left: 20px;
+      }
+      &.notpaid {
+        background-color: $blue-lighter;
+      }
+      &.paid {
+        background-color: $grey-light;
+      }
+      td {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-weight: normal;
+        font-size: 1em;
+        &:first-child {
+          font-weight: bold;
+          font-size: 14px;
+          width: 30%;
+        }
+        &:last-child {
+          font-weight: bold;
+          text-align: right;
+          font-size: 1.28em;
+        }
+      }
+    }
+  }
 }
