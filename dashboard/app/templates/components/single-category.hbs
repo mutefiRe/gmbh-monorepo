@@ -1,3 +1,5 @@
+{{modal-colorpicker}}
+
 <div class="single-category" {{action "toggleEditable"}}>
             <div class="material-icons">face</div>
               <p>{{category.name}}</p>
@@ -30,8 +32,8 @@
                 <div class="input-element">
                   <label for="color">Farbe</label>
                   <div class="select-wrapper colorselector">
-                  <span class="colordot"></span>
-                    <select name="color">
+                  <span class="colordot" {{action "showModal"}}></span>
+                    <select name="color" {{action "showModal"}}>
                       <option value="simpleblue">simple blue</option>
                     </select>
                   </div>
