@@ -41,16 +41,13 @@ You can find the documentation under the docs folder or just type /docs on runni
 #### Generation of documentation on changes
 When we change something on the api, we have to update the docs also.
 
-First you have to install
-```
-npm install -g apidoc
+Just run in root folder.
+
+```js
+npm run docs
 ```
 
-Just run in root.
-
-```
-apidocs -i . -o docs -e nodemodules
-```
+This creates an folder ```gmbh-api-docs``` on directory above
 
 
 ### Contributors
