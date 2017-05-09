@@ -10,7 +10,6 @@ export default Ember.Component.extend({
     },
     showModal() {
       this.get('modal').showModal(this);
-      return false;
     }
   }
 });
