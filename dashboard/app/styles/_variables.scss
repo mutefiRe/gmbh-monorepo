@@ -1,4 +1,5 @@
 /* Font sizes */
+
 $smallfontsize: 0.8em;
 $basefontsize: 16px;
 $headlinefontsize: 1.5em;
@@ -6,6 +7,7 @@ $smallerheadlinefontsize: 1.2em;
 $mobilefontsize: 1.15em;
 
 /* Font weights */
+
 $ultralight: 100;
 $light: 200;
 $regular: 400;
@@ -13,6 +15,7 @@ $bold: 500;
 $black: 700;
 
 /*Text Colors*/
+
 $darkgray: #454545;
 $midgray: #535353;
 $lightgray: #959595;
@@ -20,43 +23,48 @@ $inputgray: #B1B1B1;
 $lightergray: #E2E2E2;
 
 /*Block Colors*/
+
 $simpleblue: #3E6898;
 $deepseablue: #1D3850;
 $darkerred: #A23333;
 $yellowfromtheegg: #F0B71D;
 $donaublue: #3E8BF4;
-$gardengreen: #35A01C;
+$gardengreen: #478B4C;
 $freshcoral: #FF7171;
-
 $almostgray: #EBEBEB;
 $almostwhite: #F4F4F4;
-
 $defaultpadding: 10px;
 $doublepadding: $defaultpadding*2;
 
 /* menu col width for desktop */
+
 $leftcolwidth: 200px;
 $leftcolwidthlarge: 300px;
 
 /* colwidth for list with 3 items */
+
 $listleftcol: 40%;
 $listmiddlecol: 35%;
 $listrightcol: 25%;
 
 /* size of footer bar on mobile */
+
 $mobilestaticbarheight: 100px;
 
 /* box shadows */
+
 $boxshadow: '0px 0px 3px 0px rgba(0, 0, 0, 0.4)';
 $greatboxshadow: '1px 1px 1px 0px rgba(0,0,0,0.5)';
 $bottomboxshadow: '0px 3px 4px -3px rgba(0,0,0,0.75)';
 $upwardsboxshadow: 'inset 0px -3px 4px -3px rgba(0,0,0,0.5)';
 
 /* responsive sizes */
+
 $desktop: '(min-width: 768px)';
 $largedesktop: '(min-width: 1100px)';
 
 /* z-index levels */
+
 $bottomlevel: 0;
 $botmidlevel: 200;
 $midlevel: 400;
