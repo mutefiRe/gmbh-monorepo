@@ -1,14 +1,14 @@
 .colorselector {
-	select {
-		padding-left: 30px;
-    cursor: pointer;
-	}
-	.colordot {
-		width: 20px;
-		height: 20px;
-		display: block;
-		background: $simpleblue;
-		border-radius: 100%;
-		position: absolute;
-	}
+    select {
+        padding-left: 30px;
+        cursor: pointer;
+    }
+    .colordot {
+        width: 20px;
+        height: 20px;
+        display: block;
+        background: $simpleblue;
+        border-radius: 100%;
+        position: absolute;
+    }
 }
