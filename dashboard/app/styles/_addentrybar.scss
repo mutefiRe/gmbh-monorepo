@@ -1,22 +1,20 @@
 .addentrybar {
-	height: 50px;
-	background: $deepseablue;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	color: #fff;
-	z-index: $toplevel;
-
-	.plus {
-		position: absolute;
-		right: 20px;
-		font-size: 40px;
-		line-height: 40px;
-	}
-
-	.text {
-		position: absolute;
-		right: 20px;
-		line-height: 50px;
-	}
+    height: 50px;
+    background: $deepseablue;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: #fff;
+    z-index: $toplevel;
+    .plus {
+        position: absolute;
+        right: 20px;
+        font-size: 40px;
+        line-height: 40px;
+    }
+    .text {
+        position: absolute;
+        right: 20px;
+        line-height: 50px;
+    }
 }
