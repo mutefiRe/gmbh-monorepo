@@ -1,0 +1,12 @@
+.iconselector {
+  select {
+    padding-left: 30px;
+  }
+
+  .icondot {
+    position: absolute;
+    color: $inputgray;
+    bottom: 7px;
+    font-size: 25px;
+  }
+}
