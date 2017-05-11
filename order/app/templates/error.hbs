@@ -1,0 +1,16 @@
+<div class="login">
+  <div class="wrapper">
+    <img src="./assets/images/logo.png">
+    <div class="login-form">
+      {{#link-to 'index'}}<button autofocus>{{t 'button.reload'}}</button>{{/link-to}}
+      <button autofocus {{action 'logout'}}>{{t 'button.logout'}}</button>
+      {{#if model.message}}
+        <div class="error">
+          {{t model.message}}
+        </div>
+      {{/if}}
+    </div>
+    <p>{{t "copyright"}}</p>
+  </div>
+</div>
+{{outlet}}

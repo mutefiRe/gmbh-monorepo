@@ -7,6 +7,7 @@ export default DS.Model.extend({
   user:       DS.belongsTo('user'),
   table:      DS.belongsTo('table'),
   orderitems: DS.hasMany('orderitem'),
+
   showNumber: Ember.computed('number', function(){
     return this.get('number') || 'Noch nicht abgesendet!';
   }),

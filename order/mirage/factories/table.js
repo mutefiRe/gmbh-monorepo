@@ -15,5 +15,8 @@ export default Factory.extend({
   },
   updatedAt() {
     return faker.date.recent();
+  },
+  enabled() {
+    return true;
   }
 });

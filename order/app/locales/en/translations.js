@@ -17,7 +17,9 @@ export default {
     "paySelected": "pay selected",
     "printBill": "print bill",
     "startNewOrder": "start new order",
-    "login": "login"
+    "login": "login",
+    "reload": "Reload",
+    "logout": "Logout"
   },
   "input": {
     "additionalRequest": "additional request",
@@ -49,5 +51,6 @@ export default {
     "register": "register payment",
     "salesCheck": "sales check"
   },
+  "The adapter operation was aborted": "Server not reachable",
   "copyright": "© 2016 moßß OG - made with 🍺"
 };
