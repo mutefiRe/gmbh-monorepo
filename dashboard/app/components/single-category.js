@@ -3,6 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
     editable: Ember.inject.service(),
     modal: Ember.inject.service(),
+    colorname: 'donaublue',
+    colorhex: '#3E8BF4',
     tagName: 'li',
     actions: {
         toggleEditable() {
@@ -13,6 +15,9 @@ export default Ember.Component.extend({
         },
         showModalIcon() {
             this.get('modal').showModal(this, '.icon');
+        },
+        changeColor(hex, name) {
+            this.setProperties({ colorname: name, colorhex: hex });
         }
     }
 });
