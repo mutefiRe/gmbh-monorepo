@@ -10,6 +10,7 @@ export default Ember.Component.extend({
         },
         changeColor(hex, name) {
             this.sendAction('action', hex, name);
+            this.send('hideModal');
         }
     }
 });
