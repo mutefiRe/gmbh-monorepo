@@ -7,6 +7,6 @@
   {{/if}}
   <td>{{order.table.name}}</td>
   <td>{{show-time order.createdAt}}</td>
-  <td>€ {{show-currency openAmount}}</td>
+  <td class="time">€ {{show-currency openAmount}}</td>
   <td>{{#if (eq paid "paid")}}{{t "order.paid"}}{{else}}{{t "order.notPaid"}}{{/if}}</td>
 {{/if}}
