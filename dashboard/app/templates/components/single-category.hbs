@@ -1,6 +1,6 @@
 {{modal-colorpicker action="changeColor" notifyer=this}}
 
-{{modal-iconpicker}}
+{{modal-iconpicker action="changeIcon" notifyer=this}}
 
 
 <div class="single-category" {{action "toggleEditable"}}>
@@ -17,9 +17,9 @@
                 <div class="input-element">
                   <label for="icon">Icon</label>
                   <div class="select-wrapper iconselector">
-                  <span class="icondot material-icons" {{action "showModalIcon"}}>face</span>
+                  <span class="icondot material-icons" {{action "showModalIcon"}}>{{icontype}}</span>
                   <select name="icon" {{action "showModalIcon" on='mouseDown'}}>
-											<option value="face">Kopf</option>
+											<option value="face">{{iconname}}</option>
 										</select>
                   </div>
                 </div>

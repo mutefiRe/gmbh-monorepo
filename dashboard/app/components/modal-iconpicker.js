@@ -7,6 +7,10 @@ export default Ember.Component.extend({
     actions: {
         hideModal() {
             this.get('modal').hideModal(this);
+        },
+        changeIcon(type, name) {
+            this.sendAction('action', type, name);
+            this.send('hideModal');
         }
     }
 });
