@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(Ember.Evented, {
     editable: Ember.inject.service(),
     modal: Ember.inject.service(),
     colorname: 'donaublue',
