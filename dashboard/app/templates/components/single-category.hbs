@@ -1,4 +1,4 @@
-{{modal-colorpicker}}
+{{modal-colorpicker action="changeColor" notifyer=this}}
 
 {{modal-iconpicker}}
 
@@ -35,9 +35,9 @@
                 <div class="input-element">
                   <label for="color">Farbe</label>
                   <div class="select-wrapper colorselector">
-                  <span class="colordot" {{action "showModalColor"}}></span>
+                  <span class="colordot" {{action "showModalColor"}} style="background:{{colorhex}}"></span>
                     <select name="color" {{action "showModalColor" on='mouseDown'}}>
-                      <option value="simpleblue">simple blue</option>
+                      <option value="simpleblue">{{colorname}}</option>
                     </select>
                   </div>
                 </div>
