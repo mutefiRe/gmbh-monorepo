@@ -38,24 +38,6 @@
   {{/if}}
 </div>
 <br>
-{{!--
-{{#if markedOrderitems}}
-<h3>{{t "order.splitBill"}}</h3>
-<br>
-<div class="scrollable-pay">
-  <table>
-    {{#each markedOrderitems as |orderitem|}}
-    {{pay-detail/single-item orderitem=orderitem type="marked" css="topay"}}
-    {{/each}}
-  </table>
-</div>
-
-<div class="flexcontainer">
-  <p class="sum"></p>
-  <p class="sum">{{t "order.sum"}}: € {{show-currency markedAmount}}</p>
-</div>
-<br>
-{{/if}}--}}
 <div class="menu--desktop">
 <div>
   {{#if open}}
@@ -76,7 +58,11 @@
     {{/if}}
   </button>
   {{#if open}}
-    <button {{action 'payAll'}} class="smallbutton-blue">{{t "button.payAll"}}</button>
+    {{#unless (eq markedOrderitems.length orderitems.length) }}
+      <button {{action 'toggleMarkAll'}} class="smallbutton-blue">{{t "button.markAll"}}</button>
+    {{else}}
+      <button {{action 'toggleMarkAll'}} class="smallbutton-blue">{{t "button.unmarkAll"}}</button>
+    {{/unless}}
   {{else}}
     <button {{action "printBill"}} class="smallbutton-blue">{{t "button.printBill"}}</button>
   {{/if}}
