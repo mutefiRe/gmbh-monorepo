@@ -1,188 +1,188 @@
 .pay-detail {
-    background: $white;
-    margin: 0 auto;
-    padding: 40px;
+  background: $white;
+  margin: 0 auto;
+  padding: 40px;
+  width: 100%;
+  height: 100%;
+  padding-top: 0;
+  h2 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .notPaid {
+    color: $blue-light;
+  }
+  .isPaid {
+    color: $grey-dark;
+  }
+  table {
     width: 100%;
-    height: 100%;
-    padding-top: 0;
+    table-layout: fixed;
+  }
+  .smallbutton {
+    @include button($light, $grey, $grey-darker);
+    &:active {
+      @include button-hover($grey);
+    }
+    width: 48%;
+  }
+  .smallbutton-blue {
+    @include button($dark, $blue, $white);
+    &:active {
+      @include button-hover($blue);
+    }
+    padding: 20px;
+    width: 48%;
+  }
+  .smallbutton-grey {
+    @include button($light, $grey, $grey-darker);
+    &:active {
+      @include button-hover($grey);
+    }
+    padding: 20px;
+    width: 48%;
+  }
+  .bigbutton {
+    @include button($dark, $blue, $white);
+    &:active {
+      @include button-hover($blue);
+    }
+    padding: 20px;
+    width: 100%;
+  }
+  .flexcontainer {
+    @include flexbox();
+    margin-top: 20px;
+  }
+  .tablebutton {
+    font-weight: bold;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: $grey-darker;
+    border: none;
+  }
+  .required {
+    background-color: $orange-lighter;
+  }
+  .sum {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-right: 20px;
+  }
+  .scrollable {
+    max-height: 32%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+  }
+  input[type=checkbox] {
+    width: 25px;
+    height: 25px;
+  }
+  .menu--mobile {
+    display: none;
+  }
+  .menu--desktop {
+    display: block;
+  }
+  @media (max-width: 560px) {
+    padding: 0px;
     h2 {
-        padding-top: 20px;
-        padding-bottom: 20px;
-    }
-    .notPaid {
-        color: $blue-light;
-    }
-    .isPaid {
-        color: $grey-dark;
-    }
-    table {
-        width: 100%;
-        table-layout: fixed;
-    }
-    .smallbutton {
-        @include button($light, $grey, $grey-darker);
-        &:active {
-            @include button-hover($grey);
-        }
-        width: 48%;
-    }
-    .smallbutton-blue {
-        @include button($dark, $blue, $white);
-        &:active {
-            @include button-hover($blue);
-        }
-        padding: 20px;
-        width: 48%;
-    }
-    .smallbutton-grey {
-        @include button($light, $grey, $grey-darker);
-        &:active {
-            @include button-hover($grey);
-        }
-        padding: 20px;
-        width: 48%;
-    }
-    .bigbutton {
-        @include button($dark, $blue, $white);
-        &:active {
-            @include button-hover($blue);
-        }
-        padding: 20px;
-        width: 100%;
-    }
-    .flexcontainer {
-        @include flexbox();
-        margin-top: 20px;
-    }
-    .tablebutton {
-        font-weight: bold;
-        padding: 10px;
-        padding-left: 20px;
-        padding-right: 20px;
-        color: $grey-darker;
-        border: none;
-    }
-    .required {
-        background-color: $orange-lighter;
-    }
-    .sum {
-        font-weight: bold;
-        padding-top: 10px;
-        padding-right: 20px;
+      font-size: 14px;
+      padding: 5px;
+      text-align: center;
+      background-color: $grey-light;
+      width: 50%;
+      float: left;
     }
     .scrollable {
-        max-height: 32%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        border-bottom: 1px solid black;
-        border-top: 1px solid black;
-    }
-    input[type=checkbox] {
-        width: 25px;
-        height: 25px;
-    }
-    .menu--mobile {
-        display: none;
+      height: calc(100% - 127px);
+      max-height: none;
     }
     .menu--desktop {
-        display: block;
+      display: none;
     }
+    .menu--mobile {
+      display: flex;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+    .smallbutton {
+      padding: 0;
+      padding-bottom: 70px;
+      position: relative;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      width: 100%;
+      &--orange {
+        background-color: $orange-lighter;
+      }
+      &--blue {
+        @include button($dark, $blue, $white);
+      }
+      span {
+        font-size: 35px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .flexcontainer.table_sum {
+      margin-top: 0;
+      height: 33px;
+    }
+  }
+  &_single-item {
+    border: 1px solid $grey-dark;
+    width: 100%;
     @media (max-width: 560px) {
-        padding: 0px;
-        h2 {
-            font-size: 14px;
-            padding: 5px;
-            text-align: center;
-            background-color: $grey-light;
-            width: 50%;
-            float: left;
-        }
-        .scrollable {
-            height: calc(100% - 127px);
-            max-height: none;
-        }
-        .menu--desktop {
-            display: none;
-        }
-        .menu--mobile {
-            display: flex;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-        .smallbutton {
-            padding: 0;
-            padding-bottom: 70px;
-            position: relative;
-            margin-top: 0px;
-            margin-bottom: 0px;
-            width: 100%;
-            &--orange {
-                background-color: $orange-lighter;
-            }
-            &--blue {
-                @include button($dark, $blue, $white);
-            }
-            span {
-                font-size: 35px;
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-            }
-        }
-        .flexcontainer.table_sum {
-            margin-top: 0;
-            height: 33px;
-        }
+      border-left: 5px;
+      border-right: 0px;
+      border-top: 0px;
     }
-    &_single-item {
-        border: 1px solid $grey-dark;
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+    &.paid {
+      background-color: lighten($grey-dark, 40);
+      color: lighten($grey-dark, 10)
+    }
+    div {
+      font-weight: bold;
+      float: left;
+      padding: 10px;
+      &.price {
+        float: right;
+        width: 95px;
+      }
+      &.countOpen {
+        width: 60px;
+        text-align: center;
+      }
+      &.description {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: calc(100% - 155px);
+      }
+      &.countmarked {
+        width: 60px;
+        text-align: center;
+      }
+      &.item {
         width: 100%;
-        @media (max-width: 560px) {
-            border-left: 0px;
-            border-right: 0px;
-            border-top: 0px;
+        padding: 0px;
+        &.topay {
+          background-color: $blue-lighter;
+          width: calc(100% - 60px);
         }
-        &:after {
-            content: '';
-            display: block;
-            clear: both;
-        }
-        &.paid {
-            background-color: lighten($grey-dark, 40);
-            color: lighten($grey-dark, 10)
-        }
-        div {
-            font-weight: bold;
-            float: left;
-            padding: 10px;
-            &.price {
-                float: right;
-                width: 95px;
-            }
-            &.countOpen {
-                width: 60px;
-                text-align: center;
-            }
-            &.description {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: calc(100% - 155px);
-            }
-            &.countmarked {
-                width: 60px;
-                text-align: center;
-            }
-            &.item {
-                width: 100%;
-                padding: 0px;
-                &.topay {
-                    background-color: $blue-lighter;
-                    width: calc(100% - 60px);
-                }
-            }
-        }
+      }
     }
+  }
 }
