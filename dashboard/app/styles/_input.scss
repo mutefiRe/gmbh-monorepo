@@ -1,66 +1,74 @@
-input,
-select {
-    border: none;
-    outline: none;
-    border-bottom: 1px solid $inputgray;
-    color: $inputgray;
-    font-weight: $regular;
-    font-size: $basefontsize;
-    display: block;
-    margin-top: 10px;
-    padding-bottom: 10px;
-    width: 100%;
-    @media #{$desktop} {
-        margin-top: 15px;
-    }
+input, select {
+	border: none;
+	outline: none;
+	border-bottom: 1px solid $inputgray;
+	color: $inputgray;
+	font-weight: $regular;
+	font-size: $basefontsize;
+	display: block;
+	margin-top: 10px;
+	padding-bottom: 10px;
+	width: 100%;
+
+	@media #{$desktop} {
+		margin-top: 15px;
+	}
 }
 
 select {
-    border-radius: 0;
-    background: none;
-    -webkit-appearance: none;
-    -webkit-border-radius: 0px;
+	border-radius: 0;
+	background: none;
+	-webkit-appearance: none;
+  	-webkit-border-radius: 0px;
 }
 
 .select-wrapper {
-    position: relative;
-    &::before {
-        pointer-events: none;
-        position: absolute;
-        color: $inputgray;
-        right: 0;
-        @extend .material-icons;
-        content: 'keyboard_arrow_down';
-    }
+	position: relative;
+	&::before {
+		pointer-events: none;
+		position: absolute;
+		color: $inputgray;
+		right: 0;
+  		@extend .material-icons;
+  		content: 'keyboard_arrow_down';
+  	}
 }
 
 label {
-    color: $inputgray;
-    text-transform: uppercase;
-    font-size: $smallfontsize/1.4;
-    font-weight: $light;
-    letter-spacing: 0.2em;
-    @media #{$desktop} {
-        font-size: $smallfontsize;
-    }
+	color: $inputgray;
+	text-transform: uppercase;
+	font-size: $smallfontsize/1.4;
+	font-weight: $light;
+	letter-spacing: 0.2em;
+
+	@media #{$desktop} {
+		font-size: $smallfontsize;
+	}
 }
 
 .input-row {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    @media #{$desktop} {
-        flex-direction: row;
-    }
-    &.align-right {
-        justify-content: flex-end;
-    }
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px;
+
+	@media #{$desktop} {
+		flex-direction: row;
+	}
+
+	&.align-right {
+		justify-content: flex-end;
+	}
+
+	&.align-left {
+		justify-content: flex-start;
+	}
 }
 
 .input-element {
     margin-bottom: 30px;
+
     @media #{$desktop} {
-        margin: 0;
-        margin-right: 50px;
-    }
+    	margin: 0;
+		margin-right: 50px;
+	}
 }
