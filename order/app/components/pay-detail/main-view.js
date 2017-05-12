@@ -64,7 +64,7 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
     toggleMarkAll() {
-      if (this.get('markedOrderitems').length != this.get('orderitems').length) {
+      if (this.get('markedOrderitems').length !== this.get('orderitems').length) {
         this.get('orderitems').forEach(orderitem => {
           orderitem.set('countMarked', orderitem.get('count'));
         });
