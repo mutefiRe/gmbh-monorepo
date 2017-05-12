@@ -1,0 +1,7 @@
+.datepicker {
+    background: #fff;
+    position: absolute;
+    .active.day {
+        background: $simpleblue !important;
+    }
+}
