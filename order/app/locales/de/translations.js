@@ -13,6 +13,8 @@ export default {
     "back": "zurück",
     "delete": "Löschen",
     "payAll": "Alles bezahlen",
+    "markAll": "Alles markieren",
+    "unmarkAll": "Markierung aufheben",
     "showOrders": "Meine Bestellungen anzeigen",
     "paySelected": "Auswahl bezahlen",
     "printBill": "Rechnung drucken",

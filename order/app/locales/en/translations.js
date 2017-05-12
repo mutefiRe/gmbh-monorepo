@@ -13,6 +13,8 @@ export default {
     "back": "back",
     "delete": "delete",
     "payAll": "pay all",
+    "markAll": "mark all",
+    "unmarkAll": "unmark all",
     "showOrders": "show my orders",
     "paySelected": "pay selected",
     "printBill": "print bill",
