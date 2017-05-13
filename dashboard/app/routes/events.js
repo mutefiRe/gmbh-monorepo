@@ -2,6 +2,9 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
     model() {
-        return this.get('store').findAll('setting');
+        return Ember.RSVP.hash({
+            event: this.store.findAll('setting'),
+            printers: this.store.findAll('printer')
+        });
     }
 });

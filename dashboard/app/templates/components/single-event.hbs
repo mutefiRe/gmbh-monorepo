@@ -14,7 +14,7 @@
     </div>
     <div class="input-element">
       <label for="name">Enddatum</label>
-      {{bootstrap-datepicker format="dd.mm.yyyy" value=endDate}}
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=endDate}}
     </div>
   </div>
   <div class="input-row align-left">
@@ -22,9 +22,10 @@
       <label for="printer">Drucker</label>
       <div class="select-wrapper">
         <select name="printer">
-                      <option value="drucker01">Drucker01</option>
-                      <option value="drucker02" selected>Drucker02</option>
-                    </select>
+          {{#each printers as |printer|}}
+            <option value="{{printer.name}}">{{printer.name}}</option>
+          {{/each}}
+        </select>
       </div>
     </div>
     <div class="input-element">
@@ -37,7 +38,8 @@
     </div>
   </div>
   <div class="input-row">
-    <button {{action 'toggleButton' "customTables" customTables}} class="{{if customTables 'green' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if customTables 'aktiviert' 'deaktiviert'}}</button>
+    <button
+    {{action 'toggleButton' "customTables" customTables}} class="{{if customTables 'green' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if customTables 'aktiviert' 'deaktiviert'}}</button>
     <button {{action 'toggleButton' "instantPay" instantPay}} class="{{if instantPay 'green' 'gray'}}" type="button">Sofort&shy;bezahlung {{if instantPay 'aktiviert' 'deaktiviert'}}</button>
     <button {{action 'toggleButton' "showItemPrice" showItemPrice}} class="{{if showItemPrice 'green' 'gray'}}" type="button">Preis auf Produkte {{if showItemPrice 'aktiviert' 'deaktiviert'}}</button>
     <button {{action 'toggleButton' "waiterAccess" waiterAccess}} class="{{if waiterAccess 'green' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if waiterAccess 'aktiviert' 'deaktiviert'}}</button>
