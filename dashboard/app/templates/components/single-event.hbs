@@ -1,16 +1,16 @@
 <div class="single-event">
-  <h3>Donutfest</h3>
-  <p>20.4.2017 – 23.4.2017</p>
+  <h3>{{name}}</h3>
+  <p>{{beginDate}} – {{endDate}}</p>
 </div>
 <div class="editsingleevent editarea">
   <div class="input-row align-left">
     <div class="input-element">
       <label for="name">Name</label>
-      <input type="text" name="type" value="Donutfest">
+      <input type="text" name="type" value="{{name}}">
     </div>
     <div class="input-element">
       <label for="name">Startdatum</label>
-      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=startDate}}
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=beginDate}}
     </div>
     <div class="input-element">
       <label for="name">Enddatum</label>
@@ -29,17 +29,17 @@
     </div>
     <div class="input-element">
       <label for="expirationtime">Laufzeit</label>
-      <input type="number" value="72">
+      <input type="number" value="{{expiresTime}}">
     </div>
     <div class="input-element">
       <label for="name">Name (versteckt)</label>
-      <input type="text" name="type" value="Donutfest">
+      <input type="text" name="type" value="{{eventName}}">
     </div>
   </div>
   <div class="input-row">
-    <button class="gray" type="button">Benutzer&shy;definierte Tische deaktiviert</button>
-    <button class="green" type="button">Sofort&shy;bezahlung aktiviert</button>
-    <button class="green" type="button">Preis auf Produkte aktiviert</button>
-    <button class="gray" type="button">Kellner&shy;zugriffs&shy;berechtigung deaktiviert</button>
+    <button {{action 'toggleButton' "customTables" customTables}} class="{{if customTables 'green' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if customTables 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "instantPay" instantPay}} class="{{if instantPay 'green' 'gray'}}" type="button">Sofort&shy;bezahlung {{if instantPay 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "showItemPrice" showItemPrice}} class="{{if showItemPrice 'green' 'gray'}}" type="button">Preis auf Produkte {{if showItemPrice 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "waiterAccess" waiterAccess}} class="{{if waiterAccess 'green' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if waiterAccess 'aktiviert' 'deaktiviert'}}</button>
   </div>
 </div>
