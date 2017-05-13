@@ -1,4 +1,9 @@
 <div>
+  {{#unless (eq markedOrderitems.length orderitems.length) }}
+    <div class="marktoggle--mobile" {{action 'toggleMarkAll'}}><input type="checkbox"></div>
+  {{else}}
+    <div class="marktoggle--mobile" {{action 'toggleMarkAll'}}><input type="checkbox" checked></div>
+  {{/unless}}
   {{#if (eq order.type 'table')}}
     <h2>{{t "order.table" count=1}} {{order.name}}</h2>
   {{else}}

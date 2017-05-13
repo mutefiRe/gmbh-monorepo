@@ -9,6 +9,9 @@
     padding-top: 20px;
     padding-bottom: 20px;
   }
+  .marktoggle--mobile {
+    display: none;
+  }
   .notPaid {
     color: $blue-light;
   }
@@ -90,12 +93,31 @@
   @media (max-width: 560px) {
     padding: 0px;
     h2 {
-      font-size: 14px;
-      padding: 5px;
+      font-size: 16px;
+      padding: 20px 0px 20px 0px;
       text-align: center;
       background-color: $grey-light;
-      width: 50%;
       float: left;
+      width: 60%;
+      &:last-child {
+        width: 20%;
+      }
+    }
+    .marktoggle--mobile {
+      padding: 20px 0px 20px 0px;
+      background-color: $grey-light;
+      float: left;
+      width: 20%;
+      display: block;
+      text-align: left;
+      height: 56px;
+      position: relative;
+      input {
+        position: absolute;
+        left: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
     .scrollable {
       height: calc(100% - 127px);
@@ -156,7 +178,7 @@
     div {
       font-weight: bold;
       float: left;
-      padding: 10px;
+      padding: 12px;
       &.price {
         float: right;
         width: 95px;
