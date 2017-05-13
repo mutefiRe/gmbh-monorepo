@@ -1,7 +1,12 @@
 .datepicker {
     background: #fff;
     position: absolute;
+    border: 1px solid rgba(0, 0, 0, .15);
     .active.day {
         background: $simpleblue !important;
     }
+}
+
+.datepicker-dropdown.datepicker-orient-top:before {
+    border-top: 7px solid rgba(0, 0, 0, .15);
 }
