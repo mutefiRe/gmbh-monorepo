@@ -1,7 +1,10 @@
 import Ember from 'ember';
+import { storageFor } from 'ember-local-storage';
 
 export default Ember.Component.extend({
   store: Ember.inject.service('store'),
+  connection: Ember.inject.service('connection'),
+  tableStorage: storageFor('table'),
   modal: Ember.inject.service(),
   classNames: ['table-select'],
   activeTab: 'tables',
@@ -26,15 +29,20 @@ export default Ember.Component.extend({
       this.set('activeTab', tab);
     },
     createTable(){
-      this.get('store')
-        .createRecord('table', { name: this.get('name'), custom: true })
-        .save()
-        .then(table => {
-          this.send('setTable', table);
-        });
+      const table = this.get('store').createRecord('table', { name: this.get('name'), custom: true });
+      this.get('connection.status') ? this.saveTableAPI(table) : this.saveTableOffline(table);
       this.set('name', "");
       this.set('tab', 'tables');
     }
+  },
+  saveTableAPI(table){
+    table.save().then(persistedTable => this.send('setTable', persistedTable))
+  },
+  saveTableOffline(table){
+    const serializedTable = table.serialize();
+    serializedTable.id = table.id;
+    this.get('tableStorage').addObject(serializedTable);
+    this.send('setTable', table)
   }
 });
 

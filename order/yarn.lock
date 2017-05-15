@@ -2127,7 +2127,7 @@ ember-gestures@^0.4.1:
     ember-cli-version-checker "^1.2.0"
     rsvp "^3.1.0"
 
-ember-getowner-polyfill@^1.1.0, ember-getowner-polyfill@^1.2.2:
+ember-getowner-polyfill@^1.1.0, ember-getowner-polyfill@^1.1.1, ember-getowner-polyfill@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/ember-getowner-polyfill/-/ember-getowner-polyfill-1.2.2.tgz#cdab739e89cc8f25af0f78735422df1a61193e92"
   dependencies:

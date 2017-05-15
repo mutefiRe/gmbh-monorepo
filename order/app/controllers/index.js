@@ -11,9 +11,10 @@ export default Ember.Controller.extend({
   orderItems: [],
   user: null,
   actualOrder: null,
-  connection: true,
+  connection: Ember.inject.service('connection'),
   orderStorage: storageFor('order'),
   payStorage: storageFor('pay'),
+  tableStorage: storageFor('table'),
   init() {
     const id = this.get('payload').getId();
     this.store.find('user', id).then(user => {
@@ -61,7 +62,7 @@ export default Ember.Controller.extend({
       const order = this.get('order');
 
       this.get('modal').showModal({ activeType: 'loading-box' });
-      this.get('connection') ? this.saveOrderAPI(order) : this.saveOrderOffline(order);
+      this.get('connection.status') ? this.saveOrderAPI(order) : this.saveOrderOffline(order);
     },
     resetOrder() {
       const order = this.store.createRecord('order', {});
@@ -92,19 +93,20 @@ export default Ember.Controller.extend({
       });
     },
     socketDisconnected() {
-      this.set('connection', false);
+      this.get('connection').setStatus(false);
     },
     socketReconnected() {
-      this.set('connection', true);
+      this.get('connection').setStatus(true);
       if (this.get('order.user') && this.get('order.table')) this.syncOfflineStorages();
     }
   },
   syncOfflineStorages() {
-    const promises = this.get('orderStorage').recordsPromises();
-
-    Promise.all(promises).then(() => {
+    Promise.all(this.get('tableStorage').recordsPromises()).then(() => {
+      this.get('tableStorage').clear();
+      return Promise.all(this.get('orderStorage').recordsPromises())
+    }).then(() => {
       this.get('orderStorage').clear();
-      return this.get('payStorage').recordsPromises();
+      return Promise.all(this.get('payStorage').recordsPromises());
     }).then(() => {
       this.get('payStorage').clear();
     }).catch(err => {
