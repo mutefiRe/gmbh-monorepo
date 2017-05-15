@@ -24,5 +24,4 @@ export default Ember.Component.extend(Ember.Evented, {
     changeIcon(type, name) {
       this.setProperties({ icontype: type, iconname: name });
     }
-  }
 });
