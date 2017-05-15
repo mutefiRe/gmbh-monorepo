@@ -5,8 +5,6 @@ export default Ember.Component.extend({
   tagName: 'li',
   init() {
     this._super();
-    console.log('herbert');
-
   },
   actions: {
     toggleEditable() {
