@@ -41,7 +41,7 @@ start_review:
   before_script:
     - gem install dpl
     #create app
-    - 'curl -n -X POST https://api.heroku.com/apps -H "Accept: application/vnd.heroku+json; version=3" -H "Authorization: Bearer ${HEROKU_KEY}" -H "Content-Type: application/json" -d "{\"name\": \"gmbh-${CI_BUILD_REF_SLUG:0:20}\"}"'
+    - 'curl -n -X POST https://api.heroku.com/apps -H "Accept: application/vnd.heroku+json; version=3" -H "Authorization: Bearer ${HEROKU_KEY}" -H "Content-Type: application/json" -d "{\"name\": \"gmbh-${CI_BUILD_REF_SLUG:0:20}\", \"stack\": \"cedar-14\"}"'
     #set env
     - 'curl -n -X PATCH https://api.heroku.com/apps/gmbh-${CI_BUILD_REF_SLUG:0:20}/config-vars -H "Accept: application/vnd.heroku+json; version=3" -H "Authorization: Bearer ${HEROKU_KEY}" -H "Content-Type: application/json" -d "{\"GIT_HOST_HASH\": \"${GIT_HOST_HASH}\", \"GIT_DEPLOY_KEY\": \"${GIT_DEPLOY_KEY}\", \"GIT_HOST\": \"gitlab.com\", \"GMBH_BACKEND\": \"http://gmbh-backend.herokuapp.com\"}"'
     #set buildpack
