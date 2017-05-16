@@ -1,0 +1,30 @@
+<div class="modal-content">
+  <div class="modal-close material-icons" {{action 'hideModal'}}>close</div>
+    <div class="pickable-container">
+      <!-- need color entries in database or as obj with hex code and color name -->
+      <div class="pickable-wrapper" {{action 'changeColor' "#3E6898" "simpleblue"}}>
+        <div class="pickable color" style="background:#3E6898">
+          <p>#3E6898</p>
+          </div>
+          <div class="pickable-title">simpleblue</div>
+      </div>
+      <div class="pickable-wrapper" {{action 'changeColor' "#F0B71D" "yellowfromtheegg"}}>
+        <div class="pickable color" style="background:#F0B71D">
+          <p>#F0B71D</p>
+          </div>
+          <div class="pickable-title">yellowfromtheegg</div>
+      </div>
+      <div class="pickable-wrapper" {{action 'changeColor' "#FF7171" "freshcoral"}}>
+        <div class="pickable color" style="background:#FF7171">
+          <p>#FF7171</p>
+          </div>
+          <div class="pickable-title">freshcoral</div>
+      </div>
+      <div class="pickable-wrapper" {{action 'changeColor' "#3E8BF4" "donaublue"}}>
+        <div class="pickable color" style="background:#3E8BF4">
+          <p>#3E8BF4</p>
+          </div>
+          <div class="pickable-title">donaublue</div>
+      </div>
+  </div>
+</div>

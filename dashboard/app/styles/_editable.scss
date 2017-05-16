@@ -17,7 +17,9 @@
                     width: calc(50% - 50px);
                     margin-bottom: 20px;
                 }
-                .align-right>button {
+                .align-right>button,
+                .align-left>button,
+                button {
                     margin-bottom: 10px;
                 }
             }
@@ -29,6 +31,9 @@
                     margin-bottom: 0;
                 }
                 .align-right button {
+                    width: calc(25% - 50px);
+                }
+                .align-left .input-element {
                     width: calc(25% - 50px);
                 }
             }
@@ -48,7 +53,6 @@
         }
         &.open {
             position: fixed;
-            display: block;
             height: auto;
             width: 100%;
             top: 0;

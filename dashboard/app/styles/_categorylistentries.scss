@@ -16,26 +16,6 @@
         @media #{$desktop} {
             width: 100%;
         }
-        &:first-child {
-            .single-category {
-                background: $simpleblue;
-            }
-        }
-        &:nth-child(2) {
-            .single-category {
-                background: $yellowfromtheegg;
-            }
-        }
-        &:nth-child(3) {
-            .single-category {
-                background: $darkerred;
-            }
-        }
-        &:nth-child(4) {
-            .single-category {
-                background: $donaublue;
-            }
-        }
     }
     .single-category {
         display: inline-block;

@@ -55,6 +55,9 @@ label {
     &.align-right {
         justify-content: flex-end;
     }
+    &.align-left {
+        justify-content: flex-start;
+    }
 }
 
 .input-element {
