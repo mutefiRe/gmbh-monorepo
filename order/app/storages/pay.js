@@ -23,7 +23,7 @@ const Storage = StorageArray.extend({
   },
   recordsPromises(){
     const duplicated = [];
-    this.getArray().reverse().map(order => {
+    return this.getArray().reverse().map(order => {
       if (duplicated.includes(order.id)) return null;
       duplicated.push(order.id);
       const orderRecord = this.createOrderRecord(order);
