@@ -7,7 +7,7 @@
         {{input id='identification' placeholder=(t "input.enterUsername") value=identification}}
         <label for="password">{{t "input.password"}}</label>
         {{input id='password' placeholder=(t "input.enterPassword") type='password' value=password}}
-        <button type="submit">{{t "button.login"}}</button>
+        <button autofocus type="submit">{{t "button.login"}}</button>
       </form>
       {{#if errorMessage}}
         <div class="error">

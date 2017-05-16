@@ -17,7 +17,9 @@ export default {
     "paySelected": "Auswahl bezahlen",
     "printBill": "Rechnung drucken",
     "startNewOrder": "neue Bestellung aufnehmen",
-    "login": "anmelden"
+    "login": "anmelden",
+    "reload": "Neu laden",
+    "logout": "Ausloggen"
   },
   "input": {
     "additionalRequest": "Zusatzwunsch",
@@ -48,5 +50,6 @@ export default {
     "register": "Kassenbonierung",
     "salesCheck": "Kassenbon"
   },
+  "The adapter operation was aborted": "Der Server ist nicht erreichbar.",
   "copyright": "© 2016 moßß OG - made with 🍺"
 };
