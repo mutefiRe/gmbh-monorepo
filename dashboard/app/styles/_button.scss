@@ -12,12 +12,24 @@ button {
     @media #{$desktop} {
     	margin-bottom: 0;
     }
-
-	&.gray{
-		background: $inputgray;
-	}
-
-	&.green {
-		background: $gardengreen;
-	}
+    &.gray {
+        background: $inputgray;
+    }
+    &.green {
+        background: $gardengreen;
+    }
+    &.save {
+        background: $leavygreen;
+        display: none;
+        @media #{$desktop} {
+            display: block;
+        }
+    }
+    &.delete {
+        background: $dashingred;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
 }
