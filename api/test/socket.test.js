@@ -11,7 +11,7 @@ const token = jwt.sign({
   username: "test",
   firstname: "test",
   lastname: "test",
-  permission: 1
+  role: "admin"
 }, config.secret, { expiresIn: '24h' });
 
 describe('socket basic connection with authentication', () => {
@@ -52,7 +52,7 @@ describe('socket basic connection with authentication', () => {
       username: "test",
       firstname: "test",
       lastname: "test",
-      permission: 1
+      role: "admin"
     }, config.secret, { expiresIn: '0' });
 
     const client = ioClient.connect(`http://localhost:${process.env.PORT || 8080}`, {

@@ -95,7 +95,6 @@ router.get('/', function(req, res){
  * @apiUse itemParams
  * @apiUse itemAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -124,7 +123,6 @@ router.post('/', function(req, res){
  * @apiUse itemParams
  * @apiUse itemAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -151,7 +149,6 @@ router.put('/:id', function(req, res){
  * @apiName DeleteItem
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

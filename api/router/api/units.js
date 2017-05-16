@@ -78,7 +78,6 @@ router.get('/', function(req, res){
  * @apiUse unitParams
  * @apiUse unitAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -107,7 +106,6 @@ router.post('/', function(req, res) {
  * @apiSuccess {Object} units
  * @apiParam {Number} id
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -134,7 +132,6 @@ router.put('/:id', function(req, res){
  * @apiName DeleteUnit
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

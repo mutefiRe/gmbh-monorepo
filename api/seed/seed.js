@@ -3,7 +3,7 @@
 const db = require("../models/index");
 const faker = require("faker2");
 
-module.exports = function () {
+module.exports = function() {
   const speisen = [
     "Schnitzel",
     "Käsekrainer",
@@ -95,14 +95,14 @@ module.exports = function () {
     firstname: "Meister",
     lastname: "Lampe",
     password: "abc",
-    permission: 0
+    role: "admin"
   });
   db.User.create({
     username: "waiter",
     firstname: "die GmBh",
     lastname: " Buam",
     password: "abc",
-    permission: 1
+    role: "waiter"
   });
 
   printer
@@ -113,7 +113,7 @@ module.exports = function () {
         lastname: " Buam",
         password: "abc",
         printerId: printer.id,
-        permission: 1
+        role: "waiter"
       });
     })
 
@@ -124,7 +124,7 @@ module.exports = function () {
       firstname: faker.Name.firstName(),
       lastname: faker.Name.lastName(),
       password: "abc",
-      permission: faker.Helpers.randomNumber(2)
+      role: faker.Helpers.randomize(["waiter", "admin"])
     });
   }
 

@@ -17,7 +17,7 @@ const token = jwt.sign({
   username:   "test1",
   firstname:  "test1",
   lastname:   "test1",
-  permission: 1
+  role:       "admin"
 }, config.secret, { expiresIn: '24h' });
 
 describe('/order route', () => {
@@ -25,7 +25,7 @@ describe('/order route', () => {
   describe('orders exists', () => {
 
     before(() => {
-      return db.User.create({id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0})
+      return db.User.create({id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", role: "admin"})
       .then(() => db.Unit.create({id: 1, name: "unit1"}))
       .then(() => db.Category.create({
         id:          1,

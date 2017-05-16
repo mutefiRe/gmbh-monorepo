@@ -9,7 +9,7 @@ const db        = require('../../models');
  * @apiSuccess {String}  users.username Username
  * @apiSuccess {String}  users.firstname Firstname of the user
  * @apiSuccess {String}  users.lastname Lastname of the user
- * @apiSuccess {Number}  users.permission Waiter: 0 Admin: 1
+ * @apiSuccess {String}  users.role waiter or admin
  * @apiSuccess {String}  users.printer Printername on the Server
  * @apiSuccess {Number[]}  users.areas Areas assigned to the user
  */
@@ -20,7 +20,7 @@ const db        = require('../../models');
  * @apiParam {String}  users.username
  * @apiParam {String}  users.firstname
  * @apiParam {String}  users.lastname
- * @apiParam {Number}  users.permission
+ * @apiParam {String}  users.role
  * @apiParam {String}  users.printer
  */
 
@@ -74,7 +74,7 @@ router.get('/:id', function(req, res) {
  */
 
 router.get('/', function(req, res) {
-  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'permission', 'printerId'], include: [{model: db.Area}]}).then(users => {
+  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'role', 'printerId'], include: [{model: db.Area}]}).then(users => {
     res.send({users});
   }).catch(error => {
     res.status(400).send({
@@ -95,7 +95,6 @@ router.get('/', function(req, res) {
  * @apiUse userParams
  * @apiParam {String} users.password
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -125,7 +124,6 @@ router.post('/', function(req, res) {
  * @apiParam {String} users.password
  * @apiParam {Number} id
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -153,7 +151,6 @@ router.put('/:id', function(req, res) {
  * @apiName DeleteUser
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

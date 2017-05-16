@@ -37,7 +37,6 @@ const db        = require('../../models');
  * @apiSuccess {Object} organizations Orangization
  * @apiUse organizationAttributes
 
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -66,7 +65,6 @@ router.get('/:id', function(req, res){
  * @apiSuccess {Object[]} organizations Orangization
  * @apiUse organizationAttributes
 
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -93,7 +91,6 @@ router.get('/', function(req, res){
  * @apiUse organizationParams
  * @apiUse organizationAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -121,7 +118,6 @@ router.post('/', function(req, res){
  * @apiUse organizationParams
  * @apiUse organizationAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -155,7 +151,6 @@ router.put('/:id', function(req, res){
  * @apiName DeleteOrangization
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

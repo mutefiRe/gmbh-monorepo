@@ -1,0 +1,59 @@
+[{
+  "group": "waiter",
+  "permissions": [{
+    "resource": "",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "items",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "areas",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "categories",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "areas",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "orders",
+    "methods": ["GET", "POST", "PUT"],
+    "action": "allow"
+  },{
+    "resource": "printers",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "prints",
+    "methods": ["POST"],
+    "action": "allow"
+  },{
+    "resource": "tables",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "units",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "users",
+    "methods": ["GET"],
+    "action": "allow"
+  },{
+    "resource": "settings",
+    "methods": ["GET"],
+    "action": "allow"
+  }]
+},{
+  "group": "admin",
+  "permissions": [{
+    "resource": "*",
+    "methods": "*",
+    "action": "allow"
+  }]
+}]
