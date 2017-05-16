@@ -1,7 +1,7 @@
 {
   "name": "gmbh",
-  "version": "0.0.0",
-  "description": "Small description for gmbh goes here",
+  "version": "2.0.0",
+  "description": "Waiters can take orders and cash money",
   "private": true,
   "directories": {
     "doc": "doc",
@@ -12,12 +12,37 @@
     "start": "ember server",
     "test": "COVERAGE=true ember test"
   },
-  "repository": "",
+  "repository": "https://gitlab.com/mossss/gmbh-order",
   "engines": {
     "node": ">= 0.12.0"
   },
-  "author": "",
-  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Sebastian Huber",
+      "email": "shuber.mmt-b2014@fh-salzburg.ac.at"
+    },
+    {
+      "name": "Alexander Gabriel",
+      "email": "agabriel.mmt-b2014@fh-salzburg.ac.at"
+    },
+    {
+      "name": "Daniel Trojer",
+      "email": "dtrojer.mmt-b2014@fh-salzburg.ac.at"
+    },
+    {
+      "name": "Josef Krabath",
+      "email": "jkrabath.mmt-b2014@fh-salzburg.ac.at"
+    },
+    {
+      "name": "Konrad Kleeberger",
+      "email": "kkleeberger.mmt-b2014@fh-salzburg.ac.at"
+    },
+    {
+      "name": "Viktoria Steiner",
+      "email": "vsteiner.mmt-b2014@fh-salzburg.ac.at"
+    }
+  ],
+  "license": "LicenseRef-LICENSE",
   "devDependencies": {
     "babel-eslint": "^6.0.4",
     "broccoli-asset-rev": "^2.4.5",
@@ -51,7 +76,7 @@
     "ember-load-initializers": "^0.5.1",
     "ember-local-storage": "1.3.5",
     "ember-resolver": "^2.0.3",
-    "ember-simple-auth": "^1.1.0",
+    "ember-simple-auth": "^1.3.0",
     "ember-simple-auth-token": "^1.1.1",
     "ember-websockets": "^6.2.2",
     "ember-welcome-page": "^1.0.3",
