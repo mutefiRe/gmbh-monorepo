@@ -3,7 +3,6 @@
   "dependencies": {
     "ember": "~2.10.0",
     "ember-cli-shims": "0.1.3",
-    "ember-cli-test-loader": "0.2.2",
     "uri.js": "^1.17.1",
     "socket.io-client": "^1.7.2",
     "pretender": "~1.1.0",

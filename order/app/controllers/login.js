@@ -16,17 +16,17 @@ export default Ember.Controller.extend({
       const authenticator = 'authenticator:jwt';
 
       this.get('session')
-      .authenticate(authenticator, credentials)
-      .then(() => {
-        this.send('transitionToOrder');
-      })
-      .catch(reason => {
-        if (reason) {
-          this.set('errorMessage', reason.errors.msg || reason);
-        } else {
-          this.set('errorMessage', 'Server nicht erreichbar.');
-        }
-      });
+        .authenticate(authenticator, credentials)
+        .then(() => {
+          this.send('transitionToOrder');
+        })
+        .catch(reason => {
+          if (reason) {
+            this.set('errorMessage', reason.errors.msg || reason);
+          } else {
+            this.set('errorMessage', 'Server nicht erreichbar.');
+          }
+        });
     }
   }
 });
