@@ -24,4 +24,41 @@
         font-size: 40px;
         cursor: pointer;
     }
+    .save {
+        display: none;
+    }
+    .cancel {
+        display: none;
+    }
+}
+
+.noscroll {
+    .addentrybar {
+        .plus {
+            display: none;
+            @media #{$desktop} {
+                display: block;
+            }
+        }
+        .save {
+            display: block;
+            position: absolute;
+            right: 20px;
+            line-height: 50px;
+            font-size: 40px;
+            @media #{$desktop} {
+                display: none;
+            }
+        }
+        .cancel {
+            display: block;
+            position: absolute;
+            left: 20px;
+            line-height: 50px;
+            font-size: 40px;
+            @media #{$desktop} {
+                display: none;
+            }
+        }
+    }
 }

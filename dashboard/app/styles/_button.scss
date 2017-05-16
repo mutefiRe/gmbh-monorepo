@@ -17,4 +17,18 @@ button {
     &.green {
         background: $gardengreen;
     }
+    &.save {
+        background: $leavygreen;
+        display: none;
+        @media #{$desktop} {
+            display: block;
+        }
+    }
+    &.delete {
+        background: $dashingred;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
 }
