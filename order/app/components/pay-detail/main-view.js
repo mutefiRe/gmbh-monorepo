@@ -7,7 +7,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   pageTransitions: Ember.inject.service('pagetransitions'),
   classNames: ['pay-detail', 'screen'],
   recognizers: 'swipe',
-  connection: true,
+  connection: Ember.inject.service('connection'),
   paidOrderitems: Ember.computed.filter('order.orderitems.@each.countPaid', function(orderitem) {
     if (orderitem.get('countPaid') > 0) return true;
     return false;
@@ -55,13 +55,13 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('modal').showModal({ activeType: 'loading-box' });
       this.payMarkedOrderitems();
       const orders = this.get('order.type') === 'table' ? this.get('order.orders') : [this.get('order')];
-      this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
+      this.get('connection.status') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
     payAll() {
       this.get('modal').showModal({ activeType: 'loading-box' });
       this.payAllOrderitems();
       const orders = this.get('order.type') === 'table' ? this.get('order.orders') : [this.get('order')];
-      this.get('connection') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
+      this.get('connection.status') ? this.saveOrdersAPI(orders) : this.saveOrdersOffline(orders);
     },
     toggleMarkAll() {
       if (this.get('markedOrderitems').length !== this.get('orderitems').length) {

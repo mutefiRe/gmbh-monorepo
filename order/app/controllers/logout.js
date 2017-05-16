@@ -10,10 +10,10 @@ export default Ember.Controller.extend({
   actions: {
     logout() {
       this.get('session')
-      .invalidate()
-      .then(() => {
-        this.send('transitionToLogin');
-      });
+        .invalidate()
+        .then(() => {
+          this.send('transitionToLogin');
+        });
     }
   }
 });
