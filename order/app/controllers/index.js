@@ -103,7 +103,7 @@ export default Ember.Controller.extend({
   syncOfflineStorages() {
     Promise.all(this.get('tableStorage').recordsPromises()).then(() => {
       this.get('tableStorage').clear();
-      return Promise.all(this.get('orderStorage').recordsPromises())
+      return Promise.all(this.get('orderStorage').recordsPromises());
     }).then(() => {
       this.get('orderStorage').clear();
       return Promise.all(this.get('payStorage').recordsPromises());

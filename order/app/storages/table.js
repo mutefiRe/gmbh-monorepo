@@ -8,7 +8,7 @@ const Storage = StorageArray.extend({
   },
   recordsPromises() {
     return this.getArray().map(table => {
-      return this.createOrFindTableRecord(table).save()
+      return this.createOrFindTableRecord(table).save();
     });
   },
   createOrFindTableRecord(table){
@@ -18,7 +18,7 @@ const Storage = StorageArray.extend({
     const tableRecord = this.get('store').createRecord('table', table);
     tableRecord.set('area', this.get('store').peekRecord('area', table.areaId));
     return tableRecord;
-  },
+  }
 });
 
 export default Storage;

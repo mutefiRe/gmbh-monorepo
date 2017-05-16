@@ -36,13 +36,13 @@ export default Ember.Component.extend({
     }
   },
   saveTableAPI(table){
-    table.save().then(persistedTable => this.send('setTable', persistedTable))
+    table.save().then(persistedTable => this.send('setTable', persistedTable));
   },
   saveTableOffline(table){
     const serializedTable = table.serialize();
     serializedTable.id = table.id;
     this.get('tableStorage').addObject(serializedTable);
-    this.send('setTable', table)
+    this.send('setTable', table);
   }
 });
 

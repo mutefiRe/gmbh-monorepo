@@ -1,21 +1,19 @@
 import { expect } from 'chai';
-import { describeModel, it } from 'ember-mocha';
+import { it, describe } from 'mocha';
+import { setupModelTest } from 'ember-mocha';
 
-describeModel(
-  'table',
-  'Unit | Serializer | table',
-  {
+describe('Unit | Serializer | table', function() {
+  setupModelTest('table', {
     // Specify the other units that are required for this test.
-    needs: ['serializer:table']
-  },
-  function() {
-    // Replace this with your real tests.
-    it('serializes records', function() {
-      let record = this.subject();
+    needs: ['model:area', 'model:table', 'model:order']
+  });
 
-      let serializedRecord = record.serialize();
+  // Replace this with your real tests.
+  it('serializes records', function() {
+    const record = this.subject();
 
-      expect(serializedRecord).to.be.ok;
-    });
-  }
-);
+    const serializedRecord = record.serialize();
+
+    expect(serializedRecord).to.be.ok;
+  });
+});
