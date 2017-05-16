@@ -6,7 +6,7 @@ button {
     font-size: $basefontsize;
     font-weight: $regular;
     margin-right: 50px;
-    height: 45px;
+    min-height: 45px;
     margin-bottom: 15px;
     @media #{$desktop} {
         margin-bottom: 0;
@@ -16,5 +16,19 @@ button {
     }
     &.green {
         background: $gardengreen;
+    }
+    &.save {
+        background: $leavygreen;
+        display: none;
+        @media #{$desktop} {
+            display: block;
+        }
+    }
+    &.delete {
+        background: $dashingred;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
     }
 }
