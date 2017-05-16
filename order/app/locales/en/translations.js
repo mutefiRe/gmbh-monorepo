@@ -13,6 +13,8 @@ export default {
     "back": "back",
     "delete": "delete",
     "payAll": "pay all",
+    "markAll": "mark all",
+    "unmarkAll": "unmark all",
     "showOrders": "show my orders",
     "paySelected": "pay selected",
     "printBill": "print bill",
@@ -38,6 +40,7 @@ export default {
       'other': "tables"
     },
     "sum": "sum",
+    "selectedSum": "selection",
     "empty": "Order is empty!",
     "notPaid": "not paid",
     "paid": "paid",

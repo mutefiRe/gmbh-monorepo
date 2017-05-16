@@ -59,6 +59,16 @@
         <span class="icon icon-prohibited"></span>
       </button>
     {{/if}}
+  {{else if user.isCashier}}
+     {{#if order.orderitems}}
+      <button {{action 'saveOrder'}} class="smallbutton smallbutton--blue default-btn">
+        <span class="icon icon-send"></span>
+      </button>
+    {{else}}
+      <button {{action 'returnButton'}} class="smallbutton default-btn">
+        <span class="icon icon-prohibited"></span>
+      </button>
+    {{/if}}
   {{else}}
     <button {{action 'showModal'}} class="smallbutton smallbutton--blue default-btn">
       <span class="icon icon-table"></span>

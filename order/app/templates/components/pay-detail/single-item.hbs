@@ -1,13 +1,37 @@
-<td>{{computedCount}} x</td>
-<td colspan="2">{{orderitem.item.name}}
-  {{#if orderitem.item.category.showAmount}} {{show-amount orderitem.item.amount}} {{orderitem.item.unit.name}}{{/if}}<span> {{orderitem.extras}}</span>
-</td>
+{{#unless (eq type 'paid')}}
+{{#if orderitem.countMarked}}
+  <div class="countOpen"{{action decrementMarked}}>{{computedCount}} x</div>
+{{/if}}
+{{/unless}}
 
-<td>
-€ {{show-currency sum}}
-  {{#if (eq type "paid")}}
-    {{#if orderitem.countFree}}
-      ({{orderitem.countFree}} {{t "order.withVoucher"}})
-    {{/if}}
-  {{/if}}
-</td>
+{{#if (eq type 'paid')}}
+  <div class="item">
+    <div class="countmarked">
+      {{computedCount}} x
+    </div>
+    <div class="description">{{orderitem.item.name}}
+      {{#if orderitem.item.category.showAmount}} {{show-amount orderitem.item.amount}} {{orderitem.item.unit.name}}{{/if}}<span> {{orderitem.extras}}</span>
+    </div>
+    <div class="price">
+    € {{#if orderitem.countMarked}}{{show-currency sumMarked}}{{else}}{{show-currency sumTotal}}{{/if}}
+      {{#if (eq type "paid")}}
+        {{#if orderitem.countFree}}
+          ({{orderitem.countFree}} {{t "order.withVoucher"}})
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+{{else}}
+  <div class="item {{if orderitem.countMarked "topay" ""}}" {{action incrementMarked}}>
+    <div class="countmarked">
+      {{#if orderitem.countMarked}}{{orderitem.countMarked}} x{{else}}{{computedCount}} x{{/if}}
+    </div>
+    <div class="description">{{orderitem.item.name}}
+      {{#if orderitem.item.category.showAmount}} {{show-amount orderitem.item.amount}} {{orderitem.item.unit.name}}{{/if}}<span> {{orderitem.extras}}</span>
+    </div>
+
+    <div class="price">
+    € {{#if orderitem.countMarked}}{{show-currency sumMarked}}{{else}}{{show-currency sumTotal}}{{/if}}
+    </div>
+  </div>
+{{/if}}

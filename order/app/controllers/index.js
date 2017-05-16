@@ -28,16 +28,10 @@ export default Ember.Controller.extend({
       const order = this.store.createRecord('order', {});
       order.set('user', user);
       this.set('order', order);
-
-      if (this.get('user.isCashier')) {
-        this.store.findAll('table').then(table => {
-          order.set('table', table.get('firstObject'));
-        });
-      }
     });
   },
   actions: {
-    setActualOrder(table){
+    setActualOrder(table) {
       this.set('actualOrder', table);
     },
     changeCategory(category) {
