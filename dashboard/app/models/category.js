@@ -12,5 +12,6 @@ export default DS.Model.extend({
   category:     DS.belongsTo('category'),
   items:        DS.hasMany('item'),
   itemsSorting: ['sortId', 'name'],
-  sortedItems:  Ember.computed.sort('items', 'itemsSorting')
+  sortedItems:  Ember.computed.sort('items', 'itemsSorting'),
+  color:        DS.attr("string", {defaultValue: '#aabbcc'})
 });
