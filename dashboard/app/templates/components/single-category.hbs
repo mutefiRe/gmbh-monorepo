@@ -1,49 +1,45 @@
-{{modal-colorpicker action="changeColor" notifyer=this}}
-
-{{modal-iconpicker action="changeIcon" notifyer=this}}
-
-
-<div class="single-category" {{action "toggleEditable"}}>
-            <div class="material-icons">face</div>
-              <p>{{category.name}}</p>
-              <div class="singleeditindicator material-icons">mode_edit</div>
-            </div>
-            <div class="editsinglecategory editarea">
-              <div class="input-row">
-                <div class="input-element">
-                  <label for="name">Name</label>
-                  <input type="text" name="name" value="{{category.name}}">
-                </div>
-                <div class="input-element">
-                  <label for="icon">Icon</label>
-                  <div class="select-wrapper iconselector">
-                  <span class="icondot material-icons" {{action "showModalIcon"}}>{{icontype}}</span>
-                  <select name="icon" {{action "showModalIcon" on='mouseDown'}}>
-											<option value="face">{{iconname}}</option>
-										</select>
-                  </div>
-                </div>
-                <div class="input-element">
-                  <label for="printer">Drucker</label>
-                  <div class="select-wrapper">
-                    <select name="printer">
-                      <option value="glump" selected>Glumpad</option>
-                      <option value="hinig">Hinig</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="input-element">
-                  <label for="color">Farbe</label>
-                  <div class="select-wrapper colorselector">
-                  <span class="colordot" {{action "showModalColor"}} style="background:{{colorhex}}"></span>
-                    <select name="color" {{action "showModalColor" on='mouseDown'}}>
-                      <option value="simpleblue">{{colorname}}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="input-row align-right">
-                <button class="save">Speichern</button>
-                <button class="delete"><span class="material-icons">delete</span>Löschen</button>
-              </div>
-            </div>
+<div class="single-category" {{action "toggleEditable"}} style="background:{{category.color}}">
+<span class="iconfont {{category.icon}}"></span>
+  <p>{{category.name}}</p>
+  <div class="singleeditindicator material-icons">mode_edit</div>
+</div>
+<div class="editsinglecategory editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">Name</label>
+      {{input type="text" value=category.name name="name"}}
+    </div>
+    <div class="input-element">
+      <label for="icon">Icon</label>
+      <div class="select-wrapper iconselector">
+        <span class="icondot iconfont {{category.icon}}" onclick={{action (mut isShowingIcons) true}}></span>
+        <select name="icon" onclick={{action (mut isShowingIcons) true}} onchange={{action (mut category.icon) value="target.value"}}>
+        </select>
+        {{modal-iconpicker switch=isShowingIcons icons=icons category=category}}
+      </div>
+    </div>
+    <div class="input-element">
+      <label for="printer">Drucker</label>
+      <div class="select-wrapper">
+        <select onchange={{action (mut category.printer) value="target.value"}}>
+        {{#each printers as |printer|}}
+          <option value="{{printer.name}}" selected={{eq category.printer printer.name}}>{{printer.name}}</option>
+        {{/each}}
+      </select>
+      </div>
+    </div>
+    <div class="input-element">
+      <label for="color">Farbe</label>
+      <div class="select-wrapper colorselector">
+      <span class="colordot" onclick={{action (mut isShowingColors) true}} style="background:{{category.color}}"></span>
+        <select name="color" onclick={{action (mut isShowingColors) true}}>
+        </select>
+        {{modal-colorpicker switch=isShowingColors colors=colors category=category}}
+      </div>
+    </div>
+  </div>
+  <div class="input-row align-right">
+    <button class="save" {{action "updateCategory" category}}>Speichern</button>
+    <button class="delete" {{action "destroyCategory" category}}><span class="material-icons">delete</span>Löschen</button>
+  </div>
+</div>
