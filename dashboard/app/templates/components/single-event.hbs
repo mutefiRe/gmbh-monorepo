@@ -45,6 +45,6 @@
     <button {{action 'toggleButton' "waiterAccess" event.waiterAccess}} class="{{if event.waiterAccess 'green' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if event.waiterAccess 'aktiviert' 'deaktiviert'}}</button>
   </div>
   <div class="input-row align-right">
-    <button class="save">Speichern</button>
+    <button class="save" {{action 'updateEvent' event}}>Speichern</button>
   </div>
 </div>

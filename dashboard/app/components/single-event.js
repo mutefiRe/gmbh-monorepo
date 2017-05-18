@@ -22,6 +22,9 @@ export default Ember.Component.extend({
     toggleButton(prop, value) {
       const result = !value;
       Ember.set(this.event, prop, result);
+    },
+    updateEvent(event) {
+      event.save();
     }
   }
 });
