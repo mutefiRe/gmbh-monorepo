@@ -1,4 +1,4 @@
-<div class="single-product" {{action "toggleEditable"}}>
+<div class="single-product" {{action "toggleEditable"}} style="background:{{product.category.color}}">
   <p>{{product.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
@@ -6,22 +6,22 @@
     <div class="input-row">
       <div class="input-element">
         <label for="name">Name</label>
-        <input type="text" name="name" value="{{product.name}}">
+        {{input type="text" value=product.name name="name"}}
       </div>
       <div class="input-element">
         <label for="name">Preis</label>
-        <input type="text" name="price" value="{{product.price}}">
+        {{input type="text" value=product.price name="price"}}
       </div>
       <div class="input-element">
         <label for="name">Mehrwertssteuer</label>
-        <input type="text" name="mwst" value="{{product.tax}}">
+        {{input type="text" value=product.tax name="mwst"}}
       </div>
       <div class="input-element">
         <label for="color">Kategorie</label>
         <div class="select-wrapper">
-          <select name="color">
+          <select name="color" onchange={{action "changeRelation" product}}>
             {{#each categories as |category|}}
-              <option value="{{category.name}}">{{category.name}}</option>
+              <option value="{{category.id}}">{{category.name}}</option>
             {{/each}}
           </select>
       </div>
