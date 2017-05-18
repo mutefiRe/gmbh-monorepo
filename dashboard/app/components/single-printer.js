@@ -6,6 +6,9 @@ export default Ember.Component.extend({
   actions: {
     toggleEditable() {
       this.get('editable').toggle(this);
+    },
+    updatePrinter(printer) {
+      printer.save();
     }
   }
 });
