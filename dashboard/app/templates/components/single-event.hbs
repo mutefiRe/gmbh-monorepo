@@ -6,7 +6,7 @@
   <div class="input-row align-left">
     <div class="input-element">
       <label for="name">Name</label>
-      <input type="text" name="type" value="{{event.name}}">
+      {{input value=event.name}}
     </div>
     <div class="input-element">
       <label for="name">Startdatum</label>
@@ -30,11 +30,11 @@
     </div>
     <div class="input-element">
       <label for="expirationtime">Laufzeit</label>
-      <input type="number" value="{{event.expiresTime}}">
+      {{input value=event.expiresTime}}
     </div>
     <div class="input-element">
       <label for="name">Name (versteckt)</label>
-      <input type="text" name="type" value="{{event.eventName}}">
+      {{input value=event.eventName}}
     </div>
   </div>
   <div class="input-row">
