@@ -5,7 +5,17 @@ export default Ember.Component.extend({
   todaysDate: new Date(),
   init: function() {
     var singleEvent = this.events.get('firstObject');
-    this.set('event', singleEvent);
+    if (singleEvent === undefined) {
+      this.set('event', {
+        name: 'Neues Event',
+        beginDate: this.todaysDate,
+        endDate: this.todaysDate,
+        expiresTime: 72,
+        eventName: 'Neues Event'
+      });
+    } else {
+      this.set('event', singleEvent);
+    }
     this._super();
   },
   actions: {
