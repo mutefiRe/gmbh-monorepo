@@ -1,20 +1,20 @@
 <div class="single-event">
-  <h3>{{name}}</h3>
-  <p>{{moment-format beginDate 'DD.MM.YYYY'}} – {{moment-format endDate 'DD.MM.YYYY'}}</p>
+  <h3>{{event.name}}</h3>
+  <p>{{moment-format event.beginDate 'DD.MM.YYYY'}} – {{moment-format event.endDate 'DD.MM.YYYY'}}</p>
 </div>
 <div class="editsingleevent editarea">
   <div class="input-row align-left">
     <div class="input-element">
       <label for="name">Name</label>
-      <input type="text" name="type" value="{{name}}">
+      <input type="text" name="type" value="{{event.name}}">
     </div>
     <div class="input-element">
       <label for="name">Startdatum</label>
-      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=beginDate}}
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=event.beginDate}}
     </div>
     <div class="input-element">
       <label for="name">Enddatum</label>
-      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=endDate}}
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=event.endDate}}
     </div>
   </div>
   <div class="input-row align-left">
@@ -30,19 +30,19 @@
     </div>
     <div class="input-element">
       <label for="expirationtime">Laufzeit</label>
-      <input type="number" value="{{expiresTime}}">
+      <input type="number" value="{{event.expiresTime}}">
     </div>
     <div class="input-element">
       <label for="name">Name (versteckt)</label>
-      <input type="text" name="type" value="{{eventName}}">
+      <input type="text" name="type" value="{{event.eventName}}">
     </div>
   </div>
   <div class="input-row">
     <button
-    {{action 'toggleButton' "customTables" customTables}} class="{{if customTables 'green' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if customTables 'aktiviert' 'deaktiviert'}}</button>
-    <button {{action 'toggleButton' "instantPay" instantPay}} class="{{if instantPay 'green' 'gray'}}" type="button">Sofort&shy;bezahlung {{if instantPay 'aktiviert' 'deaktiviert'}}</button>
-    <button {{action 'toggleButton' "showItemPrice" showItemPrice}} class="{{if showItemPrice 'green' 'gray'}}" type="button">Preis auf Produkte {{if showItemPrice 'aktiviert' 'deaktiviert'}}</button>
-    <button {{action 'toggleButton' "waiterAccess" waiterAccess}} class="{{if waiterAccess 'green' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if waiterAccess 'aktiviert' 'deaktiviert'}}</button>
+    {{action 'toggleButton' "customTables" event.customTables}} class="{{if event.customTables 'green' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if event.customTables 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "instantPay" event.instantPay}} class="{{if event.instantPay 'green' 'gray'}}" type="button">Sofort&shy;bezahlung {{if event.instantPay 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "showItemPrice" event.showItemPrice}} class="{{if event.showItemPrice 'green' 'gray'}}" type="button">Preis auf Produkte {{if event.showItemPrice 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "waiterAccess" event.waiterAccess}} class="{{if event.waiterAccess 'green' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if event.waiterAccess 'aktiviert' 'deaktiviert'}}</button>
   </div>
   <div class="input-row align-right">
     <button class="save">Speichern</button>

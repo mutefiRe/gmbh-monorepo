@@ -3,20 +3,15 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'li',
   todaysDate: new Date(),
-  name: 'Donutfest',
-  beginDate: new Date(),
-  endDate: new Date(),
-  customTables: true,
-  instantPay: false,
-  showItemPrice: false,
-  waiterAccess: false,
-  receiptPrinter: 'Drucker',
-  eventName: 'Eigentlich Kuchenfest',
-  expiresTime: 72,
+  init: function() {
+    var singleEvent = this.events.get('firstObject');
+    this.set('event', singleEvent);
+    this._super();
+  },
   actions: {
     toggleButton(prop, value) {
       const result = !value;
-      this.set(prop, result);
+      Ember.set(this.event, prop, result);
     }
   }
 });
