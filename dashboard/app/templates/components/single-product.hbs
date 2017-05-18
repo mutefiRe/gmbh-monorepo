@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="save">Speichern</button>
-    <button class="delete"><span class="material-icons">delete</span>Löschen</button>
+    <button class="save" {{action "updateProduct" product}}>Speichern</button>
+    <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>Löschen</button>
   </div>
 </div>

@@ -6,6 +6,12 @@ export default Ember.Component.extend({
   actions: {
     toggleEditable() {
       this.get('editable').toggle(this);
+    },
+    updateProduct(product) {
+      product.save();
+    },
+    destroyProduct(product) {
+      product.destroyRecord();
     }
   }
 });
