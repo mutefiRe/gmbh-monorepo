@@ -4,8 +4,6 @@ export default Ember.Component.extend(Ember.Evented, {
   isShowingIcons: false,
   isShowingColors: false,
   editable: Ember.inject.service(),
-  colorname: 'donaublue',
-  colorhex: '#3E8BF4',
   tagName: 'li',
   actions: {
     toggleEditable() {
