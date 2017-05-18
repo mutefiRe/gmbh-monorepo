@@ -18,79 +18,79 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 body {
-    margin: 0 0 $mobilestaticbarheight 0;
-    padding: 0;
-    font-family: 'Helvetica Neue', Roboto, Helvetica, Arial, sans-serif;
-    font-size: $mobilefontsize;
-    color: $darkgray;
-    &.noscroll {
-        overflow: hidden;
-        @media #{$desktop} {
-            overflow: visible;
-        }
-    }
+  margin: 0 0 $mobilestaticbarheight 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Roboto, Helvetica, Arial, sans-serif;
+  font-size: $mobilefontsize;
+  color: $darkgray;
+  &.noscroll {
+    overflow: hidden;
     @media #{$desktop} {
-        margin: 0 0 60px 0;
-        font-size: $basefontsize;
-        background: $almostwhite;
+      overflow: visible;
     }
+  }
+  @media #{$desktop} {
+    margin: 0 0 60px 0;
+    font-size: $basefontsize;
+    background: $almostwhite;
+  }
 }
 
 .wrapper {
-    @media #{$desktop} {
-        display: flex;
-        flex-direction: row;
-    }
+  @media #{$desktop} {
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 main {
-    padding: 0 $defaultpadding;
+  padding: 0 $defaultpadding;
+  @media #{$desktop} {
+    flex-grow: 1;
+    padding: 0 $doublepadding*2 0 0;
+  }
+  .content {
     @media #{$desktop} {
-        flex-grow: 1;
-        padding: 0 $doublepadding*2 0 0;
+      background: #fff;
+      box-shadow: #{$greatboxshadow};
+      padding-bottom: $defaultpadding;
     }
-    .content {
-        @media #{$desktop} {
-            background: #fff;
-            box-shadow: #{$greatboxshadow};
-            padding-bottom: $defaultpadding;
-        }
+  }
+  .list-description {
+    display: none;
+    @media #{$desktop} {
+      display: flex;
+      flex-direction: row;
     }
-    .list-description {
-        display: none;
-        @media #{$desktop} {
-            display: flex;
-            flex-direction: row;
-        }
-        p {
-            margin-top: 0;
-            width: $listmiddlecol;
-            font-size: $smallfontsize;
-            &:first-child {
-                width: $listleftcol;
-            }
-            &:last-child {
-                width: $listrightcol;
-            }
-        }
+    p {
+      margin-top: 0;
+      width: $listmiddlecol;
+      font-size: $smallfontsize;
+      &:first-child {
+        width: $listleftcol;
+      }
+      &:last-child {
+        width: $listrightcol;
+      }
     }
+  }
 }
 
 footer {
-    display: none;
+  display: none;
 }
 
 .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 }
