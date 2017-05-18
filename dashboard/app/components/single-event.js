@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   tagName: 'li',
   todaysDate: new Date(),
   init: function() {
-    var singleEvent = this.events.get('firstObject');
+    const singleEvent = this.events.get('firstObject');
     if (singleEvent === undefined) {
       this.set('event', {
         name: 'Neues Event',
