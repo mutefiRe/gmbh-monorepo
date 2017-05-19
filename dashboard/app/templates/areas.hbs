@@ -1,1 +1,11 @@
-{{outlet}}
+<main>
+  <div class="content">
+    <ul class="editable area-list">
+      {{#each model as |area|}}
+        {{single-area area=area}}
+      {{/each}}
+    </ul>
+  </div>
+</main>
+
+{{main-controlbar}}
