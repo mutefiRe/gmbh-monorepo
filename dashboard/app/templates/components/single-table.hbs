@@ -10,7 +10,7 @@
     <div class="input-element">
         <label>Bereich</label>
         <div class="select-wrapper">
-          <select name="area" onchange={{action "changeRelation" area}}>
+          <select name="area" onchange={{action "changeRelation" table}}>
             {{#each areas as |area|}}
               <option value="{{area.id}}">{{area.name}}</option>
             {{/each}}
@@ -19,7 +19,7 @@
     </div>
   </div>
    <div class="input-row">
-      <button class="save">Speichern</button>
-      <button class="delete"><span class="material-icons">delete</span>Löschen</button>
+      <button {{action 'updateTable' table}} class="save">Speichern</button>
+      <button {{action 'destroyTable' table}} class="delete"><span class="material-icons">delete</span>Löschen</button>
     </div>
 </div>
