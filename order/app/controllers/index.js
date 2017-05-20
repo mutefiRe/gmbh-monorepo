@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   modal: Ember.inject.service('modal'),
+  notifications: Ember.inject.service('notification-messages'),
   actualCategory: false,
   order: null,
   orderItems: [],
@@ -117,6 +118,7 @@ export default Ember.Controller.extend({
     const serializedOrder = order.serialize();
     serializedOrder.id = order.id;
     this.get('orderStorage').addObject(serializedOrder);
+    this.get('notifications').success('Achtung, Applikation ist offline. Bestellung wird gespeichert, sobald Verbindung besteht.', { autoClear: true });
     this.send('resetOrder');
     if (this.get('model.Settings.firstObject.instantPay') || this.get('user.isCashier')) {
       this.set('actualOrder', order);
@@ -131,7 +133,10 @@ export default Ember.Controller.extend({
       return this.handleAPISaveAndPrint(order);
     }).then(() => {
       this.finishSaveProcess(order);
+      this.get('notifications').success('Bestellung erfolgreich abgeschickt.', { autoClear: true });
     }).catch(err => {
+
+      this.get('notifications').error('Sending Order failed');
       console.log(err); //eslint-disable-line
     });
   },
