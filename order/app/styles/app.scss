@@ -50,6 +50,11 @@
     font-weight: bold;
   }
 
+
+  html {
+      touch-action: "pan-down"
+  }
+
   body {
     font-family:'Palanquin', arial, sans-serif;
     font-size: 14px;
