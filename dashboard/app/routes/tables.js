@@ -6,5 +6,19 @@ export default Ember.Route.extend({
       tables: this.store.findAll('table'),
       areas: this.store.findAll('area')
     });
+  },
+  actions: {
+    toggleEditable() {
+      const element = $(event.target).closest('li');
+      console.log(element);
+      if (element.hasClass('open')) {
+        element.find('.editarea').stop().slideUp(() => {
+          element.removeClass('open');
+        });
+      } else {
+        element.addClass('open');
+        element.find('.editarea').stop().slideDown();
+      }
+    }
   }
 });
