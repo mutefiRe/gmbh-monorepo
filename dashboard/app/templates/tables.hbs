@@ -2,12 +2,14 @@
   <div class="content">
     <ul class="editable area-list">
       {{#each model.areas as |area|}}
-      <li class="single-area">{{area.name}}</li>
-      <ul class="table-list">
-        {{#each area.tables as |table|}}
-          {{single-table table=table}}
-        {{/each}}
-      </ul>
+        <li>
+          <div class="single-area">{{area.name}}</div>
+          <ul class="table-list editable">
+            {{#each area.tables as |table|}}
+              {{single-table table=table}}
+            {{/each}}
+          </ul>
+        </li>
       {{/each}}
     </ul>
   </div>

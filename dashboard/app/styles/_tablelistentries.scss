@@ -1,0 +1,10 @@
+.table-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.single-table {
+  background: $inputgray;
+  color: #fff;
+  width: 25%;
+}
