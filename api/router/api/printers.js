@@ -45,7 +45,7 @@ router.get('/', function (req, res) {
  * @apiUse token
  * @apiDescription Scans the local network for printers and adds them to the database and cups
 
- * @apiSuccess (200)
+ * @apiSuccess {String} ok
  * @apiPermission waiter
  * @apiPermission admin
  */
