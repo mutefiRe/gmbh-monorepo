@@ -15,7 +15,7 @@
         <span class="icondot iconfont {{category.icon}}" onclick={{action (mut isShowingIcons) true}}></span>
         <select name="icon" {{action (mut isShowingIcons) true on="mouseDown"}} onchange={{action (mut category.icon) value="target.value"}}>
         </select>
-        {{modal-iconpicker switch=isShowingIcons icons=icons category=category}}
+        {{modal-iconpicker showModal=isShowingIcons icons=icons category=category}}
       </div>
     </div>
     <div class="input-element">
@@ -34,7 +34,7 @@
       <span class="colordot" onclick={{action (mut isShowingColors) true}} style="background:{{category.color}}"></span>
         <select name="color" {{action (mut isShowingColors) true on="mouseDown"}}>
         </select>
-        {{modal-colorpicker switch=isShowingColors colors=colors category=category}}
+        {{modal-colorpicker showModal=isShowingColors colors=colors category=category}}
       </div>
     </div>
   </div>

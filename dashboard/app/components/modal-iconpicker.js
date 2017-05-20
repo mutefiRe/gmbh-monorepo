@@ -4,8 +4,8 @@ export default Ember.Component.extend({
   tagName: 'div',
   actions: {
     selectAndClose(icon) {
-      Ember.set(this.category, 'icon', icon);
-      this.set('switch', false);
+      this.get('category').set('icon', icon);
+      this.set('showModal', false);
     }
   }
 });
