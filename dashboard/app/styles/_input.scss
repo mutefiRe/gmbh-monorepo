@@ -47,21 +47,18 @@ label {
 }
 
 .input-row {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 20px;
-
-	@media #{$desktop} {
-		flex-direction: row;
-	}
-
-	&.align-right {
-		justify-content: flex-end;
-	}
-
-	&.align-left {
-		justify-content: flex-start;
-	}
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    @media #{$desktop} {
+        flex-direction: row;
+    }
+    &.align-right {
+        justify-content: flex-end;
+    }
+    &.align-left {
+        justify-content: flex-start;
+    }
 }
 
 .input-element {
