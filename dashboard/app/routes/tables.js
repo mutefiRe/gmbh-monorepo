@@ -10,7 +10,6 @@ export default Ember.Route.extend({
   actions: {
     toggleEditable() {
       const element = $(event.target).closest('li');
-      console.log(element);
       if (element.hasClass('open')) {
         element.find('.editarea').stop().slideUp(() => {
           element.removeClass('open');
