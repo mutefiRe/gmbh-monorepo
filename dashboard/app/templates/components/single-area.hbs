@@ -1,0 +1,16 @@
+<div class="single-area" {{action "toggleEditable"}}>
+  <p>{{area.name}}</p>
+  <div class="singleeditindicator material-icons">mode_edit</div>
+</div>
+  <div class="editsinglearea editarea">
+    <div class="input-row">
+      <div class="input-element">
+        <label for="name">Name</label>
+        {{input value=area.name}}
+      </div>
+  </div>
+  <div class="input-row align-right">
+    <button {{action 'updateArea' area}} class="save">Speichern</button>
+    <button {{action 'destroyArea' area}} class="delete"><span class="material-icons">delete</span>Löschen</button>
+  </div>
+</div>
