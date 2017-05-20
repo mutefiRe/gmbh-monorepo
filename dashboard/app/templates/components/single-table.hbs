@@ -1,3 +1,25 @@
-<div class="single-table">
+<div class="single-table" {{action 'toggleEditable'}}>
   <p>{{table.name}}</p>
+</div>
+<div class="editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label>Name</label>
+      {{input value=table.name}}
+    </div>
+    <div class="input-element">
+        <label>Bereich</label>
+        <div class="select-wrapper">
+          <select name="area" onchange={{action "changeRelation" area}}>
+            {{#each areas as |area|}}
+              <option value="{{area.id}}">{{area.name}}</option>
+            {{/each}}
+          </select>
+      </div>
+    </div>
+  </div>
+   <div class="input-row">
+      <button class="save">Speichern</button>
+      <button class="delete"><span class="material-icons">delete</span>Löschen</button>
+    </div>
 </div>

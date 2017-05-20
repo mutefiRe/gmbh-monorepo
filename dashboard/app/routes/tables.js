@@ -8,15 +8,15 @@ export default Ember.Route.extend({
     });
   },
   actions: {
-    toggleEditable() {
+    toggleTables() {
       const element = $(event.target).closest('li');
       if (element.hasClass('open')) {
-        element.find('.editarea').stop().slideUp(() => {
+        element.find('.tablearea').stop().slideUp(() => {
           element.removeClass('open');
         });
       } else {
         element.addClass('open');
-        element.find('.editarea').stop().slideDown();
+        element.find('.tablearea').stop().slideDown();
       }
     }
   }
