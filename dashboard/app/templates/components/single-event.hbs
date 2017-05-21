@@ -1,0 +1,50 @@
+<div class="single-event">
+  <h3>{{event.name}}</h3>
+  <p>{{moment-format event.beginDate 'DD.MM.YYYY'}} – {{moment-format event.endDate 'DD.MM.YYYY'}}</p>
+</div>
+<div class="editsingleevent editarea">
+  <div class="input-row align-left">
+    <div class="input-element">
+      <label for="name">Name</label>
+      {{input value=event.name}}
+    </div>
+    <div class="input-element">
+      <label for="name">Startdatum</label>
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=event.beginDate}}
+    </div>
+    <div class="input-element">
+      <label for="name">Enddatum</label>
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=event.endDate}}
+    </div>
+  </div>
+  <div class="input-row align-left">
+    <div class="input-element">
+      <label for="printer">Drucker</label>
+      <div class="select-wrapper">
+        <select name="printer">
+          {{#each printers as |printer|}}
+            <option value="{{printer.name}}">{{printer.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="input-element">
+      <label for="expirationtime">Laufzeit</label>
+      {{input value=event.expiresTime}}
+    </div>
+    <div class="input-element">
+      <label for="name">Name (versteckt)</label>
+      {{input value=event.eventName}}
+    </div>
+  </div>
+  <div class="input-row">
+    <button
+    {{action 'toggleButton' "customTables" event.customTables}} class="{{if event.customTables 'green' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if event.customTables 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "instantPay" event.instantPay}} class="{{if event.instantPay 'green' 'gray'}}" type="button">Sofort&shy;bezahlung {{if event.instantPay 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "showItemPrice" event.showItemPrice}} class="{{if event.showItemPrice 'green' 'gray'}}" type="button">Preis auf Produkte {{if event.showItemPrice 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "waiterAccess" event.waiterAccess}} class="{{if event.waiterAccess 'green' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if event.waiterAccess 'aktiviert' 'deaktiviert'}}</button>
+  </div>
+  <div class="input-row align-right">
+    <button class="save" {{action 'updateEvent' event}}>Speichern</button>
+  </div>
+</div>

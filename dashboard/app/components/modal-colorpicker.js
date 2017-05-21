@@ -5,8 +5,8 @@ export default Ember.Component.extend({
   tagName: 'div',
   actions: {
     selectAndClose(color) {
-      Ember.set(this.category, 'color', color);
-      this.set('switch', false);
+      this.get('category').set('color', color);
+      this.set('showModal', false);
     }
   }
 });

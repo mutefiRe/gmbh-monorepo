@@ -1,11 +1,11 @@
-{{#if switch}}
+{{#if showModal}}
   {{#modal-dialog
-          onClose=(action (mut switch) false)
+          onClose=(action (mut showModal) false)
           clickOutsideToClose=true
           overlayClass='modal'
           containerClass="modal-content"
   }}
-  <div class="modal-close material-icons" onclick={{action (mut switch) false}}>close</div>
+  <div class="modal-close material-icons" onclick={{action (mut showModal) false}}>close</div>
   <div class="pickable-container">
     {{#each icons as |icon|}}
     <div class="pickable-wrapper" {{action 'selectAndClose' icon}}>
