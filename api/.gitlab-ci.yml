@@ -31,6 +31,7 @@ tests:
   services:
   - mysql:latest
   script:
+  - npm rebuild bcrypt
   - yarn run test-ci
 
 heroku:
