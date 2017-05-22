@@ -3,7 +3,7 @@
 const db = require("../models/index");
 const faker = require("faker2");
 
-module.exports = function() {
+module.exports = function () {
   const speisen = [
     "Schnitzel",
     "Käsekrainer",
@@ -71,6 +71,23 @@ module.exports = function() {
     "Heiße Liebe"
   ];
 
+  /* PRINTER */
+
+  const printer = db.Printer.bulkCreate([{
+    systemName: "GMBH",
+    name: "Keller"
+  },{
+    systemName: "26:11:0E:86:70:5B"
+  }, {
+    systemName: "00:5F:8D:65:85:06",
+    name: "Küche"
+  }])
+    .then(() => {
+      return db.Printer.find({
+        where: { systemName: "GMBH" }
+      })
+    })
+
   /* USER */
 
   db.User.create({
@@ -87,14 +104,19 @@ module.exports = function() {
     password: "abc",
     permission: 1
   });
-  db.User.create({
-    username: "printer",
-    firstname: "die GmBh",
-    lastname: " Buam",
-    password: "abc",
-    printer: "GMBH-WLAN",
-    permission: 1
-  });
+
+  printer
+    .then((printer) => {
+      db.User.create({
+        username: "printer",
+        firstname: "die GmBh",
+        lastname: " Buam",
+        password: "abc",
+        printerId: printer.id,
+        permission: 1
+      });
+    })
+
 
   for (let i = 0; i < 50; i++) {
     db.User.create({
@@ -108,15 +130,18 @@ module.exports = function() {
 
   /* FOOD */
 
-  db.Category
-    .create({
-      name: "Speisen",
-      enabled: true,
-      icon: "food",
-      description: "Alle die Guten Sachen",
-      showAmount: false,
-      printer: "GMBH-WLAN",
-      color: '#35063E'
+  printer
+    .then((printer) => {
+      return db.Category
+        .create({
+          name: "Speisen",
+          enabled: true,
+          icon: "food",
+          description: "Alle die Guten Sachen",
+          showAmount: false,
+          printerId: printer.id,
+          color: '#35063E'
+        })
     })
     .then(cat => {
       db.Unit
@@ -127,10 +152,10 @@ module.exports = function() {
           for (let i = 0; i < 25; i++) {
             db.Item.create({
               name: faker.Helpers.randomize(speisen) +
-                " " +
-                faker.Helpers.randomize(stopwords) +
-                " " +
-                faker.Helpers.randomize(beilagen),
+              " " +
+              faker.Helpers.randomize(stopwords) +
+              " " +
+              faker.Helpers.randomize(beilagen),
               amount: 1,
               price: faker.Helpers.randomNumber(20) + 1,
               tax: 0.1,
@@ -169,23 +194,25 @@ module.exports = function() {
     end_date: "nodate",
     instantPay: true,
     customTables: true,
-    receiptPrinter: "GMBH-WLAN",
+    receiptPrinter: "GMBH",
     eventName: "GMBH",
     expiresTime: "72h",
     showItemPrice: true
   });
 
   /* ALCOHOLICS */
-
-  db.Category
-    .create({
-      name: "Alkoholisches",
-      enabled: true,
-      icon: "drink-alc",
-      description: "alkohol",
-      showAmount: true,
-      printer: "GMBH-WLAN",
-      color: '#FEAD00'
+  printer
+    .then((printer) => {
+      return db.Category
+        .create({
+          name: "Alkoholisches",
+          enabled: true,
+          icon: "drink-alc",
+          description: "alkohol",
+          showAmount: true,
+          printerId: printer.id,
+          color: '#FEAD00'
+        })
     })
     .then(cat => {
       db.Unit
@@ -329,15 +356,18 @@ module.exports = function() {
 
   /* NONALCOHOLICS */
 
-  db.Category
-    .create({
-      name: "Kaffee",
-      enabled: true,
-      icon: "drink-coffee",
-      description: "Kaffee",
-      showAmount: false,
-      printer: "GMBH-WLAN",
-      color: '#573200'
+  printer
+    .then((printer) => {
+      return db.Category
+        .create({
+          name: "Kaffee",
+          enabled: true,
+          icon: "drink-coffee",
+          description: "Kaffee",
+          showAmount: false,
+          printerId: printer.id,
+          color: '#573200'
+        })
     })
     .then(cat => {
       db.Unit
@@ -360,15 +390,18 @@ module.exports = function() {
         });
     });
 
-  db.Category
-    .create({
-      name: "Dessert",
-      enabled: true,
-      icon: "desserts",
-      description: "Dessert",
-      showAmount: false,
-      printer: "GMBH-WLAN",
-      color: '#B80C41'
+  printer
+    .then((printer) => {
+      return db.Category
+        .create({
+          name: "Dessert",
+          enabled: true,
+          icon: "desserts",
+          description: "Dessert",
+          showAmount: false,
+          printerId: printer.id,
+          color: '#B80C41'
+        })
     })
     .then(cat => {
       db.Unit
@@ -391,15 +424,19 @@ module.exports = function() {
         });
     });
 
-  db.Category
-    .create({
-      name: "Alkoholfreies",
-      enabled: true,
-      icon: "drink-anti",
-      description: "Alkoholfreies",
-      showAmount: true,
-      printer: "GMBH-WLAN",
-      color: '#005213'
+
+  printer
+    .then((printer) => {
+      return db.Category
+        .create({
+          name: "Alkoholfreies",
+          enabled: true,
+          icon: "drink-anti",
+          description: "Alkoholfreies",
+          showAmount: true,
+          printerId: printer.id,
+          color: '#005213'
+        })
     })
     .then(cat => {
       db.Unit
