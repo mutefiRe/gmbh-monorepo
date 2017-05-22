@@ -66,7 +66,7 @@ export default Ember.Component.extend(RecognizerMixin, {
     toggleMarkAll() {
       if (this.get('markedOrderitems').length !== this.get('orderitems').length) {
         this.get('orderitems').forEach(orderitem => {
-          orderitem.set('countMarked', orderitem.get('count'));
+          orderitem.set('countMarked', orderitem.get('count') - orderitem.get('countPaid'));
         });
       } else {
         this.get('orderitems').forEach(orderitem => {

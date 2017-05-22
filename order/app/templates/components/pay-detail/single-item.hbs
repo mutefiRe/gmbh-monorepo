@@ -13,7 +13,7 @@
       {{#if orderitem.item.category.showAmount}} {{show-amount orderitem.item.amount}} {{orderitem.item.unit.name}}{{/if}}<span> {{orderitem.extras}}</span>
     </div>
     <div class="price">
-    € {{#if orderitem.countMarked}}{{show-currency sumMarked}}{{else}}{{show-currency sumTotal}}{{/if}}
+    € {{show-currency sumTotal}}
       {{#if (eq type "paid")}}
         {{#if orderitem.countFree}}
           ({{orderitem.countFree}} {{t "order.withVoucher"}})
