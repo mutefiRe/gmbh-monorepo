@@ -141,7 +141,8 @@ export default Ember.Controller.extend({
     }).then(() => {
       this.finishSaveProcess(order);
       this.get('notifications').success(this.get('i18n').t('notification.order.success'), { autoClear: true });
-    }).catch(err => {
+    }).catch(() => {
+      this.get('modal').closeModal();
       this.get('notifications').error(this.get('i18n').t('notification.order.error'), { autoClear: true});
     });
   },
