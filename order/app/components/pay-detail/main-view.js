@@ -110,16 +110,16 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('payStorage').addObject(serializedOrder);
       this.set('forFree', false);
       this.get('modal').closeModal();
-      this.get('notifications').info(this.get('i18n').t('notifications.payment.offline'), {autoClear: true});
+      this.get('notifications').info(this.get('i18n').t('notification.payment.offline'), {autoClear: true});
     });
   },
   saveOrdersAPI(orders) {
     Promise.all(this.orderPromises(orders)).then(() => {
       this.set('forFree', false);
       this.get('modal').closeModal();
-      this.get('notifications').success(this.get('i18n').t('notifications.payment.success'), {autoClear: true});
+      this.get('notifications').success(this.get('i18n').t('notification.payment.success'), {autoClear: true});
     }).catch((error) => {
-      this.get('notifications').error(this.get('i18n').t('notifications.payment.error'), {autoClear: true});
+      this.get('notifications').error(this.get('i18n').t('notification.payment.error'), {autoClear: true});
     });
   }
 });

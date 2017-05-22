@@ -39,14 +39,14 @@ export default Ember.Component.extend({
   },
   saveTableAPI(table){
     table.save().then(persistedTable => this.send('setTable', persistedTable));
-    this.get('notifications').success(this.get('i18n').t('notifications.table.success'), {autoClear: true});
+    this.get('notifications').success(this.get('i18n').t('notification.table.success'), {autoClear: true});
   },
   saveTableOffline(table){
     const serializedTable = table.serialize();
     serializedTable.id = table.id;
     this.get('tableStorage').addObject(serializedTable);
     this.send('setTable', table);
-    this.get('notifications').success(this.get('i18n').t('notifications.table.offline'), {autoClear: true});
+    this.get('notifications').success(this.get('i18n').t('notification.table.offline'), {autoClear: true});
   }
 });
 

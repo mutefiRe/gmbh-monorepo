@@ -53,6 +53,7 @@ export default {
     "register": "register payment",
     "salesCheck": "sales check"
   },
+  "Authentication failed. Wrong Username": "Authentication failed. Wrong Username!",
   "The adapter operation was aborted": "Server not reachable",
   "copyright": "© 2016 moßß OG - made with 🍺"
 };

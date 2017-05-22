@@ -21,8 +21,8 @@ export default Ember.Controller.extend({
           this.send('transitionToOrder');
         })
         .catch(reason => {
-          if (reason) {
-            this.get('notifications').error(reason, { autoClear: true });
+          if (reason.errors.msg) {
+            this.get('notifications').error(this.get('i18n').t(reason.errors.msg), { autoClear: true });
           } else {
             this.get('notifications').error(this.get('i18n').t('notification.login.failed'), { autoClear: true });
           }

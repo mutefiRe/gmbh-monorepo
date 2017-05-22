@@ -14,7 +14,6 @@ const App = Ember.Application.extend({
 loadInitializers(App, config.modulePrefix);
 
 Ember.onerror = function(error) {
-  console.log(error)
   const data = {
     app: 'order',
     message: error.message

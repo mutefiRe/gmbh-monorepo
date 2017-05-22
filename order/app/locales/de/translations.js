@@ -3,6 +3,33 @@ export default {
     "loadData": "Daten werden geladen...",
     "processingData": "verarbeite Daten"
   },
+  "notification": {
+    "order": {
+      "success": "Bestellung erfolgreich abgeschickt.",
+      "error": "Fehler beim Abschicken der Bestellung.",
+      "offline": "Bestellung wird abgeschickt, sobald Verbindung besteht.",
+      "discard": "Bestellung wurde verworfen!"
+    },
+    "payment": {
+      "success": "Zahlung erfolgreich abgeschickt.",
+      "error": "Fehler beim Abschicken der Zahlung.",
+      "offline": "Zahlung wird abgeschickt, sobald Verbindung besteht."
+    },
+    "table": {
+      "success": "Tisch erfolgreich erstellt.",
+      "error": "Fehler beim Erstellen des Tisches.",
+      "offline": "Tisch wird erstellt, sobald Verbindung besteht."
+    },
+    "login": {
+      "success": "Erfolgreich angemeldet.",
+      "error": "Beim Anmelden ist ein Fehler aufgetreten!"
+    },
+    "logout": {
+      "success": "Erfolgreich abgemeldet.",
+      "error": "Beim Abmelden ist ein Fehler aufgetreten!"
+    },
+    "error": "Ein Fehler ist aufgetreten!"
+  },
   "button": {
     "abort": "Abbrechen",
     "discard": "Verwerfen",
@@ -53,6 +80,9 @@ export default {
     "register": "Kassenbonierung",
     "salesCheck": "Kassenbon"
   },
+  "Authentication failed. Wrong Username": "Anmeldung nicht erfolgreich. Falscher Benutzername!",
+  "Authentication failed. Wrong Password": "Anmeldung nicht erfolgreich. Falsches Passwort!",
+  "user not found": "Angemeldeter Benutzer existiert nichtmehr.",
   "The adapter operation was aborted": "Der Server ist nicht erreichbar.",
   "copyright": "© 2016 moßß OG - made with 🍺"
 };
