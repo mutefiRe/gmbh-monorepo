@@ -22,9 +22,9 @@ export default Ember.Controller.extend({
         })
         .catch(reason => {
           if (reason) {
-            this.set('errorMessage', reason.errors.msg || reason);
+            this.get('notifications').error(reason, { autoClear: true });
           } else {
-            this.set('errorMessage', 'Server nicht erreichbar.');
+            this.get('notifications').error(this.get('i18n').t('notification.login.failed'), { autoClear: true });
           }
         });
     }

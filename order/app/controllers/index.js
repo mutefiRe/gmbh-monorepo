@@ -6,7 +6,6 @@ export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
   modal: Ember.inject.service('modal'),
-  notifications: Ember.inject.service('notification-messages'),
   actualCategory: false,
   order: null,
   orderItems: [],
@@ -79,6 +78,7 @@ export default Ember.Controller.extend({
       order = this.store.createRecord('order', {});
       order.set('user', this.get('user'));
       this.set('order', order);
+      this.get('notifications').info(this.get('i18n').t('notification.order.discard'), { autoClear: true });
     },
     removeItemFromOrder(orderitem) {
       const order = orderitem.get('order');
@@ -110,15 +110,17 @@ export default Ember.Controller.extend({
       return Promise.all(this.get('payStorage').recordsPromises());
     }).then(() => {
       this.get('payStorage').clear();
+      this.get('notifications').success(this.get('i18n').t('notification.sync.success'), { autoClear: true });
     }).catch(err => {
       console.log(err); //eslint-disable-line
+      this.get('notifications').error(this.get('i18n').t('notification.sync.error'), { autoClear: true });
     });
   },
   saveOrderOffline(order) {
     const serializedOrder = order.serialize();
     serializedOrder.id = order.id;
     this.get('orderStorage').addObject(serializedOrder);
-    this.get('notifications').success('Achtung, Applikation ist offline. Bestellung wird gespeichert, sobald Verbindung besteht.', { autoClear: true });
+    this.get('notifications').info(this.get('i18n').t('notification.order.offline'), { autoClear: true });
     this.send('resetOrder');
     if (this.get('model.Settings.firstObject.instantPay') || this.get('user.isCashier')) {
       this.set('actualOrder', order);
@@ -133,11 +135,9 @@ export default Ember.Controller.extend({
       return this.handleAPISaveAndPrint(order);
     }).then(() => {
       this.finishSaveProcess(order);
-      this.get('notifications').success('Bestellung erfolgreich abgeschickt.', { autoClear: true });
+      this.get('notifications').success(this.get('i18n').t('notification.order.success'), { autoClear: true });
     }).catch(err => {
-
-      this.get('notifications').error('Sending Order failed');
-      console.log(err); //eslint-disable-line
+      this.get('notifications').error(this.get('i18n').t('notification.order.error'), { autoClear: true});
     });
   },
   handleAPISaveAndPrint(order) {

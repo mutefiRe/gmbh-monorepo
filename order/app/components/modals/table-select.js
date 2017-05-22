@@ -4,6 +4,8 @@ import { storageFor } from 'ember-local-storage';
 export default Ember.Component.extend({
   store: Ember.inject.service('store'),
   connection: Ember.inject.service('connection'),
+  i18n: Ember.inject.service('i18n'),
+  notifications: Ember.inject.service('notification-messages'),
   tableStorage: storageFor('table'),
   modal: Ember.inject.service(),
   classNames: ['table-select'],
@@ -37,12 +39,14 @@ export default Ember.Component.extend({
   },
   saveTableAPI(table){
     table.save().then(persistedTable => this.send('setTable', persistedTable));
+    this.get('notifications').success(this.get('i18n').t('notifications.table.success'), {autoClear: true});
   },
   saveTableOffline(table){
     const serializedTable = table.serialize();
     serializedTable.id = table.id;
     this.get('tableStorage').addObject(serializedTable);
     this.send('setTable', table);
+    this.get('notifications').success(this.get('i18n').t('notifications.table.offline'), {autoClear: true});
   }
 });
 

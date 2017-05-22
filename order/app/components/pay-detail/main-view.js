@@ -8,6 +8,8 @@ export default Ember.Component.extend(RecognizerMixin, {
   classNames: ['pay-detail', 'screen'],
   recognizers: 'swipe',
   connection: Ember.inject.service('connection'),
+  i18n: Ember.inject.service('i18n'),
+  notifications: Ember.inject.service('notification-messages'),
   paidOrderitems: Ember.computed.filter('order.orderitems.@each.countPaid', function(orderitem) {
     if (orderitem.get('countPaid') > 0) return true;
     return false;
@@ -108,12 +110,16 @@ export default Ember.Component.extend(RecognizerMixin, {
       this.get('payStorage').addObject(serializedOrder);
       this.set('forFree', false);
       this.get('modal').closeModal();
+      this.get('notifications').info(this.get('i18n').t('notifications.payment.offline'), {autoClear: true});
     });
   },
   saveOrdersAPI(orders) {
     Promise.all(this.orderPromises(orders)).then(() => {
       this.set('forFree', false);
       this.get('modal').closeModal();
+      this.get('notifications').success(this.get('i18n').t('notifications.payment.success'), {autoClear: true});
+    }).catch((error) => {
+      this.get('notifications').error(this.get('i18n').t('notifications.payment.error'), {autoClear: true});
     });
   }
 });
