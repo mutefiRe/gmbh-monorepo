@@ -3,12 +3,20 @@ import Ember from 'ember';
 
 const Storage = StorageArray.extend({
   store: Ember.inject.service('store'),
+  delete(tableId){
+    const tables = this.getArray();
+    this.clear();
+    tables.forEach(table => {
+      if (table.id !== tableId) this.addObject(table);
+    });
+  },
   getArray() {
     return JSON.parse(JSON.stringify(this.toArray()));
   },
   recordsPromises() {
     return this.getArray().map(table => {
-      return this.createOrFindTableRecord(table).save();
+      return this.createOrFindTableRecord(table).save()
+        .then(persistedTable => this.delete(persistedTable.id));
     });
   },
   createOrFindTableRecord(table){

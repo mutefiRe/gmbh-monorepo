@@ -20,6 +20,10 @@ export default {
       "error": "Fehler beim Erstellen des Tisches.",
       "offline": "Tisch wird erstellt, sobald Verbindung besteht."
     },
+    "sync": {
+      "success": "Bestellungen wurden erfolgreich synchronisiert!",
+      "error": "Fehler beim Synchronisieren der Bestellungen!"
+    },
     "login": {
       "success": "Erfolgreich angemeldet.",
       "error": "Beim Anmelden ist ein Fehler aufgetreten!"

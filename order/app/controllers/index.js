@@ -101,20 +101,25 @@ export default Ember.Controller.extend({
       if (this.get('order.user') && this.get('order.table')) this.syncOfflineStorages();
     }
   },
+  syncNeeded(){
+    return this.get('orderStorage').getArray().length || this.get('tableStorage').getArray().length || this.get('payStorage').getArray().length ? true : false;
+  },
   syncOfflineStorages() {
-    Promise.all(this.get('tableStorage').recordsPromises()).then(() => {
-      this.get('tableStorage').clear();
-      return Promise.all(this.get('orderStorage').recordsPromises());
-    }).then(() => {
-      this.get('orderStorage').clear();
-      return Promise.all(this.get('payStorage').recordsPromises());
-    }).then(() => {
-      this.get('payStorage').clear();
-      this.get('notifications').success(this.get('i18n').t('notification.sync.success'), { autoClear: true });
-    }).catch(err => {
-      console.log(err); //eslint-disable-line
-      this.get('notifications').error(this.get('i18n').t('notification.sync.error'), { autoClear: true });
-    });
+    if (!this.get('isSyncing') && this.syncNeeded()) {
+      this.set('isSyncing', true);
+      Promise.all(this.get('tableStorage').recordsPromises()).then(() => {
+        this.get('tableStorage').clear();
+        return Promise.all(this.get('orderStorage').recordsPromises());
+      }).then(() => {
+        return Promise.all(this.get('payStorage').recordsPromises());
+      }).then(() => {
+        this.set('isSyncing', false);
+        this.get('notifications').success(this.get('i18n').t('notification.sync.success'), { autoClear: true });
+      }).catch(err => {
+        this.set('isSyncing', false);
+        this.get('notifications').error(this.get('i18n').t('notification.sync.error'), { autoClear: true });
+      });
+    }
   },
   saveOrderOffline(order) {
     const serializedOrder = order.serialize();
