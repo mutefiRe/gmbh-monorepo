@@ -7,6 +7,7 @@ const db        = require('../../models');
  * @apiDefine areaAttributes
  * @apiSuccess {Number}  areas.id Autoincremented Identifier of the table
  * @apiSuccess {String}  areas.name
+ * @apiSuccess {String}  areas.short
  * @apiSuccess {Number[]}  areas.tables
  * @apiSuccess {Boolean}  areas.enabled
  */
@@ -15,6 +16,7 @@ const db        = require('../../models');
  * @apiDefine areaParams
  * @apiParam {Number}  areas.id
  * @apiParam {String}  areas.name
+ * @apiParam {String}  areas.short
  * @apiParam {Boolean}  areas.enabled
  */
 

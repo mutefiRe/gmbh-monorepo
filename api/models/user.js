@@ -9,7 +9,6 @@ module.exports = function(sequelize, DataTypes) {
     firstname:  {type: DataTypes.STRING,  allowNull: true,  unique: false},
     lastname:   {type: DataTypes.STRING,  allowNull: true,  unique: false},
     password:   {type: DataTypes.STRING,  allowNull: false, unique: false},
-    printer:    {type: DataTypes.STRING,  allowNull: true,  unique: false, defaultValue: null},
     permission: {type: DataTypes.INTEGER, allowNull: false, unique: false, validate: {isNumeric: true, min: 0, max: 2}}
   } , {
     instanceMethods: {
@@ -33,6 +32,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       associate(models) {
         User.belongsToMany(models.Area, {through: 'userarea'});
+        User.belongsTo(models.Printer);
       }
     }
   });
