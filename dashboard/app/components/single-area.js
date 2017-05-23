@@ -13,6 +13,5 @@ export default Ember.Component.extend({
     destroyArea(area) {
       area.destroyRecord();
     }
-
   }
 });
