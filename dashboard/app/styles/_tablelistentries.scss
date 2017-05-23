@@ -34,4 +34,7 @@
   color: #fff;
   width: 100%;
   min-height: 50px;
+  &.available {
+    background: lighten($simpleblue, 15%);
+  }
 }

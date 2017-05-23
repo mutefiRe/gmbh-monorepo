@@ -1,4 +1,4 @@
-<div class="single-table" {{action 'toggleEditable'}}>
+<div class="single-table {{if isEnabled 'available'}}" {{action 'toggleEditable'}}>
   <p>{{table.name}}</p>
 </div>
 <div class="editarea">
@@ -20,6 +20,7 @@
     </div>
   </div>
    <div class="input-row">
+      <button {{action 'toggleButton' table 'enabled' table.enabled}} class="{{if table.enabled 'toggle' 'gray'}}">{{if table.enabled 'aktiviert' 'deaktiviert'}}</button>
       <button {{action 'updateTable' table}} class="save">Speichern</button>
       <button {{action 'destroyTable' table}} class="delete"><span class="material-icons">delete</span>Löschen</button>
     </div>
