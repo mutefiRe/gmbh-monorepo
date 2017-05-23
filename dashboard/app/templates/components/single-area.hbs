@@ -1,4 +1,4 @@
-<div class="single-area" {{action "toggleEditable"}}>
+<div class="single-area {{if area.enabled 'available'}}" {{action "toggleEditable"}}>
   <p>{{area.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
@@ -10,6 +10,7 @@
       </div>
   </div>
   <div class="input-row align-right">
+    <button {{action 'toggleButton' area 'enabled' area.enabled}} class="{{if area.enabled 'toggle' 'gray'}}">{{if area.enabled 'aktiviert' 'deaktiviert'}}</button>
     <button {{action 'updateArea' area}} class="save">Speichern</button>
     <button {{action 'destroyArea' area}} class="delete"><span class="material-icons">delete</span>Löschen</button>
   </div>
