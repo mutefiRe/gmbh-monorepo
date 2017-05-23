@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
         this.set('actualCategory', category);
       }
     },
-    addItemToOrder(item, extras = null) {
+    addItemToOrder(item, extras = null, count = 1) {
       const order = this.get('order');
 
       const orderitem = order.get('orderitems')
@@ -49,7 +49,7 @@ export default Ember.Controller.extend({
         .filterBy('extras', extras);
 
       if (orderitem.length === 0) {
-        const newOrderitem = this.store.createRecord('orderitem', { order: this.get('order'), item, extras, price: item.get('price') });
+        const newOrderitem = this.store.createRecord('orderitem', { order: this.get('order'), item, extras, price: item.get('price'), count });
         if (newOrderitem.get('price') === 0) newOrderitem.set('countPaid', 1);
 
       } else {
