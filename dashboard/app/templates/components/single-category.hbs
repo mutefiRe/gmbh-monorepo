@@ -1,4 +1,4 @@
-<div class="single-category" {{action "toggleEditable"}} style="background:{{category.color}}">
+<div class="single-category" {{action "toggleEditable"}} style="background:{{if category.enabled category.color}}">
 <span class="iconfont {{category.icon}}"></span>
   <p>{{category.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
@@ -39,6 +39,7 @@
     </div>
   </div>
   <div class="input-row align-right">
+    <button {{action 'toggleButton' category "enabled" category.enabled}} class="{{if category.enabled 'toggle' 'gray'}}" type="button">{{if category.enabled 'aktiviert' 'deaktiviert'}}</button>
     <button class="save" {{action "updateCategory" category}}>Speichern</button>
     <button class="delete" {{action "destroyCategory" category}}><span class="material-icons">delete</span>Löschen</button>
   </div>
