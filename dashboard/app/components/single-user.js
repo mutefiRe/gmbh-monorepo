@@ -8,7 +8,7 @@ export default Ember.Component.extend({
       user.save();
     },
     toggleEditable() {
-      this.get('editable').toggle(this);
+      this.get('editable').toggle({ component: this, record: this.get('user') });
     }
   }
 });
