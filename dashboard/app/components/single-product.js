@@ -6,14 +6,18 @@ export default Ember.Component.extend({
   tagName: 'li',
   actions: {
     toggleEditable() {
-      this.get('editable').toggle(this);
+      this.get('editable').toggle({ component: this, record: this.get('product') });
     },
     changeRelation(product, event) {
       const category = this.get('store').peekRecord('category', event.target.value)
       product.set('category', category);
     },
     updateProduct(product) {
-      product.save();
+      product.save().then(() => {
+        this.send('toggleEditable');
+      }).catch(() => {
+        console.log('Error');
+      });
     },
     destroyProduct(product) {
       product.destroyRecord();
