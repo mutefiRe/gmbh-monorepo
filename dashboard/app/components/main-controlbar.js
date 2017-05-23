@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   classNames: ['addentrybar'],
   actions: {
     saveRecord() {
-      this.get('editable').currentRecord.save();
+      this.get('editable').saveRecord();
     }
   }
 
