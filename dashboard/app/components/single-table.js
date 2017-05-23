@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   areaToSet: '',
   actions: {
     toggleEditable() {
-      this.get('editable').toggle(this);
+      this.get('editable').toggle({ component: this, record: this.get('table') });
     },
     changeRelation(table, event) {
       const area = this.get('store').peekRecord('area', event.target.value);
@@ -15,7 +15,11 @@ export default Ember.Component.extend({
     },
     updateTable(table) {
       table.set('area', this.get('areaToSet'));
-      table.save();
+      table.save().then(() => {
+        this.send('toggleEditable');
+      }).catch(() => {
+        console.log('Error');
+      });
     },
     destroyTable(table) {
       table.destroyRecord();
