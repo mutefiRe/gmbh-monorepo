@@ -5,8 +5,13 @@ module.exports = function(sequelize, DataTypes) {
     id:      {type: DataTypes.UUID,    defaultValue: DataTypes.UUIDV4, primaryKey: true},
     name:    {type: DataTypes.STRING,  allowNull: false, unique: true},
     short:   {type: DataTypes.STRING,  allowNull: false, unique: true},
-    color:   {type: DataTypes.STRING,  allowNull: true,  unique: false},
-    enabled: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true}
+    enabled: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true},
+    color:   {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: false,
+      validate: { is: /^#([A-F0-9]{3}|[A-F0-9]{6})$/i}
+    }
   }, {
     classMethods: {
       associate(models) {
