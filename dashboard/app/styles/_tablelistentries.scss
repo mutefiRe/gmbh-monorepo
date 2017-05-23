@@ -1,0 +1,37 @@
+.tablearea {
+  display: none;
+}
+
+.table-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 10px 0 0;
+  padding: 0 10px;
+  li {
+    display: block !important;
+    @media #{$desktop} {
+      width: calc(50% - 5px) !important;
+    }
+  }
+  .input-row {
+    flex-wrap: wrap !important;
+  }
+  .input-element {
+    width: 100% !important;
+    margin: 0 0 20px 0 !important;
+  }
+  button {
+    margin-right: 0;
+  }
+}
+
+.single-table {
+  background: $inputgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  width: 100%;
+  min-height: 50px;
+}
