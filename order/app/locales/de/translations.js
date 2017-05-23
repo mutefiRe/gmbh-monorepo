@@ -11,7 +11,7 @@ export default {
       "discard": "Bestellung wurde verworfen!"
     },
     "orderitem": {
-      "amount": "Anzahl darf nicht 0 oder weniger sein!"
+      "amount": "Anzahl muss mindestens 1 sein!"
     },
     "payment": {
       "success": "Zahlung erfolgreich abgeschickt.",
