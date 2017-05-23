@@ -15,7 +15,11 @@ export default Ember.Component.extend({
     },
     updateTable(table) {
       table.set('area', this.get('areaToSet'));
-      table.save();
+      table.save().then(() => {
+        this.send('toggleEditable');
+      }).catch(() => {
+        console.log('Error');
+      });
     },
     destroyTable(table) {
       table.destroyRecord();

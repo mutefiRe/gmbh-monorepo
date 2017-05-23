@@ -8,7 +8,11 @@ export default Ember.Component.extend({
       this.get('editable').toggle({ component: this, record: this.get('printer') });
     },
     updatePrinter(printer) {
-      printer.save();
+      printer.save().then(() => {
+        this.send('toggleEditable');
+      }).catch(() => {
+        console.log('Error');
+      });
     }
   }
 });

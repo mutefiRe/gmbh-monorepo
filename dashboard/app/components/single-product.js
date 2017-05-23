@@ -13,7 +13,11 @@ export default Ember.Component.extend({
       product.set('category', category);
     },
     updateProduct(product) {
-      product.save();
+      product.save().then(() => {
+        this.send('toggleEditable');
+      }).catch(() => {
+        console.log('Error');
+      });
     },
     destroyProduct(product) {
       product.destroyRecord();

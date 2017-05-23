@@ -5,7 +5,11 @@ export default Ember.Component.extend({
   tagName: 'li',
   actions: {
     updateUser(user) {
-      user.save();
+      user.save().then(() => {
+        this.send('toggleEditable');
+      }).catch(() => {
+        console.log('Error');
+      });
     },
     toggleEditable() {
       this.get('editable').toggle({ component: this, record: this.get('user') });

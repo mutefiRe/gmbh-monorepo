@@ -10,7 +10,11 @@ export default Ember.Component.extend(Ember.Evented, {
       this.get('editable').toggle({ component: this, record: this.get('category') });
     },
     updateCategory(category) {
-      category.save();
+      category.save().then(() => {
+        this.send('toggleEditable');
+      }).catch(() => {
+        console.log('Error');
+      });
     },
     destroyCategory(category) {
       category.destroyRecord();
