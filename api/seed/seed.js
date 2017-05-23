@@ -188,17 +188,21 @@ module.exports = function () {
     telephone: "+43 650 87654321"
   });
 
-  db.Setting.create({
-    name: "Testsetting",
-    begin_date: "nodate",
-    end_date: "nodate",
-    instantPay: true,
-    customTables: true,
-    receiptPrinter: "GMBH",
-    eventName: "GMBH",
-    expiresTime: "72h",
-    showItemPrice: true
-  });
+  printer
+    .then((printer) => {
+      return db.Setting.create({
+        name: "Testsetting",
+        begin_date: "nodate",
+        end_date: "nodate",
+        instantPay: true,
+        customTables: true,
+        receiptPrinterId: printer.id,
+        eventName: "GMBH",
+        expiresTime: "72h",
+        showItemPrice: true
+      });
+    });
+
 
   /* ALCOHOLICS */
   printer

@@ -9,9 +9,14 @@ module.exports = function(sequelize, DataTypes) {
     customTables:   {type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue: false },
     instantPay:     {type: DataTypes.BOOLEAN, allowNull: false, unique: false, defalutValue: true },
     showItemPrice:  {type: DataTypes.BOOLEAN, allowNull: true,  unique: false, defalutValue: true },
-    receiptPrinter: {type: DataTypes.STRING,  allowNull: true,  unique: false},
     eventName:      {type: DataTypes.STRING,  allowNull: false, unique: false},
     expiresTime:    {type: DataTypes.STRING,  allowNull: false, unique: false, defaultValue: "72h"}
+  }, {
+    classMethods: {
+      associate(models) {
+        Setting.belongsTo(models.Printer, {as: 'receiptPrinter'});
+      }
+    }
   });
   return Setting;
 };
