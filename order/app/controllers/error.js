@@ -7,6 +7,7 @@ export default Ember.Controller.extend({
       this.get('session')
       .invalidate()
       .then(() => {
+        this.get('notifications').info(this.get('i18n').t('notification.logout.success'), { autoClear: true });
         this.send('transitionToLogin');
       });
     }

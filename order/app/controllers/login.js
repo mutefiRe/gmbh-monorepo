@@ -21,10 +21,10 @@ export default Ember.Controller.extend({
           this.send('transitionToOrder');
         })
         .catch(reason => {
-          if (reason) {
-            this.set('errorMessage', reason.errors.msg || reason);
+          if (reason.errors.msg) {
+            this.get('notifications').error(this.get('i18n').t(reason.errors.msg), { autoClear: true });
           } else {
-            this.set('errorMessage', 'Server nicht erreichbar.');
+            this.get('notifications').error(this.get('i18n').t('notification.login.failed'), { autoClear: true });
           }
         });
     }
