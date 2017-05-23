@@ -51,8 +51,9 @@ class layout {
   bill(order) {
     const printData = [];
     printData.push(CHAR_CODE);
-
-    printData.push(util.lpad(`${order.table.name}/${areaName(order.table.area)}`,48), ENTER);
+    if(order.table) {
+      printData.push(util.lpad(`${order.table.name}/${areaName(order.table.area)}`,48), ENTER);
+    }
     printData.push(TXT_2HEIGHT, t.billTitle, TXT_NORMAL, ENTER);
     printData.push(util.rpad(`${t.nr} ${order.id}`, 24), util.lpad(util.formatDate(order.createdAt), 24), ENTER);
 
