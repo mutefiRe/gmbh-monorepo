@@ -24,7 +24,7 @@ describe('/table route', () => {
   before(clean);
   describe('tables exists', () => {
     before(() => {
-      return db.Area.create({id: 1, name: "area1"})
+      return db.Area.create({id: 1, name: "area1", short: "A"})
       .then(() => db.Table.bulkCreate([
           {id: 1, name: "test1", x: 1, y: 1, areaId: "1"},
           {id: 2, name: "test2", x: 2, y: 2, areaId: "1", enabled: false}]
@@ -33,7 +33,10 @@ describe('/table route', () => {
 
     describe('GET tables', () => {
       const expectedResponse = {
-        "tables": [{id: "1", name: "test1", x: 1, y: 1, areaId: "1", custom: false, enabled: true}, {id: "2", name: "test2", x: 2, y: 2, areaId: "1", custom: false, enabled: false}]
+        "tables": [
+          {id: "1", name: "test1", x: 1, y: 1, areaId: "1", custom: false, enabled: true },
+          {id: "2", name: "test2", x: 2, y: 2, areaId: "1", custom: false, enabled: false}
+        ]
       };
 
       it('should get one table', () => {
@@ -89,7 +92,7 @@ describe('/table route', () => {
 
     describe('PUT table', () => {
       const requestBody = {
-        table: {name: "changedTable", x: 4, y: 4, areaId: 1}
+        table: {name: "changedTable", x: 4, y: 4, areaId: 1, enabled: false}
       };
 
       it('table should have changed', () => {
@@ -105,6 +108,7 @@ describe('/table route', () => {
           expect(table).not.to.be.null;
           expect(table.name).to.eq("changedTable");
           expect(table.areaId).to.eq("1");
+          expect(table.enabled).to.eq(false);
           expect(table.x).to.eq(4);
           expect(table.y).to.eq(4);
         });

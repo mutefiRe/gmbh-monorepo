@@ -35,7 +35,7 @@ describe('/api route -> check restriction access', () => {
     .catch(res => {
       expect(res.status).equal(400);
       expect(res.response).to.be.json;
-      expect(res.response.text).to.contain("invalid signature");
+      expect(res.response.text).to.contain("auth.tokenError");
     });
   });
 
@@ -46,7 +46,7 @@ describe('/api route -> check restriction access', () => {
     .catch(res => {
       expect(res.status).to.equal(400);
       expect(res.response).to.be.json;
-      expect(res.response.text).to.contain('No token provided');
+      expect(res.response.text).to.contain('auth.tokenError');
     });
   });
 
@@ -64,7 +64,7 @@ describe('/api route -> check restriction access', () => {
     .catch(res => {
       expect(res.status).to.equal(400);
       expect(res.response).to.be.json;
-      expect(res.response.text).to.contain("jwt expired");
+      expect(res.response.text).to.contain("auth.tokenError");
     });
   });
 });

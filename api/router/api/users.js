@@ -41,7 +41,14 @@ const db        = require('../../models');
 
 router.get('/:id', function(req, res) {
   db.User.find({where: {id: req.params.id}, include: [{model: db.Area}]}).then(user => {
-    res.send({user});
+    if (user) res.send({user});
+    else {
+      res.status(404).send({
+        'errors': {
+          'msg': 'user not found'
+        }
+      });
+    }
   }).catch(error => {
     res.status(400).send({
       'errors': {

@@ -25,7 +25,10 @@ describe('/area route', () => {
   before(clean);
   describe('areas exists', () => {
     before(() => {
-      return db.Area.bulkCreate([{id: 1, name: "area1", enabled: false}, {id: 2, name: "area2", color: "blue"}]);
+      return db.Area.bulkCreate([
+        {id: 1, name: "area1", enabled: false,  short: "A"},
+        {id: 2, name: "area2", color:   "blue", short: "B"}
+      ]);
     });
 
     describe('GET areas', () => {
@@ -33,6 +36,7 @@ describe('/area route', () => {
         "areas": [{
           id:     "1",
           name:   "area1",
+          short:  "A",
           tables: [],
           users:  [],
           color:  null,
@@ -40,6 +44,7 @@ describe('/area route', () => {
         }, {
           id:     "2",
           name:   "area2",
+          short:  "B",
           tables: [],
           users:  [],
           color:  "blue",
@@ -73,7 +78,8 @@ describe('/area route', () => {
     describe('POST area', () => {
       const requestBody = {
         area: {
-          name: "newArea"
+          name:  "newArea",
+          short: "c"
         }
       };
 
