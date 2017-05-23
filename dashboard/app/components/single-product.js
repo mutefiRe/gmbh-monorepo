@@ -2,11 +2,18 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   editable: Ember.inject.service(),
+  enable: Ember.inject.service(),
   store: Ember.inject.service(),
   tagName: 'li',
+  isEnabled: Ember.computed('product.enabled', 'product.category.enabled', function() {
+    return this.get('product.enabled') && this.get('product.category.enabled');
+  }),
   actions: {
     toggleEditable() {
       this.get('editable').toggle({ component: this, record: this.get('product') });
+    },
+    toggleButton(product, prop, value) {
+      this.get('enable').toggleBtn(product, prop, value);
     },
     changeRelation(product, event) {
       const category = this.get('store').peekRecord('category', event.target.value)
