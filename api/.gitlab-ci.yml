@@ -32,6 +32,7 @@ tests:
   - mysql:latest
   script:
   - npm rebuild bcrypt
+  - (! grep -nr '.only' test)
   - yarn run test-ci
 
 heroku:
