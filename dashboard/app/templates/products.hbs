@@ -2,7 +2,7 @@
   <div class="content">
     <ul class="editable product-list">
       {{#each model.products as |product|}}
-        {{single-product product=product categories=model.categories}}
+        {{single-product product=product categories=model.categories units=model.units}}
       {{/each}}
     </ul>
   </div>
