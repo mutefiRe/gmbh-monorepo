@@ -4,8 +4,13 @@ module.exports = function(sequelize, DataTypes) {
   const Area  = sequelize.define("area", {
     id:      {type: DataTypes.UUID,    defaultValue: DataTypes.UUIDV4, primaryKey: true},
     name:    {type: DataTypes.STRING,  allowNull: false, unique: false},
-    color:   {type: DataTypes.STRING,  allowNull: true,  unique: false},
-    enabled: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true}
+    enabled: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true},
+    color:   {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: false,
+      validate: { is: /^#([A-F0-9]{3}|[A-F0-9]{6})$/i}
+    }
   }, {
     classMethods: {
       associate(models) {

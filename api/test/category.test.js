@@ -147,7 +147,7 @@ describe('/category route', () => {
           showAmount:  true,
           categoryId:  null,
           printerId:   printer2,
-          color:       "green"
+          color:       "#00FF00"
         }
       };
 
@@ -161,7 +161,7 @@ describe('/category route', () => {
           showAmount:  true,
           categoryId:  null,
           printerId:   printer2,
-          color:       "green"
+          color:       "#00FF00"
         }
       };
 
