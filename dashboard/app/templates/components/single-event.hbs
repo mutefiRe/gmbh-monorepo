@@ -39,10 +39,10 @@
   </div>
   <div class="input-row">
     <button
-    {{action 'toggleButton' "customTables" event.customTables}} class="{{if event.customTables 'green' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if event.customTables 'aktiviert' 'deaktiviert'}}</button>
-    <button {{action 'toggleButton' "instantPay" event.instantPay}} class="{{if event.instantPay 'green' 'gray'}}" type="button">Sofort&shy;bezahlung {{if event.instantPay 'aktiviert' 'deaktiviert'}}</button>
-    <button {{action 'toggleButton' "showItemPrice" event.showItemPrice}} class="{{if event.showItemPrice 'green' 'gray'}}" type="button">Preis auf Produkte {{if event.showItemPrice 'aktiviert' 'deaktiviert'}}</button>
-    <button {{action 'toggleButton' "waiterAccess" event.waiterAccess}} class="{{if event.waiterAccess 'green' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if event.waiterAccess 'aktiviert' 'deaktiviert'}}</button>
+    {{action 'toggleButton' "customTables" event.customTables}} class="{{if event.customTables 'toggle' 'gray'}}" type="button">Benutzer&shy;definierte Tische {{if event.customTables 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "instantPay" event.instantPay}} class="{{if event.instantPay 'toggle' 'gray'}}" type="button">Sofort&shy;bezahlung {{if event.instantPay 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "showItemPrice" event.showItemPrice}} class="{{if event.showItemPrice 'toggle' 'gray'}}" type="button">Preis auf Produkte {{if event.showItemPrice 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "waiterAccess" event.waiterAccess}} class="{{if event.waiterAccess 'toggle' 'gray'}}" type="button">Kellner&shy;zugriffs&shy;berechtigung {{if event.waiterAccess 'aktiviert' 'deaktiviert'}}</button>
   </div>
   <div class="input-row align-right">
     <button class="save" {{action 'updateEvent' event}}>Speichern</button>
