@@ -3,7 +3,8 @@
 module.exports = function(sequelize, DataTypes) {
   const Area  = sequelize.define("area", {
     id:      {type: DataTypes.UUID,    defaultValue: DataTypes.UUIDV4, primaryKey: true},
-    name:    {type: DataTypes.STRING,  allowNull: false, unique: false},
+    name:    {type: DataTypes.STRING,  allowNull: false, unique: true},
+    short:   {type: DataTypes.STRING,  allowNull: false, unique: true},
     color:   {type: DataTypes.STRING,  allowNull: true,  unique: false},
     enabled: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true}
   }, {

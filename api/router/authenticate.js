@@ -24,7 +24,7 @@ router.post('/', function(req, res){
       db.Setting.findAll().then((settings) => {
         return JSON.parse(JSON.stringify(settings))[0].expiresTime;
       }).then((expiresTime) => {
-        const token = jwt.sign(thisUser.createAuthUser(), config.secret, { expiresTime });
+        const token = jwt.sign(thisUser.createAuthUser(), config.secret, { expiresIn: expiresTime || "72h" });
         res.send({token});
       });
     }
