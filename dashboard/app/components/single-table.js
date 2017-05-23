@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   areaToSet: '',
   actions: {
     toggleEditable() {
-      this.get('editable').toggle(this);
+      this.get('editable').toggle({ component: this, record: this.get('table') });
     },
     changeRelation(table, event) {
       const area = this.get('store').peekRecord('area', event.target.value);

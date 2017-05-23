@@ -7,7 +7,7 @@ export default Ember.Component.extend(Ember.Evented, {
   tagName: 'li',
   actions: {
     toggleEditable() {
-      this.get('editable').toggle(this);
+      this.get('editable').toggle({ component: this, record: this.get('category') });
     },
     updateCategory(category) {
       category.save();
