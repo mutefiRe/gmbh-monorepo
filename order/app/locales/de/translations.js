@@ -61,6 +61,10 @@ export default {
     "enterUsername": "Benutzername eingeben",
     "enterPassword": "Passwort eingeben"
   },
+  "auth": {
+    "tokenError": "Authentifizierungsfehler",
+    "error": "Anmeldung nicht erfolgreich. Falscher Benutzername oder Passwort"
+  },
   "order": {
     "order": {
       'one': "Bestellung",
@@ -84,8 +88,6 @@ export default {
     "register": "Kassenbonierung",
     "salesCheck": "Kassenbon"
   },
-  "Authentication failed. Wrong Username": "Anmeldung nicht erfolgreich. Falscher Benutzername!",
-  "Authentication failed. Wrong Password": "Anmeldung nicht erfolgreich. Falsches Passwort!",
   "user not found": "Angemeldeter Benutzer existiert nichtmehr.",
   "The adapter operation was aborted": "Der Server ist nicht erreichbar.",
   "copyright": "© 2016 moßß OG - made with 🍺"
