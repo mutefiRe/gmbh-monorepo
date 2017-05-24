@@ -2,6 +2,7 @@
   <p>{{product.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
+{{#if isOpen}}
 <div class="editsingleproduct editarea">
   <div class="input-row">
     <div class="input-element">
@@ -44,3 +45,4 @@
     <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>Löschen</button>
   </div>
 </div>
+{{/if}}

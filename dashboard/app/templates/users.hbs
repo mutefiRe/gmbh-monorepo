@@ -55,7 +55,7 @@
         <h2>{{userGroup.letter}}</h2>
         <ul class="userlist editable">
           {{#each userGroup.users as |user|}}
-            {{single-user user=user}}
+            {{single-user user=user currentSelectedUser=currentSelectedUser}}
           {{/each}}
         </ul>
       </div>
@@ -63,4 +63,8 @@
   </div>
 </main>
 
+<<<<<<< HEAD
 {{main-controlbar type='user' setRecord=(action 'createUser')}}
+=======
+{{main-controlbar currentSelectedRecord=currentSelectedUser}}
+>>>>>>> 51-fix-rework-editable

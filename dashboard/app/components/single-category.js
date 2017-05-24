@@ -1,15 +1,16 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend(Ember.Evented, {
-  notifications:   Ember.inject.service('notification-messages'),
-  editable:        Ember.inject.service(),
-  i18n:            Ember.inject.service(),
-  isShowingIcons:  false,
+  notifications: Ember.inject.service('notification-messages'),
+  i18n: Ember.inject.service(),
+  isShowingIcons: false,
   isShowingColors: false,
-  tagName:         'li',
+  tagName: 'li',
+  classNameBindings: ['isOpen:open'],
+  isOpen: false,
   actions: {
     toggleEditable() {
-      this.get('editable').toggle({ component: this, record: this.get('category') });
+      this.toggleProperty('isOpen');
     },
     updateCategory(category) {
       category.save().then(() => {

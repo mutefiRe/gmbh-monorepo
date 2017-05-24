@@ -8,7 +8,7 @@
     position: relative;
     .editarea {
       padding: 20px 30px;
-      display: none;
+      display: block;
       @media #{$desktop} {
         .input-row {
           flex-wrap: wrap;

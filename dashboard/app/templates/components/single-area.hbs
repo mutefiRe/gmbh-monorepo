@@ -2,6 +2,7 @@
   <p>{{area.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
+{{#if isOpen}}
   <div class="editsinglearea editarea">
     <div class="input-row">
       <div class="input-element">
@@ -14,3 +15,4 @@
     <button {{action 'destroyArea' area}} class="delete"><span class="material-icons">delete</span>Löschen</button>
   </div>
 </div>
+{{/if}}
