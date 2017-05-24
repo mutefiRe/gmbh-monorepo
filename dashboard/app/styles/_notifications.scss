@@ -1,0 +1,65 @@
+._c-notification_1k7w9i {
+  border-radius: 0;
+}
+
+._c-notification__content_1k7w9i {
+  align-items: center;
+}
+
+
+/* close */
+
+._c-notification__close_1k7w9i {
+  align-self: center;
+}
+
+.fa-remove:before,
+.fa-close:before,
+.fa-times:before {
+  @extend .material-icons;
+  content: 'close';
+}
+
+
+/* check */
+
+._c-notification__icon_1k7w9i {
+  padding: .5rem;
+  background: none;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fa-check:before {
+  @extend .material-icons;
+  content: 'done';
+}
+
+
+/* error */
+
+.fa-exclamation-circle:before {
+  @extend .material-icons;
+  content: 'error';
+  font-size: 30px !important;
+}
+
+._c-notification--error_1k7w9i {
+  background-color: #c9313a;
+}
+
+
+/*success message*/
+
+._c-notification--success_1k7w9i {
+  background-color: #8dc63f;
+}
+
+
+/*duration bar*/
+
+._c-notification__countdown_1k7w9i {
+  display: none;
+}
