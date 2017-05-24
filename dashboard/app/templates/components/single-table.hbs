@@ -13,8 +13,11 @@
         <div class="select-wrapper">
           <select name="area" onchange={{action "changeRelation" table}}>
             {{#each areas as |area|}}
-              <option selected={{eq area.id table.area.id}} value="{{area.id}}">{{area.name}}</option>
+              {{#if (eq area.id table.area.id)}}
+               <option value="{{area.id}}" selected>{{area.name}}</option>
               {{else}}
+                <option value="{{area.id}}" >{{area.name}}</option>
+              {{/if}}
             {{/each}}
           </select>
       </div>
