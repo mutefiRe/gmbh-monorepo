@@ -2,13 +2,15 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   notifications: Ember.inject.service('notification-messages'),
-  editable:      Ember.inject.service(),
-  store:         Ember.inject.service(),
-  i18n:          Ember.inject.service(),
-  tagName:       'li',
+  editable: Ember.inject.service(),
+  store: Ember.inject.service(),
+  i18n: Ember.inject.service(),
+  classNameBindings: ['isOpen:open'],
+  isOpen: false,
+  tagName: 'li',
   actions: {
     toggleEditable() {
-      this.get('editable').toggle({ component: this, record: this.get('product') });
+      this.toggleProperty('isOpen');
     },
     changeRelation(product, event) {
       const category = this.get('store').peekRecord('category', event.target.value);
