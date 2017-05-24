@@ -10,7 +10,7 @@
         <h2>{{userGroup.letter}}</h2>
         <ul class="userlist editable">
           {{#each userGroup.users as |user|}}
-            {{single-user user=user}}
+            {{single-user user=user currentSelectedUser=currentSelectedUser}}
           {{/each}}
         </ul>
       </div>
@@ -18,4 +18,4 @@
   </div>
 </main>
 
-{{main-controlbar}}
+{{main-controlbar currentSelectedRecord=currentSelectedUser}}

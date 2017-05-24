@@ -1,6 +1,9 @@
 export default {
   'headlines': {
+<<<<<<< 1591ac7891ef0939761e212dde72f068c5824e57
     'index': 'g.m.b.h',
+=======
+>>>>>>> feat: remove service from mobile controlbar in users
     'areas': 'Bereiche',
     'categories': 'Kategorien',
     'events': 'Veranstaltungen',
@@ -107,12 +110,15 @@ export default {
       'destroy': {
         'success': 'Der Bereich wurde gelöscht.',
         'error': 'Der Bereich konnte nicht gelöscht werden.'
+<<<<<<< 1591ac7891ef0939761e212dde72f068c5824e57
+=======
       }
     },
     'record': {
       'save': {
         'success': 'Speichern erfolgreich.',
         'error': 'Beim speichern ist ein Fehler aufgetreten.'
+>>>>>>> feat: remove service from mobile controlbar in users
       }
     }
   }

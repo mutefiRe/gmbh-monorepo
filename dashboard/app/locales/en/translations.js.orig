@@ -96,12 +96,15 @@ export default {
       'destroy': {
         'success': 'The area has been deleted.',
         'error': 'The area could not be deleted.'
+<<<<<<< 1591ac7891ef0939761e212dde72f068c5824e57
+=======
       }
     },
     'record': {
       'save': {
         'success': 'Saving successfull.',
         'error': 'An error occured while saving.'
+>>>>>>> feat: remove service from mobile controlbar in users
       }
     }
   }
