@@ -1,0 +1,11 @@
+<main>
+  <div class="content">
+    <ul class="editable unit-list">
+      {{#each model as |unit|}}
+        {{single-unit unit=unit}}
+      {{/each}}
+    </ul>
+  </div>
+</main>
+
+{{main-controlbar}}

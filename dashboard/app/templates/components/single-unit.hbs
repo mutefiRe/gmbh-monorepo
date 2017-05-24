@@ -1,0 +1,16 @@
+<div class="singleunitbar" {{action "toggleEditable"}}>
+  <div class="singleunitname">{{unit.name}}</div>
+  <div class="singleeditindicator material-icons"></div>
+</div>
+<div class="editsingleunit editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="unit">Unitname</label>
+      {{input type="text" value=unit.name name="unitname"}}
+    </div>
+  </div>
+  <div class="input-row align-right">
+    <button {{action "updateUnit" unit}} class="save" type="button">Speichern</button>
+    <button class="delete"><span class="material-icons">delete</span>Löschen</button>
+  </div>
+</div>

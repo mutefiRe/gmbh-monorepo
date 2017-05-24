@@ -2310,7 +2310,11 @@ ember-cli-babel@^5.0.0, ember-cli-babel@^5.1.10, ember-cli-babel@^5.1.3, ember-c
     ember-cli-version-checker "^1.0.2"
     resolve "^1.1.2"
 
+<<<<<<< 558e5b37bf8c4497c63921d7e32463c4daecb52d
 ember-cli-babel@^6.0.0, ember-cli-babel@^6.1.0:
+=======
+ember-cli-babel@^6.1.0:
+>>>>>>> feat: add unit page
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-6.1.0.tgz#d9c83a7d0c67cc8a3ccb9bd082971c3593e54fad"
   dependencies:

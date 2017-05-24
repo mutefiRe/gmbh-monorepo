@@ -10,7 +10,8 @@ export default {
     'tables':         'Tische',
     'users':          'User',
     'statistics':     'Statistik',
-    'changePassword': 'Passwort ändern'
+    'changePassword': 'Passwort ändern',
+    'units':          'Einheiten'
   },
   'buttons': {
     'save': 'Speichern',
