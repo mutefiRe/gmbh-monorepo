@@ -21,6 +21,21 @@ export default Ember.Service.extend({
       $('body').addClass('noscroll');
     }
   },
+  addNewRecord({ container }) {
+    console.log(container);
+    if (container.find('li').hasClass('open')) {
+      container.find('.editarea').stop().slideUp(() => {
+        container.find('li').removeClass('open');
+      });
+      container.find('.singleeditindicator').html('mode_edit');
+      $('body').removeClass('noscroll');
+    } else {
+      container.find('li').addClass('open');
+      container.find('.editarea').stop().slideDown();
+      container.find('.singleeditindicator').html('keyboard_arrow_down');
+      $('body').addClass('noscroll');
+    }
+  },
   saveRecord() {
     this.get('currentRecord').save().then(() => {
       this.toggle({ component: this.get('currentComponent') });

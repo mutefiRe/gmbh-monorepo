@@ -4,6 +4,51 @@
     <p>Berechtigung</p>
     <p>Passwort</p>
   </div>
+  {{#if currentUser}}
+<div class="content createNew" style="margin-bottom: 30px;">
+     <div class="entriesbyletter">
+        <ul class="userlist">
+          <li>
+            <div class="editsingleuser editarea">
+              <div class="input-row">
+                <div class="input-element">
+                  <label for="username">Username</label>
+                  {{input type="text" value=currentUser.username name="username"}}
+                </div>
+                <div class="input-element">
+                  <label for="firstname">Vorname</label>
+                  {{input type="text" value=currentUser.firstname name="firstname"}}
+                </div>
+                <div class="input-element">
+                  <label for="lastame">Nachname</label>
+                  {{input type="text" value=currentUser.lastname name="lastname"}}
+                </div>
+                <div class="input-element">
+                  <label for="authentication">Berechtigung</label>
+                  <div class="select-wrapper">
+                    <select onchange={{action (mut currentUser.permission) value="target.value"}}>
+                      <option selected={{eq currentUser.permission "Waiter"}}>Waiter</option>
+                      <option selected={{eq currentUser.permission "Admin"}}>Admin</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="input-row">
+                <div class="input-element">
+                  <label for="passord">Password</label>
+                  {{input type="password" value=currentUser.password name="password"}}
+                </div>
+                </div>
+
+              <div class="input-row align-right">
+                <button {{action "saveCurrentUser"}} class="save" type="button">Speichern</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+     </div>
+  </div>
+{{/if}}
   <div class="content">
     {{#each alphabeticUserGroup as |userGroup|}}
       <div class="entriesbyletter">
@@ -18,4 +63,4 @@
   </div>
 </main>
 
-{{main-controlbar type='user'}}
+{{main-controlbar type='user' setRecord=(action 'createUser')}}

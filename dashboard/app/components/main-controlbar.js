@@ -7,9 +7,7 @@ export default Ember.Component.extend({
   classNames: ['addentrybar'],
   actions: {
     createRecord() {
-      const type = this.get('type');
-      console.log('create ' + type);
-      this.get('store').createRecord(type);
+      this.get('setRecord')();
     },
     saveRecord() {
       this.get('editable').saveRecord();
