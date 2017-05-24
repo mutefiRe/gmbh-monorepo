@@ -7,9 +7,22 @@ export default Ember.Component.extend({
   classNameBindings: ['isOpen:open'],
   isOpen: false,
   tagName: 'li',
+  init() {
+    this._super();
+    const category = this.get('store').peekRecord('category', this.get('product.category.id'));
+    this.get('product').set('category', category);
+  },
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
+      if (this.get('isOpen')) {
+        Ember.$('body').addClass('noscroll');
+        this.set('currentSelectedProduct', { component: this, record: this.get('product') });
+        console.log(this.get('currentSelectedProduct'));
+      } else {
+        Ember.$('body').removeClass('noscroll');
+        this.set('currentSelectedProduct', null);
+      }
     },
     changeRelation(product, event) {
       const category = this.get('store').peekRecord('category', event.target.value);
@@ -18,20 +31,15 @@ export default Ember.Component.extend({
     updateProduct(product) {
       product.save().then(() => {
         this.send('toggleEditable');
-
-        // notify user (success)
         this.get('notifications').success(this.get('i18n').t('notifications.product.update.success'));
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.product.update.error'));
       });
     },
     destroyProduct(product) {
       product.destroyRecord().then(() => {
-        // notify user (warning)
         this.get('notifications').warning(this.get('i18n').t('notifications.product.destroy.success'));
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.product.destroy.error'));
       });
     }
