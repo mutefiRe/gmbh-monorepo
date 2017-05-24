@@ -1,8 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  editable: Ember.inject.service(),
-  tagName: 'li',
+  notifications: Ember.inject.service('notification-messages'),
+  editable:      Ember.inject.service(),
+  i18n:          Ember.inject.service(),
+  tagName:       'li',
   actions: {
     toggleEditable() {
       this.get('editable').toggle({ component: this, record: this.get('printer') });
@@ -10,8 +12,12 @@ export default Ember.Component.extend({
     updatePrinter(printer) {
       printer.save().then(() => {
         this.send('toggleEditable');
+
+         // notify user (success)
+        this.get('notifications').success(this.get('i18n').t('notifications.printer.update.success'));
       }).catch(() => {
-        console.log('Error');
+        // notify user (failure)
+        this.get('notifications').error(this.get('i18n').t('notifications.printer.update.error'));
       });
     }
   }

@@ -13,7 +13,7 @@ function getIcons() {
 }
 
 function getColors() {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     Ember.$.getJSON('/assets/colors.json', function(data) {
       resolve(data.colors);
     });
@@ -23,7 +23,7 @@ function getColors() {
 export default Ember.Controller.extend({
   init() {
     getColors()
-      .then((colors) => {
+      .then(colors => {
         this.set('colors', colors);
       });
   },
