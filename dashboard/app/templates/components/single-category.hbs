@@ -3,6 +3,7 @@
   <p>{{category.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
+{{#if isOpen}}
 <div class="editsinglecategory editarea">
   <div class="input-row">
     <div class="input-element">
@@ -43,3 +44,4 @@
     <button class="delete" {{action "destroyCategory" category}}><span class="material-icons">delete</span>Löschen</button>
   </div>
 </div>
+{{/if}}
