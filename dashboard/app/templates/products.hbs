@@ -2,10 +2,10 @@
   <div class="content">
     <ul class="editable product-list">
       {{#each model.products as |product|}}
-        {{single-product product=product categories=model.categories}}
+        {{single-product product=product currentSelectedProduct=currentSelectedProduct categories=model.categories}}
       {{/each}}
     </ul>
   </div>
 </main>
 
-{{main-controlbar}}
+{{main-controlbar currentSelectedRecord=currentSelectedProduct}}
