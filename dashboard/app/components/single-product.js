@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   notifications: Ember.inject.service('notification-messages'),
-  editable: Ember.inject.service(),
   store: Ember.inject.service(),
   i18n: Ember.inject.service(),
   classNameBindings: ['isOpen:open'],

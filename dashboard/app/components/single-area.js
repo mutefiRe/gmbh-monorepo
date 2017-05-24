@@ -2,12 +2,13 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   notifications: Ember.inject.service('notification-messages'),
-  editable:      Ember.inject.service(),
-  i18n:          Ember.inject.service(),
-  tagName:       'li',
+  i18n: Ember.inject.service(),
+  tagName: 'li',
+  classNameBindings: ['isOpen:open'],
+  isOpen: false,
   actions: {
     toggleEditable() {
-      this.get('editable').toggle({ component: this, record: this.get('area') });
+      this.toggleProperty('isOpen');
     },
     updateArea(area) {
       area.save().then(() => {

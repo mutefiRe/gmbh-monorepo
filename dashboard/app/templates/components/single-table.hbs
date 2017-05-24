@@ -1,6 +1,7 @@
 <div class="single-table" {{action 'toggleEditable'}}>
   <p>{{table.name}}</p>
 </div>
+{{#if isOpen}}
 <div class="editarea">
   <div class="input-row">
     <div class="input-element">
@@ -24,3 +25,4 @@
       <button {{action 'destroyTable' table}} class="delete"><span class="material-icons">delete</span>Löschen</button>
     </div>
 </div>
+{{/if}}
