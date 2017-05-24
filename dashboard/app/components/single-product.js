@@ -18,7 +18,6 @@ export default Ember.Component.extend({
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
         this.set('currentSelectedProduct', { component: this, record: this.get('product') });
-        console.log(this.get('currentSelectedProduct'));
       } else {
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedProduct', null);
