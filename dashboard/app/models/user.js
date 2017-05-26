@@ -5,7 +5,7 @@ export default DS.Model.extend({
   firstname: DS.attr('string'),
   lastname: DS.attr('string'),
   password: DS.attr('string'),
-  permission: DS.attr('permissions'),
+  permission: DS.attr('permissions', {defaultValue: 0}),
   areas: DS.hasMany('area'),
   printer: DS.belongsTo('printer'),
   createdAt: DS.attr('date')

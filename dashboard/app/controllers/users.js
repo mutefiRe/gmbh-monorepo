@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   editable: Ember.inject.service(),
-  currentUser: null,
+  newUser: null,
   alphabeticUserGroup: Ember.computed('model.@each.{username,id}', function() {
     const users = this.get('model').filter(user => user.get('username'));
     const startingLetters = new Set();
@@ -16,11 +16,13 @@ export default Ember.Controller.extend({
   }),
   actions: {
     createUser() {
-      this.set('currentUser', this.get('store').createRecord('user'));
+      Ember.$('body').addClass('noscroll');
+      this.set('newUser', this.get('store').createRecord('user'));
     },
-    saveCurrentUser() {
-      this.get('currentUser').save().then(() => {
-        this.set('currentUser', null);
+    saveNewUser() {
+      this.get('newUser').save().then(() => {
+        this.set('newUser', null);
+        Ember.$('body').removeClass('noscroll');
       });
     }
   }
