@@ -17,7 +17,7 @@ export default Ember.Component.extend({
     return area.get('user.id') !== this.get('currentUser').id && area.get('enabled');
   }).property('areas'),
   unassignedTables: Ember.computed.filter('tables', function(table){
-    return table.get('custom') === false && !table.get('area.id') && area.get('enabled');
+    return table.get('custom') === false && !table.get('area.id');
   }).property('tables'),
   customTables: Ember.computed.filter('tables', function(table){
     return !table.get('custom') ? false : table.get('orderitems').every(filterCustomTable);
