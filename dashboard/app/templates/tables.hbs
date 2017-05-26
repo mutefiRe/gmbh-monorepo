@@ -14,7 +14,7 @@
           <div class="tablearea">
             <ul class="table-list editable">
               {{#each area.tables as |table|}}
-                {{single-table table=table areas=model.areas}}
+                {{single-table table=table currentSelectedTable=currentSelectedTable areas=model.areas}}
               {{/each}}
             </ul>
           </div>
@@ -24,4 +24,4 @@
   </div>
 </main>
 
-{{main-controlbar type="table"}}
+{{main-controlbar record=currentSelectedTable.record toggleable=currentSelectedTable.toggleable}}

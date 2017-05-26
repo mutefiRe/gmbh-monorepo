@@ -11,24 +11,26 @@ export default Ember.Component.extend(Ember.Evented, {
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
+      if (this.get('isOpen')) {
+        Ember.$('body').addClass('noscroll');
+        this.set('currentSelectedCategory', { toggleable: this.get('isOpen'), record: this.get('category') });
+      } else {
+        Ember.$('body').removeClass('noscroll');
+        this.set('currentSelectedCategory', null);
+      }
     },
     updateCategory(category) {
       category.save().then(() => {
         this.send('toggleEditable');
-
-        // notify user (success)
         this.get('notifications').success(this.get('i18n').t('notifications.category.update.success'));
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.category.update.error'));
       });
     },
     destroyCategory(category) {
       category.destroyRecord().then(() => {
-        // notify user (warning)
         this.get('notifications').warning(this.get('i18n').t('notifications.category.destroy.success'));
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.category.destroy.error'));
       });
     }
