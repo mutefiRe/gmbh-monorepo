@@ -38,6 +38,35 @@ router.get('/', function (req, res) {
 });
 
 /**
+ * @api {get} api/printers/:id Request Setting
+ * @apiGroup Printer
+ * @apiName GetPrinter
+ * @apiParam {Number} id printers unique ID.
+
+  *@apiUse token
+
+ * @apiSuccess {Object} printers Printer
+ * @apiUse printersItem
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
+router.get('/:id', function(req, res){
+  db.Printer.find({where: {id: req.params.id}}).then(printer => {
+    if(printer === null){
+      res.status(404).send({
+        'errors': {
+          'msg': "couldn't find any printer"
+        }
+      });
+      return;
+    }
+    res.send({printer});
+  });
+});
+
+/**
  * @api {get} api/printers/update Request Printers
  * @apiGroup Printer
  * @apiName UpdatePrinters

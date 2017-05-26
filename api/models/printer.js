@@ -8,6 +8,7 @@ module.exports = function (sequelize, DataTypes) {
       associate(models) {
         Printer.hasMany(models.User,      {target: "printer"});
         Printer.hasMany(models.Category,  {target: "printer"});
+        Printer.hasMany(models.Setting,   {target: "printer"});
       }
     }
   })
