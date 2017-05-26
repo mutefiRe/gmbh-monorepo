@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button {{action 'toggleButton' category "enabled" category.enabled}} class="{{if category.enabled 'toggle' 'gray'}}" type="button">{{if category.enabled 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "enabled"}} class="{{if category.enabled 'toggle' 'gray'}}" type="button">{{if category.enabled 'aktiviert' 'deaktiviert'}}</button>
     <button class="save" {{action "updateCategory" category}}>Speichern</button>
     <button class="delete" {{action "destroyCategory" category}}><span class="material-icons">delete</span>Löschen</button>
   </div>
