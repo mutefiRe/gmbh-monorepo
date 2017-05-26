@@ -19,11 +19,16 @@ export default Ember.Component.extend({
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         $('body').addClass('noscroll');
-        this.set('currentSelectedUser', { toggleable: this.get('isOpen'), record: this.get('user') });
+        this.set('currentSelectedUser', {
+          component: this,
+          record: this.get('user'),
+          type: 'component'
+        });
       } else {
         $('body').removeClass('noscroll');
         this.set('currentSelectedUser', null);
       }
     }
+
   }
 });

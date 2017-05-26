@@ -13,7 +13,11 @@ export default Ember.Component.extend(Ember.Evented, {
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedCategory', { toggleable: this.get('isOpen'), record: this.get('category') });
+        this.set('currentSelectedCategory', {
+          component: this,
+          record: this.get('category'),
+          type: 'component'
+        });
       } else {
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedCategory', null);
