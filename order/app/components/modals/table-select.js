@@ -34,7 +34,7 @@ export default Ember.Component.extend({
       const table = this.get('store').createRecord('table', { name: this.get('name'), custom: true });
       this.get('connection.status') ? this.saveTableAPI(table) : this.saveTableOffline(table);
       this.set('name', "");
-      this.set('tab', 'tables');
+      this.set('activeTab', 'tables');
     }
   },
   saveTableAPI(table){

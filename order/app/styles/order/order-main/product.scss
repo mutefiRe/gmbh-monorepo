@@ -41,10 +41,5 @@
                 font-size: 12px;
             }
         }
-        /*   &:hover, &:active {
-    box-shadow: none;
-    background-color:lighten($grey-light, 5%);
-  } */
-        @include styles();
     }
 }

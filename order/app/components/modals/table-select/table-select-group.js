@@ -25,7 +25,7 @@ function naturalStringCompare(a, b){
     return - 1;
   }
 
-  // Go through Prases: e.g. Terasse20 => Phrase 1: Terasse, Phrase 2: 20
+  // Go through Phrases: e.g. Terasse20 => Phrase 1: Terasse, Phrase 2: 20
   for (let i = 0; i < aPhrases.length && i < bPhrases.length; i++)
   {
     if (aPhrases[i] === bPhrases[i]) continue;

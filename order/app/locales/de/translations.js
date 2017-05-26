@@ -91,6 +91,9 @@ export default {
     "register": "Kassenbonierung",
     "salesCheck": "Kassenbon"
   },
+  "table":{
+    "newGuest": "Neuen Gast anlegen"
+  },
   "user not found": "Angemeldeter Benutzer existiert nichtmehr.",
   "The adapter operation was aborted": "Der Server ist nicht erreichbar.",
   "copyright": "© 2016 moßß OG - made with 🍺"

@@ -52,40 +52,6 @@
   }
 }
 
-@mixin styles(){
-  &.style-1{
-    @include button($dark, #245C67, $white);
-
-    &:hover, &:active {
-      @include button-hover(#245C67);
-    }
-  }
-
-  &.style-2{
-    @include button($dark, #689732, $white);
-
-    &:hover, &:active {
-      @include button-hover(#689732);
-    }
-  }
-
-  &.style-3{
-    @include button($dark, #A75938, $white);
-
-    &:hover, &:active {
-      @include button-hover(#A75938);
-    }
-  }
-
-  &.style-0{
-    @include button($dark, #D74F15, $white);
-
-    &:hover, &:active {
-      @include button-hover(#D74F15);
-    }
-  }
-}
-
 @mixin flexbox(){
   display: flex;
   justify-content: space-between;
@@ -98,25 +64,6 @@
   justify-content: space-around;
   flex-direction: row;
   flex-wrap: nowrap;
-}
-
-
-@mixin stylespreview(){
-  &.style-1{
-    @include button($noshadow, #245C67, $white);
-  }
-
-  &.style-2{
-    @include button($noshadow, #689732, $white);
-  }
-
-  &.style-3{
-    @include button($noshadow, #A75938, $white);
-  }
-
-  &.style-0{
-    @include button($noshadow, #D74F15, $white);
-  }
 }
 
 // DISPLAY HELPER

@@ -84,6 +84,9 @@ export default {
     "register": "register payment",
     "salesCheck": "sales check"
   },
+  "table":{
+    "newGuest": "create new guest"
+  },
   "Authentication failed. Wrong Username": "Authentication failed. Wrong Username!",
   "The adapter operation was aborted": "Server not reachable",
   "copyright": "© 2016 moßß OG - made with 🍺"
