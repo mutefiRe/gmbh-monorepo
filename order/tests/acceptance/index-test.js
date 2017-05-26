@@ -5,12 +5,14 @@ import startApp   from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 
 describe('Acceptance | index screen', function() {
+  this.timeout(5000);
   let application;
 
   beforeEach(function() {
     application = startApp();
 
-    const category = server.create('category');
+    const printer  = server.create('printer');
+    const category = server.create('category', {printer});
     const unit     = server.create('unit');
     server.create('item', {category, unit});
     server.createList('item', 10, {category, unit});
@@ -19,7 +21,7 @@ describe('Acceptance | index screen', function() {
     server.create('area');
     server.create('setting');
     server.create('table');
-    server.create('printer');
+
   });
 
   afterEach(function() {
