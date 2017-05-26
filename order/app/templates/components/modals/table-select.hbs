@@ -11,13 +11,17 @@
 <div class="table-mask">
 {{#if (eq activeTab 'tables')}}
   {{#each userAreas as |area|}}
-    <h3>{{area.name}}</h3>
-    {{modals/table-select/table-select-group tables=area.tables setTable=(action "setTable")}}
+    {{#if area.enabled}}
+      <h3>{{area.name}}</h3>
+      {{modals/table-select/table-select-group tables=area.tables setTable=(action "setTable")}}
+    {{/if}}
   {{/each}}
 
   {{#each otherAreas as |area|}}
-    <h3>{{area.name}}</h3>
-    {{modals/table-select/table-select-group tables=area.tables setTable=(action "setTable")}}
+    {{#if area.enabled}}
+      <h3>{{area.name}}</h3>
+      {{modals/table-select/table-select-group tables=area.tables setTable=(action "setTable")}}
+    {{/if}}
   {{/each}}
 
   {{#if unassignedTables}}
