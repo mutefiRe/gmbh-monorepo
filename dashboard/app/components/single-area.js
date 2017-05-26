@@ -1,25 +1,36 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  editable: Ember.inject.service(),
-  enable: Ember.inject.service(),
-  tagName: 'li',
+  notifications: Ember.inject.service('notification-messages'),
+  editable:      Ember.inject.service(),
+  i18n:          Ember.inject.service(),
+  tagName:       'li',
   actions: {
     toggleEditable() {
       this.get('editable').toggle({ component: this, record: this.get('area') });
     },
-    toggleButton(product, prop, value) {
-      this.get('enable').toggleBtn(product, prop, value);
+    toggleButton(prop) {
+      this.get('area').toggleProperty(prop);
     },
     updateArea(area) {
       area.save().then(() => {
         this.send('toggleEditable');
+
+        // notify user (success)
+        this.get('notifications').success(this.get('i18n').t('notifications.area.update.success'));
       }).catch(() => {
-        console.log('Error');
+        // notify user (failure)
+        this.get('notifications').error(this.get('i18n').t('notifications.area.update.error'));
       });
     },
     destroyArea(area) {
-      area.destroyRecord();
+      area.destroyRecord().then(() => {
+        // notify user (warning)
+        this.get('notifications').warning(this.get('i18n').t('notifications.area.destroy.success'));
+      }).catch(() => {
+        // notify user (failure)
+        this.get('notifications').error(this.get('i18n').t('notifications.area.destroy.error'));
+      });
     }
   }
 });

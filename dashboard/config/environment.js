@@ -21,6 +21,10 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+    },
+    pace: {
+      theme: 'minimal',
+      color: 'blue'
     }
   };
 
@@ -31,9 +35,10 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
-   ENV['ember-cli-mirage'] = {
+
+  ENV['ember-cli-mirage'] = {
     enabled: false
-  }
+  };
 
   if (environment === 'test') {
     // Testem prefers this...
@@ -65,5 +70,10 @@ module.exports = function(environment) {
   ENV.i18n = {
     defaultLocale: 'de'
   };
+
+  ENV['ember-cli-notifications'] = {
+    includeFontAwesome: true
+  };
+
   return ENV;
 };

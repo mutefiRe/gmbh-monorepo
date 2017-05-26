@@ -1,14 +1,20 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  editable: Ember.inject.service(),
-  tagName: 'li',
+  notifications: Ember.inject.service('notification-messages'),
+  editable:      Ember.inject.service(),
+  i18n:          Ember.inject.service(),
+  tagName:       'li',
   actions: {
     updateUser(user) {
       user.save().then(() => {
         this.send('toggleEditable');
+
+        // notify user (success)
+        this.get('notifications').success(this.get('i18n').t('notifications.user.update.success'));
       }).catch(() => {
-        console.log('Error');
+        // notify user (failure)
+        this.get('notifications').error(this.get('i18n').t('notifications.user.update.error'));
       });
     },
     toggleEditable() {
