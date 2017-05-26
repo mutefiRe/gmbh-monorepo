@@ -58,6 +58,20 @@
 }
 
 
+/* warning */
+
+._c-notification--warning_1k7w9i {
+  background-color: $scaryred;
+}
+
+.fa-warning:before,
+.fa-exclamation-triangle:before {
+  @extend .material-icons;
+  content: 'warning';
+  font-size: 30px !important;
+}
+
+
 /*duration bar*/
 
 ._c-notification__countdown_1k7w9i {
