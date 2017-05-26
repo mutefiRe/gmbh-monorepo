@@ -9,6 +9,13 @@ export default Ember.Component.extend({
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
+      if (this.get('isOpen')) {
+        Ember.$('body').addClass('noscroll');
+        this.set('currentSelectedArea', { toggleable: this.get('isOpen'), record: this.get('area') });
+      } else {
+        Ember.$('body').removeClass('noscroll');
+        this.set('currentSelectedArea', null);
+      }
     },
     updateArea(area) {
       area.save().then(() => {
