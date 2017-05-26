@@ -31,14 +31,14 @@ export default Ember.Route.extend({
       query: `token=${token}`
     });
 
-    socket.on('update', function (payload) {
-      setTimeout(function () {
+    socket.on('update', function(payload) {
+      setTimeout(function() {
         store.pushPayload(payload);
-      },500);
+      }, 500);
     });
 
-    socket.on('delete', function (payload) {
-      setTimeout(function () {
+    socket.on('delete', function(payload) {
+      setTimeout(function() {
         const record = store.peekRecord(payload.type, payload.id);
         if (record) record.unloadRecord();
       }, 500);
@@ -53,5 +53,3 @@ export default Ember.Route.extend({
     return socket;
   }
 });
-
-
