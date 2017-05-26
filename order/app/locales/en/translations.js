@@ -30,6 +30,37 @@ export default {
     "enterUsername": "enter username",
     "enterPassword": "enter password"
   },
+  "notification": {
+    "order": {
+      "success": "Successfully sent order!",
+      "error": "Error. Sending order didn't work!",
+      "offline": "Order will be send as soon as connection is restored!",
+      "discard": "Order has been discarded."
+    },
+    "payment": {
+      "success": "Successfully send payment!",
+      "error": "Error. Sending payment didn't work!",
+      "offline": "Payment will be send as soon as connection is restored!"
+    },
+    "table": {
+      "success": "Successfully created table!",
+      "error": "Error. Creating table didn't work!",
+      "offline": "Table will be created as soon as connection is restored!"
+    },
+    "sync": {
+      "success": "Orders successfully synchronized!",
+      "error": "Error at synchronizing orders!"
+    },
+    "login": {
+      "success": "Successfully logged in!",
+      "error": "Sorry, logging in went wrong!"
+    },
+    "logout": {
+      "success": "Successfuly logged out!",
+      "error": "Sorry, logging out went wrong!"
+    },
+    "error": "Sorry, an error appeared!"
+  },
   "order": {
     "order": {
       'one': "order",

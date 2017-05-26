@@ -4,7 +4,6 @@
     <div class="login-form">
       {{#link-to 'index'}}<button autofocus>{{t 'button.reload'}}</button>{{/link-to}}
       <button autofocus {{action 'logout'}}>{{t 'button.logout'}}</button>
-      {{log model}}
       {{#if model.message}}
         <div class="error">
           {{if model.errors.msg (t model.errors.msg) (t 'notification.error')}}

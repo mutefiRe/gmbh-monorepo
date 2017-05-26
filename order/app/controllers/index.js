@@ -108,7 +108,6 @@ export default Ember.Controller.extend({
     if (!this.get('isSyncing') && this.syncNeeded()) {
       this.set('isSyncing', true);
       Promise.all(this.get('tableStorage').recordsPromises()).then(() => {
-        this.get('tableStorage').clear();
         return Promise.all(this.get('orderStorage').recordsPromises());
       }).then(() => {
         return Promise.all(this.get('payStorage').recordsPromises());
