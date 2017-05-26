@@ -11,7 +11,11 @@ export default Ember.Component.extend({
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedArea', { toggleable: this.get('isOpen'), record: this.get('area') });
+        this.set('currentSelectedArea', {
+          component: this,
+          record: this.get('area'),
+          type: 'component'
+        });
       } else {
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedArea', null);

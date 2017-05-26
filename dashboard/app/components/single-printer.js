@@ -11,7 +11,11 @@ export default Ember.Component.extend({
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedPrinter', { toggleable: this.get('isOpen'), record: this.get('printer') });
+        this.set('currentSelectedPrinter', {
+          component: this,
+          record: this.get('printer'),
+          type: 'component'
+        });
       } else {
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedPrinter', null);

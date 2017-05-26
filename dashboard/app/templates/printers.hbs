@@ -2,10 +2,10 @@
   <div class="content">
     <ul class="editable printer-list">
       {{#each model as |printer|}}
-        {{single-printer printer=printer}}
+        {{single-printer printer=printer currentSelectedPrinter=currentSelectedPrinter}}
       {{/each}}
     </ul>
   </div>
 </main>
 
-{{main-controlbar record=currentSelectedPrinter.record toggleable=currentSelectedPrinter.toggleable}}
+{{main-controlbar currentSelectedRecord=currentSelectedPrinter}}

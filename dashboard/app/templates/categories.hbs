@@ -2,10 +2,10 @@
   <div class="content">
     <ul class="editable category-list">
       {{#each model as |category|}}
-        {{single-category category=category printers=printers icons=icons colors=colors}}
+        {{single-category currentSelectedCategory=currentSelectedCategory category=category printers=printers icons=icons colors=colors}}
       {{/each}}
     </ul>
   </div>
 </main>
 
-{{main-controlbar record=currentSelectedCategory.record toggleable=currentSelectedCategory.toggleable}}
+{{main-controlbar currentSelectedRecord=currentSelectedCategory}}
