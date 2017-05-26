@@ -7,11 +7,6 @@ export default Ember.Component.extend({
   classNameBindings: ['isOpen:open'],
   isOpen: false,
   tagName: 'li',
-  init() {
-    this._super();
-    const category = this.get('store').peekRecord('category', this.get('product.category.id'));
-    this.get('product').set('category', category);
-  },
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
