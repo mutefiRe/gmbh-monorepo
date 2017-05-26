@@ -7,9 +7,8 @@ export default Ember.Component.extend({
   classNames: ['addentrybar'],
   actions: {
     saveRecord() {
-      const currentRecord = this.get('currentSelectedRecord');
-      currentRecord.record.save().then(() => {
-        currentRecord.component.set('isOpen', false);
+      this.get('record').save().then(() => {
+        this.set('toggleable', false);
         this.get('notifications').success(this.get('i18n').t('notifications.record.save.success'));
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.record.save.error'));
