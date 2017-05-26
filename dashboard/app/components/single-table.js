@@ -18,7 +18,7 @@ export default Ember.Component.extend({
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedTable', { component: this, record: this.get('table') });
+        this.set('currentSelectedTable', { toggleable: this.get('isOpen'), record: this.get('table') });
       } else {
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedTable', null);
