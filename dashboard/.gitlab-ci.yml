@@ -19,6 +19,7 @@ tests:
   - yarn
   - bower install --allow-root
   script:
+  - npm rebuild node_sass
   - yarn test
 
 heroku:
