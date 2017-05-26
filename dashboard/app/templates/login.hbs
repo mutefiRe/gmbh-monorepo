@@ -3,10 +3,10 @@
   <div class="login-form">
     <form {{action 'authenticate' on='submit'}}>
       <label for="identification">Benutzername</label>
-      {{input id='identification' placeholder='Benutzername eingeben' value=identification}}
+      {{input id='identification' value=identification}}
       <label for="password">Passwort</label>
-      {{input id='password' placeholder='Passwort eingeben' type='password' value=password}}
-      <button type="submit">anmelden</button>
+      {{input id='password' type='password' value=password}}
+      <button type="submit">Anmelden</button>
     </form>
     {{#if errorMessage}}
       <div>
@@ -14,6 +14,6 @@
       </div>
     {{/if}}
   </div>
-  <p>© 2016 moßß OG - made with 🍺</p>
+  <p>© 2017 moßß OG - made with 🍺</p>
 </div>
 {{outlet}}
