@@ -10,6 +10,9 @@ export default {
       "offline": "Bestellung wird abgeschickt, sobald Verbindung besteht.",
       "discard": "Bestellung wurde verworfen!"
     },
+    "orderitem": {
+      "amount": "Anzahl muss mindestens 1 sein!"
+    },
     "payment": {
       "success": "Zahlung erfolgreich abgeschickt.",
       "error": "Fehler beim Abschicken der Zahlung.",
