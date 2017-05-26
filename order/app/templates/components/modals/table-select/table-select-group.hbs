@@ -1,5 +1,3 @@
 {{#each sortedTables as |table|}}
-  {{#if table.enabled}}
-    {{modals/table-select/table-item table=table setTable=(action "setTable")}}
-  {{/if}}
+  {{modals/table-select/table-item table=table setTable=(action "setTable")}}
 {{/each}}
