@@ -13,14 +13,13 @@
           <select name="area" onchange={{action "changeRelation" table}}>
             {{#each areas as |area|}}
               <option selected={{eq area.id table.area.id}} value="{{area.id}}">{{area.name}}</option>
-              {{else}}
             {{/each}}
           </select>
       </div>
     </div>
   </div>
    <div class="input-row">
-      <button {{action 'toggleButton' table 'enabled' table.enabled}} class="{{if table.enabled 'toggle' 'gray'}}">{{if table.enabled 'aktiviert' 'deaktiviert'}}</button>
+      <button {{action 'toggleButton' 'enabled'}} class="{{if table.enabled 'toggle' 'gray'}}">{{if table.enabled 'aktiviert' 'deaktiviert'}}</button>
       <button {{action 'updateTable' table}} class="save">Speichern</button>
       <button {{action 'destroyTable' table}} class="delete"><span class="material-icons">delete</span>Löschen</button>
     </div>

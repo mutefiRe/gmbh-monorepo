@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button {{action 'toggleButton' product 'enabled' product.enabled}} class="{{if product.enabled 'toggle' 'gray'}}">{{if product.enabled 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' 'enabled'}} class="{{if product.enabled 'toggle' 'gray'}}">{{if product.enabled 'aktiviert' 'deaktiviert'}}</button>
     <button class="save" {{action "updateProduct" product}}>Speichern</button>
     <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>Löschen</button>
   </div>

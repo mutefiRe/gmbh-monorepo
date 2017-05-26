@@ -7,6 +7,7 @@ export default DS.Model.extend({
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
   area:      DS.belongsTo('area'),
+  enabled:   DS.attr('boolean', {defaultValue: true}),
   numericID: function () {
     const id = this.get('id');
 

@@ -1,7 +1,7 @@
 <main>
   <div class="content">
     <ul class="editable product-list">
-      {{#each model.products as |product|}}
+      {{#each sortedProducts as |product|}}
         {{single-product product=product categories=model.categories}}
       {{/each}}
     </ul>

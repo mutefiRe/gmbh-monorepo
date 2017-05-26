@@ -2,7 +2,7 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
   name:         DS.attr('string'),
-  enabled:      DS.attr('boolean'),
+  enabled:      DS.attr('boolean', {defaultValue: true}),
   description:  DS.attr('string'),
   createdAt:    DS.attr('date'),
   updatedAt:    DS.attr('date'),

@@ -10,8 +10,8 @@ export default Ember.Component.extend(Ember.Evented, {
     toggleEditable() {
       this.get('editable').toggle({ component: this, record: this.get('category') });
     },
-    toggleButton(category, prop, value) {
-      this.get('enable').toggleBtn(category, prop, value);
+    toggleButton(prop) {
+      this.get('category').toggleProperty(prop);
     },
     updateCategory(category) {
       category.save().then(() => {

@@ -12,8 +12,8 @@ export default Ember.Component.extend({
     toggleEditable() {
       this.get('editable').toggle({ component: this, record: this.get('product') });
     },
-    toggleButton(product, prop, value) {
-      this.get('enable').toggleBtn(product, prop, value);
+    toggleButton(prop) {
+      this.get('product').toggleProperty(prop);
     },
     changeRelation(product, event) {
       const category = this.get('store').peekRecord('category', event.target.value)
