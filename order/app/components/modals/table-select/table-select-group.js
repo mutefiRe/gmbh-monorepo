@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   tagName: '',
   enabledTables: Ember.computed.filter('tables', function(table){
     return table.get('enabled');
-  }),
+  }).property('tables.@each.enabled'),
   sortedTables: Ember.computed.sort('enabledTables', naturalStringCompare),
   actions: {
     setTable(table) {

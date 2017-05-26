@@ -5,7 +5,7 @@ export default DS.Model.extend({
   amount:   DS.attr('number'),
   price:    DS.attr('number'),
   tax:      DS.attr('number'),
-  sortId:   DS.attr('number'),
+  group:    DS.attr('number'),
   unit:     DS.belongsTo('unit'),
   category: DS.belongsTo('category'),
   enabled:  DS.attr('boolean')
