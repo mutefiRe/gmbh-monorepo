@@ -17,10 +17,10 @@ export default Ember.Controller.extend({
   tableStorage: storageFor('table'),
   enabledCategories: Ember.computed.filter('model.categories', function(category){
     return category.get('enabled');
-  }),
+  }).property('model.categories.@each.enabled'),
   enabledAreas: Ember.computed.filter('model.Areas', function(area){
     return area.get('enabled');
-  }),
+  }).property('model.Areas.@each.enabled'),
   init() {
     const id = this.get('payload').getId();
     this.store.find('user', id).then(user => {

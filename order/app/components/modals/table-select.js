@@ -12,13 +12,13 @@ export default Ember.Component.extend({
   activeTab: 'tables',
   userAreas: Ember.computed.filter('areas', function(area){
     return area.get('user.id') === this.get('currentUser').id && area.get('enabled');
-  }).property('areas'),
+  }).property('areas.@each.enabled'),
   otherAreas: Ember.computed.filter('areas', function(area){
     return area.get('user.id') !== this.get('currentUser').id && area.get('enabled');
-  }).property('areas'),
+  }).property('areas.@each.enabled'),
   unassignedTables: Ember.computed.filter('tables', function(table){
     return table.get('custom') === false && !table.get('area.id');
-  }).property('tables'),
+  }).property('tables.@each.enabled'),
   customTables: Ember.computed.filter('tables', function(table){
     return !table.get('custom') ? false : table.get('orderitems').every(filterCustomTable);
   }).property('tables.@each.custom', 'tables.@each.order'),

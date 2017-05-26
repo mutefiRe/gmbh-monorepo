@@ -16,7 +16,7 @@ export default DS.Model.extend({
   itemsSorting: ['group', 'name', 'price'],
   enabledItems: Ember.computed.filter('items', function(item){
     return item.get('enabled');
-  }),
+  }).property('items.@each.enabled'),
   sortedItems: Ember.computed.sort('enabledItems', 'itemsSorting'),
   textcolor: Ember.computed('color', function() {
     const color = this.get('color');
