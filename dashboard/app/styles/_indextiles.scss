@@ -1,0 +1,61 @@
+.index-main {
+  max-width: 1000px;
+  width: 100vw;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  font-size: 18px;
+  a {
+    background: $lightgray;
+    color: white;
+    padding: 30px 0;
+    margin: 0 5px 10px;
+    width: calc(50% - 10px);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @media #{$desktop} {
+      width: calc(33.33% - 10px);
+      padding: 40px 0;
+      &:first-child {
+        width: 100%;
+        padding: 70px 0;
+      }
+    }
+    .material-icons {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    &:first-child {
+      background: $simpleblue;
+    }
+    &:nth-child(2) {
+      background: $deepseablue;
+    }
+    &:nth-child(3) {
+      background: $darkerred;
+    }
+    &:nth-child(4) {
+      background: $gardengreen;
+    }
+    &:nth-child(5) {
+      background: $purplerain;
+    }
+    &:nth-child(6) {
+      background: $yellowfromtheegg;
+    }
+    &:nth-child(7) {
+      background: $donaublue;
+    }
+    &:nth-child(8) {
+      background: $logoturquoise;
+    }
+    &:nth-child(9) {
+      background: $toggleblue;
+    }
+  }
+}
