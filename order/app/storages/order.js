@@ -3,13 +3,21 @@ import Ember from 'ember';
 
 const Storage = StorageArray.extend({
   store: Ember.inject.service('store'),
+  delete(orderId){
+    const orders = this.getArray();
+    this.clear();
+    orders.forEach(order => {
+      if (order.id !== orderId) this.addObject(order);
+    });
+  },
   getArray() {
     return JSON.parse(JSON.stringify(this.toArray()));
   },
   recordsPromises() {
     return this.getArray().map(order => {
       return this.createOrFindOrderRecord(order).save().then(persistedOrder => {
-        return this.get('store').createRecord('print', { order: persistedOrder.id, isBill: false }).save();
+        return this.get('store').createRecord('print', { order: persistedOrder.id, isBill: false }).save()
+          .then(() => this.delete(persistedOrder.id));
       });
     });
   },

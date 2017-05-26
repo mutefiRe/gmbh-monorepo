@@ -6,8 +6,7 @@
       <button autofocus {{action 'logout'}}>{{t 'button.logout'}}</button>
       {{#if model.message}}
         <div class="error">
-
-          {{if model.errors (t model.errors.msg) (t 'notification.error')}}
+          {{if model.errors.msg (t model.errors.msg) (t 'notification.error')}}
         </div>
       {{/if}}
     </div>
