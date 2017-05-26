@@ -1,14 +1,4 @@
-{{#each category.sortedItems as |item|}}
-  {{order-main/product/single-item
-    item=item
-    showItemPrice=settings.showItemPrice
-    addItemToOrder=(action "addItemToOrder")
-    showModal=(action "showModal")
-  }}
-{{/each}}
-{{else}}
-{{#each categories as |category|}}
-  {{#if category.enabled}}
+{{#if category}}
   {{#each category.sortedItems as |item|}}
     {{order-main/product/single-item
       item=item
@@ -17,5 +7,17 @@
       showModal=(action "showModal")
     }}
   {{/each}}
-  {{/if}}
-{{/each}}
+{{else}}
+  {{#each categories as |category|}}
+    {{#if category.enabled}}
+    {{#each category.sortedItems as |item|}}
+      {{order-main/product/single-item
+        item=item
+        showItemPrice=settings.showItemPrice
+        addItemToOrder=(action "addItemToOrder")
+        showModal=(action "showModal")
+      }}
+    {{/each}}
+    {{/if}}
+  {{/each}}
+{{/if}}
