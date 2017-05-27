@@ -33,7 +33,8 @@ export default {
     'firstname': 'Vorname',
     'lastname': 'Nachname',
     'permission': 'Berechtigung',
-    'newPassword': 'Neues Passwort'
+    'newPassword': 'Neues Passwort',
+    'model': 'Modell'
   },
   'permissions': {
     'admin': 'Admin',
