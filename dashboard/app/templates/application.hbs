@@ -6,7 +6,9 @@
 {{/if}}
 <div class="wrapper">
   {{#if session.isAuthenticated}}
-    {{main-navigation}}
+    {{#unless isIndex}}
+      {{main-navigation}}
+    {{/unless}}
   {{/if}}
   {{outlet}}
 </div>
