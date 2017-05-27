@@ -7,34 +7,34 @@
 <div class="editsingleuser editarea">
   <div class="input-row">
     <div class="input-element">
-      <label for="username">Username</label>
+      <label for="username">{{t 'labels.username'}}</label>
       {{input type="text" value=user.username name="username"}}
     </div>
     <div class="input-element">
-      <label for="firstname">Vorname</label>
+      <label for="firstname">{{t 'labels.firstname'}}</label>
       {{input type="text" value=user.firstname name="firstname"}}
     </div>
     <div class="input-element">
-      <label for="lastame">Nachname</label>
+      <label for="lastame">{{t 'labels.lastname'}}</label>
       {{input type="text" value=user.lastname name="lastname"}}
     </div>
     <div class="input-element">
-      <label for="authentication">Berechtigung</label>
+      <label for="authentication">{{t 'labels.permission'}}</label>
       <div class="select-wrapper">
         <select onchange={{action (mut user.permission) value="target.value"}}>
-          <option selected={{eq user.permission "Waiter"}}>Waiter</option>
-          <option selected={{eq user.permission "Admin"}}>Admin</option>
+          <option selected={{eq user.permission "Waiter"}}>{{t 'permissions.waiter'}}</option>
+          <option selected={{eq user.permission "Admin"}}>{{t 'permissions.admin'}}</option>
         </select>
       </div>
     </div>
   </div>
   <div class="input-row align-right">
-    <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">Passwort ändern</button>
+    <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">{{t 'buttons.changePassword'}}</button>
     {{modal-changepassword showModal=isShowingPassword user=user}}
-    <button class="gray" type="button">Passwort zurücksetzen</button>
+    <button class="gray" type="button">{{t 'buttons.resetPassword'}}</button>
   </div>
   <div class="input-row align-right">
-    <button {{action "updateUser" user}} class="save" type="button">Speichern</button>
-    <button class="delete"><span class="material-icons">delete</span>Löschen</button>
+    <button {{action "updateUser" user}} class="save" type="button">{{t 'buttons.save'}}</button>
+    <button class="delete"><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>
   </div>
 </div>

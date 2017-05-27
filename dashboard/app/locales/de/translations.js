@@ -16,6 +16,8 @@ export default {
     'delete': 'Löschen',
     'cancel': 'Abbrechen',
     'change': 'Ändern',
+    'changePassword': 'Passwort ändern',
+    'resetPassword': 'Passwort zurücksetzen',
     'customtables': 'Benutzer&shy;definierte Tische',
     'instantpay': 'Sofort&shy;bezahlung',
     'priceonproducts': 'Preis auf Produkte',
@@ -27,7 +29,15 @@ export default {
     'startdate': 'Startdatum',
     'enddate': 'Enddatum',
     'runtime': 'Laufzeit',
+    'username': 'Username',
+    'firstname': 'Vorname',
+    'lastname': 'Nachname',
+    'permission': 'Berechtigung',
     'newPassword': 'Neues Passwort'
+  },
+  'permissions': {
+    'admin': 'Admin',
+    'waiter': 'Waiter'
   },
   'notifications': {
     'user': {
