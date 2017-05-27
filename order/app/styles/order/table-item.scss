@@ -1,62 +1,53 @@
-.table-item{
-  display: block;
-  float: left;
-  width: 24%;
-  margin: 0.5%;
-  font-size: 16px;
-  text-align: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
+.table-item {
+    position: relative;
+    width: 15.666666666666%;
+    margin: 0.5%;
+    overflow: hidden;
+    transition: 400ms;
+    float: left;
+    padding-bottom: 10%;
 
-  @media (max-width: 560px){
-    width: 32.33333%;
-  }
-  @media (max-width: 300px){
-    width: 49%;
-  }
-  
-  border: 0;
+    @media (max-width: 1200px) {
+      width: 19%;
+    }
+    @media (max-width: 1000px) {
+      width: 24%;
+    }
+    @media (max-width: 700px) {
+      width: 32.33333%;
+    }
+    @media (max-width: 450px) {
+      width: 49%;
+      padding-bottom: 22%;
+    }
 
-  td {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-weight: bold;
-    &:first-child {
-      text-align: left;
-      padding: 20px;
-    }
-    &:nth-child(2) {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      span {
-          font-weight: normal;
-      }
-    }
-    &:last-child {
-      text-align: right;
-      padding: 20px;
-      width: 120px;
-    }
-    &.disabled {
-      padding-top: 20px;
-      padding-bottom: 20px;
-      font-weight: bold;
+    div {
+      position: absolute;
       text-align: center;
-      &:nth-child(2) {
-        background: $grey-light;
+      top: 0;
+      height: 100%;
+
+      &.button {
+        width: 100%;
       }
-      &:nth-child(3){
-        background:lighten($orange, 10%);
-        color: $white;
+
+      &.area{
+        left:0;
+        font-size: 1.3em;
+        width: 25%;
       }
-      &:last-child {
-        text-align: right;
-        padding-right: 20px;
-        min-width: 100px;
-        color: $white;
-        background: $orange;
+      &.table{
+        left: 25%;
+        font-size: 1.2em;
+        width: 75%;
+        overflow: hidden;
+      }
+
+      p {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
       }
     }
   }
-}

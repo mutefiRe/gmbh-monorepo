@@ -2,8 +2,8 @@
 
 {{#if settings.firstObject.customTables}}
   <div class="table-select__switch">
-    <button class="default-btn button {{if (eq activeTab 'tables') 'active' ''}}" onclick={{action 'changeTab' 'tables'}}>Tische</button>
-    <button class="default-btn button {{if (eq activeTab 'guests') 'active' ''}}" onclick={{action 'changeTab' 'guests'}}>Gäste</button>
+    <button class="default-btn {{if (eq activeTab 'tables') 'active' ''}}" onclick={{action 'changeTab' 'tables'}}>Tische</button
+    ><button class="default-btn {{if (eq activeTab 'guests') 'active' ''}}" onclick={{action 'changeTab' 'guests'}}>Gäste</button>
   </div>
 {{/if}}
 
@@ -21,10 +21,14 @@
 
   {{#if unassignedTables}}
     <h3>Nicht zugewiesene Tische</h3>
-    {{modals/table-select/table-select-group tables=unassignedTables setTable=(action "setTable")}}    
+    {{modals/table-select/table-select-group tables=unassignedTables setTable=(action "setTable")}}
   {{/if}}
 {{else if (eq activeTab 'guests')}}
-   <button onclick={{action 'changeTab' 'new'}} class= 'table-item button-blue default-btn'>+</button>
+   <div onclick={{action 'changeTab' 'new'}} class= 'table-item button-blue'>
+     <div class="button">
+       <p class="label">+</p>
+      </div>
+    </div>
    {{modals/table-select/table-select-group tables=customTables setTable=(action "setTable")}}
 {{else if (eq activeTab 'new')}}
   <h2>{{t "table.newGuest"}}</h2>

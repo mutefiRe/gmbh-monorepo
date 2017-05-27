@@ -8,7 +8,8 @@
   padding-top: 20px;
   width: 100%;
   height: 100%;
-  h2 {
+
+  h2{
     padding-top: 20px;
     padding-bottom: 20px;
   }
@@ -37,20 +38,29 @@
   .tablebutton {
     font-weight: bold;
     padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
     color: $grey-darker;
     border: none;
-  }
-  .required {
-    background-color: $orange-lighter;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    text-align: center;
+    padding: 10px 0 10px 0;
+    width: 33.3333%;
   }
   .sum {
     font-weight: bold;
     padding-top: 10px;
-    padding-right: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
+    min-width: 130px;
   }
-  .menu--mobile {
+
+  .required{
+    background-color: inherit;
+  }
+
+  .menu--mobile{
     display: none;
   }
   .menu--desktop {
@@ -63,12 +73,15 @@
     border-bottom: 1px solid black;
     border-top: 1px solid black;
   }
-  @media (max-width: 1000px) {}
+
+  @media (max-width: 1000px) {
+  }
+
   @media (max-width: 560px) {
     padding: 0px;
-    h2 {
+    h2{
+      padding: 20px 0 20px 0;
       font-size: 14px;
-      padding: 5px;
       text-align: center;
       background-color: $grey-light;
     }
@@ -82,10 +95,11 @@
       margin-top: 0px;
       margin-bottom: 0px;
       width: 100%;
-      &--orange {
-        background-color: $orange-lighter;
+      &--delete{
+        background-color: $dashingred;
+        color: $white;
       }
-      &--blue {
+      &--submit{
         @include button($dark, $blue, $white);
       }
       span {
@@ -108,8 +122,8 @@
     .bigbutton {
       margin-bottom: 0px;
     }
-    .scrollable {
-      height: calc(100% - 129px);
+    .scrollable{
+      height: calc(100% - 157px);
       max-height: none;
     }
   }
@@ -158,12 +172,26 @@
           background: lighten($orange, 10%);
           color: $white;
         }
-        &:last-child {
-          text-align: right;
-          padding-right: 20px;
-          min-width: 100px;
-          color: $white;
-          background: $orange;
+
+        &.disabled {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            &:nth-child(2) {
+                background: $grey-light;
+            }
+            &:nth-child(3){
+              background: $dashingred-light;
+              color: $white;
+            }
+            &:last-child {
+                text-align: right;
+                padding-right: 20px;
+                min-width: 100px;
+                color: $white;
+                background: $dashingred;
+            }
         }
       }
     }

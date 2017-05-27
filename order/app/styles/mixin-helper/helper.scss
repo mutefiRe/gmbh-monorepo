@@ -37,10 +37,10 @@
 }
 
 .button-orange{
-  @include button($dark, $orange, $white);
+  @include button($dark, $dashingred, $white);
 
   &:hover, &:active {
-    @include button-hover($orange);
+    @include button-hover($dashingred);
   }
 }
 
@@ -96,6 +96,6 @@
   margin-left: 1em;
 }
 .error {
-  color: $orange;
+  color: $dashingred;
 }
 

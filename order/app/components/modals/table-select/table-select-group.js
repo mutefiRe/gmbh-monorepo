@@ -15,7 +15,7 @@ export default Ember.Component.extend({
 
 function naturalStringCompare(a, b){
   const rx = /\d+|\D+/g;
-  // Phrase is eiter a combination of letters or numbers
+  // Phrase is either a combination of letters or numbers
   const aPhrases = a.get('name').toString().match(rx);
   const bPhrases = b.get('name').toString().match(rx);
 

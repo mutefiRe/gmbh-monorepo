@@ -11,6 +11,11 @@ export default DS.Model.extend({
   area:       DS.belongsTo('area'),
   orders:     DS.hasMany('order'),
 
+  shortname: Ember.computed('name', function(){
+    const name = this.get('name');
+    return name.length > 12 ? name.substring(0, 12) + "…" : name;
+  }),
+
   orderitems: Ember.computed('orders', function () {
     const final = new Array();
     const orders = this.get('orders');
