@@ -98,5 +98,6 @@ export default {
         'error':   'The area could not be deleted.'
       }
     }
-  }
+  },
+  'no printer name': 'Unnamed Printer'
 };

@@ -108,5 +108,6 @@ export default {
         'error':   'Der Bereich konnte nicht gelöscht werden.'
       }
     }
-  }
+  },
+  'no printer name': 'Unbenannter Drucker'
 };
