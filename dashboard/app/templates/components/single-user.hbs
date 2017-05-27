@@ -29,8 +29,9 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="gray" type="button">Passwort ändern</button>
-    <button class="gray" type="button">Passwort löschen</button>
+    <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">Passwort ändern</button>
+    {{modal-changepassword showModal=isShowingPassword user=user}}
+    <button class="gray" type="button">Passwort zurücksetzen</button>
   </div>
   <div class="input-row align-right">
     <button {{action "updateUser" user}} class="save" type="button">Speichern</button>
