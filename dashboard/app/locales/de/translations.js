@@ -15,9 +15,18 @@ export default {
     'save': 'Speichern',
     'delete': 'Löschen',
     'cancel': 'Abbrechen',
-    'change': 'Ändern'
+    'change': 'Ändern',
+    'customtables': 'Benutzer&shy;definierte Tische',
+    'instantpay': 'Sofort&shy;bezahlung',
+    'priceonproducts': 'Preis auf Produkte',
+    'waiteraccessright': 'Kellner&shy;zugriffs&shy;berechtigung'
   },
   'labels': {
+    'name': 'Name',
+    'printer': 'Drucker',
+    'startdate': 'Startdatum',
+    'enddate': 'Enddatum',
+    'runtime': 'Laufzeit',
     'newPassword': 'Neues Passwort'
   },
   'notifications': {
