@@ -2,9 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   notifications: Ember.inject.service('notification-messages'),
-  editable:      Ember.inject.service(),
-  i18n:          Ember.inject.service(),
-  tagName:       'li',
+  editable: Ember.inject.service(),
+  i18n: Ember.inject.service(),
+  tagName: 'li',
+  isShowingPassword: false,
   actions: {
     updateUser(user) {
       user.save().then(() => {
