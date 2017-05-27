@@ -34,7 +34,9 @@ export default {
     'lastname': 'Nachname',
     'permission': 'Berechtigung',
     'newPassword': 'Neues Passwort',
-    'model': 'Modell'
+    'model': 'Modell',
+    'icon': 'Icon',
+    'color': 'Farbe'
   },
   'permissions': {
     'admin': 'Admin',
