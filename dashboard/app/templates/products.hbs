@@ -1,11 +1,19 @@
 <main>
+  {{#if newRecord}}
+  <div class="content">
+    <ul class="editable product-list">
+      {{single-product isNew=true product=newRecord currentSelectedRecord=currentSelectedRecord categories=model.categories units=model.units}}
+   </ul>
+  </div>
+  {{/if}}
+
   <div class="content">
     <ul class="editable product-list">
       {{#each sortedProducts as |product|}}
-        {{single-product product=product categories=model.categories}}
+        {{single-product product=product currentSelectedRecord=currentSelectedRecord categories=model.categories units=model.units}}
       {{/each}}
     </ul>
   </div>
 </main>
 
-{{main-controlbar}}
+{{main-controlbar setRecord=(action 'createRecord') currentSelectedRecord=currentSelectedRecord isNew=(if newRecord true false)}}

@@ -1,12 +1,12 @@
 {{notification-container position="top-right"}}
 {{#if session.isAuthenticated}}
   {{main-header headline=headline}}
-{{else}}
-  {{#link-to 'login'}}Login{{/link-to}}
 {{/if}}
 <div class="wrapper">
   {{#if session.isAuthenticated}}
-    {{main-navigation}}
+    {{#unless isIndex}}
+      {{main-navigation}}
+    {{/unless}}
   {{/if}}
   {{outlet}}
 </div>

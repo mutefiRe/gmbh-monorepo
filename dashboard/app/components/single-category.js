@@ -1,36 +1,62 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend(Ember.Evented, {
-  notifications:   Ember.inject.service('notification-messages'),
-  editable:        Ember.inject.service(),
-  i18n:            Ember.inject.service(),
-  isShowingIcons:  false,
+  notifications: Ember.inject.service('notification-messages'),
+  i18n: Ember.inject.service(),
+  isShowingIcons: false,
   isShowingColors: false,
   tagName: 'li',
+  classNameBindings: ['isOpen:open'],
+  isOpen: false,
+  isNew: false,
+  init(){
+    this._super(...arguments);
+    if (Ember.get(this, 'isNew')) {
+      this.set('isOpen', true);
+      Ember.$('body').addClass('noscroll');
+      this.set('currentSelectedRecord', {
+        component: this,
+        record: this.get('category'),
+        type: 'component'
+      });
+    }
+  },
   actions: {
     toggleEditable() {
-      this.get('editable').toggle({ component: this, record: this.get('category') });
+      this.toggleProperty('isOpen');
+      if (this.get('isOpen')) {
+        Ember.$('body').addClass('noscroll');
+        this.set('currentSelectedRecord', {
+          component: this,
+          record: this.get('category'),
+          type: 'component'
+        });
+      } else {
+        Ember.$('body').removeClass('noscroll');
+        this.set('currentSelectedRecord', null);
+        if (this.get('isNew')) {
+          this.get('category').deleteRecord();
+          this.set('category', null);
+        }
+      }
     },
     toggleButton(prop) {
       this.get('category').toggleProperty(prop);
     },
-    updateCategory(category) {
-      category.save().then(() => {
+    updateCategory() {
+      this.get('category').save().then(() => {
         this.send('toggleEditable');
-
-        // notify user (success)
         this.get('notifications').success(this.get('i18n').t('notifications.category.update.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.category.update.error'));
       });
     },
-    destroyCategory(category) {
-      category.destroyRecord().then(() => {
-        // notify user (warning)
+    destroyCategory() {
+      this.get('category').destroyRecord().then(() => {
         this.get('notifications').warning(this.get('i18n').t('notifications.category.destroy.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.category.destroy.error'));
       });
     }
