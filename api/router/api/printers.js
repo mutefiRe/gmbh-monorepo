@@ -3,6 +3,7 @@
 const router = require('express').Router();
 const db = require('../../models');
 const control = require('../../printer/control');
+const print = require('../../printer/print');
 
 /**
  * @apiDefine printersItem
@@ -64,6 +65,40 @@ router.get('/:id', function(req, res){
     }
     res.send({printer});
   });
+});
+
+/**
+ * @api {post} api/printers/:id test print
+ * @apiGroup Printer
+ * @apiName TestPrinter
+ * @apiParam {Number} id printers unique ID.
+
+  *@apiUse token
+
+ * @apiSuccess {Object} empty
+ * @apiPermission admin
+ */
+
+router.post('/:id/testprint', function(req, res){
+  db.Printer.find({where: {id: req.params.id}}).then(printer => {
+    if(printer === null){
+      res.status(404).send({
+        'errors': {
+          'msg': "couldn't find printer"
+        }
+      });
+      return;
+    }
+    print.test(printer.dataValues);
+    res.send({});
+  })
+  .catch((error) => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  })
 });
 
 /**
