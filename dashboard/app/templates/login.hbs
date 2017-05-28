@@ -2,11 +2,11 @@
   <img src="./assets/images/logo-gmbhtext.svg">
   <div class="login-form">
     <form {{action 'authenticate' on='submit'}}>
-      <label for="identification">Benutzername</label>
+      <label for="identification">{{t 'labels.username'}}</label>
       {{input id='identification' value=identification}}
-      <label for="password">Passwort</label>
+      <label for="password">{{t 'labels.password'}}</label>
       {{input id='password' type='password' value=password}}
-      <button type="submit">Anmelden</button>
+      <button type="submit">{{t 'buttons.login'}}</button>
     </form>
     {{#if errorMessage}}
       <div>

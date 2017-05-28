@@ -12,7 +12,7 @@
   <div class="editsinglearea editarea">
     <div class="input-row">
       <div class="input-element">
-        <label for="name">Name</label>
+        <label for="name">{{t 'labels.name'}}</label>
         {{input value=area.name}}
       </div>
     </div>
@@ -23,8 +23,8 @@
       </div>
     </div>
     <div class="input-row align-right">
-       <button class="save" {{action "updateArea"}}>Speichern</button>
-      {{#unless isNew}}<button class="delete" {{action "destroyArea"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
+       <button class="save" {{action "updateArea"}}>{{t 'buttons.save'}}</button>
+      {{#unless isNew}}<button class="delete" {{action "destroyArea"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
     </div>
   </div>
 {{/if}}
