@@ -85,8 +85,8 @@ module.exports = function () {
     .then(() => {
       return db.Printer.find({
         where: { systemName: "GMBH" }
-      })
-    })
+      });
+    });
 
   /* USER */
 
@@ -106,7 +106,7 @@ module.exports = function () {
   });
 
   printer
-    .then((printer) => {
+    .then(printer => {
       db.User.create({
         username: "printer",
         firstname: "die GmBh",
@@ -115,7 +115,7 @@ module.exports = function () {
         printerId: printer.id,
         permission: 1
       });
-    })
+    });
 
 
   for (let i = 0; i < 50; i++) {
@@ -131,7 +131,7 @@ module.exports = function () {
   /* FOOD */
 
   printer
-    .then((printer) => {
+    .then(printer => {
       return db.Category
         .create({
           name: "Speisen",
@@ -141,7 +141,7 @@ module.exports = function () {
           showAmount: false,
           printerId: printer.id,
           color: '#35063E'
-        })
+        });
     })
     .then(cat => {
       db.Unit
@@ -202,7 +202,7 @@ module.exports = function () {
 
   /* ALCOHOLICS */
   printer
-    .then((printer) => {
+    .then(printer => {
       return db.Category
         .create({
           name: "Alkoholisches",
@@ -212,7 +212,7 @@ module.exports = function () {
           showAmount: true,
           printerId: printer.id,
           color: '#FEAD00'
-        })
+        });
     })
     .then(cat => {
       db.Unit
@@ -357,7 +357,7 @@ module.exports = function () {
   /* NONALCOHOLICS */
 
   printer
-    .then((printer) => {
+    .then(printer => {
       return db.Category
         .create({
           name: "Kaffee",
@@ -367,7 +367,7 @@ module.exports = function () {
           showAmount: false,
           printerId: printer.id,
           color: '#573200'
-        })
+        });
     })
     .then(cat => {
       db.Unit
@@ -391,7 +391,7 @@ module.exports = function () {
     });
 
   printer
-    .then((printer) => {
+    .then(printer => {
       return db.Category
         .create({
           name: "Dessert",
@@ -401,7 +401,7 @@ module.exports = function () {
           showAmount: false,
           printerId: printer.id,
           color: '#B80C41'
-        })
+        });
     })
     .then(cat => {
       db.Unit
@@ -426,7 +426,7 @@ module.exports = function () {
 
 
   printer
-    .then((printer) => {
+    .then(printer => {
       return db.Category
         .create({
           name: "Alkoholfreies",
@@ -436,7 +436,7 @@ module.exports = function () {
           showAmount: true,
           printerId: printer.id,
           color: '#005213'
-        })
+        });
     })
     .then(cat => {
       db.Unit
