@@ -3,26 +3,26 @@
   <div class="singleeditindicator material-icons">{{#if isNew}}close{{else if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
 </div>
 {{#if isOpen}}
-<div class="editarea">
-  <div class="input-row">
-    <div class="input-element">
-      <label>Name</label>
-      {{input value=table.name}}
+    <div class="editarea">
+      <div class="input-row">
+        <div class="input-element">
+          <label>{{t 'labels.name'}}</label>
+          {{input value=table.name}}
+        </div>
+        <div class="input-element">
+          <label>{{t 'labels.area'}}</label>
+          <div class="select-wrapper">
+            <select name="area" onchange={{action "changeRelation" 'area'}}>
+              {{#each areas as |area|}}
+                <option selected={{eq area.id table.area.id}} value={{area.id}}>{{area.name}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+    
+       <div class="input-row {{if isNew 'align-right'}}">
+          <button {{action 'updateTable'}} class="save">{{t 'buttons.save'}}</button>
+          {{#unless isNew}}<button class="delete" {{action "destroyTable"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
+       </div>
     </div>
-    <div class="input-element">
-      <label>Bereich</label>
-      <div class="select-wrapper">
-        <select name="area" onchange={{action "changeRelation" 'area'}}>
-          {{#each areas as |area|}}
-            <option selected={{eq area.id table.area.id}} value={{area.id}}>{{area.name}}</option>
-          {{/each}}
-        </select>
-      </div>
-    </div>
-  </div>
-   <div class="input-row {{if isNew 'align-right'}}">
-      <button {{action 'updateTable'}} class="save">Speichern</button>
-      {{#unless isNew}}<button class="delete" {{action "destroyTable"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
-    </div>
-</div>
 {{/if}}

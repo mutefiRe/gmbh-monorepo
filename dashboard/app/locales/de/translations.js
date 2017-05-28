@@ -3,7 +3,7 @@ export default {
     'index': 'g.m.b.h',
     'areas': 'Bereiche',
     'categories': 'Kategorien',
-    'events': 'Veranstaltungen',
+    'events': 'Veranstaltung',
     'logout': 'Logout',
     'printers': 'Drucker',
     'products': 'Produkte',
@@ -15,10 +15,39 @@ export default {
     'save': 'Speichern',
     'delete': 'Löschen',
     'cancel': 'Abbrechen',
-    'change': 'Ändern'
+    'change': 'Ändern',
+    'changePassword': 'Passwort ändern',
+    'resetPassword': 'Passwort zurücksetzen',
+    'customtables': 'Benutzer&shy;definierte Tische',
+    'instantpay': 'Sofort&shy;bezahlung',
+    'priceonproducts': 'Preis auf Produkte',
+    'waiteraccessright': 'Kellner&shy;zugriffs&shy;berechtigung',
+    'logout': 'Abmelden',
+    'login': 'Anmelden'
   },
   'labels': {
-    'newPassword': 'Neues Passwort'
+    'name': 'Name',
+    'printer': 'Drucker',
+    'startdate': 'Startdatum',
+    'enddate': 'Enddatum',
+    'runtime': 'Laufzeit',
+    'username': 'Benutzername',
+    'firstname': 'Vorname',
+    'lastname': 'Nachname',
+    'permission': 'Berechtigung',
+    'newPassword': 'Neues Passwort',
+    'model': 'Modell',
+    'icon': 'Icon',
+    'color': 'Farbe',
+    'price': 'Preis',
+    'mwst': 'Mehrwertsteuter',
+    'category': 'Kategorie',
+    'area': 'Bereich',
+    'password': 'Passwort'
+  },
+  'permissions': {
+    'admin': 'Admin',
+    'waiter': 'Waiter'
   },
   'notifications': {
     'user': {

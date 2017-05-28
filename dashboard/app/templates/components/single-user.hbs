@@ -11,44 +11,42 @@
   {{/unless}}
 </div>
 {{#if isOpen}}
-<div class="editsingleuser editarea">
-  <div class="input-row">
-    <div class="input-element">
-      <label for="username">Username</label>
-      {{input type="text" value=user.username name="username"}}
-    </div>
-    <div class="input-element">
-      <label for="firstname">Vorname</label>
-      {{input type="text" value=user.firstname name="firstname"}}
-    </div>
-    <div class="input-element">
-      <label for="lastame">Nachname</label>
-      {{input type="text" value=user.lastname name="lastname"}}
-    </div>
-    <div class="input-element">
-      <label for="authentication">Berechtigung</label>
-      <div class="select-wrapper">
-        <select onchange={{action (mut user.permission) value="target.value"}}>
-          <option selected={{eq user.permission "Waiter"}}>Waiter</option>
-          <option selected={{eq user.permission "Admin"}}>Admin</option>
-        </select>
+    <div class="editsingleuser editarea">
+      <div class="input-row">
+        <div class="input-element">
+          <label for="username">{{t 'labels.username'}}</label>
+          {{input type="text" value=user.username name="username"}}
+        </div>
+        <div class="input-element">
+          <label for="firstname">{{t 'labels.firstname'}}</label>
+          {{input type="text" value=user.firstname name="firstname"}}
+        </div>
+        <div class="input-element">
+          <label for="lastame">{{t 'labels.lastname'}}</label>
+          {{input type="text" value=user.lastname name="lastname"}}
+        </div>
+        <div class="input-element">
+          <label for="authentication">{{t 'labels.permission'}}</label>
+          <div class="select-wrapper">
+            <select onchange={{action (mut user.permission) value="target.value"}}>
+              <option selected={{eq user.permission "Waiter"}}>{{t 'permissions.waiter'}}</option>
+              <option selected={{eq user.permission "Admin"}}>{{t 'permissions.admin'}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="input-row align-right">
+        {{#unless isNew}}
+            <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">{{t 'buttons.changePassword'}}</button>
+            {{modal-changepassword showModal=isShowingPassword user=user}}
+        {{else}}
+          <label for="password">Passwort</label>
+          {{input type="password" value=user.password name="password"}}
+        {{/unless}}
+      </div>
+      <div class="input-row align-right">
+        <button class="save" {{action "updateUser"}}>{{t 'buttons.save'}}</button>
+        {{#unless isNew}}<button class="delete" {{action "destroyUser"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
       </div>
     </div>
-  </div>
-  <div class="input-row align-right">
-    {{#unless isNew}}
-      <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">Passwort ändern</button>
-      {{modal-changepassword showModal=isShowingPassword user=user}}
-    {{else}}
-    <div class="input-element">
-      <label for="password">Passwort</label>
-      {{input type="password" value=user.password name="password"}}
-      </div>
-    {{/unless}}
-  </div>
-  <div class="input-row align-right">
-    <button class="save" {{action "updateUser"}}>Speichern</button>
-    {{#unless isNew}}<button class="delete" {{action "destroyUser"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
-  </div>
-</div>
 {{/if}}

@@ -4,35 +4,36 @@
   </p>
   <div class="singleeditindicator material-icons">{{#if isNew}}close{{else if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
 </div>
+
 {{#if isOpen}}
 <div class="editsingleproduct editarea">
   <div class="input-row">
     <div class="input-element">
-      <label for="name">Name</label> {{input type="text" value=product.name name="name"}}
+      <label for="name">{{t 'labels.name'}}</label> {{input type="text" value=product.name name="name"}}
     </div>
     <div class="input-element">
-      <label for="color">Kategorie</label>
+      <label for="color">{{t 'labels.category'}}</label>
       <div class="select-wrapper">
         <select name="color" onchange={{action "changeRelation" 'category'}}>
             {{#each categories as |category|}}
               <option selected={{eq category.id product.category.id}} value="{{category.id}}">{{category.name}}</option>
             {{/each}}
-          </select>
+        </select>
       </div>
     </div>
   </div>
   <div class="input-row">
     <div class="input-element">
-      <label for="name">Preis</label> {{input type="text" value=product.price name="price"}}
+      <label for="name">{{t 'labels.price'}}</label> {{input type="text" value=product.price name="price"}}
     </div>
     <div class="input-element">
-      <label for="name">Mehrwertssteuer</label> {{input type="text" value=product.tax name="mwst"}}
+      <label for="name">{{t 'labels.mwst'}}</label> {{input type="text" value=product.tax name="mwst"}}
     </div>
     <div class="input-element">
-      <label>Menge</label> {{input value=product.amount name="amount"}}
+      <label>{{t 'label.amount'}}</label> {{input value=product.amount name="amount"}}
     </div>
     <div class="input-element">
-      <label>Einheit</label>
+      <label>{{t 'label.unit'}}</label>
       <div class="select-wrapper">
         <select name="unit">
           {{#each units as |unit|}}
@@ -43,8 +44,8 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="save" {{action "updateProduct"}}>Speichern</button>
-    {{#unless isNew}}<button class="delete" {{action "destroyProduct"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
+    <button class="save" {{action "updateProduct"}}>{{t 'buttons.save'}}</button>
+    {{#unless isNew}}<button class="delete" {{action "destroyProduct"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
   </div>
 </div>
 {{/if}}

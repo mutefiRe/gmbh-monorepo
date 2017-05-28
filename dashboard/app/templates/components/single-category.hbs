@@ -7,11 +7,11 @@
 <div class="editsinglecategory editarea">
   <div class="input-row">
     <div class="input-element">
-      <label for="name">Name</label>
+      <label for="name">{{t 'labels.name'}}</label>
       {{input type="text" value=category.name name="name"}}
     </div>
     <div class="input-element">
-      <label for="icon">Icon</label>
+      <label for="icon">{{t 'labels.icon'}}</label>
       <div class="select-wrapper iconselector">
         <span class="icondot iconfont {{category.icon}}" onclick={{action (mut isShowingIcons) true}}></span>
         <select name="icon" {{action (mut isShowingIcons) true on="mouseDown"}} onchange={{action (mut category.icon) value="target.value"}}>
@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="input-element">
-      <label for="printer">Drucker</label>
+      <label for="printer">{{t 'labels.printer'}}</label>
       <div class="select-wrapper">
         <select onchange={{action (mut category.printer) value="target.value"}}>
         {{#each printers as |printer|}}
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="input-element">
-      <label for="color">Farbe</label>
+      <label for="color">{{t 'labels.color'}}</label>
       <div class="select-wrapper colorselector">
       <span class="colordot" onclick={{action (mut isShowingColors) true}} style="background:{{category.color}}"></span>
         <select name="color" {{action (mut isShowingColors) true on="mouseDown"}}>
@@ -40,8 +40,8 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="save" {{action "updateCategory"}}>Speichern</button>
-    {{#unless isNew}}<button class="delete" {{action "destroyCategory"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
+    <button class="save" {{action "updateCategory"}}>{{t 'buttons.save'}}</button>
+    {{#unless isNew}}<button class="delete" {{action "destroyCategory"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
   </div>
 </div>
 {{/if}}
