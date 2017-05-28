@@ -38,6 +38,9 @@ export default Ember.Component.extend({
         }
       }
     },
+    toggleButton(prop) {
+      this.get('area').toggleProperty(prop);
+    },
     updateArea() {
       this.get('area').save().then(() => {
         this.send('toggleEditable');

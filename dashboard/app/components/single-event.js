@@ -1,10 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  tagName: 'li',
+  todaysDate: new Date(),
   notifications: Ember.inject.service('notification-messages'),
   i18n: Ember.inject.service(),
-  todaysDate: new Date(),
-  tagName: 'li',
   init() {
     const singleEvent = this.get('events.firstObject');
     if (singleEvent === undefined) {
@@ -21,16 +21,13 @@ export default Ember.Component.extend({
     this._super();
   },
   actions: {
-    toggleButton(prop, value) {
-      const result = !value;
-      Ember.set(this.event, prop, result);
+    toggleButton(prop) {
+      this.get('event').toggleProperty(prop);
     },
     updateEvent(event) {
       event.save().then(() => {
-        // notify user (success)
         this.get('notifications').success(this.get('i18n').t('notifications.event.update.success'));
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.event.update.error'));
       });
     }

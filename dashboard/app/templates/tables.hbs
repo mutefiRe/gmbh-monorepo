@@ -14,7 +14,7 @@
     <ul class="editable area-list">
       {{#each model.areas as |area|}}
         <li>
-          <div class="single-area" {{action 'toggleTables'}}>
+          <div class="single-area {{if area.enabled 'available'}}" {{action 'toggleTables'}}>
             <p class="singleareaname">{{area.name}}</p>
             <p class="singleareatablecount">{{area.persistedTables.length}}</p>
           </div>

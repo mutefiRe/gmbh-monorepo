@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  sortDefinition: ['category.name', 'enabled', 'name', 'price'],
+  sortDefinition: ['category.name', 'group:asc', 'enabled', 'name', 'price:asc'],
   filteredProducts: Ember.computed.filter('model.products', product => product.get('createdAt')).property('model.products.@each.createdAt'),
   sortedProducts: Ember.computed.sort('filteredProducts', 'sortDefinition').property('model.products.@each.{enabled,name,price}'),
   newRecord: null,

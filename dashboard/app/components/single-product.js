@@ -1,12 +1,15 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  notifications: Ember.inject.service('notification-messages'),
+  tagName: 'li',
   store: Ember.inject.service(),
-  i18n: Ember.inject.service(),
+  i18n:          Ember.inject.service(),
+  notifications: Ember.inject.service('notification-messages'),
+  isEnabled: Ember.computed('product.enabled', 'product.category.enabled', function() {
+    return this.get('product.enabled') && this.get('product.category.enabled');
+  }),
   classNameBindings: ['isOpen:open'],
   isOpen: false,
-  tagName: 'li',
   isNew: false,
   init(){
     this._super(...arguments);
@@ -39,6 +42,9 @@ export default Ember.Component.extend({
           this.set('product', null);
         }
       }
+    },
+    toggleButton(prop) {
+      this.get('product').toggleProperty(prop);
     },
     changeRelation(type, event) {
       const relation = this.get('store').peekRecord(type, event.target.value);

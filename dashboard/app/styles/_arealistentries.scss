@@ -12,13 +12,18 @@
     display: flex;
     width: calc(50% - 5px);
     margin: 0 0 10px 0;
-    &:nth-child(2) {
-      .single-area {
+    &:nth-child(3n+1) {
+      .single-area.available {
+        background: $simpleblue;
+      }
+    }
+    &:nth-child(3n+2) {
+      .single-area.available {
         background: $donaublue;
       }
     }
-    &:nth-child(3) {
-      .single-area {
+    &:nth-child(3n+3) {
+      .single-area.available {
         background: $deepseablue;
       }
     }
@@ -31,7 +36,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: $simpleblue;
+    background: $lightgray;
     box-sizing: border-box;
     color: #fff;
     width: 100%;

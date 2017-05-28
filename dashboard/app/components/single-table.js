@@ -1,10 +1,13 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  notifications: Ember.inject.service('notification-messages'),
   store: Ember.inject.service(),
   i18n: Ember.inject.service(),
+  notifications: Ember.inject.service('notification-messages'),
   tagName: 'li',
+  isEnabled: Ember.computed('table.enabled', 'table.area.enabled', function() {
+    return this.get('table.enabled') && this.get('table.area.enabled');
+  }),
   classNameBindings: ['isOpen:open', 'isNew:new'],
   isOpen: false,
   isNew: false,
@@ -22,6 +25,9 @@ export default Ember.Component.extend({
     }
   },
   actions: {
+    toggleButton(prop) {
+      this.get('table').toggleProperty(prop);
+    },
     toggleEditable() {
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
@@ -46,7 +52,6 @@ export default Ember.Component.extend({
       if (!this.get('isNew')) {
         this.send('toggleEditable');
         Ember.run.next(this, () => {
-
           Ember.$('html, body').animate({
             scrollTop: this.$().offset().top
           }, 200);
