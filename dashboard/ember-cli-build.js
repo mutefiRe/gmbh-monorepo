@@ -5,6 +5,19 @@ module.exports = function(defaults) {
   const app = new EmberApp(defaults, {
     'ember-cli-babel': {
       includePolyfill: true
+    },
+    webfont: {
+      path: 'app/webfont-svg/',
+      options: {
+        files: ['**/*.svg'],
+        dest: 'assets/webfonts/',
+        fontName: 'iconfont',
+        cssFontsPath: 'webfonts/',
+        templateOptions: {
+          classPrefix: 'icon-',
+          baseClass: 'icon'
+        }
+      }
     }
   });
 

@@ -11,6 +11,10 @@ export default {
     'users': 'User',
     'changePassword': 'Change Password'
   },
+  'statistics': {
+    'salestotal': 'Sales Total',
+    'salestoday': 'Sales Today'
+  },
   'buttons': {
     'save': 'Save',
     'delete': 'Delete',
@@ -154,5 +158,6 @@ export default {
         'error': 'An error occured while saving.'
       }
     }
-  }
+  },
+  'no printer name': 'Unnamed Printer'
 };

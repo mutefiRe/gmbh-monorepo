@@ -30,6 +30,11 @@
   .cancel {
     display: none;
   }
+  &.onlyonmobile {
+    @media #{$desktop} {
+      display: none;
+    }
+  }
 }
 
 .noscroll {

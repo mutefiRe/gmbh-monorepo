@@ -44,6 +44,6 @@
     <button {{action 'toggleButton' "waiterAccess" event.waiterAccess}} class="{{if event.waiterAccess 'toggle' 'gray'}}" type="button">{{t 'buttons.waiteraccessright'}} {{if event.waiterAccess 'aktiviert' 'deaktiviert'}}</button>
   </div>
   <div class="input-row align-right">
-    <button class="save" {{action 'updateEvent' event}}>{{t 'buttons.save'}}</button>
+    <button class="save showonmobile" {{action 'updateEvent' event}}>{{t 'buttons.save'}}</button>
   </div>
 </div>

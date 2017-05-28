@@ -1,17 +1,21 @@
 export default {
   'headlines': {
-    'index':          'g.m.b.h',
-    'areas':          'Bereiche',
-    'categories':     'Kategorien',
-    'events':         'Veranstaltungen',
-    'logout':         'Logout',
-    'printers':       'Drucker',
-    'products':       'Produkte',
-    'tables':         'Tische',
-    'users':          'User',
-    'statistics':     'Statistik',
+    'index': 'g.m.b.h',
+    'areas': 'Bereiche',
+    'categories': 'Kategorien',
+    'events': 'Veranstaltungen',
+    'logout': 'Logout',
+    'printers': 'Drucker',
+    'products': 'Produkte',
+    'tables': 'Tische',
+    'users': 'User',
+    'statistics': 'Statistik',
     'changePassword': 'Passwort ändern',
-    'units':          'Einheiten'
+    'units': 'Einheiten'
+  },
+  'statistics': {
+    'salestotal': 'Gesamteinnahmen',
+    'salestoday': 'Tageseinnahmen'
   },
   'buttons': {
     'save': 'Speichern',
@@ -172,6 +176,7 @@ export default {
       }
     }
   },
+  'no printer name': 'Unbenannter Drucker',
   'new': {
     'product': "Neues Produkt anlegen:",
     'table': "Neuen Tisch anlegen:",
