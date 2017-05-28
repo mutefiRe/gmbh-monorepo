@@ -2,6 +2,7 @@
   <p>{{printer.name}}</p>
   <div class="singleprintindicator material-icons">print</div>
 </div>
+{{#if isOpen}}
 <div class="editsingleproduct editarea">
   <div class="input-row">
     <div class="input-element">
@@ -17,3 +18,4 @@
     <button class="save"{{action "updatePrinter" printer}}>{{t 'buttons.save'}}</button>
    </div>
 </div>
+{{/if}}

@@ -147,6 +147,12 @@ export default {
         'success': 'The area has been deleted.',
         'error': 'The area could not be deleted.'
       }
+    },
+    'record': {
+      'save': {
+        'success': 'Saving successfull.',
+        'error': 'An error occured while saving.'
+      }
     }
   }
 };

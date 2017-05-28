@@ -147,6 +147,19 @@ export default {
         'success': 'Der Bereich wurde gelöscht.',
         'error': 'Der Bereich konnte nicht gelöscht werden.'
       }
+    },
+    'record': {
+      'save': {
+        'success': 'Speichern erfolgreich.',
+        'error': 'Beim speichern ist ein Fehler aufgetreten.'
+      }
     }
+  },
+  'new': {
+    'product': "Neues Produkt anlegen:",
+    'table': "Neuen Tisch anlegen:",
+    'area': "Neuen Bereich anlegen:",
+    'category': "Neue Kategorie anlegen:",
+    'user': "Neuen User anlegen"
   }
 };

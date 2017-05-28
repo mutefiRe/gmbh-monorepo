@@ -2,9 +2,9 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   notifications: Ember.inject.service('notification-messages'),
-  i18n:          Ember.inject.service(),
-  todaysDate:    new Date(),
-  tagName:       'li',
+  i18n: Ember.inject.service(),
+  todaysDate: new Date(),
+  tagName: 'li',
   init() {
     const singleEvent = this.get('events.firstObject');
     if (singleEvent === undefined) {
