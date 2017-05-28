@@ -67,7 +67,7 @@ router.get('/:id', function(req, res){
 });
 
 /**
- * @api {get} api/printers/update Request Printers
+ * @api {post} api/printers/update Request Printers
  * @apiGroup Printer
  * @apiName UpdatePrinters
 
@@ -75,11 +75,10 @@ router.get('/:id', function(req, res){
  * @apiDescription Scans the local network for printers and adds them to the database and cups
 
  * @apiSuccess {String} ok
- * @apiPermission waiter
  * @apiPermission admin
  */
 
-router.get('/update', function (req, res) {
+router.post('/update', function (req, res) {
   control.updatePrinters()
     .then(() => {
       res.status(200);
@@ -102,7 +101,6 @@ router.get('/update', function (req, res) {
  * @apiUse token
  * @apiUse printersItem
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {Object} printers Printer
  */
@@ -131,7 +129,6 @@ router.put('/:id', function (req, res) {
  * @apiName DeletePrinter
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

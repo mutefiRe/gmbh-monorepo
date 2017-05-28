@@ -93,7 +93,6 @@ router.get('/', function(req, res) {
  * @apiUse categoryParams
  * @apiUse categoryAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -121,7 +120,6 @@ router.post('/', function(req, res){
  * @apiUse categoryParams
  * @apiUse categoryAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -149,7 +147,6 @@ router.put('/:id', function(req, res){
  * @apiName DeleteCategory
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

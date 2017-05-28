@@ -16,7 +16,7 @@ describe('/authenticate route', () => {
         firstname: "max",
         lastname: "mustermann",
         password: "test",
-        permission: 0
+        role: "admin"
       }),
       db.Setting.create({
         name: "Testsetting",

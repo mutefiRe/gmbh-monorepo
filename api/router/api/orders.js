@@ -184,7 +184,6 @@ router.put('/:id', function (req, res) {
  * @apiName DeleteOrder
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

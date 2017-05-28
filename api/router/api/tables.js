@@ -89,7 +89,6 @@ router.get('/', function(req, res){
  * @apiUse tableParams
  * @apiUse tableAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -118,7 +117,6 @@ router.post('/', function(req, res){
  * @apiParam {Number} id
  * @apiUse tableParams
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -145,7 +143,6 @@ router.put('/:id', function(req, res){
  * @apiName DeleteTable
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

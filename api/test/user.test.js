@@ -18,7 +18,7 @@ const token = jwt.sign({
   username:   "test1",
   firstname:  "test1",
   lastname:   "test1",
-  permission: 1
+  role:       "admin"
 }, config.secret, { expiresIn: '24h' });
 
 describe('/user route', () => {
@@ -36,8 +36,8 @@ describe('/user route', () => {
         systemName: "test2"
       }])
       .then(db.User.bulkCreate([
-        {id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", permission: 0, printerId: printer1},
-        {id: 2, username: "test2", firstname: "test2", lastname: "test2", password: "test2", permission: 1}
+        {id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", role: "admin", printerId: printer1},
+        {id: 2, username: "test2", firstname: "test2", lastname: "test2", password: "test2", role: "waiter"}
       ]))
     });
 
@@ -48,7 +48,7 @@ describe('/user route', () => {
           "username":   "test1",
           "firstname":  "test1",
           "lastname":   "test1",
-          "permission": 0,
+          "role":       "admin",
           "printerId":  printer1,
           "areas":      []
         }, {
@@ -56,7 +56,7 @@ describe('/user route', () => {
           "username":   "test2",
           "firstname":  "test2",
           "lastname":   "test2",
-          "permission": 1,
+          "role":       "waiter",
           "printerId":  null,
           "areas":      []
         }]
@@ -90,7 +90,7 @@ describe('/user route', () => {
           firstname:  "firstname",
           lastname:   "lastname",
           password:   "password",
-          permission: 0,
+          role:       "admin",
           printerId:  null
         }
       };
@@ -109,7 +109,7 @@ describe('/user route', () => {
           expect(user.username).to.eq("username");
           expect(user.firstname).to.eq("firstname");
           expect(user.lastname).to.eq("lastname");
-          expect(user.permission).to.eq(0);
+          expect(user.role).to.eq("admin");
           expect(user.printerId).to.eq(null);
         });
       });
@@ -122,7 +122,7 @@ describe('/user route', () => {
           firstname:  "firstname",
           lastname:   "lastname",
           password:   "password",
-          permission: 1,
+          role:       "admin",
           printerId:  printer2
         }
       };
@@ -141,7 +141,7 @@ describe('/user route', () => {
           expect(user.username).to.eq("username2");
           expect(user.firstname).to.eq("firstname");
           expect(user.lastname).to.eq("lastname");
-          expect(user.permission).to.eq(1);
+          expect(user.role).to.eq("admin");
           expect(user.printerId).to.eq(printer2);
         });
       });

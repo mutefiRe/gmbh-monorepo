@@ -98,7 +98,6 @@ router.get('/', function(req, res){
  * @apiUse settingParams
  * @apiUse settingAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -127,7 +126,6 @@ router.post('/', function(req, res){
  * @apiSuccess {Object} settings
  * @apiUse settingAttributes
  *
- * @apiPermission waiter
  * @apiPermission admin
  */
 
@@ -161,7 +159,6 @@ router.put('/:id', function(req, res){
  * @apiName DeleteSetting
  * @apiParam {number} id Id
  *
- * @apiPermission waiter
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */

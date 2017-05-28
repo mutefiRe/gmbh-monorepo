@@ -2,9 +2,16 @@
 
 const router = require('express').Router();
 const jwt            = require('jsonwebtoken');
+const acl            = require('express-acl');
 const config         = require('../config/config');
 const fs             = require("fs");
 const normalizedPath = require("path").join(__dirname, "api");
+
+acl.config({
+  baseUrl:'api',
+  filename:'acl.json',
+  path:'config'
+});
 
 /**
  * @apiDefine token
@@ -38,6 +45,8 @@ router.use(function(req, res, next) {
     });
   }
 });
+
+router.use(acl.authorize);
 
 
 fs.readdirSync(normalizedPath).forEach(function(file) {
