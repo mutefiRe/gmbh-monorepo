@@ -128,7 +128,7 @@ function mapLineChartData(data, numberOfHours, minHour) {
     });
   }
 
-  data.forEach(function(obj) {
+  data.forEach(obj => {
     const idxDay  = eventDays.indexOf(obj.day);
     const idxHour = obj.hour - minHour;
 
