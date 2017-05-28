@@ -185,5 +185,9 @@ export default {
     'printer': "Neuen Drucker anlegen:",
     'unit': "Neue Einheit anlegen:",
     'user': "Neuen User anlegen"
+  },
+  'role': {
+    'waiter': 'Kellner/in',
+    'admin': 'Administrator/in'
   }
 };

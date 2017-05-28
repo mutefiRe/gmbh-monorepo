@@ -1,7 +1,7 @@
 <div class="singleuserbar" {{action "toggleEditable"}}>
   {{#unless isNew}}
     <div class="singleusername">{{user.username}}</div>
-    <div class="singleauth">{{user.permission}}</div>
+    <div class="singleauth">{{tu user.role}}</div>
     <div class="singlepwindicator material-icons">vpn_key</div>
     <div class="singleeditindicator material-icons">{{#if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
   {{else}}
@@ -28,9 +28,9 @@
         <div class="input-element">
           <label for="authentication">{{t 'labels.permission'}}</label>
           <div class="select-wrapper">
-            <select onchange={{action (mut user.permission) value="target.value"}}>
-              <option selected={{eq user.permission "Waiter"}}>{{t 'permissions.waiter'}}</option>
-              <option selected={{eq user.permission "Admin"}}>{{t 'permissions.admin'}}</option>
+            <select onchange={{action (mut user.role) value="target.value"}}>
+	      <option value="waiter" selected={{eq user.role "waiter"}}>{{t "role.waiter"}}</option>
+	      <option value="admin" selected={{eq user.role "admin"}}>{{t "role.admin"}}</option>
             </select>
           </div>
         </div>
