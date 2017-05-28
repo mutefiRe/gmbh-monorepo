@@ -54,7 +54,7 @@ export default {
     'paySelected': 'Auswahl bezahlen',
     'printBill': 'Rechnung drucken',
     'startNewOrder': 'neue Bestellung aufnehmen',
-    'login': 'anmelden',
+    'login': 'Anmelden',
     'reload': 'Neu laden',
     'logout': 'Ausloggen'
   },

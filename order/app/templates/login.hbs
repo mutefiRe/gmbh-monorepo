@@ -1,12 +1,12 @@
 <div class="login">
   <div class="wrapper">
-    <img src="./assets/images/logo.png">
+    <img src="./assets/images/logo-gmbhtext.svg">
     <div class="login-form">
       <form {{action 'authenticate' on='submit'}}>
         <label for="identification">{{t "input.username"}}</label>
-        {{input id='identification' placeholder=(t "input.enterUsername") value=identification}}
+        {{input id='identification' value=identification}}
         <label for="password">{{t "input.password"}}</label>
-        {{input id='password' placeholder=(t "input.enterPassword") type='password' value=password}}
+        {{input id='password' type='password' value=password}}
         <button autofocus type="submit">{{t "button.login"}}</button>
       </form>
       {{#if errorMessage}}
