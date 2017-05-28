@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend(Ember.Evented, {
   notifications: Ember.inject.service('notification-messages'),
   i18n: Ember.inject.service(),
+  store: Ember.inject.service(),
   isShowingIcons: false,
   isShowingColors: false,
   tagName: 'li',
@@ -39,6 +40,10 @@ export default Ember.Component.extend(Ember.Evented, {
           this.set('category', null);
         }
       }
+    },
+    changeRelation(type, event) {
+      const relation = this.get('store').peekRecord(type, event.target.value);
+      this.get('category').set(type, relation);
     },
     toggleButton(prop) {
       this.get('category').toggleProperty(prop);

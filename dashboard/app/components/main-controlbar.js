@@ -5,6 +5,7 @@ export default Ember.Component.extend({
   i18n: Ember.inject.service(),
   tagName: 'div',
   classNames: ['addentrybar'],
+  payload: Ember.inject.service('session-payload'),
   actions: {
     createRecord() {
       this.get('setRecord')();
@@ -29,6 +30,20 @@ export default Ember.Component.extend({
       }
       this.set('currentSelectedRecord.component.isOpen', false);
       Ember.$('body').removeClass('noscroll');
+    },
+    searchPrinters(){
+      this.securePostRequest('api/printers/update').then(() => {
+        this.get('notifications').success('notifications.printer.search.success');
+      }).catch(() => {
+        this.get('notifications').error('notifications.printer.search.error');
+      });
     }
+  },
+  securePostRequest(url) {
+    const jwt = this.get('payload').getToken();
+    return Ember.$.ajax({
+      headers: { 'X-Access-Token': jwt },
+      method: 'POST',
+      url: `${window.EmberENV.host}/${url}` });
   }
 });

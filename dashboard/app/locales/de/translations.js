@@ -109,6 +109,10 @@ export default {
       'destroy': {
         'success': 'Der Drucker wurde gelöscht.',
         'error': 'Der Drucker konnte nicht gelöscht werden.'
+      },
+      'search': {
+        'success': 'Druckersuche wurde in Auftrag gegeben. Dieser Vorgang kann bis zu einer Minute dauern!',
+        'error': 'Druckersuche läuft bereits oder konnte nicht gestartet werden.'
       }
     },
     'event': {

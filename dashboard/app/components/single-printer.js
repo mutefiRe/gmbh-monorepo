@@ -24,12 +24,17 @@ export default Ember.Component.extend({
     updatePrinter(printer) {
       printer.save().then(() => {
         this.send('toggleEditable');
-
-        // notify user (success)
         this.get('notifications').success(this.get('i18n').t('notifications.printer.update.success'));
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.printer.update.error'));
+      });
+    },
+    destroyPrinter() {
+      this.get('printer').destroyRecord().then(() => {
+        this.get('notifications').warning(this.get('i18n').t('notifications.printer.destroy.success'));
+        Ember.$('body').removeClass('noscroll');
+      }).catch(() => {
+        this.get('notifications').error(this.get('i18n').t('notifications.printer.destroy.error'));
       });
     }
   }

@@ -108,6 +108,10 @@ export default {
       'destroy': {
         'success': 'The printer has been deleted.',
         'error': 'The printer could not be deleted.'
+      },
+      'search': {
+        'success': 'Searching printers. This process can last up to 1 minute!',
+        'error': 'Search process is running alreay or could not be started!'
       }
     },
     'event': {
