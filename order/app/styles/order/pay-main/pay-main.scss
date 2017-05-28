@@ -1,21 +1,21 @@
 .pay-main {
   background: $white;
   margin: 0 auto;
-  padding: 40px;
-  padding-top: 20px;
+  padding: 0px;
   width: 100%;
   height: 100%;
+
   &__switch {
     button {
-      @include button($dark, $grey, $grey-darker);
+      @include button($noshadow, $grey, $grey-darker);
       &:active {
         @include button-hover($grey);
       }
-      width: 49.6%;
+      width: 50%;
       &.active {
-        background: $orange-lighter;
+        color: $white;
+        background: $blue;
       }
-      margin-bottom: 20px;
     }
   }
   h2 {
@@ -34,7 +34,6 @@
   }
   .flexcontainer {
     @include flexbox();
-    margin-top: 20px;
     &.mobile {
       display: none;
     }
@@ -51,7 +50,7 @@
     border: none;
   }
   .required {
-    background-color: $orange-lighter;
+    background-color: $dashingred-lighter;
   }
   .sum {
     font-weight: bold;
@@ -66,19 +65,25 @@
   }
   .orders,
   .tables {
-    height: calc(100% - 162px);
+    height: calc(100% - 123px);
   }
   &_single-order {
-    border: 1px solid $grey-dark;
+    td.time {
+      min-width: 82px;
+    }
     .spacer {
       display: inline-block;
       padding-left: 20px;
     }
     &.notpaid {
-      background-color: $blue-lighter;
+      border-left: 5px solid $blue;
+      border-bottom: 1px solid $blue;
     }
     &.paid {
+      border-left: 5px solid $grey-dark;
+      border-bottom: 1px solid $grey-dark;
       background-color: $grey-light;
+      color: $grey-inactive;
     }
     td {
       padding-top: 20px;
@@ -106,43 +111,55 @@
     position: relative;
     width: 15.666666666666%;
     margin: 0.5%;
-    padding-bottom: 8%;
-    .caption {
-      @include center;
-      font-size: 16px;
-      text-align: center;
-    }
-    overflow:hidden;
+    overflow: hidden;
     transition: 400ms;
     float: left;
+    padding-bottom: 10%;
+
     @media (max-width: 1200px) {
       width: 19%;
-      padding-bottom: 12%;
     }
     @media (max-width: 1000px) {
       width: 24%;
-      padding-bottom: 14%;
     }
     @media (max-width: 700px) {
       width: 32.33333%;
-      padding-bottom: 18%;
-      .caption {
-        font-size: 14px;
-      }
     }
     @media (max-width: 450px) {
       width: 49%;
-      padding-bottom: 32.333333%;
-      .caption {
-        font-size: 12px;
+      padding-bottom: 22%;
+    }
+
+    div {
+      position: absolute;
+      text-align: center;
+      top: 0;
+      height: 100%;
+
+      &.area{
+        left:0;
+        font-size: 1.3em;
+        width: 25%;
+      }
+      &.table{
+        left: 25%;
+        font-size: 1.2em;
+        width: 75%;
+        overflow: hidden;
+      }
+
+      p {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
       }
     }
   }
   @media (max-width: 560px) {
-    padding: 0px;
     &__switch {
       button {
-        @include button($dark, $grey, $grey-darker);
+        @include button($noshadow, $grey, $grey-darker);
         &:active {
           @include button-hover($grey);
         }
@@ -182,25 +199,14 @@
       height: calc(100% - 118px);
     }
     &_single-order {
-      border: 0;
-      border-top: 1px $grey-dark solid;
-      .spacer {
-        display: inline-block;
-        padding-left: 20px;
-      }
-      &.notpaid {
-        background-color: $blue-lighter;
-      }
-      &.paid {
-        background-color: $grey-light;
-      }
       td {
-        padding-top: 12px;
-        padding-bottom: 12px;
         padding-left: 5px;
         padding-right: 5px;
         font-weight: normal;
         font-size: 1em;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &.time {
           display: none;
         }
@@ -209,7 +215,7 @@
           font-weight: bold;
           font-size: 14px;
           width: 30%;
-          min-width: 146px;
+          min-width: 110px;
         }
         &:last-child {
           padding-right: 5px;

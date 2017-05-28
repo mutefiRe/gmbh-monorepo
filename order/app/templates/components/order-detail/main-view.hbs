@@ -12,7 +12,7 @@
 <div class="flexcontainer table_sum">
   {{#unless user.isCashier}}
     {{#if order.table.name}}
-      <button {{action 'showModal'}} class="tablebutton">{{t "order.table" count=1}}: {{order.table.name}}</button>
+      <button {{action 'showModal'}} class="tablebutton" style={{tableButtonStyle}}>{{t "order.table" count=1}}: {{order.table.shortname}}</button>
     {{else}}
       <button {{action 'showModal'}} class="tablebutton required">{{t "button.selectTable"}}</button>
     {{/if}}
@@ -46,12 +46,12 @@
   <button {{action 'returnButton'}} class="smallbutton default-btn">
     <span class="icon icon-return"></span>
   </button>
-  <button {{action 'showModal2'}} class="smallbutton smallbutton--orange default-btn">
+  <button {{action 'showModal2'}} class="smallbutton smallbutton--delete default-btn">
     <span class="icon icon-garbage"></span>
   </button>
   {{#if order.table.name}}
     {{#if order.orderitems}}
-      <button {{action 'saveOrder'}} class="smallbutton smallbutton--blue default-btn">
+      <button {{action 'saveOrder'}} class="smallbutton smallbutton--submit default-btn">
         <span class="icon icon-send"></span>
       </button>
     {{else}}
@@ -61,7 +61,7 @@
     {{/if}}
   {{else if user.isCashier}}
      {{#if order.orderitems}}
-      <button {{action 'saveOrder'}} class="smallbutton smallbutton--blue default-btn">
+      <button {{action 'saveOrder'}} class="smallbutton smallbutton--submit default-btn">
         <span class="icon icon-send"></span>
       </button>
     {{else}}
@@ -70,7 +70,7 @@
       </button>
     {{/if}}
   {{else}}
-    <button {{action 'showModal'}} class="smallbutton smallbutton--blue default-btn">
+    <button {{action 'showModal'}} class="smallbutton smallbutton--submit default-btn">
       <span class="icon icon-table"></span>
     </button>
   {{/if}}

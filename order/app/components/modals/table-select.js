@@ -31,10 +31,14 @@ export default Ember.Component.extend({
       this.set('activeTab', tab);
     },
     createTable(){
+      if(this.get('name') === ""){
+        this.get('notifications').error(this.get('i18n').t('notification.table.emptyString'), {autoClear: true});
+        return;
+      }
       const table = this.get('store').createRecord('table', { name: this.get('name'), custom: true });
       this.get('connection.status') ? this.saveTableAPI(table) : this.saveTableOffline(table);
       this.set('name', "");
-      this.set('tab', 'tables');
+      this.set('activeTab', 'tables');
     }
   },
   saveTableAPI(table){

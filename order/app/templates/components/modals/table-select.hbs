@@ -1,10 +1,9 @@
 {{yield}}
 
 {{#if settings.firstObject.customTables}}
-  <div class="navbar">
-    <button onclick={{action 'changeTab' 'tables'}}>Tische</button>
-    <button onclick={{action 'changeTab' 'guests'}}>Gäste</button>
-    <button onclick={{action 'changeTab' 'new'}}>Neuer Gast</button>
+  <div class="table-select__switch">
+    <button class="default-btn {{if (eq activeTab 'tables') 'active' ''}}" onclick={{action 'changeTab' 'tables'}}>Tische</button
+    ><button class="default-btn {{if (eq activeTab 'guests') 'active' ''}}" onclick={{action 'changeTab' 'guests'}}>Gäste</button>
   </div>
 {{/if}}
 
@@ -22,13 +21,18 @@
 
   {{#if unassignedTables}}
     <h3>Nicht zugewiesene Tische</h3>
+    {{modals/table-select/table-select-group tables=unassignedTables setTable=(action "setTable")}}
   {{/if}}
-  {{modals/table-select/table-select-group tables=unassignedTables setTable=(action "setTable")}}
 {{else if (eq activeTab 'guests')}}
-   <button  class= 'table-item button-blue default-btn'>+</button>
+   <div onclick={{action 'changeTab' 'new'}} class= 'table-item button-blue'>
+     <div class="button">
+       <p class="label">+</p>
+      </div>
+    </div>
    {{modals/table-select/table-select-group tables=customTables setTable=(action "setTable")}}
 {{else if (eq activeTab 'new')}}
+  <h2>{{t "table.newGuest"}}</h2>
   <div class="input">{{input value=name type='text' autofocus='autofocus'}}</div>
-  <button class="button-blue  button-modal" onclick={{action 'createTable'}}>Erstellen</button>
+  <button class="button-blue default-btn submit" onclick={{action 'createTable'}}>Erstellen</button>
 {{/if}}
 </div>

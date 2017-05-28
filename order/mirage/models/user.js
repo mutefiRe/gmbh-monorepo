@@ -1,5 +1,6 @@
 import { Model, belongsTo } from 'ember-cli-mirage';
 
 export default Model.extend({
-  area: belongsTo('area')
+  area: belongsTo('area'),
+  printer: belongsTo('printer', { async: false })
 });

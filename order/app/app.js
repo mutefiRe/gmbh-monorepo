@@ -13,18 +13,21 @@ const App = Ember.Application.extend({
 
 loadInitializers(App, config.modulePrefix);
 
-Ember.onerror = function(error) {
-  const data = {
-    app: 'order',
-    message: error.message
+if (config.environment === 'production'){
+  Ember.onerror = function(error) {
+    const data = {
+      app: 'order',
+      message: error.message
+    };
+    Ember.$.ajax({
+      url: window.EmberENV.host + '/error',
+      type: 'POST',
+      data: JSON.stringify(data),
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json'
+    });
   };
-  Ember.$.ajax({
-    url: window.EmberENV.host + '/error',
-    type: 'POST',
-    data: JSON.stringify(data),
-    contentType: 'application/json; charset=utf-8',
-    dataType: 'json'
-  });
-};
+}
+
 
 export default App;
