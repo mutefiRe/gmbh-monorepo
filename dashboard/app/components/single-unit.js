@@ -15,29 +15,28 @@ export default Ember.Component.extend({
       Ember.$('body').addClass('noscroll');
       this.set('currentSelectedRecord', {
         component: this,
-        record: this.get('user'),
+        record: this.get('unit'),
         type: 'component'
       });
-      this.set('user.permission', 0);
     }
   },
   actions: {
-    updateUser() {
-      this.get('user').save().then(() => {
+    updateUnit() {
+      this.get('unit').save().then(() => {
         this.send('toggleEditable');
-        this.get('notifications').success(this.get('i18n').t('notifications.user.update.success'));
+        this.get('notifications').success(this.get('i18n').t('notifications.unit.update.success'));
         Ember.$('body').removeClass('noscroll');
       }).catch(() => {
-        this.get('notifications').error(this.get('i18n').t('notifications.user.update.error'));
+        this.get('notifications').error(this.get('i18n').t('notifications.unit.update.error'));
       });
     },
-    destroyUser() {
-      this.get('user').destroyRecord().then(() => {
+    destroyUnit() {
+      this.get('unit').destroyRecord().then(() => {
         this.send('toggleEditable');
-        this.get('notifications').warning(this.get('i18n').t('notifications.user.destroy.success'));
+        this.get('notifications').warning(this.get('i18n').t('notifications.unit.destroy.success'));
         Ember.$('body').removeClass('noscroll');
       }).catch(() => {
-        this.get('notifications').error(this.get('i18n').t('notifications.user.destroy.error'));
+        this.get('notifications').error(this.get('i18n').t('notifications.unit.destroy.error'));
       });
     },
     toggleEditable() {
@@ -46,15 +45,15 @@ export default Ember.Component.extend({
         Ember.$('body').addClass('noscroll');
         this.set('currentSelectedRecord', {
           component: this,
-          record: this.get('user'),
+          record: this.get('unit'),
           type: 'component'
         });
       } else {
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedRecord', null);
         if (this.get('isNew')) {
-          if (this.get('user.hasDirtyAttributes')) this.get('user').deleteRecord();
-          this.set('user', null);
+          if (this.get('unit.hasDirtyAttributes')) this.get('unit').deleteRecord();
+          this.set('unit', null);
         }
       }
     }

@@ -10,7 +10,8 @@ export default {
     'tables': 'Tische',
     'users': 'User',
     'statistics': 'Statistik',
-    'changePassword': 'Passwort ändern'
+    'changePassword': 'Passwort ändern',
+    'units': 'Einheiten'
   },
   'statistics': {
     'salestotal': 'Gesamteinnahmen',
@@ -27,6 +28,7 @@ export default {
     'instantpay': 'Sofort&shy;bezahlung',
     'priceonproducts': 'Preis auf Produkte',
     'waiteraccessright': 'Kellner&shy;zugriffs&shy;berechtigung',
+    'showamount': 'Einheiten anzeigen',
     'logout': 'Abmelden',
     'login': 'Anmelden'
   },
@@ -140,6 +142,20 @@ export default {
       }
     },
     'area': {
+      'save': {
+        'success': 'Ein neuer Bereich wurde angelegt.',
+        'error': 'Der Bereich konnte nicht angelegt werden.'
+      },
+      'update': {
+        'success': 'Der Bereich wurde aktualisiert.',
+        'error': 'Der Bereich konnte nicht aktualisiert werden.'
+      },
+      'destroy': {
+        'success': 'Der Bereich wurde gelöscht.',
+        'error': 'Der Bereich konnte nicht gelöscht werden.'
+      }
+    },
+    'unit': {
       'save': {
         'success': 'Ein neuer Bereich wurde angelegt.',
         'error': 'Der Bereich konnte nicht angelegt werden.'

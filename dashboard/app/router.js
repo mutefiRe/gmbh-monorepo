@@ -7,17 +7,17 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('areas');
+  this.route('categories');
+  this.route('events');
   this.route('login');
   this.route('logout');
-  this.route('data', function(){});
-  this.route('categories');
-  this.route('users');
   this.route('printers');
-  this.route('events');
   this.route('products');
-  this.route('tables');
-  this.route('areas');
   this.route('statistics');
+  this.route('tables');
+  this.route('units');
+  this.route('users');
 });
 
 export default Router;

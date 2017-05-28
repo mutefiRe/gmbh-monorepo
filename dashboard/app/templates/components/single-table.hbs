@@ -21,14 +21,10 @@
       </div>
 
       <div class="input-row {{if isNew 'align-right'}}">
-        <button {{action 'updateTable'}} class="save">{{t 'buttons.save'}}</button>
+        <button {{action 'toggleButton' 'enabled'}} class="{{if table.enabled 'toggle' 'gray'}}">{{if table.enabled 'aktiviert' 'deaktiviert'}}</button>
+        <button {{action 'updateTable' table}} class="save">{{t 'buttons.save'}}</button>
         {{#unless isNew}}<button class="delete" {{action "destroyTable"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
       </div>
     </div>
-  </div>
-  <div class="input-row">
-    <button {{action 'toggleButton' 'enabled'}} class="{{if table.enabled 'toggle' 'gray'}}">{{if table.enabled 'aktiviert' 'deaktiviert'}}</button>
-    <button {{action 'updateTable' table}} class="save">{{t 'buttons.save'}}</button>
-    {{#unless isNew}}<button class="delete" {{action "destroyTable"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
   </div>
 {{/if}}

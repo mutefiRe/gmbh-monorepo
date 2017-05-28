@@ -41,8 +41,8 @@ export default Ember.Component.extend({
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedRecord', null);
         if (this.get('isNew')) {
-          this.get('table').deleteRecord();
-          this.set('table', null);this.set('product', null);
+          if (this.get('table.hasDirtyAttributes')) this.get('table').deleteRecord();
+          this.set('table', null);
         }
       }
     },
