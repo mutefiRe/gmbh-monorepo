@@ -35,6 +35,10 @@ class Print {
     this.printJob(printer, layout.bill(order));
   }
 
+  test(printer){
+    this.printJob(printer.systemName, layout.printerTest(printer));
+  }
+
   printJob(printerName, data) {
     const self = this;
     console.log(`recieved print job for printer ${printerName}`);

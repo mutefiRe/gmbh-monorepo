@@ -108,6 +108,19 @@ class layout {
     }
     return printSequence;
   }
+
+  printerTest(printer) {
+    const printData = [];
+    printData.push(CHAR_CODE);
+    printData.push(ENTER);
+    printData.push(TXT_2HEIGHT, util.cpad(printer.name || "Unbenannter Drucker", 48), TXT_NORMAL);
+    printData.push(ENTER);
+    printData.push(ENTER);
+    printData.push(TXT_2HEIGHT, util.cpad(printer.systemName, 48), TXT_NORMAL);
+    printData.push(FEED, PAPER_PART_CUT);
+
+    return printData.reduce((a,b) => a.concat(b));
+  }
 }
 
 function showAmount(data) {
