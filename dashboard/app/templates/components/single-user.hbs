@@ -35,7 +35,8 @@
   </div>
   <div class="input-row align-right">
     {{#unless isNew}}
-      <button class="gray" type="button">Passwort ändern</button>
+      <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">Passwort ändern</button>
+      {{modal-changepassword showModal=isShowingPassword user=user}}
     {{else}}
       <label for="password">Passwort</label>
       {{input type="password" value=user.password name="password"}}

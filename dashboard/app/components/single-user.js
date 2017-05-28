@@ -1,9 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  notifications: Ember.inject.service('notification-messages'),
   i18n: Ember.inject.service(),
+  notifications: Ember.inject.service('notification-messages'),
   tagName: 'li',
+  isShowingPassword: false,
   classNameBindings: ['isOpen:open'],
   isOpen: false,
   isNew: false,
