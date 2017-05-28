@@ -34,7 +34,7 @@
     "action": "allow"
   },{
     "resource": "tables",
-    "methods": ["GET"],
+    "methods": ["GET", "POST"],
     "action": "allow"
   },{
     "resource": "units",
