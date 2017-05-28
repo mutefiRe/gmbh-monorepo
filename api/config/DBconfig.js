@@ -6,9 +6,10 @@ module.exports = function(){
         user:     process.env.GMBH_DB_USER     || "root",
         password: process.env.GMBH_DB_PASSWORD || "",
         options: {
-          host:    process.env.GMBH_DB_HOST    || "localhost",
-          port:    process.env.GMBH_DB_PORT    || 3306,
-          dialect: process.env.GMBH_DB_DIALECT || 'mysql'
+          host:     process.env.GMBH_DB_HOST    || "localhost",
+          port:     process.env.GMBH_DB_PORT    || 3306,
+          dialect:  process.env.GMBH_DB_DIALECT || 'mysql',
+          timezone: 'Europe/Vienna'
         }
       };
     case 'test':
@@ -17,11 +18,12 @@ module.exports = function(){
         user:     process.env.GMBH_DB_USER     || "root",
         password: process.env.GMBH_DB_PASSWORD || "",
         options: {
-          pool: false,
-          logging: false,
-          host:    process.env.GMBH_DB_HOST    || "localhost",
-          port:    process.env.GMBH_DB_PORT    || 3306,
-          dialect: process.env.GMBH_DB_DIALECT || 'mysql'
+          pool:     false,
+          logging:  false,
+          host:     process.env.GMBH_DB_HOST    || "localhost",
+          port:     process.env.GMBH_DB_PORT    || 3306,
+          dialect:  process.env.GMBH_DB_DIALECT || 'mysql',
+          timezone: 'Europe/Vienna'
         }
       };
     case'production':
@@ -30,9 +32,10 @@ module.exports = function(){
         user:      process.env.GMBH_DB_USER     || "root",
         password:  process.env.GMBH_DB_PASSWORD || "",
         options: {
-          host:    process.env.GMBH_DB_HOST    || "localhost",
-          port:    process.env.GMBH_DB_PORT    || 3306,
-          dialect: process.env.GMBH_DB_DIALECT || 'postgres'
+          host:     process.env.GMBH_DB_HOST    || "localhost",
+          port:     process.env.GMBH_DB_PORT    || 3306,
+          dialect:  process.env.GMBH_DB_DIALECT || 'postgres',
+          timezone: 'Europe/Vienna'
         }
       };
     case 'test-ci':
@@ -41,11 +44,12 @@ module.exports = function(){
         user:     process.env.GMBH_DB_USER     || "root",
         password: process.env.GMBH_DB_PASSWORD || "GMBH",
         options: {
-          pool:     false,
-          logging:  false,
-          host: process.env.GMBH_IP             || "mysql",
-          port:     process.env.GMBH_DB_PORT    || 3306,
-          dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+          pool:      false,
+          logging:   false,
+          host:      process.env.GMBH_IP             || "mysql",
+          port:      process.env.GMBH_DB_PORT    || 3306,
+          dialect:   process.env.GMBH_DB_DIALECT || 'mysql',
+          timezone: 'Europe/Vienna'
         }
       };
     default:
@@ -54,9 +58,10 @@ module.exports = function(){
         user:      process.env.GMBH_DB_USER     || "root",
         password:  process.env.GMBH_DB_PASSWORD || "",
         options: {
-          host: process.env.GMBH_IP         || "localhost",
-          port:     process.env.GMBH_DB_PORT    || 3306,
-          dialect:  process.env.GMBH_DB_DIALECT || 'mysql'
+          host:      process.env.GMBH_IP         || "localhost",
+          port:      process.env.GMBH_DB_PORT    || 3306,
+          dialect:   process.env.GMBH_DB_DIALECT || 'mysql',
+          timezone: 'Europe/Vienna'
         }
       };
   }
