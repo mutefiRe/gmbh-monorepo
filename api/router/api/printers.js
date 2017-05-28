@@ -3,6 +3,9 @@
 const router = require('express').Router();
 const db = require('../../models');
 const control = require('../../printer/control');
+const print = require('../../printer/print');
+
+let lockSearch = false;
 
 /**
  * @apiDefine printersItem
@@ -67,6 +70,40 @@ router.get('/:id', function(req, res){
 });
 
 /**
+ * @api {post} api/printers/:id test print
+ * @apiGroup Printer
+ * @apiName TestPrinter
+ * @apiParam {Number} id printers unique ID.
+
+  *@apiUse token
+
+ * @apiSuccess {Object} empty
+ * @apiPermission admin
+ */
+
+router.post('/:id/testprint', function(req, res){
+  db.Printer.find({where: {id: req.params.id}}).then(printer => {
+    if(printer === null){
+      res.status(404).send({
+        'errors': {
+          'msg': "couldn't find printer"
+        }
+      });
+      return;
+    }
+    print.test(printer.dataValues);
+    res.send({});
+  })
+  .catch((error) => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  })
+});
+
+/**
  * @api {post} api/printers/update Request Printers
  * @apiGroup Printer
  * @apiName UpdatePrinters
@@ -79,17 +116,17 @@ router.get('/:id', function(req, res){
  */
 
 router.post('/update', function (req, res) {
-  control.updatePrinters()
-    .then(() => {
-      res.status(200);
+  res.status(200).send();
+  const io = req.app.get('io');
+  if(!lockSearch) {
+    lockSearch = true;
+    control.updatePrinters()
+    .then((printers) => {
+      io.sockets.emit("update", { printers: printers.slice(printers.length/2, printers.length) });
+      lockSearch = false;
     })
-    .catch((error) => {
-      res.status(400).send({
-        'errors': {
-          'msg': error && error.errors && error.errors[0].message || error.message
-        }
-      });
-    })
+  }
+
 });
 
 /**
