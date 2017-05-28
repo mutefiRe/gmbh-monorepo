@@ -8,32 +8,51 @@ export default Ember.Component.extend(Ember.Evented, {
   tagName: 'li',
   classNameBindings: ['isOpen:open'],
   isOpen: false,
+  isNew: false,
+  init(){
+    this._super(...arguments);
+    if (Ember.get(this, 'isNew')) {
+      this.set('isOpen', true);
+      Ember.$('body').addClass('noscroll');
+      this.set('currentSelectedRecord', {
+        component: this,
+        record: this.get('category'),
+        type: 'component'
+      });
+    }
+  },
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedCategory', {
+        this.set('currentSelectedRecord', {
           component: this,
           record: this.get('category'),
           type: 'component'
         });
       } else {
         Ember.$('body').removeClass('noscroll');
-        this.set('currentSelectedCategory', null);
+        this.set('currentSelectedRecord', null);
+        if (this.get('isNew')) {
+          this.get('category').deleteRecord();
+          this.set('category', null);
+        }
       }
     },
-    updateCategory(category) {
-      category.save().then(() => {
+    updateCategory() {
+      this.get('category').save().then(() => {
         this.send('toggleEditable');
         this.get('notifications').success(this.get('i18n').t('notifications.category.update.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.category.update.error'));
       });
     },
-    destroyCategory(category) {
-      category.destroyRecord().then(() => {
+    destroyCategory() {
+      this.get('category').destroyRecord().then(() => {
         this.get('notifications').warning(this.get('i18n').t('notifications.category.destroy.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.category.destroy.error'));
       });

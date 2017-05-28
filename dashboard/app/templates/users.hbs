@@ -1,56 +1,23 @@
 <main>
+  {{#if newRecord}}
+    <div class="content">
+      <ul class="userlist editable">
+        {{single-user user=newRecord currentSelectedRecord=currentSelectedRecord isNew=true}}
+      </ul>
+    </div>
+  {{/if}}
   <div class="list-description">
     <p>Name</p>
     <p>Berechtigung</p>
     <p>Passwort</p>
   </div>
-
-  {{#if newUser}}
-    <div class="content createNew" style="margin-bottom: 30px;">
-      <div class="input-row">
-        <div class="input-element">
-          <label for="username">Username</label>
-          {{input type="text" value=newUser.username name="username"}}
-        </div>
-        <div class="input-element">
-          <label for="firstname">Vorname</label>
-          {{input type="text" value=newUser.firstname name="firstname"}}
-        </div>
-        <div class="input-element">
-          <label for="lastame">Nachname</label>
-          {{input type="text" value=newUser.lastname name="lastname"}}
-        </div>
-        <div class="input-element">
-          <label for="authentication">Berechtigung</label>
-          <div class="select-wrapper">
-            <select onchange={{action (mut newUser.permission) value="target.value"}}>
-              <option selected={{eq newUser.permission "Waiter"}} value=0>Waiter</option>
-              <option selected={{eq newUser.permission "Admin"}} value=1>Admin</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="input-row">
-        <div class="input-element">
-          <label for="passord">Password</label>
-          {{input type="password" value=newUser.password name="password"}}
-        </div>
-      </div>
-      <div class="input-row align-right">
-        <button {{action "saveNewUser"}} class="save" type="button">Speichern</button>
-      </div>
-      <div class="input-row align-right">
-        <button {{action "cancelNewUser"}} class="delete" type="button">Abbrechen</button>
-      </div>
-    </div>
-  {{/if}}
   <div class="content">
     {{#each alphabeticUserGroup as |userGroup|}}
       <div class="entriesbyletter">
         <h2>{{userGroup.letter}}</h2>
         <ul class="userlist editable">
           {{#each userGroup.users as |user|}}
-            {{single-user user=user currentSelectedUser=currentSelectedUser}}
+            {{single-user user=user currentSelectedRecord=currentSelectedRecord}}
           {{/each}}
         </ul>
       </div>
@@ -58,4 +25,4 @@
   </div>
 </main>
 
-{{main-controlbar currentSelectedRecord=currentSelectedUser}}
+{{main-controlbar setRecord=(action 'createRecord') currentSelectedRecord=currentSelectedRecord isNew=(if newRecord true false)}}

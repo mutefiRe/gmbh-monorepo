@@ -114,5 +114,11 @@ export default {
         'error': 'Beim speichern ist ein Fehler aufgetreten.'
       }
     }
+  },
+  'new': {
+    'product': "Neues Produkt anlegen:",
+    'table': "Neuen Tisch anlegen:",
+    'area': "Neuen Bereich anlegen:",
+    'category': "Neue Kategorie anlegen:"
   }
 };

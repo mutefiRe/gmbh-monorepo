@@ -6,38 +6,52 @@ export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['isOpen:open'],
   isOpen: false,
+  isNew: false,
+  init(){
+    this._super(...arguments);
+    if (Ember.get(this, 'isNew')) {
+      this.set('isOpen', true);
+      Ember.$('body').addClass('noscroll');
+      this.set('currentSelectedRecord', {
+        component: this,
+        record: this.get('area'),
+        type: 'component'
+      });
+    }
+  },
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedArea', {
+        this.set('currentSelectedRecord', {
           component: this,
           record: this.get('area'),
           type: 'component'
         });
       } else {
         Ember.$('body').removeClass('noscroll');
-        this.set('currentSelectedArea', null);
+        this.set('currentSelectedRecord', null);
+        if (this.get('isNew')) {
+          this.get('area').deleteRecord();
+          this.set('area', null);
+        }
       }
     },
-    updateArea(area) {
-      area.save().then(() => {
+    updateArea() {
+      this.get('area').save().then(() => {
         this.send('toggleEditable');
-
-        // notify user (success)
         this.get('notifications').success(this.get('i18n').t('notifications.area.update.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.area.update.error'));
       });
     },
-    destroyArea(area) {
-      area.destroyRecord().then(() => {
-        // notify user (warning)
+    destroyArea() {
+      this.get('area').destroyRecord().then(() => {
         this.get('notifications').warning(this.get('i18n').t('notifications.area.destroy.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
-        // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.area.destroy.error'));
       });
     }

@@ -7,36 +7,63 @@ export default Ember.Component.extend({
   classNameBindings: ['isOpen:open'],
   isOpen: false,
   tagName: 'li',
+  isNew: false,
+  init(){
+    this._super(...arguments);
+    if (Ember.get(this, 'isNew')) {
+      this.set('isOpen', true);
+      Ember.$('body').addClass('noscroll');
+      this.set('currentSelectedRecord', {
+        component: this,
+        record: this.get('product'),
+        type: 'component'
+      });
+      this.set('product.category', this.get('categories.firstObject'));
+    }
+  },
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedProduct', {
+        this.set('currentSelectedRecord', {
           component: this,
           record: this.get('product'),
           type: 'component'
         });
       } else {
         Ember.$('body').removeClass('noscroll');
-        this.set('currentSelectedProduct', null);
+        this.set('currentSelectedRecord', null);
+        if (this.get('isNew')) {
+          this.get('product').deleteRecord();
+          this.set('product', null);
+        }
       }
     },
-    changeRelation(product, event) {
-      const category = this.get('store').peekRecord('category', event.target.value);
-      product.set('category', category);
+    changeRelation(type, event) {
+      const relation = this.get('store').peekRecord(type, event.target.value);
+      this.get('product').set(type, relation);
+      if (!this.get('isNew')) {
+        Ember.run.next(this, () => {
+          Ember.$('html, body').animate({
+            scrollTop: this.$().offset().top
+          }, 200);
+        });
+      }
     },
-    updateProduct(product) {
-      product.save().then(() => {
+    updateProduct() {
+      this.get('product').save().then(() => {
         this.send('toggleEditable');
         this.get('notifications').success(this.get('i18n').t('notifications.product.update.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.product.update.error'));
       });
     },
-    destroyProduct(product) {
-      product.destroyRecord().then(() => {
+    destroyProduct() {
+      this.get('product').destroyRecord().then(() => {
         this.get('notifications').warning(this.get('i18n').t('notifications.product.destroy.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.product.destroy.error'));
       });

@@ -1,5 +1,11 @@
 <div class="single-product" {{action "toggleEditable"}} style="background:{{product.category.color}}">
-  <p>{{product.name}}</p>
+  <p>
+    {{#if isNew}}
+      {{t 'new.product'}}
+    {{else}}
+      {{product.name}}
+    {{/if}}
+  </p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
 {{#if isOpen}}
@@ -11,7 +17,7 @@
     <div class="input-element">
       <label for="color">Kategorie</label>
       <div class="select-wrapper">
-        <select name="color" onchange={{action "changeRelation" product}}>
+        <select name="color" onchange={{action "changeRelation" 'category'}}>
             {{#each categories as |category|}}
               <option selected={{eq category.id product.category.id}} value="{{category.id}}">{{category.name}}</option>
             {{/each}}
@@ -41,8 +47,8 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="save" {{action "updateProduct" product}}>Speichern</button>
-    <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>Löschen</button>
+    <button class="save" {{action "updateProduct"}}>Speichern</button>
+    {{#unless isNew}}<button class="delete" {{action "destroyProduct"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
   </div>
 </div>
 {{/if}}
