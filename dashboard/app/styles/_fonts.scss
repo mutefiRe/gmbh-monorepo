@@ -1,0 +1,36 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(./fonts/materialicons/MaterialIcons-Regular.eot);
+  /* For IE6-8 */
+  src: local('./fonts/materialicons/Material Icons'), local('./fonts/materialicons/MaterialIcons-Regular'), url(./fonts/materialicons/MaterialIcons-Regular.woff2) format('woff2'), url(./fonts/materialicons/MaterialIcons-Regular.woff) format('woff'), url(./fonts/materialicons/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(./fonts/Roboto/Roboto-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: url(./fonts/Roboto/Roboto-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: url(./fonts/Roboto/Roboto-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100;
+  src: url(./fonts/Roboto/Roboto-Thin.ttf) format('truetype');
+}
