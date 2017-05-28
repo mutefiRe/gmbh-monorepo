@@ -53,7 +53,7 @@ export default Ember.Component.extend({
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedRecord', null);
         if (this.get('isNew')) {
-          this.get('user').deleteRecord();
+          if (this.get('user.hasDirtyAttributes')) this.get('user').deleteRecord();
           this.set('user', null);
         }
       }
