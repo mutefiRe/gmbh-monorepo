@@ -6,6 +6,7 @@ export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['isOpen:open'],
   isOpen: false,
+  payload: Ember.inject.service('session-payload'),
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
@@ -30,6 +31,21 @@ export default Ember.Component.extend({
       }).catch(() => {
         // notify user (failure)
         this.get('notifications').error(this.get('i18n').t('notifications.printer.update.error'));
+      });
+    },
+    testPrint() {
+      const printerId = this.get('printer').id;
+      $.ajax({
+        headers: {
+          'X-Access-Token': this.get('payload').getToken()
+        },
+        'method': 'POST',
+        url: `${window.EmberENV.host}/api/printers/${printerId}/testprint`
+      })
+      .then(() => {
+        this.get('notifications').success(this.get('i18n').t('notifications.printer.test.success'));
+      }).catch(() => {
+        this.get('notifications').error(this.get('i18n').t('notifications.printer.test.error'));
       });
     }
   }
