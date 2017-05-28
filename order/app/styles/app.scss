@@ -1,17 +1,33 @@
-  $blue: #177FB2;
-  $blue-light: #6BCFFF;
-  $blue-lighter: #BEE9FF;
-  $blue-baby: #E6FCFF;
+  $blue: #365B94;
+  $blue-light: lighten($blue, 25%);
+  $blue-lighter: lighten($blue, 45%);
+  $blue-baby: lighten($blue, 75%);
 
   $grey-darker: #4D4D4D;
   $grey-dark: #666666;
+  $grey-inactive: #C4C4C4;
   $grey: #E6E6E6;
   $grey-light: #F0F0F0;
   $white: #FFFFFF;
 
-  $orange: #FF5700;
-  $orange-light: #FF9863;
-  $orange-lighter: #FFEEE6;
+
+  /*Block Colors*/
+
+  $yellowfromtheegg: #F0B71D;
+  $freshcoral: #FF7171;
+  $dashingred: #D51E21;
+  $scaryred: #A33637;
+  $darkerred: #A23333;
+  $purplerain: #5d3d57;
+  $donaublue: #3E8BF4;
+  $simpleblue: #3E6898;
+  $toggleblue: #115186;
+  $deepseablue: #1D3850;
+  $logoturquoise: #40b391;
+  $gardengreen: #478B4C;
+
+  $dashingred-light: lighten($dashingred, 15%);
+  $dashingred-lighter: lighten($dashingred, 25%);
 
   $light: 1;
   $dark: 0;

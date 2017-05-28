@@ -30,7 +30,7 @@
 
 <div class="flexcontainer table_sum">
   {{#if order.table}}
-    <p {{action "setActualOrder" order.table}} class="sum">{{t "order.table" count=1}}: {{order.table.name}}</p>
+    <p {{action "setActualOrder" order.table}} class="tablebutton">{{t "order.table" count=1}}: {{order.table.shortname}}</p>
   {{else}}
     {{#unless (eq order.type "table")}}
     <p>{{t "order.salesCheck"}}</p>
@@ -56,11 +56,7 @@
 {{/if}}
 <div class="flexcontainer">
   <button {{action "goToPayMain"}} class="smallbutton-grey">
-    {{#if settings.firstObject.instantPay}}
-      {{t "button.showOrders"}}
-    {{else}}
-      {{t "button.back"}}
-    {{/if}}
+    {{t "button.showOrders"}}
   </button>
   {{#if open}}
     {{#unless (eq markedOrderitems.length orderitems.length) }}
@@ -73,20 +69,18 @@
   {{/if}}
 </div>
 <div class="flexcontainer">
-  {{#if settings.firstObject.instantPay}}
-    <button {{action 'goToOrderMain'}} class="bigbutton default-btn">{{t "button.startNewOrder"}}</button>
-  {{/if}}
+  <button {{action 'goToOrderMain'}} class="bigbutton default-btn">{{t "button.startNewOrder"}}</button>
 </div>
 </div>
 <div class="menu--mobile">
   <button {{action "goToPayMain"}} class="smallbutton default-btn">
     <span class="icon icon-return"></span>
   </button>
-  <button {{action 'goToOrderMain'}} class="smallbutton smallbutton--orange default-btn">
+  <button {{action 'goToOrderMain'}} class="smallbutton smallbutton--new default-btn">
     <span class="icon icon-new_order"></span>
   </button>
 {{#if markedOrderitems}}
-      <button {{action "paySelected"}} class="smallbutton smallbutton--blue default-btn">
+      <button {{action "paySelected"}} class="smallbutton smallbutton--submit default-btn">
         <span class="icon icon-pay"></span>
       </button>
 {{else}}

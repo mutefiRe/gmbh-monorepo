@@ -1,7 +1,7 @@
 {{yield}}
 <div class="pay-main__switch ">
- <button {{action "filterButtonOrder"}} class="default-btn {{if (eq filter 'orders') 'active' ''}}">{{t "order.order" count=2}}</button>
- <button {{action "filterButtonTables"}} class="default-btn {{if (eq filter 'tables') 'active' ''}}">{{t "order.table" count=2}}</button>
+ <button {{action "filterButtonOrder"}} class="default-btn {{if (eq filter 'orders') 'active' ''}}">{{t "order.order" count=2}}</button
+ ><button {{action "filterButtonTables"}} class="default-btn {{if (eq filter 'tables') 'active' ''}}">{{t "order.table" count=2}}</button>
 </div>
 {{#if (eq filter "orders")}}
   <div class="orders">
@@ -30,10 +30,10 @@
   </div>
 {{/if}}
  <div class="flexcontainer desktop">
-      <button {{action "backButton"}} class="default-btn bigbutton">{{t "button.back"}}</button>
-    </div>
-    <div class="flexcontainer mobile">
-      <button {{action "backButton"}} class="default-btn bigbutton">
-        <span class="icon icon-return"></span>
-      </button>
-    </div>
+    <button {{action "backButton"}} class="default-btn bigbutton">{{t "button.back"}}</button>
+  </div>
+  <div class="flexcontainer mobile">
+    <button {{action "backButton"}} class="default-btn bigbutton">
+      <span class="icon icon-return"></span>
+    </button>
+  </div>

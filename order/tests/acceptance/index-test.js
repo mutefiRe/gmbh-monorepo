@@ -64,7 +64,7 @@ describe('Acceptance | index screen', function() {
     andThen(() => {
       click("div.menu--desktop button.bigbutton:first-child");
       andThen(() => {
-        click("div.table-mask > button:first");
+        click("div.table-mask > div:first");
         andThen(() => {
           expect(find("div.menu--desktop span").html()).to.equal("Bestellung ist leer!");
         });
@@ -78,7 +78,7 @@ describe('Acceptance | index screen', function() {
       click("div.product_single-item:first-child");
       click("div.menu--desktop button.bigbutton:first-child"); // Tisch auswählen
       andThen(() => {
-        click("div.table-mask > button:first"); // Erster Tisch
+        click("div.table-mask > div:first"); // Erster Tisch
         andThen(() => {
           expect(find("div.menu--desktop button.bigbutton:first").html()).to.equal("Abschicken");
         });

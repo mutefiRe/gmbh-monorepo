@@ -7,6 +7,15 @@ export default Ember.Component.extend(RecognizerMixin, {
   recognizers: 'swipe',
   classNames: ['order-detail','screen'],
   tagName: 'div',
+  tableButtonStyle: Ember.computed('order.table', function(){
+    if(typeof this.get('order.table') === "undefined"){
+      return '';
+    }
+    return Ember.String.htmlSafe(
+      'background-color: ' + this.get('order.table.area.color') + ';' +
+      'color: ' + this.get('order.table.area.textcolor') + ';'
+    );
+  }),
   openAmount: Ember.computed('order.orderitems.@each.{countPaid,count}', function(){
     let total = 0;
     this.get('order.orderitems').forEach(orderitem => {

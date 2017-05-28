@@ -1,9 +1,37 @@
 .table-select{
   width: 100%;
   height: 100%;
+
+  &__switch {
+    margin-top: 20px;
+    button {
+      @include button($noshadow, $grey, $grey-darker);
+      &:active {
+        @include button-hover($grey);
+      }
+      width: 50%;
+      &.active {
+        color: $white;
+        background: $blue;
+      }
+    }
+  }
+
+  button.submit{
+    width: 100%;
+  }
+
+  input[type=text]{
+    padding: 20px 0 20px 0;
+    margin-bottom: 20px;
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
+  }
+
   .navbar{
-      width:100%;
-      height:80px;
+    width:100%;
+    height:80px;
     button{
       width:32.33%;
       margin: 0.5%;
@@ -18,7 +46,9 @@
   }
   .table-mask{
     overflow-y: auto;
+    min-height: 250px;
     max-height: 470px;
+    padding-top: 20px;
     width:100%;
     @media (max-height: 680px){
       max-height: 350px;
@@ -26,12 +56,18 @@
     @media (max-height: 560px){
       max-height: 250px;
     }
-    h3 {
+    h2, h3 {
       text-align:center;
       display:block;
       padding-top:15px;
       padding-bottom:10px;
+      clear:both;
     }
+
+    h3:first-child {
+      padding-top: 0;
+    }
+
     .button-modal {
       width:100%;
       padding-top: 10px;
@@ -50,10 +86,10 @@
   @media (max-width: 560px){
     .table-mask{
       @media (max-height: 680px){
-        max-height: 450px;
+        max-height: 358px;
       }
       @media (max-height: 560px){
-        max-height: 350px;
+        max-height: 258px;
       }
       @media (max-height: 460px){
         max-height: 250px;
