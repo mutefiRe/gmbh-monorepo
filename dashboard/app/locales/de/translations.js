@@ -24,6 +24,7 @@ export default {
     'instantpay': 'Sofort&shy;bezahlung',
     'priceonproducts': 'Preis auf Produkte',
     'waiteraccessright': 'Kellner&shy;zugriffs&shy;berechtigung',
+    'showamount': 'Einheiten anzeigen',
     'logout': 'Abmelden',
     'login': 'Anmelden'
   },
