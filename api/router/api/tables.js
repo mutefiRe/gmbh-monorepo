@@ -1,8 +1,8 @@
 'use strict';
 
-const express   = require('express');
-const router    = express.Router();
-const db        = require('../../models');
+const express = require('express');
+const router = express.Router();
+const db = require('../../models');
 
 /**
  * @apiDefine tableAttributes
@@ -41,9 +41,9 @@ const db        = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Table.find({where: {id: req.params.id}}).then(table => {
-    res.send({table});
+router.get('/:id', function(req, res) {
+  db.Table.find({ where: { id: req.params.id } }).then(table => {
+    res.send({ table });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -68,9 +68,9 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res){
+router.get('/', function(req, res) {
   db.Table.findAll().then(tables => {
-    res.send({tables});
+    res.send({ tables });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -92,18 +92,39 @@ router.get('/', function(req, res){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res){
+router.post('/', function(req, res) {
   const io = req.app.get('io');
-  db.Table.create(req.body.table).then(table => {
-    io.sockets.emit("update", {table});
-    res.send({table});
-  }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
+  let table = req.body.table;
+  if (table.custom) {
+    db.Area.findOrCreate({
+      where: { name: '_custom', short: '*', color: '#A7292E' }
+    }).then(area => {
+      io.sockets.emit("update", { area: area[0] });
+      table.areaId = area[0].id;
+      db.Table.create(table).then(tables => {
+        io.sockets.emit("update", { tables });
+        res.send({ tables });
+      });
+    }).catch(error => {
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
     });
-  });
+  } else {
+    db.Table.create(req.body.table).then(table => {
+      io.sockets.emit("update", { table });
+      res.send({ table });
+    }).catch(error => {
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
+
+    });
+  }
 });
 
 /**
@@ -120,14 +141,14 @@ router.post('/', function(req, res){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res){
+router.put('/:id', function(req, res) {
   const io = req.app.get('io');
-  db.Table.find({where: {id: req.params.id}}).then(table => {
-    if(table === null) throw new Error('table not found');
+  db.Table.find({ where: { id: req.params.id } }).then(table => {
+    if (table === null) throw new Error('table not found');
     return table.update(req.body.table);
   }).then(table => {
-    res.send({table});
-    io.sockets.emit("update", {table});
+    res.send({ table });
+    io.sockets.emit("update", { table });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -147,14 +168,14 @@ router.put('/:id', function(req, res){
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res){
+router.delete('/:id', function(req, res) {
   const io = req.app.get('io');
-  db.Table.find({where: {id: req.params.id}}).then(table => {
-    if(table === null) throw new Error('table not found');
+  db.Table.find({ where: { id: req.params.id } }).then(table => {
+    if (table === null) throw new Error('table not found');
     return table.destroy();
   }).then(() => {
     res.send({});
-    io.sockets.emit("delete", {'type': 'table', 'id': table.id});
+    io.sockets.emit("delete", { 'type': 'table', 'id': table.id });
   }).catch(error => {
     res.status(400).send({
       'errors': {
