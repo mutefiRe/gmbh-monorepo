@@ -4,7 +4,7 @@ export default DS.Model.extend({
   name:       DS.attr('string'),
   x:          DS.attr('number'),
   y:          DS.attr('number'),
-  custom:     DS.attr('boolean', { defaultValue: false }),
+  custom:     DS.attr('boolean', { defaultValue: true }),
   createdAt:  DS.attr('date'),
   updatedAt:  DS.attr('date'),
   enabled:    DS.attr('boolean', { defaultValue: true }),
@@ -16,7 +16,7 @@ export default DS.Model.extend({
     return name.length > 12 ? name.substring(0, 12) + "…" : name;
   }),
 
-  orderitems: Ember.computed('orders', function () {
+  orderitems: Ember.computed('orders', 'orders.@each.table', function () {
     const final = new Array();
     const orders = this.get('orders');
     orders.toArray().map(order => {
