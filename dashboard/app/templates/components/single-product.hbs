@@ -5,19 +5,19 @@
   <div class="editsingleproduct editarea">
     <div class="input-row">
       <div class="input-element">
-        <label for="name">Name</label>
+        <label for="name">{{t 'labels.name'}}</label>
         {{input type="text" value=product.name name="name"}}
       </div>
       <div class="input-element">
-        <label for="name">Preis</label>
+        <label for="name">{{t 'labels.price'}}</label>
         {{input type="text" value=product.price name="price"}}
       </div>
       <div class="input-element">
-        <label for="name">Mehrwertssteuer</label>
+        <label for="name">{{t 'labels.mwst'}}</label>
         {{input type="text" value=product.tax name="mwst"}}
       </div>
       <div class="input-element">
-        <label for="color">Kategorie</label>
+        <label for="color">{{t 'labels.category'}}</label>
         <div class="select-wrapper">
           <select name="color" onchange={{action "changeRelation" product}}>
             {{#each categories as |category|}}
@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="save" {{action "updateProduct" product}}>Speichern</button>
-    <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>Löschen</button>
+    <button class="save" {{action "updateProduct" product}}>{{t 'buttons.save'}}</button>
+    <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>{{t 'buttons.save'}}</button>
   </div>
 </div>

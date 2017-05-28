@@ -36,7 +36,10 @@ export default {
     'newPassword': 'Neues Passwort',
     'model': 'Modell',
     'icon': 'Icon',
-    'color': 'Farbe'
+    'color': 'Farbe',
+    'price': 'Preis',
+    'mwst': 'Mehrwertsteuter',
+    'category': 'Kategorie'
   },
   'permissions': {
     'admin': 'Admin',
