@@ -4,11 +4,11 @@
 <div class="editarea">
   <div class="input-row">
     <div class="input-element">
-      <label>Name</label>
+      <label>{{t 'labels.name'}}</label>
       {{input value=table.name}}
     </div>
     <div class="input-element">
-        <label>Bereich</label>
+        <label>{{t 'labels.area'}}</label>
         <div class="select-wrapper">
           <select name="area" onchange={{action "changeRelation" table}}>
             {{#each areas as |area|}}
@@ -20,7 +20,7 @@
     </div>
   </div>
    <div class="input-row">
-      <button {{action 'updateTable' table}} class="save">Speichern</button>
-      <button {{action 'destroyTable' table}} class="delete"><span class="material-icons">delete</span>Löschen</button>
+      <button {{action 'updateTable' table}} class="save">{{t 'buttons.save'}}</button>
+      <button {{action 'destroyTable' table}} class="delete"><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>
     </div>
 </div>

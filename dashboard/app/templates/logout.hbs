@@ -1,7 +1,7 @@
 <div class="login">
   <img src="./assets/images/logo-gmbhtext.svg">
   <div class="login-form">
-    <button {{action "logout"}}>Abmelden</button>
+    <button {{action "logout"}}>{{t 'buttons.logout'}}</button>
     {{#if errorMessage}}
       <div>
         {{errorMessage}}

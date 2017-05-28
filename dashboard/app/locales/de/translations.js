@@ -21,7 +21,9 @@ export default {
     'customtables': 'Benutzer&shy;definierte Tische',
     'instantpay': 'Sofort&shy;bezahlung',
     'priceonproducts': 'Preis auf Produkte',
-    'waiteraccessright': 'Kellner&shy;zugriffs&shy;berechtigung'
+    'waiteraccessright': 'Kellner&shy;zugriffs&shy;berechtigung',
+    'logout': 'Abmelden',
+    'login': 'Anmelden'
   },
   'labels': {
     'name': 'Name',
@@ -29,7 +31,7 @@ export default {
     'startdate': 'Startdatum',
     'enddate': 'Enddatum',
     'runtime': 'Laufzeit',
-    'username': 'Username',
+    'username': 'Benutzername',
     'firstname': 'Vorname',
     'lastname': 'Nachname',
     'permission': 'Berechtigung',
@@ -39,7 +41,9 @@ export default {
     'color': 'Farbe',
     'price': 'Preis',
     'mwst': 'Mehrwertsteuter',
-    'category': 'Kategorie'
+    'category': 'Kategorie',
+    'area': 'Bereich',
+    'password': 'Passwort'
   },
   'permissions': {
     'admin': 'Admin',
