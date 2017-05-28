@@ -23,7 +23,7 @@ export default Ember.Controller.extend({
         this.set('currentSelectedRecord', {
           component: this,
           record: this.get('newRecord'),
-          type:'controller'
+          type: 'controller'
         });
       }
     }
@@ -35,7 +35,7 @@ function getIcons() {
   const rules = [...document.styleSheets[0].cssRules];
   rules.forEach(rule => {
     const selector = rule.selectorText;
-    if ((selector || "").includes("iconfont-")) {
+    if ((selector || "").includes("icon-")) {
       iconNames.add(selector.substr(1, selector.indexOf(":") - 1));
     }
   });
