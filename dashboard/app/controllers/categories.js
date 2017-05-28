@@ -5,7 +5,7 @@ function getIcons() {
   const rules = [...document.styleSheets[0].cssRules];
   rules.forEach(rule => {
     const selector = rule.selectorText;
-    if((selector || "").includes("iconfont-")) {
+    if ((selector || "").includes("iconfont-")) {
       iconNames.add(selector.substr(1, selector.indexOf(":") - 1));
     }
   });
@@ -27,10 +27,11 @@ export default Ember.Controller.extend({
         this.set('colors', colors);
       });
   },
+  currentSelectedCategory: null,
   icons: getIcons(),
   colors: [],
   store: Ember.inject.service(),
-  printers:  Ember.computed('store.printer', function() {
+  printers: Ember.computed('store.printer', function() {
     return this.get('store').findAll('printer');
   })
 });

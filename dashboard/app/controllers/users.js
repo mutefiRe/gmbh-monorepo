@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  currentSelectedUser: null,
   alphabeticUserGroup: Ember.computed('model', function() {
     const users = this.get('model');
     const startingLetters = new Set();

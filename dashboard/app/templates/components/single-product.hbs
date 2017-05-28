@@ -2,12 +2,12 @@
   <p>{{product.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
-  <div class="editsingleproduct editarea">
-    <div class="input-row">
-      <div class="input-element">
-        <label for="name">Name</label>
-        {{input type="text" value=product.name name="name"}}
-      </div>
+{{#if isOpen}}
+<div class="editsingleproduct editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">Name</label> {{input type="text" value=product.name name="name"}}
+    </div>
       <div class="input-element">
         <label for="name">Preis</label>
         {{input type="text" value=product.price name="price"}}
@@ -16,10 +16,10 @@
         <label for="name">Mehrwertssteuer</label>
         {{input type="text" value=product.tax name="mwst"}}
       </div>
-      <div class="input-element">
-        <label for="color">Kategorie</label>
-        <div class="select-wrapper">
-          <select name="color" onchange={{action "changeRelation" product}}>
+    <div class="input-element">
+      <label for="color">Kategorie</label>
+      <div class="select-wrapper">
+        <select name="color" onchange={{action "changeRelation" product}}>
             {{#each categories as |category|}}
               <option selected={{eq category.id product.category.id}} value="{{category.id}}">{{category.name}}</option>
             {{/each}}
@@ -32,3 +32,4 @@
     <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>Löschen</button>
   </div>
 </div>
+{{/if}}

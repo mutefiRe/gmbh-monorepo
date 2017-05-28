@@ -118,6 +118,12 @@ export default {
         'success': 'Der Bereich wurde gelöscht.',
         'error': 'Der Bereich konnte nicht gelöscht werden.'
       }
+    },
+    'record': {
+      'save': {
+        'success': 'Speichern erfolgreich.',
+        'error': 'Beim speichern ist ein Fehler aufgetreten.'
+      }
     }
   }
 };

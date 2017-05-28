@@ -2,10 +2,10 @@
   <div class="content">
     <ul class="editable area-list">
       {{#each model as |area|}}
-        {{single-area area=area}}
+        {{single-area area=area currentSelectedArea=currentSelectedArea}}
       {{/each}}
     </ul>
   </div>
 </main>
 
-{{main-controlbar}}
+{{main-controlbar currentSelectedRecord=currentSelectedArea}}
