@@ -1,5 +1,11 @@
-<div class="single-area" {{action "toggleEditable"}}>
-  <p>{{area.name}}</p>
+<div class="single-area" {{action "toggleEditable"}} style="background:{{area.color}}">
+  <p>
+    {{#if isNew}}
+      {{t 'new.area'}}
+    {{else}}
+      {{area.name}}
+    {{/if}}
+  </p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
 {{#if isOpen}}
@@ -9,10 +15,16 @@
         <label for="name">Name</label>
         {{input value=area.name}}
       </div>
+    </div>
+    <div class="input-row">
+      <div class="input-element">
+        <label for="short">Kurzbezeichnung</label>
+        {{input value=area.short}}
+      </div>
+    </div>
+    <div class="input-row align-right">
+       <button class="save" {{action "updateArea"}}>Speichern</button>
+      {{#unless isNew}}<button class="delete" {{action "destroyArea"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
+    </div>
   </div>
-  <div class="input-row align-right">
-    <button {{action 'updateArea' area}} class="save">Speichern</button>
-    <button {{action 'destroyArea' area}} class="delete"><span class="material-icons">delete</span>Löschen</button>
-  </div>
-</div>
 {{/if}}

@@ -1,8 +1,12 @@
 <div class="singleuserbar" {{action "toggleEditable"}}>
-  <div class="singleusername">{{user.username}}</div>
-  <div class="singleauth">{{user.permission}}</div>
-  <div class="singlepwindicator material-icons">vpn_key</div>
-  <div class="singleeditindicator material-icons">mode_edit</div>
+  {{#unless isNew}}
+    <div class="singleusername">{{user.username}}</div>
+    <div class="singleauth">{{user.permission}}</div>
+    <div class="singlepwindicator material-icons">vpn_key</div>
+    <div class="singleeditindicator material-icons">mode_edit</div>
+  {{else}}
+    <div class="singleusername">{{t 'new.user'}}</div>
+  {{/unless}}
 </div>
 {{#if isOpen}}
 <div class="editsingleuser editarea">
@@ -30,13 +34,17 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">Passwort ändern</button>
-    {{modal-changepassword showModal=isShowingPassword user=user}}
-    <button class="gray" type="button">Passwort zurücksetzen</button>
+    {{#unless isNew}}
+      <button {{action (mut isShowingPassword) true on="mouseDown"}} class="gray" type="button">Passwort ändern</button>
+      {{modal-changepassword showModal=isShowingPassword user=user}}
+    {{else}}
+      <label for="password">Passwort</label>
+      {{input type="password" value=user.password name="password"}}
+    {{/unless}}
   </div>
   <div class="input-row align-right">
-    <button {{action "updateUser" user}} class="save" type="button">Speichern</button>
-    <button class="delete"><span class="material-icons">delete</span>Löschen</button>
+    <button class="save" {{action "updateUser"}}>Speichern</button>
+    {{#unless isNew}}<button class="delete" {{action "destroyUser"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
   </div>
 </div>
 {{/if}}

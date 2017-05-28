@@ -1,5 +1,35 @@
 import Ember from 'ember';
 
+export default Ember.Controller.extend({
+  store: Ember.inject.service(),
+  currentSelectedRecord: null,
+  newRecord: null,
+  colors: [],
+  icons: getIcons(),
+  init() {
+    getColors()
+      .then(colors => {
+        this.set('colors', colors);
+      });
+  },
+  printers: Ember.computed('store.printer', function() {
+    return this.get('store').findAll('printer');
+  }),
+  actions: {
+    createRecord() {
+      if (!this.get('newRecord')) {
+        Ember.$('body').addClass('noscroll');
+        this.set('newRecord', this.get('store').createRecord('category'));
+        this.set('currentSelectedRecord', {
+          component: this,
+          record: this.get('newRecord'),
+          type:'controller'
+        });
+      }
+    }
+  }
+});
+
 function getIcons() {
   const iconNames = new Set();
   const rules = [...document.styleSheets[0].cssRules];
@@ -19,19 +49,3 @@ function getColors() {
     });
   });
 }
-
-export default Ember.Controller.extend({
-  init() {
-    getColors()
-      .then(colors => {
-        this.set('colors', colors);
-      });
-  },
-  currentSelectedCategory: null,
-  icons: getIcons(),
-  colors: [],
-  store: Ember.inject.service(),
-  printers: Ember.computed('store.printer', function() {
-    return this.get('store').findAll('printer');
-  })
-});

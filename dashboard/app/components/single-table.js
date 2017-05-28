@@ -5,45 +5,68 @@ export default Ember.Component.extend({
   store: Ember.inject.service(),
   i18n: Ember.inject.service(),
   tagName: 'li',
-  areaToSet: '',
-  classNameBindings: ['isOpen:open'],
+  classNameBindings: ['isOpen:open', 'isNew:new'],
   isOpen: false,
+  isNew: false,
   init() {
     this._super();
-    const area = this.get('store').peekRecord('area', this.get('table.area.id'));
-    this.set('areaToSet', area);
+    if (Ember.get(this, 'isNew')) {
+      this.set('isOpen', true);
+      Ember.$('body').addClass('noscroll');
+      this.set('currentSelectedRecord', {
+        component: this,
+        record: this.get('table'),
+        type: 'component'
+      });
+      this.set('table.area', this.get('areas.firstObject'));
+    }
   },
   actions: {
     toggleEditable() {
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
         Ember.$('body').addClass('noscroll');
-        this.set('currentSelectedTable', {
+        this.set('currentSelectedRecord', {
           component: this,
           record: this.get('table'),
           type: 'component'
         });
       } else {
         Ember.$('body').removeClass('noscroll');
-        this.set('currentSelectedTable', null);
+        this.set('currentSelectedRecord', null);
+        if (this.get('isNew')) {
+          this.get('table').deleteRecord();
+          this.set('table', null);this.set('product', null);
+        }
       }
     },
-    changeRelation(table, event) {
-      const area = this.get('store').peekRecord('area', event.target.value);
-      this.set('areaToSet', area);
+    changeRelation(type, event) {
+      const relation = this.get('store').peekRecord(type, event.target.value);
+      this.get('table').set(type, relation);
+      if (!this.get('isNew')) {
+        this.send('toggleEditable');
+        Ember.run.next(this, () => {
+
+          Ember.$('html, body').animate({
+            scrollTop: this.$().offset().top
+          }, 200);
+        });
+      }
     },
-    updateTable(table) {
-      table.set('area', this.get('areaToSet'));
-      table.save().then(() => {
+    updateTable() {
+      this.get('table').save().then(() => {
         this.send('toggleEditable');
         this.get('notifications').success(this.get('i18n').t('notifications.table.update.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.table.update.error'));
       });
     },
-    destroyTable(table) {
-      table.destroyRecord().then(() => {
+    destroyTable() {
+      this.get('table').destroyRecord().then(() => {
+        this.send('toggleEditable');
         this.get('notifications').warning(this.get('i18n').t('notifications.table.destroy.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.table.destroy.error'));
       });

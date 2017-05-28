@@ -1,35 +1,62 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  notifications: Ember.inject.service('notification-messages'),
-  classNameBindings: ['isOpen:open'],
-  isOpen: false,
   i18n: Ember.inject.service(),
+  notifications: Ember.inject.service('notification-messages'),
   tagName: 'li',
   isShowingPassword: false,
+  classNameBindings: ['isOpen:open'],
+  isOpen: false,
+  isNew: false,
+  init(){
+    this._super(...arguments);
+    if (Ember.get(this, 'isNew')) {
+      this.set('isOpen', true);
+      Ember.$('body').addClass('noscroll');
+      this.set('currentSelectedRecord', {
+        component: this,
+        record: this.get('user'),
+        type: 'component'
+      });
+      this.set('user.permission', 0);
+    }
+  },
   actions: {
-    updateUser(user) {
-      user.save().then(() => {
+    updateUser() {
+      this.get('user').save().then(() => {
         this.send('toggleEditable');
         this.get('notifications').success(this.get('i18n').t('notifications.user.update.success'));
+        Ember.$('body').removeClass('noscroll');
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.user.update.error'));
+      });
+    },
+    destroyUser() {
+      this.get('user').destroyRecord().then(() => {
+        this.send('toggleEditable');
+        this.get('notifications').warning(this.get('i18n').t('notifications.user.destroy.success'));
+        Ember.$('body').removeClass('noscroll');
+      }).catch(() => {
+        this.get('notifications').error(this.get('i18n').t('notifications.user.destroy.error'));
       });
     },
     toggleEditable() {
       this.toggleProperty('isOpen');
       if (this.get('isOpen')) {
-        $('body').addClass('noscroll');
-        this.set('currentSelectedUser', {
+        Ember.$('body').addClass('noscroll');
+        this.set('currentSelectedRecord', {
           component: this,
           record: this.get('user'),
           type: 'component'
         });
       } else {
-        $('body').removeClass('noscroll');
-        this.set('currentSelectedUser', null);
+        Ember.$('body').removeClass('noscroll');
+        this.set('currentSelectedRecord', null);
+        if (this.get('isNew')) {
+          this.get('user').deleteRecord();
+          this.set('user', null);
+        }
       }
     }
-
   }
 });

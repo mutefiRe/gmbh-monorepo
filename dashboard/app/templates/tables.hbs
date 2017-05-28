@@ -1,4 +1,11 @@
 <main>
+    {{#if newRecord}}
+  <div class="content">
+    <ul class="editable product-list">
+      {{single-table table=newRecord currentSelectedRecord=currentSelectedRecord areas=model.areas isNew=true}}
+   </ul>
+  </div>
+  {{/if}}
   <div class="list-description">
     <p>Bereich</p>
     <p>Tischanzahl</p>
@@ -9,12 +16,12 @@
         <li>
           <div class="single-area" {{action 'toggleTables'}}>
             <p class="singleareaname">{{area.name}}</p>
-            <p class="singleareatablecount">{{area.tables.length}}</p>
+            <p class="singleareatablecount">{{area.persistedTables.length}}</p>
           </div>
           <div class="tablearea">
             <ul class="table-list editable">
-              {{#each area.tables as |table|}}
-                {{single-table table=table currentSelectedTable=currentSelectedTable areas=model.areas}}
+              {{#each area.persistedTables as |table|}}
+                {{single-table table=table currentSelectedRecord=currentSelectedRecord areas=model.areas}}
               {{/each}}
             </ul>
           </div>
@@ -24,4 +31,4 @@
   </div>
 </main>
 
-{{main-controlbar currentSelectedRecord=currentSelectedTable}}
+{{main-controlbar setRecord=(action 'createRecord') currentSelectedRecord=currentSelectedRecord isNew=(if newRecord true false)}}

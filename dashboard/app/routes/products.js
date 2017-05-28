@@ -4,7 +4,8 @@ export default Ember.Route.extend({
   model() {
     return Ember.RSVP.hash({
       categories: this.store.findAll('category'),
-      products:   this.store.findAll('item')
+      products: this.store.findAll('item'),
+      units: this.store.findAll('unit')
     });
   }
 });
