@@ -11,14 +11,14 @@ export default Ember.Component.extend({
   classNames: ['table-select'],
   activeTab: 'tables',
   userAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') === this.get('currentUser').id;
-  }).property('areas'),
+    return area.get('user.id') === this.get('currentUser').id && area.get('enabled');
+  }).property('areas.@each.enabled'),
   otherAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') !== this.get('currentUser').id;
-  }).property('areas'),
+    return area.get('user.id') !== this.get('currentUser').id && area.get('enabled');
+  }).property('areas.@each.enabled'),
   unassignedTables: Ember.computed.filter('tables', function(table){
     return table.get('custom') === false && !table.get('area.id');
-  }).property('tables'),
+  }).property('tables.@each.enabled'),
   customTables: Ember.computed.filter('tables', function(table){
     return !table.get('custom') ? false : table.get('orderitems').every(filterCustomTable);
   }).property('tables.@each.custom', 'tables.@each.order'),
@@ -31,10 +31,14 @@ export default Ember.Component.extend({
       this.set('activeTab', tab);
     },
     createTable(){
+      if(this.get('name') === ""){
+        this.get('notifications').error(this.get('i18n').t('notification.table.emptyString'), {autoClear: true});
+        return;
+      }
       const table = this.get('store').createRecord('table', { name: this.get('name'), custom: true });
       this.get('connection.status') ? this.saveTableAPI(table) : this.saveTableOffline(table);
       this.set('name', "");
-      this.set('tab', 'tables');
+      this.set('activeTab', 'tables');
     }
   },
   saveTableAPI(table){

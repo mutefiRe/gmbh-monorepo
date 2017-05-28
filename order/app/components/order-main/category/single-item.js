@@ -6,9 +6,9 @@ export default Ember.Component.extend({
   attributeBindings: ['style'],
   style: Ember.computed('category', 'actualCategory', function(){
     if(this.get('actualCategory') === this.get('category') || !this.get('actualCategory')) {
-      return 'color: ' + this.get('category.textcolor') + '; background-color: ' + this.get('category.color');
+      return Ember.String.htmlSafe('color: ' + this.get('category.textcolor') + '; background-color: ' + this.get('category.color'));
     }
-    return 'color: ' + this.get('category.textcolor') + '; filter: grayscale(70%); background-color: ' + this.get('category.color');
+    return Ember.String.htmlSafe('color: ' + this.get('category.textcolor') + '; background-color: ' + this.get('category.lightcolor'));
   }),
   click() {
     this.get('changeCategory')(this.get('category'));

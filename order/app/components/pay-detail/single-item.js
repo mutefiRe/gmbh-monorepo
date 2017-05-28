@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   tagName: 'div',
   attributeBindings: ['style'],
   style: Ember.computed('category', function() {
-    return 'border-left: ' + this.get('orderitem.item.category.color') + ' 5px solid';
+    return Ember.String.htmlSafe('border-left: ' + this.get('orderitem.item.category.color') + ' 5px solid');
   }),
   computedCount: Ember.computed('orderitem.countMarked', 'orderitem.countPaid', function() {
     const orderitem = this.get('orderitem');

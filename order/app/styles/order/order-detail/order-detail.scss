@@ -1,4 +1,4 @@
-.order-detail{
+.order-detail {
   background: $white;
   margin: 0 auto;
   position: absolute;
@@ -8,153 +8,169 @@
   padding-top: 20px;
   width: 100%;
   height: 100%;
+
   h2{
     padding-top: 20px;
     padding-bottom: 20px;
   }
-  table{
+  table {
     width: 100%;
     table-layout: fixed;
   }
-
-  .bigbutton{
+  .bigbutton {
     @include button($dark, $blue, $white);
-    &:active{
+    &:active {
       @include button-hover($blue);
     }
     width: 100%;
   }
-
-  .smallbutton{
+  .smallbutton {
     @include button($light, $grey, $grey-darker);
-    &:active{
+    &:active {
       @include button-hover($grey);
     }
     width: 48%;
   }
-
-  .flexcontainer{
+  .flexcontainer {
     @include flexbox();
     margin-top: 20px;
   }
-
-  .tablebutton{
+  .tablebutton {
     font-weight: bold;
     padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
     color: $grey-darker;
     border: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    text-align: center;
+    padding: 10px 0 10px 0;
+    width: 33.3333%;
+  }
+  .sum {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    min-width: 130px;
   }
 
   .required{
-    background-color: $orange-lighter;
+    background-color: inherit;
   }
 
-  .sum{
-    font-weight: bold;
-    padding-top: 10px;
-    padding-right: 20px;
-  }
   .menu--mobile{
     display: none;
   }
-  .menu--desktop{
+  .menu--desktop {
     display: block;
   }
   .scrollable {
-    max-height:65%;
-    overflow-y:auto;
+    max-height: 65%;
+    overflow-y: scroll;
+    touch-action: pan-y;
     border-bottom: 1px solid black;
     border-top: 1px solid black;
   }
 
   @media (max-width: 1000px) {
-
   }
+
   @media (max-width: 560px) {
     padding: 0px;
     h2{
+      padding: 20px 0 20px 0;
       font-size: 14px;
-      padding: 5px;
       text-align: center;
       background-color: $grey-light;
     }
-    .flexcontainer.table_sum{
+    .flexcontainer.table_sum {
       margin-top: 0;
     }
-    .smallbutton{
+    .smallbutton {
       padding: 0;
       padding-bottom: 70px;
       position: relative;
       margin-top: 0px;
       margin-bottom: 0px;
       width: 100%;
-      &--orange{
-        background-color: $orange-lighter;
+      &--delete{
+        background-color: $dashingred;
+        color: $white;
       }
-      &--blue{
+      &--submit{
         @include button($dark, $blue, $white);
       }
-      span{
+      span {
         font-size: 35px;
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
       }
     }
-
-    .menu--desktop{
+    .menu--desktop {
       display: none;
     }
-    .menu--mobile{
+    .menu--mobile {
       display: flex;
       position: fixed;
       width: 100%;
       bottom: 0;
     }
-    .bigbutton{
+    .bigbutton {
       margin-bottom: 0px;
     }
     .scrollable{
-      height: calc(100% - 129px);
+      height: calc(100% - 157px);
       max-height: none;
     }
   }
-
   &_single-item {
     border: 1px solid $grey-dark;
     &:first-child {
-        border-top: 0px;
+      border-top: 0px;
     }
     &:last-child {
-        border-bottom: 0px;
+      border-bottom: 0px;
     }
     @media (max-width: 560px) {
-        border-left: 0px;
-        border-right: 0px;
+      border-left: 0px;
+      border-right: 0px;
     }
     td {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      font-weight: bold;
+      &:first-child {
+        text-align: left;
+        padding: 20px;
+      }
+      &:nth-child(2) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        span {
+          font-weight: normal;
+        }
+      }
+      &:last-child {
+        text-align: right;
+        padding: 20px;
+        width: 120px;
+      }
+      &.disabled {
         padding-top: 20px;
         padding-bottom: 20px;
         font-weight: bold;
-        &:first-child {
-            text-align: left;
-            padding: 20px;
-        }
+        text-align: center;
         &:nth-child(2) {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            span {
-                font-weight: normal;
-            }
+          background: $grey-light;
         }
-        &:last-child {
-            text-align: right;
-            padding: 20px;
-            width: 120px;
+        &:nth-child(3) {
+          background: $dashingred-light;
+          color: $white;
         }
         &.disabled {
             padding-top: 20px;
@@ -165,7 +181,7 @@
                 background: $grey-light;
             }
             &:nth-child(3){
-              background:lighten($orange, 10%);
+              background: $dashingred-light;
               color: $white;
             }
             &:last-child {
@@ -173,18 +189,17 @@
                 padding-right: 20px;
                 min-width: 100px;
                 color: $white;
-                background: $orange;
+                background: $dashingred;
             }
         }
+      }
     }
-}
-
+  }
 }
 
 .empty-order {
-  @include button(2, transparent,  $grey-darker);
+  @include button(2, transparent, $grey-darker);
   width: 100%;
-  display:inline-block;
-  text-align:center;
+  display: inline-block;
+  text-align: center;
 }
-

@@ -8,6 +8,9 @@
   h2 {
     padding-top: 20px;
     padding-bottom: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .marktoggle--mobile {
     display: none;
@@ -57,21 +60,27 @@
     @include flexbox();
     margin-top: 20px;
   }
-  .tablebutton {
+  .tablebutton{
     font-weight: bold;
     padding: 10px;
     padding-left: 20px;
     padding-right: 20px;
-    color: $grey-darker;
     border: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
-  .required {
-    background-color: $orange-lighter;
-  }
-  .sum {
+
+  .sum{
     font-weight: bold;
     padding-top: 10px;
-    padding-right: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
+    min-width: 130px;
+  }
+
+  .required {
+    background-color: $dashingred-lighter;
   }
   .scrollable {
     max-height: 32%;
@@ -99,6 +108,7 @@
       background-color: $grey-light;
       float: left;
       width: 60%;
+
       &:last-child {
         width: 20%;
       }
@@ -139,10 +149,11 @@
       margin-top: 0px;
       margin-bottom: 0px;
       width: 100%;
-      &--orange {
-        background-color: $orange-lighter;
+      &--new {
+        background-color: $blue-lighter;
+        color: black;
       }
-      &--blue {
+      &--submit {
         @include button($dark, $blue, $white);
       }
       span {
@@ -159,12 +170,13 @@
     }
   }
   &_single-item {
-    border: 1px solid $grey-dark;
+    border-bottom: 1px solid $grey-dark;
+    border-right: 1px solid $grey-dark;
     width: 100%;
+
     @media (max-width: 560px) {
       border-left: 5px;
       border-right: 0px;
-      border-top: 0px;
     }
     &:after {
       content: '';

@@ -5,7 +5,10 @@ export default Ember.Component.extend({
   classNames: ['preview_single-item'],
   attributeBindings: ['style'],
   style: Ember.computed('item.item.category.color', function(){
-    return 'color: ' + this.get('item.item.category.textcolor') + '; background-color: ' + this.get('item.item.category.color');
+    return Ember.String.htmlSafe(
+      'color: ' + this.get('item.item.category.textcolor') + ';' +
+      'background-color: ' + this.get('item.item.category.color')
+    );
   }),
   didUpdate() {
     const $this = this.$();
