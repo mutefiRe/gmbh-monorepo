@@ -14,8 +14,11 @@ export default Ember.Service.extend({
   },
   getPermission() {
     const authenticator = Ember.getOwner(this).lookup('authenticator:jwt');
-    const token = this.get('session.session.content.authenticated.token');
-    const tokenData = authenticator.getTokenData(token);
+    const token         = this.get('session.session.content.authenticated.token');
+    const tokenData     = authenticator.getTokenData(token);
     return tokenData.permission;
+  },
+  getToken() {
+    return this.get('session.session.content.authenticated.token');
   }
 });
