@@ -12,11 +12,11 @@ export default Ember.Service.extend({
       return tokenData.id;
     }
   },
-  getPermission() {
+  getRole() {
     const authenticator = Ember.getOwner(this).lookup('authenticator:jwt');
-    const token         = this.get('session.session.content.authenticated.token');
-    const tokenData     = authenticator.getTokenData(token);
-    return tokenData.permission;
+    const token = this.get('session.session.content.authenticated.token');
+    const tokenData = authenticator.getTokenData(token);
+    return tokenData.role;
   },
   getToken() {
     return this.get('session.session.content.authenticated.token');

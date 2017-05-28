@@ -10,7 +10,8 @@ export default {
     'tables': 'Tische',
     'users': 'User',
     'statistics': 'Statistik',
-    'changePassword': 'Passwort ändern'
+    'changePassword': 'Passwort ändern',
+    'units': 'Einheiten'
   },
   'statistics': {
     'salestotal': 'Gesamteinnahmen',
@@ -27,6 +28,7 @@ export default {
     'instantpay': 'Sofort&shy;bezahlung',
     'priceonproducts': 'Preis auf Produkte',
     'waiteraccessright': 'Kellner&shy;zugriffs&shy;berechtigung',
+    'showamount': 'Einheiten anzeigen',
     'logout': 'Abmelden',
     'login': 'Anmelden'
   },
@@ -113,6 +115,10 @@ export default {
       'search': {
         'success': 'Druckersuche wurde in Auftrag gegeben. Dieser Vorgang kann bis zu einer Minute dauern!',
         'error': 'Druckersuche läuft bereits oder konnte nicht gestartet werden.'
+      },
+      'test': {
+        'success': 'Testdruck erfolgreich.',
+        'error': 'Testdruck fehlgeschlagen.'
       }
     },
     'event': {
@@ -157,6 +163,20 @@ export default {
         'error': 'Der Bereich konnte nicht gelöscht werden.'
       }
     },
+    'unit': {
+      'save': {
+        'success': 'Ein neuer Bereich wurde angelegt.',
+        'error': 'Der Bereich konnte nicht angelegt werden.'
+      },
+      'update': {
+        'success': 'Der Bereich wurde aktualisiert.',
+        'error': 'Der Bereich konnte nicht aktualisiert werden.'
+      },
+      'destroy': {
+        'success': 'Der Bereich wurde gelöscht.',
+        'error': 'Der Bereich konnte nicht gelöscht werden.'
+      }
+    },
     'record': {
       'save': {
         'success': 'Speichern erfolgreich.',
@@ -173,5 +193,9 @@ export default {
     'printer': "Neuen Drucker anlegen:",
     'unit': "Neue Einheit anlegen:",
     'user': "Neuen User anlegen"
+  },
+  'role': {
+    'waiter': 'Kellner/in',
+    'admin': 'Administrator/in'
   }
 };

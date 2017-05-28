@@ -112,6 +112,10 @@ export default {
       'search': {
         'success': 'Searching printers. This process can last up to 1 minute!',
         'error': 'Search process is running alreay or could not be started!'
+      },
+      'test': {
+        'success': 'Testdruck erfolgreich.',
+        'error': 'Testdruck fehlgeschlagen.'
       }
     },
     'event': {
@@ -162,6 +166,10 @@ export default {
         'error': 'An error occured while saving.'
       }
     }
+  },
+  'role': {
+    'waiter': 'Waiter',
+    'admin': 'Admin'
   },
   'no printer name': 'Unnamed Printer'
 };

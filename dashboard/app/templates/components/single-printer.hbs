@@ -1,6 +1,6 @@
 <div class="single-printer" {{action 'toggleEditable'}}>
   <p>{{printer.name}}</p>
-  <div class="singleprintindicator material-icons">print</div>
+  <div class="singleprintindicator material-icons" {{action "testPrint" bubbles=false}}>print</div>
 </div>
 {{#if isOpen}}
 <div class="editsingleproduct editarea">

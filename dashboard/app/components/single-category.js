@@ -36,7 +36,7 @@ export default Ember.Component.extend(Ember.Evented, {
         Ember.$('body').removeClass('noscroll');
         this.set('currentSelectedRecord', null);
         if (this.get('isNew')) {
-          this.get('category').deleteRecord();
+          if (this.get('category.hasDirtyAttributes')) this.get('category').deleteRecord();
           this.set('category', null);
         }
       }
