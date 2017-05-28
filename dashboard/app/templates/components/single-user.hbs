@@ -3,9 +3,11 @@
     <div class="singleusername">{{user.username}}</div>
     <div class="singleauth">{{user.permission}}</div>
     <div class="singlepwindicator material-icons">vpn_key</div>
-    <div class="singleeditindicator material-icons">mode_edit</div>
+    <div class="singleeditindicator material-icons">{{#if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
   {{else}}
     <div class="singleusername">{{t 'new.user'}}</div>
+        <div class="singleeditindicator material-icons">close</div>
+
   {{/unless}}
 </div>
 {{#if isOpen}}
