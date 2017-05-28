@@ -1,19 +1,20 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 
 import { expect } from 'chai';
-import startApp   from '../helpers/start-app';
+import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 
 describe('Acceptance | index screen', function() {
+  this.timeout(5000);
   let application;
 
   beforeEach(function() {
     application = startApp();
 
     const category = server.create('category');
-    const unit     = server.create('unit');
-    server.create('item', {category, unit});
-    server.createList('item', 10, {category, unit});
+    const unit = server.create('unit');
+    server.create('item', { category, unit });
+    server.createList('item', 10, { category, unit });
 
     server.create('user');
     server.create('area');
