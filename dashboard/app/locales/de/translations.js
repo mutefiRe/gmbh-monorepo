@@ -7,7 +7,8 @@ export default {
     'printers':   'Drucker',
     'products':   'Produkte',
     'tables':     'Tische',
-    'users':      'User'
+    'users':      'User',
+    'statistics': 'Statistik'
   },
   'notifications': {
     'user': {
