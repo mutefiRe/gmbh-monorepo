@@ -1,10 +1,6 @@
 <div class="single-product" {{action "toggleEditable"}} style="background:{{product.category.color}}">
   <p>
-    {{#if isNew}}
-      {{t 'new.product'}}
-    {{else}}
-      {{product.name}}
-    {{/if}}
+    <p>{{if isNew (t 'new.product') product.name}}</p>
   </p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
