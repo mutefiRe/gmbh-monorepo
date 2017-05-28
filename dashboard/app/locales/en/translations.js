@@ -1,4 +1,54 @@
 export default {
+  'headlines': {
+    'index': 'g.m.b.h',
+    'areas': 'Areas',
+    'categories': 'Categories',
+    'events': 'Event',
+    'logout': 'Logout',
+    'printers': 'Printer',
+    'products': 'Products',
+    'tables': 'Tables',
+    'users': 'User',
+    'changePassword': 'Change Password'
+  },
+  'buttons': {
+    'save': 'Save',
+    'delete': 'Delete',
+    'cancel': 'Cancel',
+    'change': 'Change',
+    'changePassword': 'Change Password',
+    'resetPassword': 'Reset Password',
+    'customtables': 'Custom Tables',
+    'instantpay': 'Instant Pay',
+    'priceonproducts': 'Price on Products',
+    'waiteraccessright': 'Waiter\'s Right of Access',
+    'logout': 'Logout',
+    'login': 'Login'
+  },
+  'labels': {
+    'name': 'Name',
+    'printer': 'Printer',
+    'startdate': 'Start Date',
+    'enddate': 'End Date',
+    'runtime': 'Runtime',
+    'username': 'Username',
+    'firstname': 'First Name',
+    'lastname': 'Last Name',
+    'permission': 'Permission',
+    'newPassword': 'New Password',
+    'model': 'Model',
+    'icon': 'Icon',
+    'color': 'Color',
+    'price': 'Price',
+    'mwst': 'Valued Added Tax',
+    'category': 'Category',
+    'area': 'Area',
+    'password': 'Password'
+  },
+  'permissions': {
+    'admin': 'Admin',
+    'waiter': 'Waiter'
+  },
   'notifications': {
     'user': {
       'save': {

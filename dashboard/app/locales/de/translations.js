@@ -3,7 +3,7 @@ export default {
     'index': 'g.m.b.h',
     'areas': 'Bereiche',
     'categories': 'Kategorien',
-    'events': 'Veranstaltungen',
+    'events': 'Veranstaltung',
     'logout': 'Logout',
     'printers': 'Drucker',
     'products': 'Produkte',
