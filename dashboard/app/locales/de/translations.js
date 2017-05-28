@@ -131,6 +131,7 @@ export default {
     'area': "Neuen Bereich anlegen:",
     'category': "Neue Kategorie anlegen:",
     'printer': "Neuen Drucker anlegen:",
-    'unit': "Neue Einheit anlegen:"
+    'unit': "Neue Einheit anlegen:",
+    'user': "Neuen User anlegen"
   }
 };
