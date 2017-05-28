@@ -14,7 +14,7 @@ export default DS.Model.extend({
 
 function naturalStringCompare(a, b){
   const rx = /\d+|\D+/g;
-  if (!aPhrases || !bPhrases) return - 1;
+  if (!a.get('name') || !b.get('name')) return - 1;
   // Phrase is eiter a combination of letters or numbers
   const aPhrases = a.get('name').toString().match(rx);
   const bPhrases = b.get('name').toString().match(rx);
