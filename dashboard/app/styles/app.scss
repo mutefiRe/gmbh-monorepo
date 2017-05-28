@@ -62,6 +62,12 @@ main {
       padding-bottom: $defaultpadding;
     }
   }
+  .new-record {
+    @media #{$desktop} {
+      margin-bottom: 50px;
+      padding-bottom: 0;
+    }
+  }
   .list-description {
     display: none;
     @media #{$desktop} {

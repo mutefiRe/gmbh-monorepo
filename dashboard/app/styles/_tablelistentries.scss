@@ -13,6 +13,18 @@
     @media #{$desktop} {
       width: calc(50% - 5px) !important;
     }
+    .singleeditindicator {
+      @media #{$desktop} {
+        display: none !important;
+      }
+    }
+    &.open {
+      .singleeditindicator {
+        @media #{$desktop} {
+          display: block !important;
+        }
+      }
+    }
   }
   .input-row {
     flex-wrap: wrap !important;
@@ -34,4 +46,15 @@
   color: #fff;
   width: 100%;
   min-height: 50px;
+  cursor: pointer;
+}
+
+.new-record {
+  .single-table {
+    @media #{$desktop} {
+      justify-content: flex-start;
+      padding-left: $doublepadding;
+      width: auto;
+    }
+  }
 }
