@@ -111,6 +111,10 @@ export default {
       'destroy': {
         'success': 'Der Drucker wurde gelöscht.',
         'error': 'Der Drucker konnte nicht gelöscht werden.'
+      },
+      'test': {
+        'success': 'Testdruck erfolgreich.',
+        'error': 'Testdruck fehlgeschlagen.'
       }
     },
     'event': {

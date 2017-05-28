@@ -108,6 +108,10 @@ export default {
       'destroy': {
         'success': 'The printer has been deleted.',
         'error': 'The printer could not be deleted.'
+      },
+      'test': {
+        'success': 'Testdruck erfolgreich.',
+        'error': 'Testdruck fehlgeschlagen.'
       }
     },
     'event': {
