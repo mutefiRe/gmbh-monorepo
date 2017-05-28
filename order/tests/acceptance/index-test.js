@@ -11,16 +11,17 @@ describe('Acceptance | index screen', function() {
   beforeEach(function() {
     application = startApp();
 
-    const category = server.create('category');
-    const unit = server.create('unit');
-    server.create('item', { category, unit });
-    server.createList('item', 10, { category, unit });
+    const printer  = server.create('printer');
+    const category = server.create('category', {printer});
+    const unit     = server.create('unit');
+    server.create('item', {category, unit});
+    server.createList('item', 10, {category, unit});
 
     server.create('user');
     server.create('area');
     server.create('setting');
     server.create('table');
-    server.create('printer');
+
   });
 
   afterEach(function() {

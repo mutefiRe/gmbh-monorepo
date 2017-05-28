@@ -8,7 +8,7 @@ export default DS.Model.extend({
   updatedAt:   DS.attr('date'),
   showAmount:  DS.attr('boolean'),
   icon:        DS.attr('string'),
-  printer:     DS.attr('string'),
+  printer:     DS.belongsTo('printer'),
   category:    DS.belongsTo('category'),
   items:       DS.hasMany('item'),
   color:       DS.attr('string', {defaultValue: '#aabbcc'}),
