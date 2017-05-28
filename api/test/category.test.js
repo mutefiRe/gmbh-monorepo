@@ -17,7 +17,7 @@ const token = jwt.sign({
   username:   "test1",
   firstname:  "test1",
   lastname:   "test1",
-  permission: 1
+  role: "admin"
 }, config.secret, { expiresIn: '24h' });
 
 describe('/category route', () => {
@@ -38,7 +38,6 @@ describe('/category route', () => {
           id:          1,
           name:        "category1",
           enabled:     true,
-          description: "newCategory",
           icon:        null,
           showAmount:  true,
           printerId:   null
@@ -46,7 +45,6 @@ describe('/category route', () => {
           id:          2,
           name:        "category2",
           enabled:     false,
-          description: "newCategory",
           icon:        "icon.jpg",
           showAmount:  false,
           printerId:   printer1,
@@ -69,7 +67,6 @@ describe('/category route', () => {
           id:          "1",
           name:        "category1",
           enabled:     true,
-          description: "newCategory",
           icon:        null,
           showAmount:  true,
           printerId:     null,
@@ -79,7 +76,6 @@ describe('/category route', () => {
           id:          "2",
           name:        "category2",
           enabled:     false,
-          description: "newCategory",
           icon:        "icon.jpg",
           showAmount:  false,
           printerId:   printer1,
@@ -114,7 +110,6 @@ describe('/category route', () => {
         category: {
           name:        "newCategory",
           enabled:     true,
-          description: "newCategory",
           icon:        null,
           showAmount:  true,
           printerId:     null
@@ -142,7 +137,6 @@ describe('/category route', () => {
         category: {
           name:        "changedCategory",
           enabled:     false,
-          description: "changedCategory",
           icon:        "icon.jpg",
           showAmount:  true,
           categoryId:  null,
@@ -156,7 +150,6 @@ describe('/category route', () => {
           id:          "1",
           name:        "changedCategory",
           enabled:     false,
-          description: "changedCategory",
           icon:        "icon.jpg",
           showAmount:  true,
           categoryId:  null,

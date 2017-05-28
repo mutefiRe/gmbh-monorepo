@@ -17,7 +17,7 @@ const token = jwt.sign({
   username:   "test1",
   firstname:  "test1",
   lastname:   "test1",
-  permission: 1
+  role: "admin"
 }, config.secret, { expiresIn: '24h' });
 
 describe('/item route', () => {
@@ -41,7 +41,7 @@ describe('/item route', () => {
         amount:     0.5,
         price:      3.5,
         tax:        0.1,
-        sort:       null,
+        group:      null,
         categoryId: "1",
         unitId:     "1"
       }, {
@@ -50,7 +50,7 @@ describe('/item route', () => {
         amount:     0.5,
         price:      3.5,
         tax:        0.1,
-        sort:       null,
+        group:      null,
         categoryId: "1",
         unitId:     "1"
       }]));
@@ -64,7 +64,7 @@ describe('/item route', () => {
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
-          sort:       null,
+          group:       null,
           categoryId: "1",
           unitId:     "1",
           enabled:    true
@@ -74,7 +74,7 @@ describe('/item route', () => {
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
-          sort:       null,
+          group:       null,
           categoryId: "1",
           unitId:     "1",
           enabled:    true
@@ -108,7 +108,7 @@ describe('/item route', () => {
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
-          sort:       null,
+          group:       null,
           categoryId: "1",
           unitId:     "1"
         }
@@ -137,7 +137,7 @@ describe('/item route', () => {
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
-          sort:       null,
+          group:       null,
           categoryId: "1",
           unitId:     "1",
           enabled:    false
@@ -151,7 +151,7 @@ describe('/item route', () => {
           amount:     0.5,
           price:      3.5,
           tax:        0.1,
-          sort:       null,
+          group:       null,
           categoryId: "1",
           unitId:     "1",
           enabled:    false

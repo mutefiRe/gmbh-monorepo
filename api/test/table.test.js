@@ -17,7 +17,7 @@ const token = jwt.sign({
   tablename:   "test1",
   firstname:  "test1",
   lastname:   "test1",
-  permission: 1
+  role: "admin"
 }, config.secret, { expiresIn: '24h' });
 
 describe('/table route', () => {
