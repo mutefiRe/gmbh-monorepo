@@ -1,7 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  errorMessage: null,
   session: Ember.inject.service('session'),
   payload: Ember.inject.service('session-payload'),
 
@@ -21,10 +20,10 @@ export default Ember.Controller.extend({
           this.send('transitionToOrder');
         })
         .catch(reason => {
-          if (reason.errors.msg) {
+          if (reason && reason.errors && reason.errors.msg) {
             this.get('notifications').error(this.get('i18n').t(reason.errors.msg), { autoClear: true });
           } else {
-            this.get('notifications').error(this.get('i18n').t('notification.login.failed'), { autoClear: true });
+            this.get('notifications').error(this.get('i18n').t('notification.login.error'), { autoClear: true });
           }
         });
     }
