@@ -1,13 +1,15 @@
 export default {
   'headlines': {
-    'areas': 'Bereiche',
-    'categories': 'Kategorien',
-    'events': 'Veranstaltung',
-    'logout': 'Logout',
-    'printers': 'Drucker',
-    'products': 'Produkte',
-    'tables': 'Tische',
-    'users': 'User',
+    'index':          'g.m.b.h',
+    'areas':          'Bereiche',
+    'categories':     'Kategorien',
+    'events':         'Veranstaltungen',
+    'logout':         'Logout',
+    'printers':       'Drucker',
+    'products':       'Produkte',
+    'tables':         'Tische',
+    'users':          'User',
+    'statistics':     'Statistik',
     'changePassword': 'Passwort ändern'
   },
   'buttons': {
