@@ -1,5 +1,6 @@
 export default {
   'headlines': {
+    'index': 'g.m.b.h',
     'areas': 'Bereiche',
     'categories': 'Kategorien',
     'events': 'Veranstaltungen',
