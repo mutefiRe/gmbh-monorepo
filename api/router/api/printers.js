@@ -114,16 +114,11 @@ router.post('/:id/testprint', function(req, res){
  */
 
 router.post('/update', function (req, res) {
+  res.status(200).send();
+  const io = req.app.get('io');
   control.updatePrinters()
-    .then(() => {
-      res.status(200);
-    })
-    .catch((error) => {
-      res.status(400).send({
-        'errors': {
-          'msg': error && error.errors && error.errors[0].message || error.message
-        }
-      });
+    .then((printers) => {
+      io.sockets.emit("update", { printers: printers.slice(printers.length/2, printers.length) });
     })
 });
 
