@@ -2,18 +2,20 @@
   <p>{{printer.name}}</p>
   <div class="singleprintindicator material-icons">print</div>
 </div>
+{{#if isOpen}}
 <div class="editsingleproduct editarea">
   <div class="input-row">
     <div class="input-element">
-      <label for="name">Name</label>
+      <label for="name">{{t 'labels.name'}}</label>
       {{input type="text" value=printer.name name="name"}}
     </div>
     <div class="input-element">
-    <label for="name">Modell</label>
+    <label for="name">{{t 'labels.model'}}</label>
     <input disabled="" type="text" name="type" value="{{printer.name}}">
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="save"{{action "updatePrinter" printer}}>Speichern</button>
+    <button class="save"{{action "updatePrinter" printer}}>{{t 'buttons.save'}}</button>
    </div>
 </div>
+{{/if}}
