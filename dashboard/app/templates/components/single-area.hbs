@@ -6,7 +6,7 @@
       {{area.name}}
     {{/if}}
   </p>
-  <div class="singleeditindicator material-icons">mode_edit</div>
+  <div class="singleeditindicator material-icons">{{#if isNew}}close{{else if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
 </div>
 {{#if isOpen}}
   <div class="editsinglearea editarea">
@@ -15,8 +15,6 @@
         <label for="name">Name</label>
         {{input value=area.name}}
       </div>
-    </div>
-    <div class="input-row">
       <div class="input-element">
         <label for="short">Kurzbezeichnung</label>
         {{input value=area.short}}
