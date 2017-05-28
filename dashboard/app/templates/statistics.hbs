@@ -1,0 +1,12 @@
+<main>
+  <div class="content">
+    Sales Total: {{model.sales.sales}}<br>
+    Sales Today: {{model.salesToday.sales}}
+
+    {{ember-chart type='bar'  data=model.topSellingProducts.data options=model.topSellingProducts.options height=500}}
+    {{ember-chart type='bar'  data=model.mostSoldProducts.data   options=model.mostSoldProducts.options   height=500}}
+    {{ember-chart type='line' data=model.salesPerHour.data       options=model.salesPerHour.options       height=500}}
+  </div>
+</main>
+
+{{main-controlbar}}

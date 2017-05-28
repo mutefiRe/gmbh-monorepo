@@ -17,6 +17,7 @@ Router.map(function() {
   this.route('products');
   this.route('tables');
   this.route('areas');
+  this.route('statistics');
 });
 
 export default Router;
