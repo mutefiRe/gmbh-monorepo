@@ -26,7 +26,12 @@ module.exports = {
       .then((ips) => {
         const promises = [];
         ips.forEach((printer, ip) => promises.push(this.addPrinter(printer, ip)));
-        ips.forEach((printer) => promises.push(db.Printer.create({systemName: printer})));
+        ips.forEach((printer) => promises.push(
+          db.Printer.create({systemName: printer})
+          .catch(() => {
+            return false;
+          })
+        ));
         return Promise.all(promises);
       })
   }
