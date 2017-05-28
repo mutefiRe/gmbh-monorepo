@@ -1,8 +1,9 @@
 <div class="single-category" {{action "toggleEditable"}} style="background:{{category.color}}">
 <span class="iconfont {{category.icon}}"></span>
-  <p>{{category.name}}</p>
+  <p>{{if isNew (t 'new.category') category.name}}</p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
+{{#if isOpen}}
 <div class="editsinglecategory editarea">
   <div class="input-row">
     <div class="input-element">
@@ -39,7 +40,8 @@
     </div>
   </div>
   <div class="input-row align-right">
-    <button class="save" {{action "updateCategory" category}}>Speichern</button>
-    <button class="delete" {{action "destroyCategory" category}}><span class="material-icons">delete</span>Löschen</button>
+    <button class="save" {{action "updateCategory"}}>Speichern</button>
+    {{#unless isNew}}<button class="delete" {{action "destroyCategory"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
   </div>
 </div>
+{{/if}}

@@ -1,25 +1,19 @@
 <div class="single-product" {{action "toggleEditable"}} style="background:{{product.category.color}}">
-  <p>{{product.name}}</p>
+  <p>
+    <p>{{if isNew (t 'new.product') product.name}}</p>
+  </p>
   <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
-  <div class="editsingleproduct editarea">
-    <div class="input-row">
-      <div class="input-element">
-        <label for="name">Name</label>
-        {{input type="text" value=product.name name="name"}}
-      </div>
-      <div class="input-element">
-        <label for="name">Preis</label>
-        {{input type="text" value=product.price name="price"}}
-      </div>
-      <div class="input-element">
-        <label for="name">Mehrwertssteuer</label>
-        {{input type="text" value=product.tax name="mwst"}}
-      </div>
-      <div class="input-element">
-        <label for="color">Kategorie</label>
-        <div class="select-wrapper">
-          <select name="color" onchange={{action "changeRelation" product}}>
+{{#if isOpen}}
+<div class="editsingleproduct editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">Name</label> {{input type="text" value=product.name name="name"}}
+    </div>
+    <div class="input-element">
+      <label for="color">Kategorie</label>
+      <div class="select-wrapper">
+        <select name="color" onchange={{action "changeRelation" 'category'}}>
             {{#each categories as |category|}}
               <option selected={{eq category.id product.category.id}} value="{{category.id}}">{{category.name}}</option>
             {{/each}}
@@ -27,8 +21,30 @@
       </div>
     </div>
   </div>
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">Preis</label> {{input type="text" value=product.price name="price"}}
+    </div>
+    <div class="input-element">
+      <label for="name">Mehrwertssteuer</label> {{input type="text" value=product.tax name="mwst"}}
+    </div>
+    <div class="input-element">
+      <label>Menge</label> {{input value=product.amount name="amount"}}
+    </div>
+    <div class="input-element">
+      <label>Einheit</label>
+      <div class="select-wrapper">
+        <select name="unit">
+          {{#each units as |unit|}}
+            <option selected={{eq unit.id product.unit.id}} value="{{unit.id}}">{{unit.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  </div>
   <div class="input-row align-right">
-    <button class="save" {{action "updateProduct" product}}>Speichern</button>
-    <button class="delete" {{action "destroyProduct" product}}><span class="material-icons">delete</span>Löschen</button>
+    <button class="save" {{action "updateProduct"}}>Speichern</button>
+    {{#unless isNew}}<button class="delete" {{action "destroyProduct"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
   </div>
 </div>
+{{/if}}

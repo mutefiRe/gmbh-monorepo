@@ -1,4 +1,11 @@
 <main>
+  {{#if newRecord}}
+    <div class="content">
+      <ul class="userlist editable">
+        {{single-user user=newRecord currentSelectedRecord=currentSelectedRecord isNew=true}}
+      </ul>
+    </div>
+  {{/if}}
   <div class="list-description">
     <p>Name</p>
     <p>Berechtigung</p>
@@ -10,7 +17,7 @@
         <h2>{{userGroup.letter}}</h2>
         <ul class="userlist editable">
           {{#each userGroup.users as |user|}}
-            {{single-user user=user}}
+            {{single-user user=user currentSelectedRecord=currentSelectedRecord}}
           {{/each}}
         </ul>
       </div>
@@ -18,4 +25,4 @@
   </div>
 </main>
 
-{{main-controlbar}}
+{{main-controlbar setRecord=(action 'createRecord') currentSelectedRecord=currentSelectedRecord isNew=(if newRecord true false)}}

@@ -2,6 +2,7 @@
 @import './_editable.scss';
 @import './_mainnavigation.scss';
 @import './_header.scss';
+@import './indextiles.scss';
 @import './_userlistentries.scss';
 @import './_categorylistentries.scss';
 @import './_productlistentries.scss';
@@ -18,6 +19,8 @@
 @import './_modal.scss';
 @import './_pickable.scss';
 @import './notifications.scss';
+@import './loginlogout.scss';
+@import './changepassword.scss';
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 body {

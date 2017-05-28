@@ -1,6 +1,8 @@
-<div class="single-table" {{action 'toggleEditable'}}>
-  <p>{{table.name}}</p>
+<div class="single-table" {{action "toggleEditable"}} style="background:{{table.area.color}}">
+  <p>{{if isNew (t 'new.table') table.name}}</p>
+  <div class="singleeditindicator material-icons">mode_edit</div>
 </div>
+{{#if isOpen}}
 <div class="editarea">
   <div class="input-row">
     <div class="input-element">
@@ -8,19 +10,19 @@
       {{input value=table.name}}
     </div>
     <div class="input-element">
-        <label>Bereich</label>
-        <div class="select-wrapper">
-          <select name="area" onchange={{action "changeRelation" table}}>
-            {{#each areas as |area|}}
-              <option selected={{eq area.id table.area.id}} value="{{area.id}}">{{area.name}}</option>
-              {{else}}
-            {{/each}}
-          </select>
+      <label>Bereich</label>
+      <div class="select-wrapper">
+        <select name="area" onchange={{action "changeRelation" 'area'}}>
+          {{#each areas as |area|}}
+            <option selected={{eq area.id table.area.id}} value={{area.id}}>{{area.name}}</option>
+          {{/each}}
+        </select>
       </div>
     </div>
   </div>
    <div class="input-row">
-      <button {{action 'updateTable' table}} class="save">Speichern</button>
-      <button {{action 'destroyTable' table}} class="delete"><span class="material-icons">delete</span>Löschen</button>
+      <button {{action 'updateTable'}} class="save">Speichern</button>
+      {{#unless isNew}}<button class="delete" {{action "destroyTable"}}><span class="material-icons">delete</span>Löschen</button>{{/unless}}
     </div>
 </div>
+{{/if}}
