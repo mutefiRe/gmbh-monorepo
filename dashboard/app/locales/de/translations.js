@@ -156,6 +156,7 @@ export default {
       }
     }
   },
+  'no printer name': 'Unbenannter Drucker',
   'new': {
     'product': "Neues Produkt anlegen:",
     'table': "Neuen Tisch anlegen:",

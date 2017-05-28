@@ -154,5 +154,6 @@ export default {
         'error': 'An error occured while saving.'
       }
     }
-  }
+  },
+  'no printer name': 'Unnamed Printer'
 };
