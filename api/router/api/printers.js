@@ -5,6 +5,8 @@ const db = require('../../models');
 const control = require('../../printer/control');
 const print = require('../../printer/print');
 
+let lockSearch = false;
+
 /**
  * @apiDefine printersItem
  * @apiSuccess {String}  printers.id Universal unique Identifier of the printer
@@ -116,10 +118,15 @@ router.post('/:id/testprint', function(req, res){
 router.post('/update', function (req, res) {
   res.status(200).send();
   const io = req.app.get('io');
-  control.updatePrinters()
+  if(!lockSearch) {
+    lockSearch = true;
+    control.updatePrinters()
     .then((printers) => {
       io.sockets.emit("update", { printers: printers.slice(printers.length/2, printers.length) });
+      lockSearch = false;
     })
+  }
+
 });
 
 /**
