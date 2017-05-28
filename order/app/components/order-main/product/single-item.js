@@ -6,7 +6,10 @@ export default Ember.Component.extend({
   classNames: ['product_single-item'],
   attributeBindings: ['style'],
   style: Ember.computed('category', function(){
-    return 'color: ' + this.get('item.category.textcolor') + '; background-color: ' + this.get('item.category.color');
+    return Ember.String.htmlSafe(
+      'color: ' + this.get('item.category.textcolor') + ';' +
+      'background-color: ' + this.get('item.category.lightcolor') + ';' +
+      'border-left: 5px solid ' + this.get('item.category.color') + ';');
   }),
   clickDelay: 500,
 
