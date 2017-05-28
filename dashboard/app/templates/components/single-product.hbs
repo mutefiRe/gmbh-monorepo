@@ -2,7 +2,7 @@
   <p>
     <p>{{if isNew (t 'new.product') product.name}}</p>
   </p>
-  <div class="singleeditindicator material-icons">mode_edit</div>
+  <div class="singleeditindicator material-icons">{{#if isNew}}close{{else if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
 </div>
 {{#if isOpen}}
 <div class="editsingleproduct editarea">
