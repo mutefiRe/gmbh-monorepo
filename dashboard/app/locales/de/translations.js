@@ -150,6 +150,20 @@ export default {
         'error': 'Der Bereich konnte nicht gelöscht werden.'
       }
     },
+    'unit': {
+      'save': {
+        'success': 'Ein neuer Bereich wurde angelegt.',
+        'error': 'Der Bereich konnte nicht angelegt werden.'
+      },
+      'update': {
+        'success': 'Der Bereich wurde aktualisiert.',
+        'error': 'Der Bereich konnte nicht aktualisiert werden.'
+      },
+      'destroy': {
+        'success': 'Der Bereich wurde gelöscht.',
+        'error': 'Der Bereich konnte nicht gelöscht werden.'
+      }
+    },
     'record': {
       'save': {
         'success': 'Speichern erfolgreich.',
