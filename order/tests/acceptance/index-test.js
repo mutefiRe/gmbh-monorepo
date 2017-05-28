@@ -5,7 +5,7 @@ import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 
 describe('Acceptance | index screen', function() {
-  this.timeout(5000);
+  this.timeout(15000);
   let application;
 
   beforeEach(function() {
