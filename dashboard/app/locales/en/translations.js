@@ -155,5 +155,9 @@ export default {
       }
     }
   },
+  'role': {
+    'waiter': 'Waiter',
+    'admin': 'Admin'
+  },
   'no printer name': 'Unnamed Printer'
 };

@@ -18,7 +18,7 @@ export default Ember.Component.extend({
         record: this.get('user'),
         type: 'component'
       });
-      this.set('user.permission', 0);
+      this.set('user.role', "waiter");
     }
   },
   actions: {
