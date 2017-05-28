@@ -8,7 +8,17 @@ export default {
     'printers': 'Drucker',
     'products': 'Produkte',
     'tables': 'Tische',
-    'users': 'User'
+    'users': 'User',
+    'changePassword': 'Passwort ändern'
+  },
+  'buttons': {
+    'save': 'Speichern',
+    'delete': 'Löschen',
+    'cancel': 'Abbrechen',
+    'change': 'Ändern'
+  },
+  'labels': {
+    'newPassword': 'Neues Passwort'
   },
   'notifications': {
     'user': {
