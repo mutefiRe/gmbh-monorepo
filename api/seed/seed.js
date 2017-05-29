@@ -71,23 +71,6 @@ module.exports = function() {
     "Heiße Liebe"
   ];
 
-  /* PRINTER */
-
-  const printer = db.Printer.bulkCreate([{
-    systemName: "GMBH",
-    name: "Keller"
-  },{
-    systemName: "26:11:0E:86:70:5B"
-  }, {
-    systemName: "00:5F:8D:65:85:06",
-    name: "Küche"
-  }])
-    .then(() => {
-      return db.Printer.find({
-        where: { systemName: "GMBH" }
-      });
-    });
-
   /* USER */
 
   db.User.create({
@@ -97,6 +80,7 @@ module.exports = function() {
     password: "abc",
     role: "admin"
   });
+
   db.User.create({
     username: "waiter",
     firstname: "die GmBh",
@@ -105,20 +89,7 @@ module.exports = function() {
     role: "waiter"
   });
 
-  printer
-    .then(printer => {
-      db.User.create({
-        username: "printer",
-        firstname: "die GmBh",
-        lastname: " Buam",
-        password: "abc",
-        printerId: printer.id,
-        role: "waiter"
-      });
-    });
-
-
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 20; i++) {
     db.User.create({
       username: faker.Internet.userName(),
       firstname: faker.Name.firstName(),
@@ -130,40 +101,35 @@ module.exports = function() {
 
   /* FOOD */
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Speisen",
-          enabled: true,
-          icon: "food",
-          description: "Alle die Guten Sachen",
-          showAmount: false,
-          printerId: printer.id,
-          color: '#35063E'
-        });
+  db.Category
+    .create({
+      name: "Speisen",
+      enabled: true,
+      icon: "food",
+      description: "Alle die Guten Sachen",
+      showAmount: false,
+      color: '#35063E'
     })
     .then(cat => {
-      db.Unit
-        .create({
-          name: "Stk."
-        })
-        .then(data => {
-          for (let i = 0; i < 25; i++) {
-            db.Item.create({
-              name: faker.Helpers.randomize(speisen) +
-              " " +
-              faker.Helpers.randomize(stopwords) +
-              " " +
-              faker.Helpers.randomize(beilagen),
-              amount: 1,
-              price: faker.Helpers.randomNumber(20) + 1,
-              tax: 0.1,
-              unitId: data.id,
-              categoryId: cat.id
-            });
-          }
-        });
+      db.Unit.create({
+        name: "Stk."
+      })
+      .then(unit => {
+        for (let i = 0; i < 25; i++) {
+          db.Item.create({
+            name: faker.Helpers.randomize(speisen) +
+            " " +
+            faker.Helpers.randomize(stopwords) +
+            " " +
+            faker.Helpers.randomize(beilagen),
+            amount: 1,
+            price: faker.Helpers.randomNumber(20) + 1,
+            tax: 0.1,
+            unitId: unit.id,
+            categoryId: cat.id
+          });
+        }
+      });
     });
 
   /* ORGANISATIONS */
@@ -188,362 +154,331 @@ module.exports = function() {
     telephone: "+43 650 87654321"
   });
 
-  printer
-    .then((printer) => {
-      return db.Setting.create({
-        name: "Testsetting",
-        begin_date: "nodate",
-        end_date: "nodate",
-        instantPay: true,
-        customTables: true,
-        receiptPrinterId: printer.id,
-        eventName: "GMBH",
-        expiresTime: "72h",
-        showItemPrice: true
-      });
-    });
-
+  db.Setting.create({
+    name: "Testsetting",
+    begin_date: "nodate",
+    end_date: "nodate",
+    instantPay: true,
+    customTables: true,
+    receiptPrinterId: null,
+    eventName: "GMBH",
+    expiresTime: "72h",
+    showItemPrice: true
+  });
 
   /* ALCOHOLICS */
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Alkoholisches",
-          enabled: true,
-          icon: "drink-alc",
-          description: "alkohol",
-          showAmount: true,
-          printerId: printer.id,
-          color: '#FEAD00'
-        });
+  db.Category.create({
+    name: "Alkoholisches",
+    enabled: true,
+    icon: "drink-alc",
+    description: "alkohol",
+    showAmount: true,
+    color: '#FEAD00'
+  })
+  .then(cat => {
+    db.Unit.findOrCreate({
+      where: { name: "l" }
     })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "l" }
-        })
-        .spread(data => {
-          db.Item.bulkCreate([
-            {
-              name: "Bier",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Bier",
-              amount: 0.33,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Radler",
-              amount: 0.5,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Radler",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Grüner Veltliner",
-              amount: 0.125,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Grüner Veltliner",
-              amount: 0.25,
-              price: 5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Spätburgunder",
-              amount: 0.125,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Spätburgunder",
-              amount: 0.25,
-              price: 5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Weißer Spritzer",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Roter Spritzer",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            }
-          ]);
-        });
-
-      db.Unit
-        .findOrCreate({
-          where: { name: "cl" }
-        })
-        .spread(data => {
-          db.Item.bulkCreate([
-            {
-              name: "Klopfer",
-              amount: 2,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Jägermeister",
-              amount: 2,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Obstler",
-              amount: 4,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Williams-Schnaps",
-              amount: 4,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Nuss-Schnaps",
-              amount: 4,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            }
-          ]);
-        });
+    .spread(unit => {
+      db.Item.bulkCreate([
+        {
+          name: "Bier",
+          amount: 0.5,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Bier",
+          amount: 0.33,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Radler",
+          amount: 0.5,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Radler",
+          amount: 0.3,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Grüner Veltliner",
+          amount: 0.125,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Grüner Veltliner",
+          amount: 0.25,
+          price: 5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Spätburgunder",
+          amount: 0.125,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Spätburgunder",
+          amount: 0.25,
+          price: 5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Weißer Spritzer",
+          amount: 0.5,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Roter Spritzer",
+          amount: 0.5,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        }
+      ]);
     });
+
+    db.Unit.findOrCreate({
+      where: { name: "cl" }
+    })
+    .spread(unit => {
+      db.Item.bulkCreate([
+        {
+          name: "Klopfer",
+          amount: 2,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Jägermeister",
+          amount: 2,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Obstler",
+          amount: 4,
+          price: 2,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Williams-Schnaps",
+          amount: 4,
+          price: 2,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Nuss-Schnaps",
+          amount: 4,
+          price: 2,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        }
+      ]);
+    });
+  });
 
   /* NONALCOHOLICS */
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Kaffee",
-          enabled: true,
-          icon: "drink-coffee",
-          description: "Kaffee",
-          showAmount: false,
-          printerId: printer.id,
-          color: '#573200'
-        });
+  db.Category.create({
+    name: "Kaffee",
+    enabled: true,
+    icon: "drink-coffee",
+    description: "Kaffee",
+    showAmount: false,
+    color: '#573200'
+  })
+  .then(cat => {
+    db.Unit.findOrCreate({
+      where: { name: "Stk." }
     })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "Stk." }
+    .spread(unit => {
+      db.Item.bulkCreate(
+        kaffee.map(x => {
+          return {
+            name: x,
+            amount: 1,
+            price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
+            tax: 0.2,
+            unitId: unit.id,
+            categoryId: cat.id
+          };
         })
-        .spread(data => {
-          db.Item.bulkCreate(
-            kaffee.map(x => {
-              return {
-                name: x,
-                amount: 1,
-                price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
-                tax: 0.2,
-                unitId: data.id,
-                categoryId: cat.id
-              };
-            })
-          );
-        });
+      );
     });
+  });
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Dessert",
-          enabled: true,
-          icon: "desserts",
-          description: "Dessert",
-          showAmount: false,
-          printerId: printer.id,
-          color: '#B80C41'
-        });
+  db.Category.create({
+    name: "Dessert",
+    enabled: true,
+    icon: "desserts",
+    description: "Dessert",
+    showAmount: false,
+    color: '#B80C41'
+  })
+  .then(cat => {
+    db.Unit.findOrCreate({
+      where: { name: "Stk." }
     })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "Stk." }
+    .spread(unit => {
+      db.Item.bulkCreate(
+        dessert.map(x => {
+          return {
+            name: x,
+            amount: 1,
+            price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
+            tax: 0.2,
+            unitId: unit.id,
+            categoryId: cat.id
+          };
         })
-        .spread(data => {
-          db.Item.bulkCreate(
-            dessert.map(x => {
-              return {
-                name: x,
-                amount: 1,
-                price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
-                tax: 0.2,
-                unitId: data.id,
-                categoryId: cat.id
-              };
-            })
-          );
-        });
+      );
     });
+  });
 
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Alkoholfreies",
-          enabled: true,
-          icon: "drink-anti",
-          description: "Alkoholfreies",
-          showAmount: true,
-          printerId: printer.id,
-          color: '#005213'
-        });
+  db.Category.create({
+    name: "Alkoholfreies",
+    enabled: true,
+    icon: "drink-anti",
+    description: "Alkoholfreies",
+    showAmount: true,
+    color: '#005213'
+  })
+  .then(cat => {
+    db.Unit.findOrCreate({
+      where: { name: "l" }
     })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "l" }
-        })
-        .spread(data => {
-          db.Item.bulkCreate([
-            {
-              name: "Coca Cola",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Coca Cola",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Fanta",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Fanta",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Sprite",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Sprite",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Mineral",
-              amount: 0.3,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Mineral",
-              amount: 0.5,
-              price: 3,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            }
-          ]);
-        });
+    .spread(unit => {
+      db.Item.bulkCreate([
+        {
+          name: "Coca Cola",
+          amount: 0.3,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Coca Cola",
+          amount: 0.5,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Fanta",
+          amount: 0.3,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Fanta",
+          amount: 0.5,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Sprite",
+          amount: 0.3,
+          price: 2.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Sprite",
+          amount: 0.5,
+          price: 3.5,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Mineral",
+          amount: 0.3,
+          price: 2,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        },
+        {
+          name: "Mineral",
+          amount: 0.5,
+          price: 3,
+          tax: 0.2,
+          unitId: unit.id,
+          categoryId: cat.id
+        }
+      ]);
     });
+  });
 
-  db.Area
-    .findOrCreate({
-      where: { name: "Terrasse", color: '#2acb54', short:"T" }
-    })
-    .spread(area => {
-      for (let i = 0; i < 12; i++) {
-        db.Table.create({
-          name: i,
-          x: 1,
-          y: 2,
-          areaId: area.id
-        });
-      }
-    });
+  db.Area.findOrCreate({
+    where: { name: "Terrasse", color: '#2acb54', short:"T" }
+  })
+  .spread(area => {
+    for (let i = 0; i < 12; i++) {
+      db.Table.create({
+        name: i,
+        x: 1,
+        y: 2,
+        areaId: area.id
+      });
+    }
+  });
 
-  db.Area
-    .findOrCreate({
-      where: { name: "Gaststube", color: '#45b1a4', short:"G" }
-    })
-    .spread(area => {
-      for (let i = 0; i < 12; i++) {
-        db.Table.create({
-          name: i,
-          x: 1,
-          y: 2,
-          areaId: area.id
-        });
-      }
-    });
+  db.Area.findOrCreate({
+    where: { name: "Gaststube", color: '#45b1a4', short:"G" }
+  })
+  .spread(area => {
+    for (let i = 0; i < 12; i++) {
+      db.Table.create({
+        name: i,
+        x: 1,
+        y: 2,
+        areaId: area.id
+      });
+    }
+  });
 };
