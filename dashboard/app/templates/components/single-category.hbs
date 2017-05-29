@@ -22,11 +22,12 @@
     <div class="input-element">
       <label for="printer">{{t 'labels.printer'}}</label>
       <div class="select-wrapper">
-        <select onchange={{action "changeRelation"}}>
-        {{#each printers as |printer|}}
-          <option value="{{printer.id}}" selected={{eq category.printer.id printer.id}}>{{printer.name}}</option>
-        {{/each}}
-      </select>
+        <select name="printer" onchange={{action "changeRelation" 'printer'}}>
+          <option value=null selected={{eq category.printer null}}>Kein Drucker</option>
+          {{#each printers as |printer|}}
+            <option value="{{printer.id}}" selected={{eq category.printer.id printer.id}}>{{printer.name}}</option>
+          {{/each}}
+        </select>
       </div>
     </div>
   </div>

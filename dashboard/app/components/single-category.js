@@ -41,13 +41,16 @@ export default Ember.Component.extend(Ember.Evented, {
         }
       }
     },
+    changeRelation(type, event) {
+      if (event.target.value !== null) {
+        const relation = this.get('store').peekRecord(type, event.target.value);
+        this.get('category').set(type, relation);
+      } else {
+        this.get('category').set(type, null);
+      }
+    },
     toggleButton(prop) {
       this.get('category').toggleProperty(prop);
-    },
-    changeRelation(event) {
-      const category = this.get('category');
-      const printer = this.get('store').peekRecord('printer', event.target.value);
-      category.set('printer', printer);
     },
     updateCategory() {
       this.get('category').save().then(() => {
