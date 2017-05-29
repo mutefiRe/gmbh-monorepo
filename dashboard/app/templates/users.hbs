@@ -2,7 +2,7 @@
   {{#if newRecord}}
     <div class="content new-record">
       <ul class="userlist editable">
-        {{single-user user=newRecord currentSelectedRecord=currentSelectedRecord isNew=true}}
+        {{single-user user=newRecord currentSelectedRecord=currentSelectedRecord isNew=true printers=model.printers}}
       </ul>
     </div>
   {{/if}}
@@ -17,7 +17,7 @@
         <h2>{{userGroup.letter}}</h2>
         <ul class="userlist editable">
           {{#each userGroup.users as |user|}}
-            {{single-user user=user currentSelectedRecord=currentSelectedRecord}}
+            {{single-user user=user currentSelectedRecord=currentSelectedRecord printers=model.printers}}
           {{/each}}
         </ul>
       </div>

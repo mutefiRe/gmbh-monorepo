@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   i18n: Ember.inject.service(),
+  store: Ember.inject.service(),
   notifications: Ember.inject.service('notification-messages'),
   tagName: 'li',
   isShowingPassword: false,
@@ -56,6 +57,14 @@ export default Ember.Component.extend({
           if (this.get('user.hasDirtyAttributes')) this.get('user').deleteRecord();
           this.set('user', null);
         }
+      }
+    },
+    changeRelation(type, event) {
+      if (event.target.value !== null) {
+        const relation = this.get('store').peekRecord(type, event.target.value);
+        this.get('user').set(type, relation);
+      } else {
+        this.get('user').set(type, null);
       }
     }
   }

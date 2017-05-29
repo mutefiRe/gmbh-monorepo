@@ -174,5 +174,6 @@ export default {
     'waiter': 'Waiter',
     'admin': 'Admin'
   },
-  'no printer name': 'Unnamed Printer'
+  'no printer name': 'Unnamed Printer',
+  'deselect printer': 'No printer'
 };
