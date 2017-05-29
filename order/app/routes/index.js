@@ -13,7 +13,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       Orders: this.store.findAll('order'),
       Tables: this.store.findAll('table'),
       Areas: this.store.findAll('area'),
-      Settings: this.store.findAll('setting')
+      Settings: this.store.findAll('setting'),
+      Printers: this.store.findAll('printer')
     });
   }
 });
