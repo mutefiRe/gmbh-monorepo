@@ -7,7 +7,7 @@ export default DS.Model.extend({
   instantPay:     DS.attr('boolean'),
   customTables:   DS.attr('boolean'),
   showItemPrice:  DS.attr('boolean'),
-  receiptPrinter: DS.attr('string'),
+  receiptPrinter: DS.belongsTo('printer'),
   eventName:      DS.attr('string'),
   expiresTime:    DS.attr('string')
 });
