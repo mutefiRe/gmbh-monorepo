@@ -23,7 +23,7 @@
       <label for="printer">{{t 'labels.printer'}}</label>
       <div class="select-wrapper">
         <select name="printer" onchange={{action "changeRelation" 'printer'}}>
-          <option value=null selected={{eq category.printer null}}>Kein Drucker</option>
+          <option value=null selected={{eq category.printer null}}>{{t 'noprinter'}}</option>
           {{#each printers as |printer|}}
             <option value="{{printer.id}}" selected={{eq category.printer.id printer.id}}>{{printer.name}}</option>
           {{/each}}

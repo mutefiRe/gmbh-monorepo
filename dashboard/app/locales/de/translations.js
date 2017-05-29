@@ -188,6 +188,7 @@ export default {
     }
   },
   'no printer name': 'Unbenannter Drucker',
+  'noprinter': 'Kein Drucker',
   'new': {
     'product': "Neues Produkt anlegen:",
     'table': "Neuen Tisch anlegen:",
