@@ -47,7 +47,10 @@ export default {
     'mwst': 'Valued Added Tax',
     'category': 'Category',
     'area': 'Area',
-    'password': 'Password'
+    'password': 'Password',
+    'amount': 'Amount',
+    'unit': 'Unit',
+    'unitname': 'Unitname'
   },
   'permissions': {
     'admin': 'Admin',

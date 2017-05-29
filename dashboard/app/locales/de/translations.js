@@ -47,10 +47,13 @@ export default {
     'icon': 'Icon',
     'color': 'Farbe',
     'price': 'Preis',
-    'mwst': 'Mehrwertsteuter',
+    'tax': 'Mehrwertsteuer',
     'category': 'Kategorie',
     'area': 'Bereich',
-    'password': 'Passwort'
+    'password': 'Passwort',
+    'amount': 'Menge',
+    'unit': 'Einheit',
+    'unitname': 'Name der Einheit'
   },
   'permissions': {
     'admin': 'Admin',
