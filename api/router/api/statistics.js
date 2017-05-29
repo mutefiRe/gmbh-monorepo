@@ -3,6 +3,7 @@
 const router    = require('express').Router();
 const db        = require('../../models');
 const colors    = ['#009493', '#da3f71', '#b1723b', '#8dc63f', '#3977b8', '#40b391', '#b74775', '#365b94', '#00787c', '#fbae4e', '#d6954e', '#b1723b', '#c9313a', '#a7292e', '#8e251b', '#da3f71', '#b74775', '#79426'];
+const dialect   = db.sequelize.options.dialect;
 const options   = {
   responsive: true,
   title:  { display: true },
@@ -13,7 +14,12 @@ const options   = {
 
 // total sales (value)
 router.get('/sales', function(req, res){
-  db.sequelize.query(`SELECT SUM(price * countPaid) AS sales FROM gmbh.orderitems WHERE countPaid <> 0`, { type: db.sequelize.QueryTypes.SELECT })
+  const query = {
+    mysql:    `SELECT SUM(price * countPaid) AS sales FROM orderitems WHERE countPaid <> 0`,
+    postgres: `SELECT SUM(price * "countPaid") AS sales FROM orderitems WHERE "countPaid" <> 0`
+  };
+
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(value => { res.send(value[0]); })
   .catch(()  => {
     res.status(400).send({ 'errors': { 'msg': 'Error on generating total sales.' }});
@@ -22,24 +28,35 @@ router.get('/sales', function(req, res){
 
 // today's sales (value)
 router.get('/sales-today', function(req, res){
-  db.sequelize.query(
-`SELECT createdAt, SUM(price * countPaid) AS sales FROM gmbh.orderitems
-WHERE countPaid <> 0 GROUP BY MONTH(createdAt), DAY(createdAt)
-ORDER BY createdAt DESC LIMIT 1`,
-  { type: db.sequelize.QueryTypes.SELECT })
-  .then(value => { res.send(value[0]); })
-  .catch(() => {
+  const query = {
+    mysql:   `SELECT SUM(price * countPaid) AS sales FROM orderitems
+              WHERE countPaid <> 0 GROUP BY YEAR(createdAt), MONTH(createdAt), DAY(createdAt)
+              ORDER BY createdAt DESC LIMIT 1`,
+    postgres: `SELECT SUM(price * "countPaid") AS sales FROM orderitems WHERE "countPaid" <> 0
+              GROUP BY date_trunc('year', "createdAt"), date_trunc('month', "createdAt"), date_trunc('day', "createdAt")
+              ORDER BY date_trunc('year', "createdAt"), date_trunc('month', "createdAt"), date_trunc('day', "createdAt") LIMIT 1`
+  };
+
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
+  .then(value => {
+    res.send(value.length ? value[0] : { sales: 0 });
+  }).catch(() => {
     res.status(400).send({ 'errors': { 'msg': 'Error on generating sales per day.'}});
   });
 });
 
 // the ten top-selling products (graph)
 router.get('/top-selling-products', function(req, res){
-  db.sequelize.query(
-`SELECT items.name, SUM(orderitems.countPaid * orderitems.price) AS sales
-FROM gmbh.orderitems INNER JOIN gmbh.items ON gmbh.orderitems.itemId = gmbh.items.id
-WHERE orderitems.countPaid <> 0 GROUP BY items.id ORDER BY sales DESC LIMIT 10`,
-  { type: db.sequelize.QueryTypes.SELECT })
+  const query = {
+    mysql:    `SELECT items.name, SUM(orderitems.price * orderitems.countPaid) AS sales
+              FROM gmbh.orderitems INNER JOIN gmbh.items ON gmbh.orderitems.itemId = gmbh.items.id
+              WHERE orderitems.countPaid <> 0 GROUP BY items.id ORDER BY sales DESC LIMIT 10`,
+    postgres: `SELECT items.name, SUM(orderitems.price * orderitems."countPaid") AS sales
+              FROM orderitems INNER JOIN items ON orderitems."itemId" = items.id
+              WHERE orderitems."countPaid" <> 0 GROUP BY items.id ORDER BY sales DESC LIMIT 10`
+  };
+
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(val => {
     const data = {
       labels:   val.map(obj => obj.name),
@@ -58,11 +75,16 @@ WHERE orderitems.countPaid <> 0 GROUP BY items.id ORDER BY sales DESC LIMIT 10`,
 
 // the ten most sold products (graph)
 router.get('/most-sold-products', function(req, res){
-  db.sequelize.query(
-`SELECT items.name, SUM(orderitems.countPaid) AS amount
-FROM gmbh.orderitems INNER JOIN gmbh.items ON gmbh.orderitems.itemId = gmbh.items.id
-WHERE orderitems.countPaid <> 0 GROUP BY items.id ORDER BY amount DESC LIMIT 10`,
-  { type: db.sequelize.QueryTypes.SELECT })
+  const query = {
+    mysql:    `SELECT items.name, SUM(orderitems.countPaid) AS amount
+              FROM gmbh.orderitems INNER JOIN gmbh.items ON gmbh.orderitems.itemId = gmbh.items.id
+              WHERE orderitems.countPaid <> 0 GROUP BY items.id ORDER BY amount DESC LIMIT 10`,
+    postgres: `SELECT items.name, SUM(orderitems."countPaid") AS amount
+              FROM orderitems INNER JOIN items ON orderitems."itemId" = items.id
+              WHERE orderitems."countPaid" <> 0 GROUP BY items.id ORDER BY amount DESC LIMIT 10`
+  };
+
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(val => {
     const data = {
       labels:   val.map(obj => obj.name),
@@ -81,12 +103,18 @@ WHERE orderitems.countPaid <> 0 GROUP BY items.id ORDER BY amount DESC LIMIT 10`
 
 // sales per hour - last five days (graph)
 router.get('/sales-hour', function(req, res){
-  db.sequelize.query(
-`SELECT createdAt, DAY(createdAt) AS day, HOUR(createdAt) as hour,
-WEEKDAY(createdAt) AS weekday, SUM(price * countPaid) AS sales FROM gmbh.orderitems
-WHERE countPaid <> 0 AND DATEDIFF(CURDATE(), createdAt) <= 5
-GROUP BY MONTH(createdAt), DAY(createdAt), HOUR(createdAt) ORDER BY createdAt`,
-  { type: db.sequelize.QueryTypes.SELECT })
+  const query = {
+    mysql:    `SELECT MONTH(createdAt) AS month, DAY(createdAt) AS day, HOUR(createdAt) as hour,
+              SUM(price * countPaid) AS sales FROM gmbh.orderitems
+              WHERE countPaid <> 0 AND DATEDIFF(CURDATE(), createdAt) <= 5
+              GROUP BY MONTH(createdAt), DAY(createdAt), HOUR(createdAt) ORDER BY createdAt`,
+    postgres: `SELECT EXTRACT(MONTH from "createdAt") AS month, EXTRACT(DAY from "createdAt") AS day, EXTRACT(HOUR from "createdAt") AS hour,
+              SUM(price * "countPaid") AS sales FROM orderitems
+              WHERE "countPaid" <> 0 AND date_trunc('DAY', "createdAt") > current_date - INTERVAL '5 DAYS'
+              GROUP BY month, day, hour ORDER BY month, day, hour`
+  };
+
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(val => {
     const hours    = val.map(obj => obj.hour);
     const maxHour  = Math.max(...hours);
@@ -132,16 +160,18 @@ function mapLineChartData(data, numberOfHours, minHour) {
     const idxDay  = eventDays.indexOf(obj.day);
     const idxHour = obj.hour - minHour;
 
-    datasets[idxDay].label         = parseDatetime(obj.createdAt);
+    datasets[idxDay].label         = parseDatetime(obj.month, obj.day);
     datasets[idxDay].data[idxHour] = obj.sales;
   });
 
   return datasets;
 }
 
-function parseDatetime(dt) {
-  const date = dt.toJSON().toString().split("-");
-  return `${date[1]}.${date[2].split('T')[0]}`;
+function parseDatetime(month, day) {
+  const m = month.toString().length === 1 ? `0${month}` : month;
+  const d = day.toString().length   === 1 ? `0${day}`   : day;
+
+  return `${m}.${d}`;
 }
 
 module.exports = router;
