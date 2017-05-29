@@ -8,6 +8,7 @@ export default DS.Model.extend({
   updatedAt:    DS.attr('date'),
   showAmount:   DS.attr('boolean'),
   icon:         DS.attr('string'),
+  category:     DS.belongsTo('category'),
   items:        DS.hasMany('item'),
   itemsSorting: ['sortId', 'name'],
   sortedItems:  Ember.computed.sort('items', 'itemsSorting'),
