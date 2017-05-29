@@ -19,7 +19,7 @@ router.get('/sales', function(req, res){
     postgres: `SELECT SUM(price * "countPaid") AS sales FROM orderitems WHERE "countPaid" <> 0`
   };
 
-  db.sequelize.query(query[`${dialect}`], { type: db.sequelize.QueryTypes.SELECT })
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(value => { res.send(value[0]); })
   .catch(()  => {
     res.status(400).send({ 'errors': { 'msg': 'Error on generating total sales.' }});
@@ -37,7 +37,7 @@ router.get('/sales-today', function(req, res){
               ORDER BY date_trunc('year', "createdAt"), date_trunc('month', "createdAt"), date_trunc('day', "createdAt") LIMIT 1`
   };
 
-  db.sequelize.query(query[`${dialect}`], { type: db.sequelize.QueryTypes.SELECT })
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(value => {
     res.send(value.length ? value[0] : { sales: 0 });
   }).catch(() => {
@@ -56,7 +56,7 @@ router.get('/top-selling-products', function(req, res){
               WHERE orderitems."countPaid" <> 0 GROUP BY items.id ORDER BY sales DESC LIMIT 10`
   };
 
-  db.sequelize.query(query[`${dialect}`], { type: db.sequelize.QueryTypes.SELECT })
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(val => {
     const data = {
       labels:   val.map(obj => obj.name),
@@ -84,7 +84,7 @@ router.get('/most-sold-products', function(req, res){
               WHERE orderitems."countPaid" <> 0 GROUP BY items.id ORDER BY amount DESC LIMIT 10`
   };
 
-  db.sequelize.query(query[`${dialect}`], { type: db.sequelize.QueryTypes.SELECT })
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(val => {
     const data = {
       labels:   val.map(obj => obj.name),
@@ -114,7 +114,7 @@ router.get('/sales-hour', function(req, res){
               GROUP BY month, day, hour ORDER BY month, day, hour`
   };
 
-  db.sequelize.query(query[`${dialect}`], { type: db.sequelize.QueryTypes.SELECT })
+  db.sequelize.query(query[dialect], { type: db.sequelize.QueryTypes.SELECT })
   .then(val => {
     const hours    = val.map(obj => obj.hour);
     const maxHour  = Math.max(...hours);
