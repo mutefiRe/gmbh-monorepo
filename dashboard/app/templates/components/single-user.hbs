@@ -34,6 +34,17 @@
             </select>
           </div>
         </div>
+          <div class="input-element">
+        <label for="printer">{{t 'labels.printer'}}</label>
+        <div class="select-wrapper">
+          <select name="printer" onchange={{action "changeRelation" 'printer'}}>
+            <option value=null selected={{eq user.printer null}}>{{t 'noprinter'}}</option>
+            {{#each printers as |printer|}}
+              <option value="{{printer.id}}" selected={{eq user.printer.id printer.id}}>{{printer.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
       </div>
       <div class="input-row align-right">
         {{#unless isNew}}
