@@ -30,8 +30,6 @@
         </select>
       </div>
     </div>
-  </div>
-  <div class="input-row">
     <div class="input-element">
       <label for="color">{{t 'labels.color'}}</label>
       <div class="select-wrapper colorselector">
@@ -41,9 +39,9 @@
         {{modal-colorpicker showModal=isShowingColors colors=colors category=category}}
       </div>
     </div>
-    <div class="input-element">
-      <button {{action 'toggleButton' 'showAmount'}} class="{{if category.showAmount 'green' 'gray'}}" type="button">{{t 'buttons.showamount'}} {{if category.showAmount 'aktiviert' 'deaktiviert'}}</button>
-    </div>
+  </div>
+  <div class="input-row align-right">
+      <button {{action 'toggleButton' 'showAmount'}} class="{{if category.showAmount 'toggle' 'gray'}}" type="button">{{t 'buttons.showamount'}} {{if category.showAmount 'aktiviert' 'deaktiviert'}}</button>
   </div>
   <div class="input-row align-right">
     <button {{action 'toggleButton' "enabled"}} class="{{if category.enabled 'toggle' 'gray'}}" type="button">{{if category.enabled 'aktiviert' 'deaktiviert'}}</button>
