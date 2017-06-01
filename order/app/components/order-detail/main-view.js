@@ -7,7 +7,7 @@ export default Ember.Component.extend(RecognizerMixin, {
   recognizers: 'swipe',
   classNames: ['order-detail','screen'],
   tagName: 'div',
-  tableButtonStyle: Ember.computed('order.table', function(){
+  tableButtonStyle: Ember.computed('order.table', 'order.table.area.color', function(){
     if(typeof this.get('order.table') === "undefined"){
       return '';
     }

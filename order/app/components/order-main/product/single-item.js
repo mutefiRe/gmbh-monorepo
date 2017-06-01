@@ -9,7 +9,8 @@ export default Ember.Component.extend({
     return Ember.String.htmlSafe(
       'color: ' + this.get('item.category.textcolor') + ';' +
       'background-color: ' + this.get('item.category.lightcolor') + ';' +
-      'border-left: 5px solid ' + this.get('item.category.color') + ';');
+      'border-left: 5px solid ' + this.get('item.category.color') + ';'
+    );
   }),
   clickDelay: 500,
 
@@ -26,14 +27,20 @@ export default Ember.Component.extend({
     this.get('addItemToOrder')(this.get('item'));
 
   },
-  touchStart() {
+  touchStart(){
+    this.mouseDown();
+  },
+  touchEnd(){
+    this.mouseUp();
+  },
+  mouseDown() {
     const runLater = Ember.run.later(this, function () {
       this.triggerAction({action: 'showModal', target: this});
     }, this.get('clickDelay'));
 
     this.set('pressed', runLater);
   },
-  touchEnd() {
+  mouseUp() {
     this.triggerAction({action: 'cancel', target: this});
   }
 });
