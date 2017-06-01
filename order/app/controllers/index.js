@@ -114,7 +114,7 @@ export default Ember.Controller.extend({
       }).then(() => {
         this.set('isSyncing', false);
         this.get('notifications').success(this.get('i18n').t('notification.sync.success'), { autoClear: true });
-      }).catch(err => {
+      }).catch(() => {
         this.set('isSyncing', false);
         this.get('notifications').error(this.get('i18n').t('notification.sync.error'), { autoClear: true });
       });
