@@ -7,7 +7,7 @@ class Print {
   deliveryNote(order) {
     const printers = new Map();
     order.orderitems.forEach((orderitem) => {
-      const printer = orderitem.item.category.printer.systemName;
+      const printer = (orderitem.item.category.printer || {}).systemName;
       if(printers.has(printer)) {
         printers.get(printer).push(orderitem);
       } else {
