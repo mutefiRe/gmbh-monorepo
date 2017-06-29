@@ -19,7 +19,7 @@
     "url": "https://gitlab.com/mossss/gmbh-api/issues"
   },
   "engines": {
-    "node": ">= 6.9.0"
+    "node": ">= 5 <7"
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test PORT=8081 mocha test --recursive",
