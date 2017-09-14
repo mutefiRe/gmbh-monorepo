@@ -10,5 +10,8 @@ export default DS.Model.extend({
   countMarked: DS.attr('number', {defaultValue: 0}),
   price:       DS.attr('number'),
   order:       DS.belongsTo('order'),
-  item:        DS.belongsTo('item')
+  item:        DS.belongsTo('item'),
+  orderIsPaid: Ember.computed('order.openAmount', function(){
+    return this.get('order.openAmount') <= 0;
+  })
 });
