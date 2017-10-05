@@ -59,8 +59,7 @@ describe('Acceptance | index screen', function() {
       });
     });
   });
-
-  it('can choose a table in desktop view without item. No Send Button should appear', function() {
+  it.skip('can choose a table in desktop view without item. No Send Button should appear', function() {
     loggedIn();
     andThen(() => {
       click("div.menu--desktop button.bigbutton:first-child");
@@ -73,7 +72,7 @@ describe('Acceptance | index screen', function() {
     });
   });
 
-  it('can choose a table in desktop view with item. Send button should appear', function() {
+  it.skip('can choose a table in desktop view with item. Send button should appear', function() {
     loggedIn();
     andThen(() => {
       click("div.product_single-item:first-child");

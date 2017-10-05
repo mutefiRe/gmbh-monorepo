@@ -10,21 +10,25 @@ export default Ember.Component.extend(RecognizerMixin, {
   connection: Ember.inject.service('connection'),
   i18n: Ember.inject.service('i18n'),
   notifications: Ember.inject.service('notification-messages'),
-  paidOrderitems: Ember.computed.filter('order.orderitems.@each.countPaid', function(orderitem) {
+  paidOrderitems: Ember.computed.filter('overallOrderitems.@each.countPaid', function(orderitem) {
     if (orderitem.get('countPaid') > 0) return true;
     return false;
   }),
-  markedOrderitems: Ember.computed.filter('order.orderitems.@each.countMarked', function(orderitem) {
+  markedOrderitems: Ember.computed.filter('overallOrderitems.@each.countMarked', function(orderitem) {
     if (orderitem.get('countMarked') > 0) return true;
     return false;
   }),
-  orderitems: Ember.computed.filter('order.orderitems.@each.{countMarked,countPaid}', function(orderitem) {
+  orderitems: Ember.computed.filter('overallOrderitems.@each.{countMarked,countPaid}', function(orderitem) {
     if (orderitem.get('countPaid') < orderitem.get('count')) return true;
     return false;
   }),
   markedAmount: Ember.computed('markedOrderitems', function() {
     const orderitems = this.get('markedOrderitems');
     return orderitems.reduce((sum, orderitem) => sum + orderitem.get('price') * orderitem.get('countMarked'), 0);
+  }),
+  overallOrderitems: Ember.computed.filter('order.orderitems.@each.{orderIsPaid,updatedAt}', function(orderitem){
+    if (this.get('order.type') === 'order') return true;
+    return !orderitem.get('orderIsPaid');
   }),
   openAmount: Ember.computed('order', 'order.openAmount', function() {
     return this.get('order.openAmount');
