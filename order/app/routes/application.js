@@ -4,7 +4,7 @@ export default Ember.Route.extend({
   socketService: Ember.inject.service('socket-io'),
   socketRef: null,
   session: Ember.inject.service('session'),
-  store: this.store,
+  store: Ember.inject.service('store'),
   afterModel() {
     const io = this.get('socketService');
     const content = this.get('session.session.content');

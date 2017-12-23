@@ -3,11 +3,12 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   const app = new EmberApp(defaults, {
-    babel: {
-      optional: ['es6.spec.symbols']
-    },
     'ember-cli-babel': {
-      includePolyfill: true
+      includePolyfill: true,
+      presets: [
+        ["es2015", { "modules": false }]
+      ],
+       optional: ['es6.spec.symbols']
     },
     webfont: {
       path: 'app/webfont-svg/',
