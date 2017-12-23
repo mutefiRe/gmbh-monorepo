@@ -18,7 +18,7 @@ class layout {
 
     printData.push(util.lpad(`${order.table.name}/${areaName(order.table.area)}`,48), ENTER);
     printData.push(TXT_2HEIGHT, t.deliveryNoteTitle, TXT_NORMAL, ENTER);
-    printData.push(util.rpad(`${t.nr} ${order.id}`, 24), util.lpad(util.formatDate(order.createdAt), 24), ENTER);
+    printData.push(util.rpad(`${t.nr} ${order.number}`, 24), util.lpad(util.formatDate(order.createdAt), 24), ENTER);
 
     printData.push(ENTER);
     printData.push(util.rpad(t.quantity, 7).concat(' ', util.rpad(t.item, 40), ENTER));
@@ -55,7 +55,7 @@ class layout {
       printData.push(util.lpad(`${order.table.name}/${areaName(order.table.area)}`,48), ENTER);
     }
     printData.push(TXT_2HEIGHT, t.billTitle, TXT_NORMAL, ENTER);
-    printData.push(util.rpad(`${t.nr} ${order.id}`, 24), util.lpad(util.formatDate(order.createdAt), 24), ENTER);
+    printData.push(util.rpad(`${t.nr} ${order.number}`, 24), util.lpad(util.formatDate(order.createdAt), 24), ENTER);
 
     printData.push(ENTER);
     printData.push(util.rpad(t.quantity, 7), ' ', util.rpad(t.item, 20),' ', util.lpad(t.price, 9), ' ', util.lpad(t.sum, 9), ENTER)
