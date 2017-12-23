@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   notifications: Ember.inject.service('notification-messages'),
   i18n: Ember.inject.service(),
   tagName: 'li',
+  isShowingColors: false,
   classNameBindings: ['isOpen:open'],
   isOpen: false,
   isNew: false,

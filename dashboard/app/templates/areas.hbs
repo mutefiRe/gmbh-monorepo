@@ -2,14 +2,14 @@
   {{#if newRecord}}
     <div class="content new-record">
       <ul class="editable area-list">
-        {{single-area isNew=true area=newRecord currentSelectedRecord=currentSelectedRecord}}
+        {{single-area isNew=true area=newRecord colors=colors currentSelectedRecord=currentSelectedRecord}}
       </ul>
     </div>
   {{/if}}
   <div class="content">
     <ul class="editable area-list">
       {{#each model as |area|}}
-        {{single-area area=area currentSelectedRecord=currentSelectedRecord}}
+        {{single-area area=area colors=colors currentSelectedRecord=currentSelectedRecord}}
       {{/each}}
     </ul>
   </div>

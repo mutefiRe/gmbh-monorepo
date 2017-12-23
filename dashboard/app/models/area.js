@@ -8,6 +8,7 @@ export default DS.Model.extend({
   tables:    DS.hasMany('table'),
   users:     DS.hasMany('user'),
   short:     DS.attr('string'),
+  color:     DS.attr("string", {defaultValue: '#aabbcc'}),
   sortDefinition: ['name'],
   sortedTables: Ember.computed.sort('tables', naturalStringCompare).property('tables.@each.name'),
   persistedTables: Ember.computed.filter('sortedTables', table => table.createdAt).property('tables.@each.createdAt')

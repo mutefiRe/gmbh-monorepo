@@ -3,6 +3,13 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   newRecord: null,
   currentSelectedRecord: null,
+  colors: [],
+  init() {
+    getColors()
+      .then(colors => {
+        this.set('colors', colors);
+      });
+  },
   actions: {
     createRecord() {
       if (!this.get('newRecord')) {
@@ -17,3 +24,11 @@ export default Ember.Controller.extend({
     }
   }
 });
+
+function getColors() {
+  return new Promise(resolve => {
+    Ember.$.getJSON('/assets/colors.json', function(data) {
+      resolve(data.colors);
+    });
+  });
+}

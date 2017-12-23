@@ -20,6 +20,15 @@
         {{input value=area.short}}
       </div>
     </div>
+    <div class="input-element">
+      <label for="color">{{t 'labels.color'}}</label>
+      <div class="select-wrapper colorselector">
+      <span class="colordot" onclick={{action (mut isShowingColors) true}} style="background:{{area.color}}"></span>
+        <select name="color" {{action (mut isShowingColors) true on="mouseDown"}}>
+        </select>
+        {{modal-colorpicker showModal=isShowingColors colors=colors category=area}}
+      </div>
+    </div>
 
     <div class="input-row align-right">
       <button {{action 'toggleButton' 'enabled'}} class="{{if area.enabled 'toggle' 'gray'}}">{{if area.enabled 'aktiviert' 'deaktiviert'}}</button>
