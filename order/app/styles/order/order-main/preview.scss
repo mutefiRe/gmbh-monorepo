@@ -21,6 +21,12 @@
       display: block;
       overflow: hidden
     }
+    .extra-icon {
+      position: absolute;
+      font-size:12px;
+      bottom:5%;
+      left:3px;
+    }
     margin: 2.5px;
     background-color:$white;
     list-style-type: none;

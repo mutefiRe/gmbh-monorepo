@@ -42,7 +42,7 @@ describe('Acceptance | index screen', function() {
       expect(currentURL()).to.equal('/');
       click("div.product_single-item:first-child");
       andThen(() => {
-        expect(find('.preview > li:first-child').html()).to.equal('<div class="caption">1I</div>');
+        expect(find('.preview > li:first-child').html()).to.equal('<div class="caption">1 Item 0</div>');
       });
     });
   });
@@ -54,8 +54,8 @@ describe('Acceptance | index screen', function() {
       click("div.product_single-item:nth-child(2)");
       click("div.product_single-item:nth-child(2)");
       andThen(() => {
-        expect(find('.preview > li:first-child').html()).to.equal('<div class="caption">1I</div>');
-        expect(find('.preview > li:nth-child(2)').html()).to.equal('<div class="caption">2I</div>');
+        expect(find('.preview > li:first-child').html()).to.equal('<div class="caption">1 Item 0</div>');
+        expect(find('.preview > li:nth-child(2)').html()).to.equal('<div class="caption">2 Item 0</div>');
       });
     });
   });
