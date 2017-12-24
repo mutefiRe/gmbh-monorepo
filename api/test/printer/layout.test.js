@@ -5,9 +5,10 @@ const expect = chai.expect;
 
 
 const order = {
-  "id": 3,
+  "id": 4,
   "createdAt": "date",
   "orderitems": [],
+  "number": 3,
   "table": {
     "name": "T3",
     "area": {
