@@ -56,7 +56,8 @@ export default {
     'startNewOrder': 'neue Bestellung aufnehmen',
     'login': 'Anmelden',
     'reload': 'Neu laden',
-    'logout': 'Ausloggen'
+    'logout': 'Ausloggen',
+    'noTable': 'Kein Tisch ausgewählt'
   },
   'input': {
     'additionalRequest': 'Zusatzwunsch',

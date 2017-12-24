@@ -1,5 +1,5 @@
 .product {
-    width: 90%;
+    width: 80%;
     overflow-y: auto;
     justify-content: flex-start;
     flex-direction: row;
@@ -34,11 +34,11 @@
                 font-size: 14px;
             }
         }
-        @media (max-width: 450px) {
+        @media (max-width: 530px) {
             width: 49%;
             padding-bottom: 32.333333%;
             .caption {
-                font-size: 12px;
+                font-size: 13px;
             }
         }
     }

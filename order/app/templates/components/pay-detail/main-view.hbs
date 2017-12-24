@@ -86,9 +86,20 @@
         <span class="icon icon-pay"></span>
       </button>
 {{else}}
+ 
+  {{#unless open}}
+    {{#if (eq order.type "order")}}
+      <button {{action "printBill"}} class="smallbutton default-btn"><span class="icon icon-invoice"></span></button>
+    {{else}}
       <button class="smallbutton default-btn">
         <span class="icon icon-prohibited"></span>
       </button>
+    {{/if}}
+  {{else}}
+    <button class="smallbutton default-btn">
+      <span class="icon icon-prohibited"></span>
+    </button>
+  {{/unless}}
 {{/if}}
 
 </div>

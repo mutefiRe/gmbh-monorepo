@@ -6,8 +6,8 @@ export default Ember.Component.extend({
   attributeBindings: ['style'],
   style: Ember.computed('item.item.category.color', function(){
     return Ember.String.htmlSafe(
-      'color: ' + this.get('item.item.category.textcolor') + ';' +
-      'background-color: ' + this.get('item.item.category.color')
+      'color: black' + this.get('item.item.category.textcolor') + ';' +
+      'border-left: 5px solid ' + this.get('item.item.category.color')
     );
   }),
   didUpdate() {

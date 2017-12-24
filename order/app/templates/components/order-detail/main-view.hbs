@@ -14,7 +14,7 @@
     {{#if order.table.name}}
       <button {{action 'showModal'}} class="tablebutton" style={{tableButtonStyle}}>{{t "order.table" count=1}}: {{order.table.shortname}}</button>
     {{else}}
-      <button {{action 'showModal'}} class="tablebutton required">{{t "button.selectTable"}}</button>
+      <button {{action 'showModal'}} class="tablebutton required">{{t "button.noTable"}}</button>
     {{/if}}
   {{/unless}}
   <p class="sum">{{t "order.sum"}}: € {{show-currency openAmount}}</p>
