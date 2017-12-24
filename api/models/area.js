@@ -10,7 +10,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
       unique: false,
-      validate: { is: /^#([A-F0-9]{3}|[A-F0-9]{6})$/i}
+      validate: { is: /^#([A-F0-9]{3}|[A-F0-9]{6})$/i},
+      default: "#dddddd"
     }
   }, {
     classMethods: {
