@@ -11,7 +11,7 @@ export default DS.Model.extend({
   showNumber: Ember.computed('number', function(){
     return this.get('number') || 'Noch nicht abgesendet!';
   }),
-  openAmount: Ember.computed('orderitems.@each.count', 'orderitems', function () {
+  openAmount: Ember.computed('orderitems.@each.count', 'orderitems.@each.countPaid', 'orderitems', function () {
     const orderitems = this.get('orderitems').toArray();
     let sum = 0;
     for (const orderitem of orderitems) {

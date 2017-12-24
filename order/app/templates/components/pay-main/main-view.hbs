@@ -1,7 +1,7 @@
 {{yield}}
 <div class="pay-main__switch ">
  <button {{action "filterButtonOrder"}} class="default-btn {{if (eq filter 'orders') 'active' ''}}">{{t "order.order" count=2}}</button
- ><button {{action "filterButtonTables"}} class="default-btn {{if (eq filter 'tables') 'active' ''}}">{{t "order.table" count=2}}</button>
+ ><button {{action "filterButtonTables"}} class="default-btn {{if (eq filter 'tables') 'active' ''}}">{{t "order.opentable" count=2}}</button>
 </div>
 {{#if (eq filter "orders")}}
   <div class="orders">

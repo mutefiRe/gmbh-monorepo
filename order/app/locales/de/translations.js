@@ -78,6 +78,10 @@ export default {
       'one': 'Tisch',
       'other': 'Tische'
     },
+    'opentable': {
+      'one': 'Offener Tisch',
+      'other': 'Offene Tische'
+    },
     'sum': 'Summe',
     'selectedSum': 'Auswahl',
     'empty': 'Bestellung ist leer!',

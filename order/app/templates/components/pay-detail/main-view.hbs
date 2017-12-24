@@ -30,7 +30,7 @@
 
 <div class="flexcontainer table_sum">
   {{#if order.table}}
-    <p {{action "setActualOrder" order.table}} class="tablebutton">{{t "order.table" count=1}}: {{order.table.shortname}}</p>
+    <p class="tablebutton">{{t "order.table" count=1}}: {{order.table.shortname}}</p>
   {{else}}
     {{#unless (eq order.type "table")}}
     <p>{{t "order.salesCheck"}}</p>
@@ -65,7 +65,9 @@
       <button {{action 'toggleMarkAll'}} class="smallbutton-blue">{{t "button.unmarkAll"}}</button>
     {{/unless}}
   {{else}}
-    <button {{action "printBill"}} class="smallbutton-blue">{{t "button.printBill"}}</button>
+    {{#if (eq order.type "order")}}
+      <button {{action "printBill"}} class="smallbutton-blue">{{t "button.printBill"}}</button>
+    {{/if}}
   {{/if}}
 </div>
 <div class="flexcontainer">
