@@ -6,7 +6,7 @@ module.exports = function(defaults) {
     'ember-cli-babel': {
       includePolyfill: true,
       presets: [
-        ["es2015", { "modules": false }]
+        ["env", { "modules": false }]
       ],
        optional: ['es6.spec.symbols']
     },

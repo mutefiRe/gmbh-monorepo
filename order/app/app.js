@@ -15,6 +15,7 @@ loadInitializers(App, config.modulePrefix);
 
 if (config.environment === 'production'){
   Ember.onerror = function(error) {
+    console.log(error)
     const data = {
       app: 'order',
       message: error.message
