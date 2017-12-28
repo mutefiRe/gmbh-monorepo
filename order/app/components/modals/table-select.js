@@ -11,16 +11,20 @@ export default Ember.Component.extend({
   classNames: ['table-select'],
   activeTab: 'tables',
   userAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') === this.get('currentUser').id && area.get('enabled');
+    return area.get('user.id') === this.get('currentUser').id &&
+      area.get('enabled') &&
+      !area.get('tables.firstObject.custom');
   }).property('areas.@each.enabled'),
   otherAreas: Ember.computed.filter('areas', function(area){
-    return area.get('user.id') !== this.get('currentUser').id && area.get('enabled');
+    return area.get('user.id') !== this.get('currentUser').id &&
+      area.get('enabled') &&
+      !area.get('tables.firstObject.custom');
   }).property('areas.@each.enabled'),
   unassignedTables: Ember.computed.filter('tables', function(table){
     return table.get('custom') === false && !table.get('area.id');
   }).property('tables.@each.enabled'),
   customTables: Ember.computed.filter('tables', function(table){
-    return !table.get('custom') ? false : table.get('orderitems').every(filterCustomTable);
+    return table.get('custom') ? table.get('orderitems').every(filterCustomTable) : false;
   }).property('tables.@each.custom', 'tables.@each.order'),
   actions: {
     setTable(table) {
