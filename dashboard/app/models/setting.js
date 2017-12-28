@@ -8,6 +8,5 @@ export default DS.Model.extend({
   customTables:   DS.attr('boolean'),
   showItemPrice:  DS.attr('boolean'),
   receiptPrinter: DS.belongsTo('printer'),
-  eventName:      DS.attr('string'),
   expiresTime:    DS.attr('string')
 });
