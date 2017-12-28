@@ -12,7 +12,6 @@ const db     = require('../../models');
  * @apiSuccess {Boolean}  settings.instantPay
  * @apiSuccess {Boolean}  settings.customTables
  * @apiSuccess {String}  settings.receiptPrinter
- * @apiSuccess {String}  settings.eventName
  * @apiSuccess {String}  settings.expiresTime
  * @apiSuccess {Boolean}  settings.itemShowPrice
  */
@@ -26,7 +25,6 @@ const db     = require('../../models');
  * @apiParam {Boolean}  settings.instantPay
  * @apiParam {Boolean}  settings.CustomTables
  * @apiSuccess {String}  settings.receiptPrinter
- * @apiSuccess {String}  settings.eventName
  * @apiSuccess {String}  settings.expiresTime
  * @apiSuccess {Boolean}  settings.itemShowPrice
  */

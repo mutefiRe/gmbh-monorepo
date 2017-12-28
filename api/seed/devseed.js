@@ -197,7 +197,6 @@ module.exports = function() {
         instantPay: true,
         customTables: true,
         receiptPrinterId: printer.id,
-        eventName: "GMBH",
         expiresTime: "72h",
         showItemPrice: true
       });

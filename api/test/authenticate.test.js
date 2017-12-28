@@ -25,7 +25,6 @@ describe('/authenticate route', () => {
         instantPay: true,
         customTables: false,
         receiptPrinter: "GMBH-WLAN",
-        eventName: "GMBH",
         expiresTime: "72h"
       })
     ])
