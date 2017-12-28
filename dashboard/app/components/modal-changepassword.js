@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   i18n: Ember.inject.service(),
   actions: {
     save(password) {
-      this.get('user').set('password', password);
+      this.get('user').set('password', password && password.length > 0 ? password : null);
       this.set('showModal', false);
     },
     cancel() {

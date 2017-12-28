@@ -19,6 +19,7 @@ export default Ember.Component.extend({
         record: this.get('user'),
         type: 'component'
       });
+      this.set('user.password', null);
       this.set('user.role', "waiter");
     }
   },
@@ -28,6 +29,7 @@ export default Ember.Component.extend({
         this.send('toggleEditable');
         this.get('notifications').success(this.get('i18n').t('notifications.user.update.success'));
         Ember.$('body').removeClass('noscroll');
+        this.set('user.password', null);
       }).catch(() => {
         this.get('notifications').error(this.get('i18n').t('notifications.user.update.error'));
       });
