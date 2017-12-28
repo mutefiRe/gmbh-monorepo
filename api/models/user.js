@@ -37,9 +37,11 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  User.hook('beforeValidate', function(user) {
+  User.hook('beforeCreate', function(user) {
     user.password = User.generateHash(user.password);
+    return user;
   });
+
 
   return User;
 };
