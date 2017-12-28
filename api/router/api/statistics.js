@@ -63,9 +63,9 @@ router.get('/top-selling-products', function(req, res){
       datasets: [{ data: val.map(obj => obj.sales), backgroundColor: colors.slice(0, val.length) }]
     };
 
-    options.title.text                             = 'Top 10 der verkaufsstärksten Produkte';
+    options.title.text                             = 'Top 10 der umsatzstärksten Produkte';
     options.legend.display                         = false;
-    options.scales.yAxes[0].scaleLabel.labelString = 'Stk.';
+    options.scales.yAxes[0].scaleLabel.labelString = 'Umsatz in Euro';
 
     res.send({data, options});
   }).catch(() => {
@@ -91,9 +91,9 @@ router.get('/most-sold-products', function(req, res){
       datasets: [{ data: val.map(obj => obj.amount), backgroundColor: colors.slice(0, val.length) }]
     };
 
-    options.title.text                             = 'Top 10 der umsatzstärksten Produkte';
+    options.title.text                             = 'Top 10 der verkaufsstärksten Produkte';
     options.legend.display                         = false;
-    options.scales.yAxes[0].scaleLabel.labelString = 'Umsatz in Euro';
+    options.scales.yAxes[0].scaleLabel.labelString = 'Stk.';
 
     res.send({data, options});
   }).catch(() => {
