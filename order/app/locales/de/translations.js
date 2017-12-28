@@ -36,6 +36,11 @@ export default {
       'success': 'Erfolgreich abgemeldet.',
       'error': 'Beim Abmelden ist ein Fehler aufgetreten!'
     },
+    'bill': {
+      'success': 'Rechnung drucken erfolgreich abgeschickt',
+      'error': 'Fehler beim Rechnung drucken',
+      'notConnected': 'Keine Verbindung!'
+    },
     'error': 'Ein Fehler ist aufgetreten!'
   },
   'button': {

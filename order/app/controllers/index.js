@@ -88,10 +88,18 @@ export default Ember.Controller.extend({
       this.store.deleteRecord(orderitem);
     },
     printBill(orderId) {
-      this.get('modal').showModal({ activeType: 'loading-box' });
-      this.store.createRecord('print', { order: orderId, isBill: true }).save().then(() => {
-        this.get('modal').closeModal();
-      });
+      if (this.get('connection')) {
+        this.get('modal').showModal({ activeType: 'loading-box' });
+        this.store.createRecord('print', { order: orderId, isBill: true }).save().then(() => {
+          this.get('notifications').success(this.get('i18n').t('notification.bill.success'), { autoClear: true });
+          this.get('modal').closeModal();
+        }).catch(() => {
+          this.get('notifications').error(this.get('i18n').t('notification.bill.error'), { autoClear: true });
+          this.get('modal').closeModal();
+        });
+      } else {
+        this.get('notifications').error(this.get('i18n').t('notification.bill.notConnected'), { autoClear: true });
+      }
     },
     socketDisconnected() {
       this.get('connection').setStatus(false);
