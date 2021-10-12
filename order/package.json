@@ -10,11 +10,12 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
-    "test": "COVERAGE=true ember test"
+    "test": "COVERAGE=true ember test",
+    "bower:install": "bower install"
   },
   "repository": "https://gitlab.com/mossss/gmbh-order",
   "engines": {
-    "node": ">= 0.12.0"
+    "node": "6.17.1"
   },
   "contributors": [
     {
@@ -46,6 +47,7 @@
   "devDependencies": {
     "babel-eslint": "^6.0.4",
     "babel-preset-env": "^1.6.1",
+    "bower": "^1.8.12",
     "broccoli-asset-rev": "^2.4.5",
     "cz-conventional-changelog": "^1.1.5",
     "ember-ajax": "^2.4.1",
