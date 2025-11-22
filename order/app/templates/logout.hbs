@@ -1,0 +1,15 @@
+<div class="login">
+  <div class="wrapper">
+    <img src="./assets/images/logo-gmbhtext.svg">
+    <div class="login-form">
+      <button autofocus {{action 'logout'}}>Ausloggen</button>
+      {{#if errorMessage}}
+        <div class="error">
+          {{errorMessage}}
+        </div>
+      {{/if}}
+    </div>
+    <p>© 2016 moßß OG - made with 🍺</p>
+  </div>
+</div>
+{{outlet}}

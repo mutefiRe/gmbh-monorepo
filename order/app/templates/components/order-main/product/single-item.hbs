@@ -1,0 +1,10 @@
+<p class="caption">
+  {{item.name}}
+  {{#if item.category.showAmount}}
+    {{show-amount item.amount}}
+    {{item.unit.name}}
+  {{/if}}
+  {{#if showItemPrice}}
+    <br/>€ {{show-currency item.price}}
+  {{/if}}
+</p>

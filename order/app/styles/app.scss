@@ -1,0 +1,193 @@
+  $blue: #365B94;
+  $blue-light: lighten($blue, 25%);
+  $blue-lighter: lighten($blue, 45%);
+  $blue-baby: lighten($blue, 75%);
+
+  $grey-darker: #4D4D4D;
+  $grey-dark: #666666;
+  $grey-inactive: #C4C4C4;
+  $grey: #E6E6E6;
+  $grey-light: #F0F0F0;
+  $white: #FFFFFF;
+
+
+  /*Block Colors*/
+
+  $yellowfromtheegg: #F0B71D;
+  $freshcoral: #FF7171;
+  $dashingred: #D51E21;
+  $scaryred: #A33637;
+  $darkerred: #A23333;
+  $purplerain: #5d3d57;
+  $donaublue: #3E8BF4;
+  $simpleblue: #3E6898;
+  $toggleblue: #115186;
+  $deepseablue: #1D3850;
+  $logoturquoise: #40b391;
+  $gardengreen: #478B4C;
+
+  $dashingred-light: lighten($dashingred, 15%);
+  $dashingred-lighter: lighten($dashingred, 25%);
+
+  $light: 1;
+  $dark: 0;
+  $noshadow: 2;
+  @import 'reset';
+  @import 'mixin-helper/helper.scss';
+  @import 'order/order';
+  @import 'order/order-main/category.scss';
+  @import 'order/order-main/preview.scss';
+  @import 'order/order-main/product.scss';
+  @import 'order/order-detail/order-detail.scss';
+  @import 'order/pay-main/pay-main.scss';
+  @import 'order/pay-detail/pay-detail.scss';
+  @import 'order/modal-box.scss';
+  @import 'order/table-select.scss';
+  @import 'order/table-item.scss';
+  @import 'order/item-settings.scss';
+  @import 'login.scss';
+  @import 'loading.scss';
+  @import 'notifications.scss';
+  @font-face {
+    font-family: 'Palanquin';
+    src: url('./fonts/Palanquin-Medium.ttf');
+    font-weight: normal;
+  }
+  
+  @font-face {
+    font-family: 'Palanquin';
+    src: url('./fonts/Palanquin-Light.ttf');
+    font-weight: light;
+  }
+  
+  @font-face {
+    font-family: 'Palanquin';
+    src: url('./fonts/Palanquin-Bold.ttf');
+    font-weight: bold;
+  }
+  
+  @font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(./fonts/materialicons/MaterialIcons-Regular.eot);
+    /* For IE6-8 */
+    src: local('./fonts/materialicons/Material Icons'), local('./fonts/materialicons/MaterialIcons-Regular'), url(./fonts/materialicons/MaterialIcons-Regular.woff2) format('woff2'), url(./fonts/materialicons/MaterialIcons-Regular.woff) format('woff'), url(./fonts/materialicons/MaterialIcons-Regular.ttf) format('truetype');
+  }
+  
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+  }
+  
+  body {
+    font-family: 'Palanquin', arial, sans-serif;
+    font-size: 14px;
+    color: $grey-darker;
+    overflow-y: hidden;
+  }
+  
+   ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  h1 {
+    font-weight: bold;
+    font-size: 2.57em;
+  }
+  
+  h2 {
+    font-weight: bold;
+    font-size: 1.92em;
+  }
+  
+  h3 {
+    font-weight: bold;
+    font-size: 1.28em;
+  }
+  
+  body,
+  html {
+    width: 100%;
+    height: 100%;
+  }
+  
+  body>div {
+    width: 100%;
+    height: 100%;
+  }
+  
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  input,
+  textarea {
+    -webkit-touch-callout: default;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+  
+  .screen {
+    display: none;
+    position: absolute;
+    &.isActive {
+      display: flex;
+      flex-direction: column;
+    }
+    width: 100%;
+    height: 100%;
+  }
+  
+  .item-and-preview {
+    display: flex;
+    align-items: stretch;
+    min-height: 0;
+    flex-grow: 1;
+  }
+  
+  .login-screen {
+    margin: 20px;
+  }
+  
+  .logout-screen {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .center {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

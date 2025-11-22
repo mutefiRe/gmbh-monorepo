@@ -1,0 +1,3 @@
+{{#each sortedCategories as |category|}}
+    {{order-main/category/single-item category=category actualCategory=actualCategory changeCategory=(action "changeCategory")}}
+{{/each}}

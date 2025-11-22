@@ -1,0 +1,16 @@
+<div class="login">
+  <div class="wrapper">
+    <img src="./assets/images/logo-gmbhtext.svg">
+    <div class="login-form">
+      <form {{action 'authenticate' on='submit'}}>
+        <label for="identification">{{t "input.username"}}</label>
+        {{input id='identification' value=identification}}
+        <label for="password">{{t "input.password"}}</label>
+        {{input id='password' type='password' value=password}}
+        <button autofocus type="submit">{{t "button.login"}}</button>
+      </form>
+    </div>
+    <p>{{t "copyright"}}</p>
+  </div>
+</div>
+{{outlet}}

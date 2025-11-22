@@ -1,0 +1,101 @@
+// brightness - dark buttons (high saturation) need a darker dropshadow
+//              light buttons (pastell) need a lighter dropshadow
+@mixin button($brightness, $background-color, $font-color){
+  background-color: $background-color;
+  font-weight: bold;
+  font-size: 1.28em;
+  color: $font-color;
+  @if $brightness == 0 {
+    box-shadow: rgba(0,0,0,0.2) 2px 2px 5px;
+  }
+  @if $brightness == 1{
+    box-shadow: rgba(0,0,0,0.3) 2px 2px 5px;
+  }
+  @if $brightness == 2{
+    box-shadow: none;
+  }
+
+  border: none;
+}
+
+ @mixin button-hover($background-color){
+  /* background-color: lighten($background-color,5%);
+  box-shadow: none; */
+}
+
+.default-btn{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.button-blue{
+  @include button($dark, $blue, $white);
+
+  &:hover, &:active {
+    @include button-hover($blue);
+  }
+}
+
+.button-orange{
+  @include button($dark, $dashingred, $white);
+
+  &:hover, &:active {
+    @include button-hover($dashingred);
+  }
+}
+
+.button-grey{
+  @include button($light, $grey, $grey-darker);
+
+  &:hover, &:active {
+    @include button-hover($grey);
+  }
+}
+
+@mixin flexbox(){
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+@mixin flexbox-around(){
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+// DISPLAY HELPER
+
+.none {
+  display: none;
+}
+
+.center {
+  text-align: center;
+}
+
+@mixin center(){
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.space-top {
+  margin-top: 1em;
+}
+.space-right {
+  margin-right: 1em;
+}
+.space-bottom {
+  margin-bottom: 1em;
+}
+.space-left {
+  margin-left: 1em;
+}
+.error {
+  color: $dashingred;
+}
+

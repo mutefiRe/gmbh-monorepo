@@ -1,0 +1,23 @@
+{{yield}}
+{{order-main/category/main-container
+  categories=categories
+  actualCategory=actualCategory
+  changeCategory=(action "changeCategory")
+}}
+<div class="item-and-preview">
+  {{order-main/product/main-container
+    category=actualCategory
+    categories=categories
+    items=items
+    settings=settings.firstObject
+    addItemToOrder=(action "addItemToOrder")
+    showModal=(action "showModal")
+    goToOrderDetail=(action "goToOrderDetail")
+    goToPayMain=(action "goToPayMain")
+  }}
+  {{order-main/preview/main-container
+    order=order
+    goToOrderDetail=(action "goToOrderDetail")
+    goToPayMain=(action "goToPayMain")
+  }}
+</div>

@@ -1,0 +1,105 @@
+<div>
+  {{#unless (eq markedOrderitems.length orderitems.length) }}
+    <div class="marktoggle--mobile" {{action 'toggleMarkAll'}}><input type="checkbox"></div>
+  {{else}}
+    <div class="marktoggle--mobile" {{action 'toggleMarkAll'}}><input type="checkbox" checked></div>
+  {{/unless}}
+  {{#if (eq order.type 'table')}}
+    <h2>{{t "order.table" count=1}} {{order.name}}</h2>
+  {{else}}
+    {{#if order.table}}
+    <h2>{{t "order.order" count=1}} #{{order.showNumber}}</h2>
+    {{else}}
+    <h2>{{t "order.register"}} #{{order.showNumber}}</h2>
+    {{/if}}
+  {{/if}}
+  {{#if open}}
+    <h2 class="notPaid">{{t "order.notPaid"}}</h2>
+  {{else}}
+    <h2 class="isPaid">{{t "order.paid"}}</h2>
+  {{/if}}
+</div>
+<div class="scrollable">
+    {{#each orderitems as |orderitem|}}
+      {{pay-detail/single-item orderitem=orderitem type="open" css="notpaid"}}
+    {{/each}}
+    {{#each paidOrderitems as |orderitem|}}
+      {{pay-detail/single-item orderitem=orderitem type="paid" css="paid"}}
+    {{/each}}
+</div>
+
+<div class="flexcontainer table_sum">
+  {{#if order.table}}
+    <p class="tablebutton">{{t "order.table" count=1}}: {{order.table.shortname}}</p>
+  {{else}}
+    {{#unless (eq order.type "table")}}
+    <p>{{t "order.salesCheck"}}</p>
+    {{/unless}}
+  {{/if}}
+  {{#if markedOrderitems}}
+    <p class="sum">{{t "order.selectedSum"}}: € {{show-currency markedAmount}}</p>
+  {{else}}
+    <p class="sum">{{t "order.sum"}}: € {{show-currency openAmount}}</p>
+  {{/if}}
+</div>
+<br>
+<div class="menu--desktop">
+<div>
+  {{#if open}}
+    {{input id="voucher" type="checkbox" checked=forFree}} <label for="voucher">{{t "order.payWithVoucher"}}</label>
+  {{/if}}
+</div>
+{{#if markedOrderitems}}
+<div class="flexcontainer">
+  <button {{action "paySelected"}} class="bigbutton default-btn">{{t "button.paySelected"}}</button>
+</div>
+{{/if}}
+<div class="flexcontainer">
+  <button {{action "goToPayMain"}} class="smallbutton-grey">
+    {{t "button.showOrders"}}
+  </button>
+  {{#if open}}
+    {{#unless (eq markedOrderitems.length orderitems.length) }}
+      <button {{action 'toggleMarkAll'}} class="smallbutton-blue">{{t "button.markAll"}}</button>
+    {{else}}
+      <button {{action 'toggleMarkAll'}} class="smallbutton-blue">{{t "button.unmarkAll"}}</button>
+    {{/unless}}
+  {{else}}
+    {{#if (eq order.type "order")}}
+      <button {{action "printBill"}} class="smallbutton-blue">{{t "button.printBill"}}</button>
+    {{/if}}
+  {{/if}}
+</div>
+<div class="flexcontainer">
+  <button {{action 'goToOrderMain'}} class="bigbutton default-btn">{{t "button.startNewOrder"}}</button>
+</div>
+</div>
+<div class="menu--mobile">
+  <button {{action "goToPayMain"}} class="smallbutton default-btn">
+    <span class="icon icon-return"></span>
+  </button>
+  <button {{action 'goToOrderMain'}} class="smallbutton smallbutton--new default-btn">
+    <span class="icon icon-new_order"></span>
+  </button>
+{{#if markedOrderitems}}
+      <button {{action "paySelected"}} class="smallbutton smallbutton--submit default-btn">
+        <span class="icon icon-pay"></span>
+      </button>
+{{else}}
+ 
+  {{#unless open}}
+    {{#if (eq order.type "order")}}
+      <button {{action "printBill"}} class="smallbutton default-btn"><span class="icon icon-invoice"></span></button>
+    {{else}}
+      <button class="smallbutton default-btn">
+        <span class="icon icon-prohibited"></span>
+      </button>
+    {{/if}}
+  {{else}}
+    <button class="smallbutton default-btn">
+      <span class="icon icon-prohibited"></span>
+    </button>
+  {{/unless}}
+{{/if}}
+
+</div>

@@ -1,0 +1,10 @@
+{{#if isTabbed}}
+<td>{{orderitem.count}} x</td>
+<td {{action 'closeTabbed' bubbles=false}}class="disabled">{{t "button.abort"}}</td>
+<td {{action 'reduceOrderitemCount'}} class="disabled">- 1</td>
+<td {{action 'removeItemFromOrder'}} class="disabled">{{t "button.delete"}}</td>
+{{else}}
+<td>{{orderitem.count}} x</td>
+<td colspan="2">{{orderitem.item.name}} {{show-amount orderitem.item.amount}}{{orderitem.item.unit.name}}<span> {{orderitem.extras}}</span></td>
+<td>€ {{show-currency (multiply orderitem.price orderitem.count)}}</td>
+{{/if}}

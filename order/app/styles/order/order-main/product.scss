@@ -1,0 +1,45 @@
+.product {
+    width: 80%;
+    overflow-y: auto;
+    justify-content: flex-start;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    align-content: flex-start;
+    &_single-item {
+        position: relative;
+        width: 15.666666666666%;
+        margin: 0.5%;
+        padding-bottom: 8%;
+        .caption {
+            @include center;
+            font-size: 16px;
+            text-align: center;
+        }
+        overflow:hidden;
+        transition: 400ms;
+        @media (max-width: 1200px) {
+            width: 19%;
+            padding-bottom: 12%;
+        }
+        @media (max-width: 1000px) {
+            width: 24%;
+            padding-bottom: 14%;
+        }
+        @media (max-width: 700px) {
+            width: 32.33333%;
+            padding-bottom: 18%;
+            .caption {
+                font-size: 14px;
+            }
+        }
+        @media (max-width: 530px) {
+            width: 49%;
+            padding-bottom: 32.333333%;
+            .caption {
+                font-size: 13px;
+            }
+        }
+    }
+}
