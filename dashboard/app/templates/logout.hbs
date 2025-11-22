@@ -1,0 +1,13 @@
+<div class="login">
+  <img src="./assets/images/logo-gmbhtext.svg">
+  <div class="login-form">
+    <button {{action "logout"}}>{{t 'buttons.logout'}}</button>
+    {{#if errorMessage}}
+      <div>
+        {{errorMessage}}
+      </div>
+    {{/if}}
+  </div>
+  <p>© 2017 moßß OG - made with 🍺</p>
+</div>
+{{outlet}}

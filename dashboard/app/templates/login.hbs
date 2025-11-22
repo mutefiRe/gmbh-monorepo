@@ -1,0 +1,19 @@
+<div class="login">
+  <img src="./assets/images/logo-gmbhtext.svg">
+  <div class="login-form">
+    <form {{action 'authenticate' on='submit'}}>
+      <label for="identification">{{t 'labels.username'}}</label>
+      {{input id='identification' value=identification}}
+      <label for="password">{{t 'labels.password'}}</label>
+      {{input id='password' type='password' value=password}}
+      <button type="submit">{{t 'buttons.login'}}</button>
+    </form>
+    {{#if errorMessage}}
+      <div>
+        {{errorMessage}}
+      </div>
+    {{/if}}
+  </div>
+  <p>© 2017 moßß OG - made with 🍺</p>
+</div>
+{{outlet}}

@@ -1,0 +1,69 @@
+.addentrybar {
+  height: 50px;
+  background: $deepseablue;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: #fff;
+  z-index: $toplevel;
+  .plus {
+    position: absolute;
+    right: 20px;
+    font-size: 40px;
+    line-height: 50px;
+  }
+  .text {
+    position: absolute;
+    right: 20px;
+    line-height: 50px;
+  }
+  .single-icon {
+    position: absolute;
+    right: 20px;
+    line-height: 50px;
+    font-size: 40px;
+    cursor: pointer;
+  }
+  .save {
+    display: none;
+  }
+  .cancel {
+    display: none;
+  }
+  &.onlyonmobile {
+    @media #{$desktop} {
+      display: none;
+    }
+  }
+}
+
+.noscroll {
+  .addentrybar {
+    .plus {
+      display: none;
+      @media #{$desktop} {
+        display: block;
+      }
+    }
+    .save {
+      display: block;
+      position: absolute;
+      right: 20px;
+      line-height: 50px;
+      font-size: 40px;
+      @media #{$desktop} {
+        display: none;
+      }
+    }
+    .cancel {
+      display: block;
+      position: absolute;
+      left: 20px;
+      line-height: 50px;
+      font-size: 40px;
+      @media #{$desktop} {
+        display: none;
+      }
+    }
+  }
+}

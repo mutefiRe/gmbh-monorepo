@@ -1,0 +1,109 @@
+@import './_variables.scss';
+@import './_fonts.scss';
+@import './_editable.scss';
+@import './_mainnavigation.scss';
+@import './_header.scss';
+@import './indextiles.scss';
+@import './_userlistentries.scss';
+@import './_categorylistentries.scss';
+@import './_productlistentries.scss';
+@import './_printerlistentries.scss';
+@import './_tablelistentries.scss';
+@import './_arealistentries.scss';
+@import './unitlistentries.scss';
+@import './_addentrybar.scss';
+@import './_input.scss';
+@import './_button.scss';
+@import './_eventlistentries.scss';
+@import './_datepicker.scss';
+@import './_colorselector.scss';
+@import './_iconselector.scss';
+@import './_modal.scss';
+@import './_pickable.scss';
+@import './notifications.scss';
+@import './loginlogout.scss';
+@import './changepassword.scss';
+@import './statistics.scss';
+body {
+  margin: 0 0 $mobilestaticbarheight 0;
+  padding: 0;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: $mobilefontsize;
+  color: $darkgray;
+  &.noscroll {
+    overflow: hidden;
+    @media #{$desktop} {
+      overflow: visible;
+    }
+  }
+  @media #{$desktop} {
+    margin: 0 0 60px 0;
+    font-size: $basefontsize;
+    background: $almostwhite;
+  }
+}
+
+.wrapper {
+  @media #{$desktop} {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+main {
+  padding: 0 $defaultpadding;
+  @media #{$desktop} {
+    flex-grow: 1;
+    padding: 0 $doublepadding*2 0 0;
+  }
+  .content {
+    @media #{$desktop} {
+      background: #fff;
+      box-shadow: #{$greatboxshadow};
+      padding-bottom: $defaultpadding;
+    }
+  }
+  .new-record {
+    @media #{$desktop} {
+      margin-bottom: 50px;
+      padding-bottom: 0;
+    }
+  }
+  .list-description {
+    display: none;
+    @media #{$desktop} {
+      display: flex;
+      flex-direction: row;
+    }
+    p {
+      margin-top: 0;
+      width: $listmiddlecol;
+      font-size: $smallfontsize;
+      &:first-child {
+        width: $listleftcol;
+      }
+      &:last-child {
+        width: $listrightcol;
+      }
+    }
+  }
+}
+
+footer {
+  display: none;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}

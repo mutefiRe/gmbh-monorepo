@@ -1,0 +1,84 @@
+.entriesbyletter {
+  h2 {
+    background: $simpleblue;
+    color: #fff;
+    margin: 0;
+    font-size: $headlinefontsize;
+    padding: $defaultpadding/2 $doublepadding;
+    font-weight: $black;
+    @media #{$desktop} {
+      font-size: $smallerheadlinefontsize;
+    }
+  }
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  li {
+    &.open {
+      .singleuserbar {
+        color: #fff;
+        background: $donaublue;
+        text-align: center;
+        box-shadow: #{$bottomboxshadow};
+        padding: $doublepadding 0;
+      }
+      @media #{$desktop} {
+        .singleuserbar {
+          text-align: left;
+          padding: $doublepadding 0 $doublepadding $doublepadding*2;
+        }
+      }
+    }
+  }
+}
+
+.singleuserbar {
+  padding: $doublepadding 0 $doublepadding $doublepadding*2;
+  font-weight: $regular;
+  color: $midgray;
+  letter-spacing: 0.01em;
+  clear: both;
+  position: relative;
+  @media #{$desktop} {
+    display: flex;
+    flex-direction: row;
+    &:hover {
+      background: $almostgray;
+      cursor: pointer;
+    }
+  }
+  .singleusername {
+    @media #{$desktop} {
+      width: $listleftcol;
+    }
+  }
+  .singleauth {
+    display: none;
+    @media #{$desktop} {
+      display: inline;
+      width: $listmiddlecol;
+    }
+  }
+  .singlepwindicator {
+    display: none;
+    @media #{$desktop} {
+      display: inline;
+      width: $listrightcol;
+    }
+  }
+}
+
+.entriesbyletter:nth-child(3n+1) {
+  h2 {
+    background: $darkerred;
+  }
+}
+
+.entriesbyletter:nth-child(3n+0) {
+  h2 {
+    background: $yellowfromtheegg;
+  }
+}

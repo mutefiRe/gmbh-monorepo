@@ -1,0 +1,45 @@
+<div class="single-event">
+  <h3>{{event.name}}</h3>
+  <p>{{moment-format event.beginDate 'DD.MM.YYYY'}} – {{moment-format event.endDate 'DD.MM.YYYY'}}</p>
+</div>
+<div class="editsingleevent editarea">
+  <div class="input-row align-left">
+    <div class="input-element">
+      <label for="name">{{t 'labels.name'}}</label>
+      {{input value=event.name}}
+    </div>
+    <div class="input-element">
+      <label for="name">{{t 'labels.startdate'}}</label>
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=event.beginDate}}
+    </div>
+    <div class="input-element">
+      <label for="name">{{t 'labels.enddate'}}</label>
+      {{bootstrap-datepicker format="dd.mm.yyyy" startDate=todaysDate value=event.endDate}}
+    </div>
+  </div>
+  <div class="input-row align-left">
+    <div class="input-element">
+      <label for="printer">{{t 'labels.printer'}}</label>
+      <div class="select-wrapper">
+        <select name="printer" onchange={{action "changeRelation" event}}>
+          <option value=null selected={{eq event.receiptPrinter null}}>{{t 'noprinter'}}</option>
+          {{#each printers as |printer|}}
+            <option value="{{printer.id}}" selected={{eq event.receiptPrinter.id printer.id}}>{{printer.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="input-element">
+      <label for="expirationtime">{{t 'labels.runtime'}}</label>
+      {{input value=event.expiresTime}}
+    </div>
+  </div>
+  <div class="input-row">
+    <button {{action 'toggleButton' "customTables" event.customTables}} class="{{if event.customTables 'toggle' 'gray'}}" type="button">{{t 'buttons.customtables'}} {{if event.customTables 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "instantPay" event.instantPay}} class="{{if event.instantPay 'toggle' 'gray'}}" type="button">{{t 'buttons.instantpay'}} {{if event.instantPay 'aktiviert' 'deaktiviert'}}</button>
+    <button {{action 'toggleButton' "showItemPrice" event.showItemPrice}} class="{{if event.showItemPrice 'toggle' 'gray'}}" type="button">{{t 'buttons.priceonproducts'}} {{if event.showItemPrice 'aktiviert' 'deaktiviert'}}</button>
+  </div>
+  <div class="input-row align-right">
+    <button class="save showonmobile" {{action 'updateEvent' event}}>{{t 'buttons.save'}}</button>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<main>
+  <div class="content">
+    <ul class="editable printer-list">
+      {{#each model as |printer|}}
+        {{single-printer printer=printer currentSelectedRecord=currentSelectedRecord}}
+      {{/each}}
+    </ul>
+  </div>
+</main>
+
+{{main-controlbar setRecord=(action 'createRecord') currentSelectedRecord=currentSelectedRecord searchPrinters=true}}

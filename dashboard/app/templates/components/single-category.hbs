@@ -1,0 +1,52 @@
+<div class="single-category" {{action "toggleEditable"}} style="background:{{if category.enabled category.color}}">
+<span class="icon {{category.icon}}"></span>
+  <p>{{if isNew (t 'new.category') category.name}}</p>
+  <div class="singleeditindicator material-icons">{{#if isNew}}close{{else if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
+</div>
+{{#if isOpen}}
+<div class="editsinglecategory editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">{{t 'labels.name'}}</label>
+      {{input type="text" value=category.name name="name"}}
+    </div>
+    <div class="input-element">
+      <label for="icon">{{t 'labels.icon'}}</label>
+      <div class="select-wrapper iconselector">
+        <span class="icondot icon {{category.icon}}" onclick={{action (mut isShowingIcons) true}}></span>
+        <select name="icon" {{action (mut isShowingIcons) true on="mouseDown"}} onchange={{action (mut category.icon) value="target.value"}}>
+        </select>
+        {{modal-iconpicker showModal=isShowingIcons icons=icons category=category}}
+      </div>
+    </div>
+    <div class="input-element">
+      <label for="printer">{{t 'labels.printer'}}</label>
+      <div class="select-wrapper">
+        <select name="printer" onchange={{action "changeRelation" 'printer'}}>
+          <option value=null selected={{eq category.printer null}}>{{t 'noprinter'}}</option>
+          {{#each printers as |printer|}}
+            <option value="{{printer.id}}" selected={{eq category.printer.id printer.id}}>{{printer.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="input-element">
+      <label for="color">{{t 'labels.color'}}</label>
+      <div class="select-wrapper colorselector">
+      <span class="colordot" onclick={{action (mut isShowingColors) true}} style="background:{{category.color}}"></span>
+        <select name="color" {{action (mut isShowingColors) true on="mouseDown"}}>
+        </select>
+        {{modal-colorpicker showModal=isShowingColors colors=colors category=category}}
+      </div>
+    </div>
+  </div>
+  <div class="input-row align-right">
+      <button {{action 'toggleButton' 'showAmount'}} class="{{if category.showAmount 'toggle' 'gray'}}" type="button">{{t 'buttons.showamount'}} {{if category.showAmount 'aktiviert' 'deaktiviert'}}</button>
+  </div>
+  <div class="input-row align-right">
+    <button {{action 'toggleButton' "enabled"}} class="{{if category.enabled 'toggle' 'gray'}}" type="button">{{if category.enabled 'aktiviert' 'deaktiviert'}}</button>
+    <button class="save" {{action "updateCategory" category}}>{{t 'buttons.save'}}</button>
+     {{#unless isNew}}<button class="delete" {{action "destroyCategory"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
+  </div>
+</div>
+{{/if}}

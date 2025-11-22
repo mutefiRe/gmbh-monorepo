@@ -1,0 +1,92 @@
+/* editable element with overlay on mobile and four input next to each other on desktop */
+
+.editable {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  li {
+    position: relative;
+    .editarea {
+      padding: 20px 30px;
+      display: block;
+      @media #{$desktop} {
+        .input-row {
+          flex-wrap: wrap;
+        }
+        .input-element {
+          width: calc(50% - 50px);
+          margin-bottom: 20px;
+        }
+        .align-right>button,
+        .align-left>button,
+        button {
+          margin-bottom: 10px;
+        }
+      }
+      @media #{$largedesktop} {
+        .input-row {
+          flex-wrap: nowrap;
+        }
+        .input-element {
+          margin-bottom: 0;
+        }
+        .align-right button {
+          width: calc(25% - 50px);
+        }
+        .align-left .input-element {
+          width: calc(25% - 50px);
+        }
+      }
+    }
+    .singleeditindicator {
+      display: none;
+      position: absolute;
+      right: 10px;
+      font-size: 24px !important;
+    }
+    &:hover {
+      @media #{$desktop} {
+        .singleeditindicator {
+          display: block;
+        }
+      }
+    }
+    &.open {
+      position: fixed;
+      display: block;
+      height: auto;
+      width: 100%;
+      top: 0;
+      bottom: $mobilestaticbarheight/2;
+      left: 0;
+      right: 0;
+      background: #fff;
+      z-index: 300;
+      overflow-y: scroll;
+      z-index: $midlevel;
+      @media #{$desktop} {
+        position: relative;
+        box-shadow: #{$upwardsboxshadow};
+        overflow-y: visible;
+        top: auto;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        .singleeditindicator {
+          display: block;
+        }
+      }
+    }
+    &.new {
+      z-index: $addnewlevel;
+    }
+  }
+}
+
+.new-record {
+  .editable {
+    li {
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{{notification-container position="top-right"}}
+{{#if session.isAuthenticated}}
+  {{main-header headline=headline}}
+{{/if}}
+<div class="wrapper">
+  {{#if session.isAuthenticated}}
+    {{#unless isIndex}}
+      {{main-navigation}}
+    {{/unless}}
+  {{/if}}
+  {{outlet}}
+</div>

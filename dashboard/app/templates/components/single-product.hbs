@@ -1,0 +1,50 @@
+<div class="single-product" {{action "toggleEditable"}} style="background:{{if isEnabled product.category.color}}">
+  <p>{{if isNew (t 'new.product') product.name}}</p>
+  <div class="singleeditindicator material-icons">{{#if isNew}}close{{else if isOpen}}keyboard_arrow_down{{else}}mode_edit{{/if}}</div>
+</div>
+
+{{#if isOpen}}
+<div class="editsingleproduct editarea">
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">{{t 'labels.name'}}</label> {{input type="text" value=product.name name="name"}}
+    </div>
+    <div class="input-element">
+      <label for="color">{{t 'labels.category'}}</label>
+      <div class="select-wrapper">
+        <select name="color" onchange={{action "changeRelation" 'category'}}>
+            {{#each categories as |category|}}
+              <option selected={{eq category.id product.category.id}} value="{{category.id}}">{{category.name}}</option>
+            {{/each}}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="input-row">
+    <div class="input-element">
+      <label for="name">{{t 'labels.price'}}</label> {{input type="text" value=product.price name="price"}}
+    </div>
+    <div class="input-element">
+      <label for="name">{{t 'labels.tax'}}</label> {{input type="text" value=product.tax name="mwst"}}
+    </div>
+    <div class="input-element">
+      <label>{{t 'labels.amount'}}</label> {{input value=product.amount name="amount"}}
+    </div>
+    <div class="input-element">
+      <label>{{t 'labels.unit'}}</label>
+      <div class="select-wrapper">
+        <select name="unit">
+          {{#each units as |unit|}}
+            <option selected={{eq unit.id product.unit.id}} value="{{unit.id}}">{{unit.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="input-row align-right">
+    <button {{action 'toggleButton' 'enabled'}} class="{{if product.enabled 'toggle' 'gray'}}">{{if product.enabled 'aktiviert' 'deaktiviert'}}</button>
+    <button class="save" {{action "updateProduct" product}}>{{t 'buttons.save'}}</button>
+    {{#unless isNew}}<button class="delete" {{action "destroyProduct"}}><span class="material-icons">delete</span>{{t 'buttons.delete'}}</button>{{/unless}}
+  </div>
+</div>
+{{/if}}
