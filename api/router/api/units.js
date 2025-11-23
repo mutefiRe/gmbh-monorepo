@@ -1,7 +1,7 @@
 'use strict';
 
-const router    = require('express').Router();
-const db        = require('../../models');
+const router = require('express').Router();
+const db = require('../../models');
 
 /**
  * @apiDefine unitAttributes
@@ -30,9 +30,9 @@ const db        = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Unit.find({where: {id: req.params.id}}).then(unit => {
-    res.send({unit});
+router.get('/:id', function (req, res) {
+  db.Unit.findOne({ where: { id: req.params.id } }).then(unit => {
+    res.send({ unit });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -57,9 +57,9 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res){
+router.get('/', function (req, res) {
   db.Unit.findAll().then(units => {
-    res.send({units});
+    res.send({ units });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -81,11 +81,11 @@ router.get('/', function(req, res){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
   const io = req.app.get('io');
   db.Unit.create(req.body.unit).then(unit => {
-    res.send({unit});
-    io.sockets.emit("update", {unit});
+    res.send({ unit });
+    io.sockets.emit("update", { unit });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -109,14 +109,14 @@ router.post('/', function(req, res) {
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res){
+router.put('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Unit.find({where: {id: req.params.id}}).then(unit => {
+  db.Unit.findOne({ where: { id: req.params.id } }).then(unit => {
     if (unit === null) throw new Error('unit not found');
     return unit.update(req.body.unit);
   }).then(unit => {
-    res.send({unit});
-    io.sockets.emit("update", {unit});
+    res.send({ unit });
+    io.sockets.emit("update", { unit });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -136,14 +136,14 @@ router.put('/:id', function(req, res){
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res){
+router.delete('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Unit.find({where: {id: req.params.id}}).then(unit => {
+  db.Unit.findOne({ where: { id: req.params.id } }).then(unit => {
     if (unit === null) throw new Error('unit not found');
     return unit.destroy();
   }).then(() => {
     res.send({});
-    io.sockets.emit("delete", {'type': 'unit', 'id': unit.id});
+    io.sockets.emit("delete", { 'type': 'unit', 'id': unit.id });
   }).catch(error => {
     res.status(400).send({
       'errors': {

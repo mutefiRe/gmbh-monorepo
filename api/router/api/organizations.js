@@ -1,7 +1,7 @@
 'use strict';
 
-const router    = require('express').Router();
-const db        = require('../../models');
+const router = require('express').Router();
+const db = require('../../models');
 
 
 /**
@@ -40,9 +40,9 @@ const db        = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Organization.find({where: {id: req.params.id}}).then(organization => {
-    if(organization === null){
+router.get('/:id', function (req, res) {
+  db.Organization.findOne({ where: { id: req.params.id } }).then(organization => {
+    if (organization === null) {
       res.status(404).send({
         'errors': {
           'msg': "organization not found"
@@ -50,7 +50,7 @@ router.get('/:id', function(req, res){
       });
       return;
     }
-    res.send({organization});
+    res.send({ organization });
   });
 });
 
@@ -68,9 +68,9 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res){
+router.get('/', function (req, res) {
   db.Organization.findAll().then(organizations => {
-    if(organizations[0] === undefined){
+    if (organizations[0] === undefined) {
       res.status(404).send({
         'errors': {
           'msg': "organizations not found"
@@ -78,7 +78,7 @@ router.get('/', function(req, res){
       });
       return;
     }
-    res.send({organizations});
+    res.send({ organizations });
   });
 });
 
@@ -94,11 +94,11 @@ router.get('/', function(req, res){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res){
+router.post('/', function (req, res) {
   const io = req.app.get('io');
   db.Organization.create(req.body.organization).then(organization => {
-    io.sockets.emit("update", {organization});
-    res.send({organization});
+    io.sockets.emit("update", { organization });
+    res.send({ organization });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -121,10 +121,10 @@ router.post('/', function(req, res){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res){
+router.put('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Organization.find({where: {id: req.params.id}}).then(organization => {
-    if(organization === null) {
+  db.Organization.findOne({ where: { id: req.params.id } }).then(organization => {
+    if (organization === null) {
       res.status(404).send({
         'errors': {
           'msg': "organizations not found"
@@ -132,9 +132,9 @@ router.put('/:id', function(req, res){
       });
       return;
     }
-    organization.update(req.body.organization).then( data => {
-      res.send({organization: data});
-      io.sockets.emit("update", {organization: data});
+    organization.update(req.body.organization).then(data => {
+      res.send({ organization: data });
+      io.sockets.emit("update", { organization: data });
     }).catch(error => {
       res.status(400).send({
         'errors': {
@@ -155,10 +155,10 @@ router.put('/:id', function(req, res){
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res){
+router.delete('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Organization.find({where: {id: req.params.id}}).then(organization => {
-    if(organization === null){
+  db.Organization.findOne({ where: { id: req.params.id } }).then(organization => {
+    if (organization === null) {
       res.status(404).send({
         'errors': {
           'msg': "organization not found"
@@ -168,7 +168,7 @@ router.delete('/:id', function(req, res){
     }
     organization.destroy().then(() => {
       res.send({});
-      io.sockets.emit("delete", {'type': 'organization', 'id': organization.id});
+      io.sockets.emit("delete", { 'type': 'organization', 'id': organization.id });
     });
   });
 });

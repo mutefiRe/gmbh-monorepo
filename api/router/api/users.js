@@ -1,7 +1,7 @@
 'use strict';
 
-const router    = require('express').Router();
-const db        = require('../../models');
+const router = require('express').Router();
+const db = require('../../models');
 
 /**
  * @apiDefine userAttributes
@@ -39,9 +39,9 @@ const db        = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res) {
-  db.User.find({where: {id: req.params.id}, include: [{model: db.Area}]}).then(user => {
-    if (user) res.send({user});
+router.get('/:id', function (req, res) {
+  db.User.findOne({ where: { id: req.params.id }, include: [{ model: db.Area }] }).then(user => {
+    if (user) res.send({ user });
     else {
       res.status(404).send({
         'errors': {
@@ -73,9 +73,9 @@ router.get('/:id', function(req, res) {
  * @apiPermission admin
  */
 
-router.get('/', function(req, res) {
-  db.User.findAll({attributes: ['id', 'username', 'firstname', 'lastname', 'role', 'printerId'], include: [{model: db.Area}]}).then(users => {
-    res.send({users});
+router.get('/', function (req, res) {
+  db.User.findAll({ attributes: ['id', 'username', 'firstname', 'lastname', 'role', 'printerId'], include: [{ model: db.Area }] }).then(users => {
+    res.send({ users });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -98,11 +98,11 @@ router.get('/', function(req, res) {
  * @apiPermission admin
  */
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
   const io = req.app.get('io');
   db.User.create(req.body.user).then(user => {
-    res.send({user});
-    io.sockets.emit("update", {user});
+    res.send({ user });
+    io.sockets.emit("update", { user });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -127,16 +127,16 @@ router.post('/', function(req, res) {
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res) {
+router.put('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.User.find({where: {id: req.params.id}}).then(user => {
+  db.User.findOne({ where: { id: req.params.id } }).then(user => {
     if (user === null) throw new Error('user not found');
     if (!req.body.user.password) Reflect.deleteProperty(req.body.user, 'password');
-    else req.body.user.password = db.User.generateHash(req.body.user.password); 
+    else req.body.user.password = db.User.generateHash(req.body.user.password);
     return user.update(req.body.user);
   }).then(user => {
-    res.send({user});
-    io.sockets.emit("update", {user});
+    res.send({ user });
+    io.sockets.emit("update", { user });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -156,14 +156,14 @@ router.put('/:id', function(req, res) {
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res) {
+router.delete('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.User.find({where: {id: req.params.id}}).then(user => {
+  db.User.findOne({ where: { id: req.params.id } }).then(user => {
     if (user === null) throw new Error('user not found');
     return user.destroy();
   }).then(() => {
     res.send({});
-    io.sockets.emit("delete", {'type': 'user', 'id': user.id});
+    io.sockets.emit("delete", { 'type': 'user', 'id': user.id });
   }).catch(error => {
     res.status(400).send({
       'errors': {

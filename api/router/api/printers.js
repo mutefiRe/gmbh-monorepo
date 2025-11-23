@@ -55,9 +55,9 @@ router.get('/', function (req, res) {
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Printer.find({where: {id: req.params.id}}).then(printer => {
-    if(printer === null){
+router.get('/:id', function (req, res) {
+  db.Printer.findOne({ where: { id: req.params.id } }).then(printer => {
+    if (printer === null) {
       res.status(404).send({
         'errors': {
           'msg': "couldn't find any printer"
@@ -65,7 +65,7 @@ router.get('/:id', function(req, res){
       });
       return;
     }
-    res.send({printer});
+    res.send({ printer });
   });
 });
 
@@ -81,9 +81,9 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.post('/:id/testprint', function(req, res){
-  db.Printer.find({where: {id: req.params.id}}).then(printer => {
-    if(printer === null){
+router.post('/:id/testprint', function (req, res) {
+  db.Printer.findOne({ where: { id: req.params.id } }).then(printer => {
+    if (printer === null) {
       res.status(404).send({
         'errors': {
           'msg': "couldn't find printer"
@@ -94,13 +94,13 @@ router.post('/:id/testprint', function(req, res){
     print.test(printer.dataValues);
     res.send({});
   })
-  .catch((error) => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
-    });
-  })
+    .catch((error) => {
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
+    })
 });
 
 /**
@@ -118,13 +118,13 @@ router.post('/:id/testprint', function(req, res){
 router.post('/update', function (req, res) {
   res.status(200).send();
   const io = req.app.get('io');
-  if(!lockSearch) {
+  if (!lockSearch) {
     lockSearch = true;
     control.updatePrinters()
-    .then((printers) => {
-      io.sockets.emit("update", { printers: printers.slice(printers.length/2, printers.length) });
-      lockSearch = false;
-    })
+      .then((printers) => {
+        io.sockets.emit("update", { printers: printers.slice(printers.length / 2, printers.length) });
+        lockSearch = false;
+      })
   }
 
 });
@@ -144,7 +144,7 @@ router.post('/update', function (req, res) {
 
 router.put('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Printer.find({ where: { id: req.params.id } }).then(printer => {
+  db.Printer.findOne({ where: { id: req.params.id } }).then(printer => {
     if (printer === null) throw new Error("printer not found");
     return printer.update(req.body.printer);
   }).then(printer => {
@@ -170,14 +170,14 @@ router.put('/:id', function (req, res) {
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res) {
+router.delete('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Printer.find({where: {id: req.params .id}}).then(printer => {
+  db.Printer.findOne({ where: { id: req.params.id } }).then(printer => {
     if (printer === null) throw new Error('printer not found');
     return Promise.all([printer.destroy(), control.removePrinter(printer.systemName)]);
   }).then(() => {
     res.send({});
-    io.sockets.emit("delete", {'type': 'printer', 'id': req.params.id});
+    io.sockets.emit("delete", { 'type': 'printer', 'id': req.params.id });
   }).catch(error => {
     res.status(400).send({
       'errors': {

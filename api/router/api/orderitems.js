@@ -1,7 +1,7 @@
 'use strict';
 
-const router    = require('express').Router();
-const db        = require('../../models');
+const router = require('express').Router();
+const db = require('../../models');
 
 /**
  * @apiDefine orderitemAttributes
@@ -41,13 +41,13 @@ const db        = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Orderitem.find({where: {id: req.params.id}}).then(data => {
-    if(data === null){
+router.get('/:id', function (req, res) {
+  db.Orderitem.findOne({ where: { id: req.params.id } }).then(data => {
+    if (data === null) {
       res.status(404).send("couldn't find item");
       return;
     }
-    res.send({'item':data});
+    res.send({ 'item': data });
   });
 });
 
@@ -66,8 +66,8 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res){
-  db.Orderitem.findAll({include: [{model: db.Item}, {model: db.Order, where: {userId: req.decoded.id}}]}).then(orderitems => {
+router.get('/', function (req, res) {
+  db.Orderitem.findAll({ include: [{ model: db.Item }, { model: db.Order, where: { userId: req.decoded.id } }] }).then(orderitems => {
     res.send(orderitems);
   });
 });
@@ -84,9 +84,9 @@ router.get('/', function(req, res){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res){
-  db.Orderitem.create(req.body.orderitem).then( orderitem => {
-    res.send({orderitem});
+router.post('/', function (req, res) {
+  db.Orderitem.create(req.body.orderitem).then(orderitem => {
+    res.send({ orderitem });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -109,19 +109,19 @@ router.post('/', function(req, res){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res){
-  db.Orderitem.update(req.body.orderitem, {where: {id: req.params.id}})
-  .then(() => {
-    return db.Orderitem.findById(req.params.id);
-  }).then(orderitem => {
-    res.send({orderitem});
-  }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
+router.put('/:id', function (req, res) {
+  db.Orderitem.update(req.body.orderitem, { where: { id: req.params.id } })
+    .then(() => {
+      return db.Orderitem.findById(req.params.id);
+    }).then(orderitem => {
+      res.send({ orderitem });
+    }).catch(error => {
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
     });
-  });
 });
 
 /**
@@ -134,9 +134,9 @@ router.put('/:id', function(req, res){
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res){
-  db.Orderitem.find({where: {id: req.params.id}}).then(item => {
-    if(item === null){
+router.delete('/:id', function (req, res) {
+  db.Orderitem.findOne({ where: { id: req.params.id } }).then(item => {
+    if (item === null) {
       res.status(404).send({
         'errors': {
           'msg': error && error.errors && error.errors[0].message || error.message

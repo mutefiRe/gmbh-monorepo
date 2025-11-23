@@ -1,7 +1,7 @@
 'use strict';
 
 const router = require('express').Router();
-const db     = require('../../models');
+const db = require('../../models');
 
 /**
  * @apiDefine settingAttributes
@@ -44,9 +44,9 @@ const db     = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Setting.find({where: {id: req.params.id}}).then(setting => {
-    if(setting === null){
+router.get('/:id', function (req, res) {
+  db.Setting.findOne({ where: { id: req.params.id } }).then(setting => {
+    if (setting === null) {
       res.status(404).send({
         'errors': {
           'msg': "couldn't find any settings"
@@ -54,7 +54,7 @@ router.get('/:id', function(req, res){
       });
       return;
     }
-    res.send({setting});
+    res.send({ setting });
   });
 });
 
@@ -73,7 +73,7 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res){
+router.get('/', function (req, res) {
   db.Setting.findAll().then(setting => {
     if (setting[0] === undefined) {
       res.status(404).send({
@@ -83,7 +83,7 @@ router.get('/', function(req, res){
       });
       return;
     }
-    res.send({setting});
+    res.send({ setting });
   });
 });
 
@@ -99,11 +99,11 @@ router.get('/', function(req, res){
  * @apiPermission admin
  */
 
-router.post('/', function(req, res){
+router.post('/', function (req, res) {
   const io = req.app.get('io');
   db.Setting.create(req.body.setting).then(setting => {
-    res.send({setting});
-    io.sockets.emit("update", {setting});
+    res.send({ setting });
+    io.sockets.emit("update", { setting });
   }).catch(err => {
     res.status(400).send({
       'errors': {
@@ -127,10 +127,10 @@ router.post('/', function(req, res){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res){
+router.put('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Setting.find({where: {id: req.params.id}}).then(setting => {
-    if(setting === null) {
+  db.Setting.findOne({ where: { id: req.params.id } }).then(setting => {
+    if (setting === null) {
       res.status(404).send({
         'errors': {
           'msg': "couldn't find any settings"
@@ -139,8 +139,8 @@ router.put('/:id', function(req, res){
       return;
     }
     setting.update(req.body.setting).then(setting => {
-      res.send({setting});
-      io.sockets.emit("update", {setting});
+      res.send({ setting });
+      io.sockets.emit("update", { setting });
     }).catch(err => {
       res.status(400).send({
         'errors': {
@@ -161,9 +161,9 @@ router.put('/:id', function(req, res){
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res){
-  db.Setting.find({where: {id: req.params.id}}).then(setting => {
-    if(setting === null){
+router.delete('/:id', function (req, res) {
+  db.Setting.findOne({ where: { id: req.params.id } }).then(setting => {
+    if (setting === null) {
       res.status(404).send({
         'errors': {
           'msg': "could not find any settings"
