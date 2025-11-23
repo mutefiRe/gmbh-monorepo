@@ -3,7 +3,7 @@
 const db = require("../models/index");
 const faker = require("faker2");
 
-module.exports = function() {
+module.exports = async function () {
   const speisen = [
     "Schnitzel",
     "Käsekrainer",
@@ -73,53 +73,39 @@ module.exports = function() {
 
   /* PRINTER */
 
-  const printer = db.Printer.bulkCreate([{
-    systemName: "GMBH",
-    name: "Keller"
-  },{
-    systemName: "26:11:0E:86:70:5B"
-  }, {
-    systemName: "00:5F:8D:65:85:06",
-    name: "Küche"
-  }])
-    .then(() => {
-      return db.Printer.find({
-        where: { systemName: "GMBH" }
-      });
-    });
+  await db.Printer.bulkCreate([
+    { systemName: "GMBH", name: "Keller" },
+    { systemName: "26:11:0E:86:70:5B" },
+    { systemName: "00:5F:8D:65:85:06", name: "Küche" }
+  ]);
+  const printer = await db.Printer.findOne({ where: { systemName: "GMBH" } });
 
   /* USER */
 
-  db.User.create({
+  await db.User.create({
     username: "admin",
     firstname: "Meister",
     lastname: "Lampe",
     password: "abc",
     role: "admin"
   });
-  db.User.create({
+  await db.User.create({
     username: "waiter",
     firstname: "die GmBh",
     lastname: " Buam",
     password: "abc",
     role: "waiter"
   });
-
-  printer
-    .then(printer => {
-      db.User.create({
-        username: "printer",
-        firstname: "die GmBh",
-        lastname: " Buam",
-        password: "abc",
-        printerId: printer.id,
-        role: "waiter"
-      });
-    });
-
-
+  await db.User.create({
+    username: "printer",
+    firstname: "die GmBh",
+    lastname: " Buam",
+    password: "abc",
+    printerId: printer.id,
+    role: "waiter"
+  });
   for (let i = 0; i < 50; i++) {
-    db.User.create({
+    await db.User.create({
       username: faker.Internet.userName(),
       firstname: faker.Name.firstName(),
       lastname: faker.Name.lastName(),
@@ -130,45 +116,34 @@ module.exports = function() {
 
   /* FOOD */
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Speisen",
-          enabled: true,
-          icon: "food",
-          description: "Alle die Guten Sachen",
-          showAmount: false,
-          printerId: printer.id,
-          color: '#35063E'
-        });
-    })
-    .then(cat => {
-      db.Unit
-        .create({
-          name: "Stk."
-        })
-        .then(data => {
-          for (let i = 0; i < 25; i++) {
-            db.Item.create({
-              name: faker.Helpers.randomize(speisen) +
-              " " +
-              faker.Helpers.randomize(stopwords) +
-              " " +
-              faker.Helpers.randomize(beilagen),
-              amount: 1,
-              price: faker.Helpers.randomNumber(20) + 1,
-              tax: 0.1,
-              unitId: data.id,
-              categoryId: cat.id
-            });
-          }
-        });
+  const cat = await db.Category.create({
+    name: "Speisen",
+    enabled: true,
+    icon: "food",
+    description: "Alle die Guten Sachen",
+    showAmount: false,
+    printerId: printer.id,
+    color: '#35063E'
+  });
+  const unit = await db.Unit.create({ name: "Stk." });
+  for (let i = 0; i < 25; i++) {
+    await db.Item.create({
+      name: faker.Helpers.randomize(speisen) +
+        " " +
+        faker.Helpers.randomize(stopwords) +
+        " " +
+        faker.Helpers.randomize(beilagen),
+      amount: 1,
+      price: faker.Helpers.randomNumber(20) + 1,
+      tax: 0.1,
+      unitId: unit.id,
+      categoryId: cat.id
     });
+  }
 
   /* ORGANISATIONS */
 
-  db.Organization.create({
+  await db.Organization.create({
     uid: "blaaaah",
     name: "GehMalBierHolen Gmbh",
     street: "Urstein Süd",
@@ -177,8 +152,7 @@ module.exports = function() {
     city: "Puch bei Hallein",
     telephone: "+43 650 12345678"
   });
-
-  db.Organization.create({
+  await db.Organization.create({
     uid: "puuuuh",
     name: "Fetzgeil Gmbh",
     street: "Urstein Nord",
@@ -188,361 +162,133 @@ module.exports = function() {
     telephone: "+43 650 87654321"
   });
 
-  printer
-    .then((printer) => {
-      return db.Setting.create({
-        name: "Testsetting",
-        begin_date: "nodate",
-        end_date: "nodate",
-        instantPay: true,
-        customTables: true,
-        receiptPrinterId: printer.id,
-        expiresTime: "72h",
-        showItemPrice: true
-      });
-    });
+  await db.Setting.create({
+    name: "Testsetting",
+    begin_date: "nodate",
+    end_date: "nodate",
+    instantPay: true,
+    customTables: true,
+    receiptPrinterId: printer.id,
+    expiresTime: "72h",
+    showItemPrice: true
+  });
 
 
   /* ALCOHOLICS */
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Alkoholisches",
-          enabled: true,
-          icon: "drink-alc",
-          description: "alkohol",
-          showAmount: true,
-          printerId: printer.id,
-          color: '#FEAD00'
-        });
-    })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "l" }
-        })
-        .spread(data => {
-          db.Item.bulkCreate([
-            {
-              name: "Bier",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Bier",
-              amount: 0.33,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Radler",
-              amount: 0.5,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Radler",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Grüner Veltliner",
-              amount: 0.125,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Grüner Veltliner",
-              amount: 0.25,
-              price: 5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Spätburgunder",
-              amount: 0.125,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Spätburgunder",
-              amount: 0.25,
-              price: 5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Weißer Spritzer",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Roter Spritzer",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            }
-          ]);
-        });
-
-      db.Unit
-        .findOrCreate({
-          where: { name: "cl" }
-        })
-        .spread(data => {
-          db.Item.bulkCreate([
-            {
-              name: "Klopfer",
-              amount: 2,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Jägermeister",
-              amount: 2,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Obstler",
-              amount: 4,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Williams-Schnaps",
-              amount: 4,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Nuss-Schnaps",
-              amount: 4,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            }
-          ]);
-        });
-    });
+  const alcCat = await db.Category.create({
+    name: "Alkoholisches",
+    enabled: true,
+    icon: "drink-alc",
+    description: "alkohol",
+    showAmount: true,
+    printerId: printer.id,
+    color: '#FEAD00'
+  });
+  let [lUnit] = await db.Unit.findOrCreate({ where: { name: "l" } });
+  await db.Item.bulkCreate([
+    { name: "Bier", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Bier", amount: 0.33, price: 2.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Radler", amount: 0.5, price: 2.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Radler", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Grüner Veltliner", amount: 0.125, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Grüner Veltliner", amount: 0.25, price: 5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Spätburgunder", amount: 0.125, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Spätburgunder", amount: 0.25, price: 5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Weißer Spritzer", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id },
+    { name: "Roter Spritzer", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id }
+  ]);
+  let [clUnit] = await db.Unit.findOrCreate({ where: { name: "cl" } });
+  await db.Item.bulkCreate([
+    { name: "Klopfer", amount: 2, price: 2.5, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id },
+    { name: "Jägermeister", amount: 2, price: 2.5, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id },
+    { name: "Obstler", amount: 4, price: 2, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id },
+    { name: "Williams-Schnaps", amount: 4, price: 2, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id },
+    { name: "Nuss-Schnaps", amount: 4, price: 2, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id }
+  ]);
 
   /* NONALCOHOLICS */
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Kaffee",
-          enabled: true,
-          icon: "drink-coffee",
-          description: "Kaffee",
-          showAmount: false,
-          printerId: printer.id,
-          color: '#573200'
-        });
-    })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "Stk." }
-        })
-        .spread(data => {
-          db.Item.bulkCreate(
-            kaffee.map(x => {
-              return {
-                name: x,
-                amount: 1,
-                price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
-                tax: 0.2,
-                unitId: data.id,
-                categoryId: cat.id
-              };
-            })
-          );
-        });
-    });
+  const coffeeCat = await db.Category.create({
+    name: "Kaffee",
+    enabled: true,
+    icon: "drink-coffee",
+    description: "Kaffee",
+    showAmount: false,
+    printerId: printer.id,
+    color: '#573200'
+  });
+  let [stkUnit] = await db.Unit.findOrCreate({ where: { name: "Stk." } });
+  await db.Item.bulkCreate(
+    kaffee.map(x => ({
+      name: x,
+      amount: 1,
+      price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
+      tax: 0.2,
+      unitId: stkUnit.id,
+      categoryId: coffeeCat.id
+    }))
+  );
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Dessert",
-          enabled: true,
-          icon: "desserts",
-          description: "Dessert",
-          showAmount: false,
-          printerId: printer.id,
-          color: '#B80C41'
-        });
-    })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "Stk." }
-        })
-        .spread(data => {
-          db.Item.bulkCreate(
-            dessert.map(x => {
-              return {
-                name: x,
-                amount: 1,
-                price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
-                tax: 0.2,
-                unitId: data.id,
-                categoryId: cat.id
-              };
-            })
-          );
-        });
-    });
+  const dessertCat = await db.Category.create({
+    name: "Dessert",
+    enabled: true,
+    icon: "desserts",
+    description: "Dessert",
+    showAmount: false,
+    printerId: printer.id,
+    color: '#B80C41'
+  });
+  let [stkUnit2] = await db.Unit.findOrCreate({ where: { name: "Stk." } });
+  await db.Item.bulkCreate(
+    dessert.map(x => ({
+      name: x,
+      amount: 1,
+      price: (Math.round(Math.random() * 20 * 10) / 10).toFixed(2),
+      tax: 0.2,
+      unitId: stkUnit2.id,
+      categoryId: dessertCat.id
+    }))
+  );
 
 
-  printer
-    .then(printer => {
-      return db.Category
-        .create({
-          name: "Alkoholfreies",
-          enabled: true,
-          icon: "drink-anti",
-          description: "Alkoholfreies",
-          showAmount: true,
-          printerId: printer.id,
-          color: '#005213'
-        });
-    })
-    .then(cat => {
-      db.Unit
-        .findOrCreate({
-          where: { name: "l" }
-        })
-        .spread(data => {
-          db.Item.bulkCreate([
-            {
-              name: "Coca Cola",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Coca Cola",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Fanta",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Fanta",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Sprite",
-              amount: 0.3,
-              price: 2.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Sprite",
-              amount: 0.5,
-              price: 3.5,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Mineral",
-              amount: 0.3,
-              price: 2,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            },
-            {
-              name: "Mineral",
-              amount: 0.5,
-              price: 3,
-              tax: 0.2,
-              unitId: data.id,
-              categoryId: cat.id
-            }
-          ]);
-        });
-    });
+  const nonAlcCat = await db.Category.create({
+    name: "Alkoholfreies",
+    enabled: true,
+    icon: "drink-anti",
+    description: "Alkoholfreies",
+    showAmount: true,
+    printerId: printer.id,
+    color: '#005213'
+  });
+  let [lUnit2] = await db.Unit.findOrCreate({ where: { name: "l" } });
+  await db.Item.bulkCreate([
+    { name: "Coca Cola", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id },
+    { name: "Coca Cola", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id },
+    { name: "Fanta", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id },
+    { name: "Fanta", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id },
+    { name: "Sprite", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id },
+    { name: "Sprite", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id },
+    { name: "Mineral", amount: 0.3, price: 2, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id },
+    { name: "Mineral", amount: 0.5, price: 3, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id }
+  ]);
 
-  db.Area
-    .findOrCreate({
-      where: { name: "Terrasse", color: '#2acb54', short:"T" }
-    })
-    .spread(area => {
-      for (let i = 0; i < 12; i++) {
-        db.Table.create({
-          name: i,
-          x: 1,
-          y: 2,
-          areaId: area.id
-        });
-      }
+  let [terrace] = await db.Area.findOrCreate({ where: { name: "Terrasse", color: '#2acb54', short: "T" } });
+  for (let i = 0; i < 12; i++) {
+    await db.Table.create({
+      name: i,
+      x: 1,
+      y: 2,
+      areaId: terrace.id
     });
+  }
 
-  db.Area
-    .findOrCreate({
-      where: { name: "Gaststube", color: '#45b1a4', short:"G" }
-    })
-    .spread(area => {
-      for (let i = 0; i < 12; i++) {
-        db.Table.create({
-          name: i,
-          x: 1,
-          y: 2,
-          areaId: area.id
-        });
-      }
+  let [gaststube] = await db.Area.findOrCreate({ where: { name: "Gaststube", color: '#45b1a4', short: "G" } });
+  for (let i = 0; i < 12; i++) {
+    await db.Table.create({
+      name: i,
+      x: 1,
+      y: 2,
+      areaId: gaststube.id
     });
+  }
 };

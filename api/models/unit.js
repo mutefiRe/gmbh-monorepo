@@ -1,10 +1,12 @@
 "use strict";
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
   const Unit = sequelize.define("unit", {
-    id:   {type: DataTypes.UUID,   defaultValue: DataTypes.UUIDV4, primaryKey: true},
-    name: {type: DataTypes.STRING, allowNull: true,  unique: true}
+    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+    name: { type: DataTypes.STRING, allowNull: true, unique: true }
   });
+
+  // Add associations here if needed
 
   return Unit;
 };

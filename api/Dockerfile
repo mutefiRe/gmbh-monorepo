@@ -1,11 +1,21 @@
-from node:6.10.0
+FROM node:24-bookworm
+
+ENV PYTHON=python3
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN apt-get update && apt-get install -y \
   cups \
   nmap \
-  libcups2-dev
+  libcups2-dev python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g node-gyp
 
-CMD [ "node" ]
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+CMD [ "npm", "run", "start" ]
 

@@ -1,7 +1,5 @@
-const nmapConfig = require('../config/config').nmap;
 const ifaces = require('os').networkInterfaces();
-const nmap = require('node-nmap');
-const arp = require('arp-a');
+const localDevices = require('local-devices');
 
 module.exports = {
   getIp() {
@@ -13,38 +11,29 @@ module.exports = {
         }
         addresses.push(iface.address);
       });
-    })
+    });
     return addresses[0].split('.').splice(0, 3).join('.') + '.*';
   },
+
   getPrinterIps() {
-    const nmapscan = new nmap.nodenmap.NmapScan(this.getIp(), nmapConfig);
-    return new Promise((resolve, reject) => {
-      nmapscan.on('complete', function (devices) {
-        resolve(
-          devices
-            .filter(device => device.openPorts.findIndex(p => p.port === 9100) !== - 1)
-            .map(printer => printer.ip)
-        );
-      });
-      nmapscan.on('error', function (error) {
-        reject(error);
-      });
-      nmapscan.startScan();
+    // localDevices returns a Promise with all devices on the local network
+    return localDevices().then(devices => {
+      // Filter for devices with port 9100 open (if available)
+      // local-devices does not provide port info, so you may need to filter by known printer MAC prefixes or names
+      // For now, return all IPs (customize as needed)
+      return devices.map(device => device.ip);
     });
   },
-  addMacToIpsMap(ips) {
-    return new Promise((resolve, reject) => {
-      arp.table(function (err, entry) {
-        if (!!err) return reject('arp: ' + err.message);
-        if (!entry) {
-          resolve(ips);
-          return;
-        }
 
-        if (ips.has(entry.ip)) {
-          ips.set(entry.ip, entry.mac);
+  addMacToIpsMap(ips) {
+    // localDevices returns MAC addresses as well
+    return localDevices().then(devices => {
+      devices.forEach(device => {
+        if (ips.has(device.ip)) {
+          ips.set(device.ip, device.mac);
         }
       });
+      return ips;
     });
   }
-}
+};

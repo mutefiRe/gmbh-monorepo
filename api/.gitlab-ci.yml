@@ -1,7 +1,7 @@
 cache:
   paths:
-  - /root/.yarn-cache
-  - node_modules/
+    - /root/.yarn-cache
+    - node_modules/
 
 variables:
   MYSQL_DATABASE: gmbh_test
@@ -15,32 +15,22 @@ stages:
   image: registry.gitlab.com/mossss/gmbh-api:v3
   stage: test
   before_script:
-   - eval $(ssh-agent -s)
-   - ssh-add <(echo "$SSH_PRIVATE_KEY")
-   - mkdir -p ~/.ssh
-   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-   - yarn
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - yarn
 
 linting:
   <<: *test_definition
   script:
-  - yarn run lint
+    - yarn run lint
 
 tests:
   <<: *test_definition
   services:
-  - mysql:latest
+    - mysql:latest
   script:
-  - npm rebuild bcrypt
-  - (! grep -nr '.only' test)
-  - yarn run test-ci
-
-heroku:
-  stage: deploy
-  environment: staging
-  script:
-  - gem install dpl
-  - dpl --provider=heroku --app=gmbh-backend --api-key=$HEROKU_KEY
-  - "curl -n -X POST https://api.heroku.com/apps/gmbh-backend/ps -H \"Accept: application/json\" -H \"Authorization: Bearer ${HEROKU_KEY}\" -d \"command=node seed\""
-  only:
-  - develop
+    - npm rebuild bcrypt
+    - (! grep -nr '.only' test)
+    - yarn run test-ci
