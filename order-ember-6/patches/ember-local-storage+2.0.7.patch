@@ -1,0 +1,20 @@
+diff --git a/node_modules/ember-local-storage/addon/helpers/storage.js b/node_modules/ember-local-storage/addon/helpers/storage.js
+index b5137d3..1222194 100644
+--- a/node_modules/ember-local-storage/addon/helpers/storage.js
++++ b/node_modules/ember-local-storage/addon/helpers/storage.js
+@@ -1,7 +1,14 @@
+ import { assert } from '@ember/debug';
+ import EmberObject, { computed, get } from '@ember/object';
+ import { getOwner } from '@ember/application';
+-import { dasherize } from '@ember/string';
++// Internal dasherize implementation to avoid @ember/string peer dependency issues
++function dasherize(str) {
++  return str
++    .replace(/([A-Z])/g, '-$1')
++    .replace(/_/g, '-')
++    .toLowerCase()
++    .replace(/^-/, '');
++}
+ 
+ const storage = {};
+ 

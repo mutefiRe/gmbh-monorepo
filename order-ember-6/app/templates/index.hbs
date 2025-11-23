@@ -1,0 +1,48 @@
+{{outlet}}
+
+{{connection-indicator status=connection.status}}
+
+{{order-main/main-view
+settings=@model.settings
+categories=this.enabledCategories
+actualCategory=this.actualCategory
+changeCategory=this.changeCategory
+items=@model.items
+addItemToOrder=this.addItemToOrder
+order=this.order
+swipeHelper=this.swipeHelper
+}}
+
+{{#modals/modal-box}}
+{{#if (eq this.modal.modalType "modals/table-select")}}
+<Modals::TableSelect @currentUser={{@model.currentUser}} @tables={{@model.tables}} @settings={{@model.settings}}
+  @areas={{this.enabledAreas}} @order={{this.order}} @addItemToOrder={{this.addItemToOrder}}
+  @modalItem={{@model.modalItem}} @discardOrder={{this.discardOrder}} />
+{{else if (eq this.modal.modalType "modals/discard-order")}}
+<Modals::DiscardOrder @order={{this.order}} @discardOrder={{this.discardOrder}} />
+{{/if}}
+{{/modals/modal-box}}
+
+{{order-detail/main-view
+user=@model.currentUser
+settings=@model.settings
+order=this.order
+removeItemFromOrder=this.removeItemFromOrder
+saveOrder=this.saveOrder
+}}
+
+{{pay-main/main-view
+settings=@model.settings
+orders=@model.orders
+actualOrder=this.actualOrder
+order=this.order
+tables=@model.tables
+swipeHelper=this.swipeHelper
+}}
+
+{{pay-detail/main-view
+settings=@model.settings
+order=this.actualOrder
+printBill=this.printBill
+setActualOrder=this.setActualOrder
+}}
