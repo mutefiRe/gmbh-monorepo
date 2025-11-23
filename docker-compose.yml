@@ -12,6 +12,14 @@ services:
       GMBH_DB_PORT: "3306"
       GMBH_DB_DIALECT: mysql
       PORT: "8080"
+  order:
+    build: order/
+    ports:
+      - "4200:4200"
+      - "7020:7020" # dev server
+    volumes:
+      - ./order/app:/app/app
+      # - shared_app:/app/dist
   mysql:
     image: mysql:8.0.44-bookworm
     environment:
@@ -27,9 +35,18 @@ services:
     image: nginx:latest
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs/server:/etc/nginx/certs/server:ro
+      - ./nginx/certs/ca:/etc/nginx/certs/ca:ro
+      - ./nginx/cert-install:/app/cert-install:ro
+      # - shared_app:/app/order:ro
     depends_on:
       - api
+      - order
+    extra_hosts:
+      - "gmbh.local:127.0.0.1"
 volumes:
   mysql_data:
+  shared_app:
