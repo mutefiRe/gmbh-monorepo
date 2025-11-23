@@ -8,14 +8,14 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "ember build",
-    "start": "ember server",
-    "test": "COVERAGE=true ember test",
+    "build": "./node_modules/.bin/ember build",
+    "start": "./node_modules/.bin/ember server",
+    "test": "COVERAGE=true ./node_modules/.bin/ember test",
     "bower:install": "bower install"
   },
   "repository": "https://gitlab.com/mossss/gmbh-order",
   "engines": {
-    "node": "6.17.1"
+    "node": "6.9.1"
   },
   "contributors": [
     {
@@ -51,7 +51,7 @@
     "broccoli-asset-rev": "^2.4.5",
     "cz-conventional-changelog": "^1.1.5",
     "ember-ajax": "^2.4.1",
-    "ember-cli": "2.10.1",
+    "ember-cli": "^2.10.1",
     "ember-cli-app-version": "^2.0.0",
     "ember-cli-babel": "^6.0.0",
     "ember-cli-chai": "0.3.2",
@@ -85,7 +85,6 @@
     "ember-simple-auth-token": "^1.1.1",
     "ember-websockets": "^6.2.2",
     "ember-welcome-page": "^1.0.3",
-    "eslint-config-mossss": "git+ssh://git@gitlab.com:mossss/eslint-config-mossss.git",
     "loader.js": "^4.0.10",
     "phantomjs-prebuilt": "^2.1.7"
   }

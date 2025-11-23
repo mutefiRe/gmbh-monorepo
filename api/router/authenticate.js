@@ -27,12 +27,12 @@ router.post('/', function (req, res) {
         return JSON.parse(JSON.stringify(settings))[0].expiresTime;
       }).then((expiresTime) => {
         const token = jwt.sign(thisUser.createAuthUser(), config.secret, { expiresIn: expiresTime || "72h" });
-        res.cookie('x-gmbh-token', token, {
-          httpOnly: true,
-          sameSite: 'lax',
-          // secure: true, // Uncomment if using HTTPS
-          maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days in ms
-        });
+        // res.cookie('x-gmbh-token', token, {
+        //   httpOnly: true,
+        //   sameSite: 'lax',
+        //   // secure: true, // Uncomment if using HTTPS
+        //   maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days in ms
+        // });
         res.send({ token });
       });
     }

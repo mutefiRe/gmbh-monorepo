@@ -1,6 +1,16 @@
-from node:6.10.0
+FROM danlynn/ember-cli:2.18.2-node_8.9
 
-RUN npm install -g bower@1.8.0
-RUN npm install -g ember-cli@2.10.0
+WORKDIR /app
 
-CMD [ "node" ]
+COPY package.json /app/package.json
+COPY bower.json /app/bower.json
+
+RUN npm install
+
+RUN bower install --allow-root
+
+COPY . /app
+
+RUN npm run build
+
+CMD [ "npm", "start" ]

@@ -1,14 +1,11 @@
 /* global require, module */
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
   const app = new EmberApp(defaults, {
     'ember-cli-babel': {
       includePolyfill: true,
-      presets: [
-        ["env", { "modules": false }]
-      ],
-       optional: ['es6.spec.symbols']
+      include: ['vendor/helpers/event.js'] // transpile this file
     },
     webfont: {
       path: 'app/webfont-svg/',
