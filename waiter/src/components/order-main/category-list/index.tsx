@@ -22,7 +22,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-row gap-2 mb-4 overflow-x-auto mt-2 px-2">
+    <div className="w-full flex flex-row gap-2 mb-4 overflow-x-auto mt-2 px-2 h-[70px]">
       {/* All tab */}
       <button
         key="all"
@@ -42,8 +42,8 @@ export const CategoryList: React.FC<CategoryListProps> = ({
             }
         }
       >
-        <span className="text-3xl">🔎</span>
-        <span className="text-sm font-semibold">Alle</span>
+        <span className="text-2xl">🔎</span>
+        <span className="text-xs font-semibold">Alle</span>
       </button>
       {Array.isArray(categories) &&
         categories.map((category) => {
@@ -68,8 +68,8 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                   }
               }
             >
-              <span className="text-3xl">{category.icon || '❓'}</span>
-              <span className="text-sm font-semibold">{category.name}</span>
+              <span className="text-2xl">{category.icon || '❓'}</span>
+              <span className="text-xs font-semibold">{category.name}</span>
             </button>
           );
         })}

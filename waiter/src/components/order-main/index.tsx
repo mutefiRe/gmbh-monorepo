@@ -39,9 +39,9 @@ export const OrderMain: React.FC<OrderMainProps> = ({
 
   return (<>
     {children}
-    <div className="grid grid-rows-[1fr_auto] h-screen w-full overflow-x-hidden">
-      <div className="grid grid-cols-10 w-full h-full overflow-x-hidden">
-        <div className="col-span-7 h-full overflow-y-auto overflow-x-hidden">
+    <div className="grid grid-rows-[1fr_auto] h-[calc(100vh-50px)] w-full overflow-x-hidden">
+      <div className="grid grid-cols-10 w-full h-[calc(100%)] overflow-x-hidden">
+        <div className="col-span-7 h-[full] overflow-y-auto overflow-x-hidden">
           <ProductList
             items={items}
             selectedCategory={selectedCategory}
@@ -58,7 +58,7 @@ export const OrderMain: React.FC<OrderMainProps> = ({
           />
         </div>
       </div>
-      <div className="w-full overflow-x-hidden">
+      <div className="w-full overflow-x-hidden h-[90px] overflow-y-hidden">
         <CategoryList
           categories={categories}
           selectedCategory={selectedCategory}

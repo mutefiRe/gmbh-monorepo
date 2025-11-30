@@ -86,6 +86,9 @@ export function StateWrapper() {
       <Route path="/settings">
         <div>Settings Page</div>
       </Route>
+      <Route path="/notifications">
+        <div>Notifications Page</div>
+      </Route>
 
       <Redirect to="/order/new" />
       <Route>

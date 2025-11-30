@@ -33,6 +33,10 @@ function App() {
             <span role="img" aria-label="Einstellungen">⚙️</span>
             <span className="text-xs">Einstellungen</span>
           </Link>
+          <Link role="button" className={(isActive) => `flex flex-col items-center focus:outline-none active:scale-90 transition-all duration-200 ${isActive ? "text-blue-500" : ""}`} href="/notifications">
+            <span role="img" aria-label="Benachrichtigungen">🔔</span>
+            <span className="text-xs">Benachrichtigungen</span>
+          </Link>
         </nav>
 
         <main>
