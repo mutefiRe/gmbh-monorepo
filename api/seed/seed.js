@@ -105,6 +105,7 @@ module.exports = async function () {
     name: "Speisen",
     enabled: true,
     icon: "food",
+    emoji: "🍽️",
     description: "Alle die Guten Sachen",
     showAmount: false,
     color: '#35063E'
@@ -163,6 +164,7 @@ module.exports = async function () {
     name: "Alkoholisches",
     enabled: true,
     icon: "drink-alc",
+    emoji: "🍺",
     description: "alkohol",
     showAmount: true,
     color: '#FEAD00'
@@ -195,6 +197,7 @@ module.exports = async function () {
     name: "Kaffee",
     enabled: true,
     icon: "drink-coffee",
+    emoji: "☕",
     description: "Kaffee",
     showAmount: false,
     color: '#573200'
@@ -215,6 +218,7 @@ module.exports = async function () {
     name: "Dessert",
     enabled: true,
     icon: "desserts",
+    emoji: "🍰",
     description: "Dessert",
     showAmount: false,
     color: '#B80C41'
@@ -236,6 +240,7 @@ module.exports = async function () {
     name: "Alkoholfreies",
     enabled: true,
     icon: "drink-anti",
+    emoji: "🥤",
     description: "Alkoholfreies",
     showAmount: true,
     color: '#005213'

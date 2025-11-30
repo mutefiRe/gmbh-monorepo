@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+.root {
+  isolation: isolate;
+}
+
+body {
+    position: relative;
+}
+
+@theme {
+  --color-primary: #1c90cf;
+}

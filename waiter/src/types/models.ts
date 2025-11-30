@@ -1,0 +1,106 @@
+export interface Area {
+  id: string;
+  name: string;
+  short: string;
+  tables: string[];
+  enabled: boolean;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  enabled: boolean;
+  description: string;
+  icon: string;
+  showAmount: boolean;
+  printer: string;
+  parentCategory?: number;
+  color: string;
+  categories?: number[];
+}
+
+export interface Item {
+  id: string;
+  name: string;
+  amount: string;
+  price: number;
+  tax: number;
+  sort: number;
+  category: number;
+  unitId: string;
+  enabled: boolean;
+  categoryId: string;
+}
+
+export interface Organization {
+  id: string;
+  uid: number;
+  street: string;
+  street_number: string;
+  postalcode: string;
+  city: string;
+  telephone: string;
+}
+
+export interface OrderItem {
+  id?: string;
+  extras: string;
+  count: number;
+  countPaid: number;
+  countFree: number;
+  price: number;
+  order?: number;
+  itemId: string;
+}
+
+export interface Order {
+  id: number;
+  totalAmount: number;
+  user: number;
+  table: number;
+  orderitems: OrderItem[];
+}
+
+export interface Printer {
+  id: string;
+  systemName: string;
+  name: string;
+}
+
+export interface Setting {
+  id: number;
+  name: string;
+  beginDate: string | Date;
+  endDate: string | Date;
+  instantPay: boolean;
+  customTables: boolean;
+  receiptPrinter: string;
+  expiresTime: string;
+  itemShowPrice: boolean;
+}
+
+export interface Table {
+  id: number;
+  area: number;
+  name: string;
+  x: number;
+  y: number;
+  custom: boolean;
+  enabled: boolean;
+}
+
+export interface Unit {
+  id: string;
+  name: string;
+}
+
+export interface User {
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  role: string;
+  printer: string;
+  areas: number[];
+  password?: string;
+}

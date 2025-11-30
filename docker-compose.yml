@@ -12,6 +12,8 @@ services:
       GMBH_DB_PORT: "3306"
       GMBH_DB_DIALECT: mysql
       PORT: "8080"
+    depends_on:
+      - mysql
   order:
     build: order/
     ports:
@@ -34,8 +36,8 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "80:80"
-      - "443:443"
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/certs/server:/etc/nginx/certs/server:ro
@@ -46,7 +48,7 @@ services:
       - api
       - order
     extra_hosts:
-      - "gmbh.local:127.0.0.1"
+      - "gmbh.local:127.0.0.2"
 volumes:
   mysql_data:
   shared_app:
