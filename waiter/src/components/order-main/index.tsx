@@ -1,11 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { CategoryList } from "./category-list";
-import type { Category, Item, OrderItem, Unit } from "../../types/models";
+import type { Category, Item, Unit } from "../../types/models";
 import { ProductList } from "./product-list";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { PreviewList } from "./preview-list";
-// import ProductMainContainer from "./product/MainContainer";
-// import PreviewMainContainer from "./preview/MainContainer";
+import type { CurrentOrder } from "../../types/state";
 
 interface OrderMainProps {
   categories: Category[];
@@ -13,7 +11,7 @@ interface OrderMainProps {
   actualCategory: any;
   changeCategory: (cat: any) => void;
   items: Item[];
-  orderItems: OrderItem[];
+  currentOrder: CurrentOrder;
   settings: any;
   addItemToOrder: (item: any) => void;
   showModal: (modal: string) => void;
@@ -27,7 +25,7 @@ export const OrderMain: React.FC<OrderMainProps> = ({
   units,
   items,
   addItemToOrder,
-  orderItems,
+  currentOrder,
   // settings,
   // order,
   children,
@@ -39,7 +37,7 @@ export const OrderMain: React.FC<OrderMainProps> = ({
 
   return (<>
     {children}
-    <div className="grid grid-rows-[1fr_auto] h-[calc(100vh-50px)] w-full overflow-x-hidden">
+    <div className="grid grid-rows-[1fr_auto] h-[calc(100dvh-50px)] w-full overflow-x-hidden">
       <div className="grid grid-cols-10 w-full h-[calc(100%)] overflow-x-hidden">
         <div className="col-span-7 h-[full] overflow-y-auto overflow-x-hidden">
           <ProductList
@@ -52,7 +50,7 @@ export const OrderMain: React.FC<OrderMainProps> = ({
         </div>
         <div className="col-span-3 pr-3 h-full overflow-y-auto overflow-x-hidden">
           <PreviewList
-            orderItems={orderItems}
+            orderItems={currentOrder.orderItems}
             items={items}
             categories={categories}
           />

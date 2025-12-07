@@ -45,15 +45,15 @@ export function DebugOverlay() {
       error: console.error
     };
 
-    // console.log = (...args: unknown[]) => {
-    //   push("[LOG] " + args.map(String).join(" "));
-    //   originalConsole.log(...args);
-    // };
+    console.log = (...args: unknown[]) => {
+      push("[LOG] " + args.map(String).join(" "));
+      originalConsole.log(...args);
+    };
 
-    // console.warn = (...args: unknown[]) => {
-    //   push("[WARN] " + args.map(String).join(" "));
-    //   originalConsole.warn(...args);
-    // };
+    console.warn = (...args: unknown[]) => {
+      push("[WARN] " + args.map(String).join(" "));
+      originalConsole.warn(...args);
+    };
 
     console.error = (...args: unknown[]) => {
       push("[ERROR] " + args.map(String).join(" "));
@@ -74,5 +74,31 @@ export function DebugOverlay() {
   if (messages.length === 0) {
     return null;
   }
+  return (
+    <div
+      ref={overlayRef}
+      style={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        maxHeight: "30%",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        color: "white",
+        fontSize: "12px",
+        overflowY: "auto",
+        zIndex: 9999,
+        padding: "8px",
+        fontFamily: "monospace",
+        whiteSpace: "pre-wrap"
+      }}
+    >
+      {messages.map((msg, idx) => (
+        <div key={idx} style={{ marginBottom: "4px" }}>
+          {msg}
+        </div>
+      ))}
+    </div>
+  );
 
 }

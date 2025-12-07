@@ -51,7 +51,7 @@ const db = require('../../models');
  */
 
 router.get('/:id', function (req, res) {
-  db.Order.find({ where: { id: req.params.id }, include: [{ model: db.Orderitem }] }).then(order => {
+  db.Order.findOne({ where: { id: req.params.id }, include: [{ model: db.Orderitem }] }).then(order => {
 
     order = JSON.parse(JSON.stringify(order));
     res.send({ order });
@@ -80,7 +80,8 @@ router.get('/:id', function (req, res) {
  */
 
 router.get('/', function (req, res) {
-  db.Order.findAll({ where: { userId: req.decoded.id }, include: [{ model: db.Orderitem }] }).then(orders => {
+  const userId = req.decoded?.id || null;
+  db.Order.findAll({ where: { userId }, include: [{ model: db.Orderitem }], order: [['createdAt', 'DESC']] }).then(orders => {
     orders = JSON.parse(JSON.stringify(orders));
 
     res.send({ orders });
@@ -106,34 +107,49 @@ router.get('/', function (req, res) {
  * @apiPermission admin
  */
 
-router.post('/', function (req, res) {
-  db.Order.find({ where: { id: req.body.order.id } }).then(order => {
-    if (order) {
-      return res.send({order});
-    }
-    const requestOrder = req.body.order;
-    const orderitems = requestOrder.orderitems;
-    let orderId = null;
-    db.Order.create(requestOrder).then(order => {
-      orderitems.map(x => {
-        x.orderId = order.id;
-      });
-      orderId = order.id;
-      return db.Orderitem.bulkCreate(orderitems);
-    }).then(() => {
-      return db.Order.findById(orderId, { include: [{ model: db.Orderitem }] });
-    }).then(data => {
-      const order = JSON.parse(JSON.stringify(data));
+router.post('/', async function (req, res) {
 
-      res.send({ order });
-    }).catch(error => {
-      res.status(400).send({
-        'errors': {
-          'msg': error && error.errors && error.errors[0].message || error.message
-        }
-      });
+  let order;
+  if (req.body.order?.id) {
+    order = await db.Order.findOne({ where: { id: req.body.order.id } });
+  }
+  if (order) {
+    // Order already exists, return it, not sure if this really should not be updated with anything from the request
+    return res.send({ order });
+  }
+
+
+
+  const requestOrder = req.body.order;
+  if (!requestOrder || !requestOrder.orderitems?.length) {
+    return res.status(400).send({
+      'errors': {
+        'msg': 'No order provided'
+      }
+    });
+  }
+  const orderitems = requestOrder.orderitems;
+  let orderId = null;
+  db.Order.create(requestOrder).then(order => {
+    orderitems.map(x => {
+      x.orderId = order.id;
+    });
+    orderId = order.id;
+    return db.Orderitem.bulkCreate(orderitems);
+  }).then(() => {
+    return db.Order.findOne({ where: { id: orderId }, include: [{ model: db.Orderitem }] });
+  }).then(data => {
+    const order = JSON.parse(JSON.stringify(data));
+
+    res.send({ order });
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
     });
   });
+
 });
 
 /**

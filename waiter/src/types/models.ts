@@ -2,7 +2,6 @@ export interface Area {
   id: string;
   name: string;
   short: string;
-  tables: string[];
   enabled: boolean;
 }
 
@@ -14,9 +13,9 @@ export interface Category {
   icon: string;
   showAmount: boolean;
   printer: string;
-  parentCategory?: number;
+  parentCategory?: string;
   color: string;
-  categories?: number[];
+  categories?: string[];
 }
 
 export interface Item {
@@ -49,15 +48,15 @@ export interface OrderItem {
   countPaid: number;
   countFree: number;
   price: number;
-  order?: number;
   itemId: string;
+  orderId: string;
 }
 
 export interface Order {
-  id: number;
+  id: string;
   totalAmount: number;
-  user: number;
-  table: number;
+  userId: string;
+  tableId: string;
   orderitems: OrderItem[];
 }
 
@@ -80,8 +79,8 @@ export interface Setting {
 }
 
 export interface Table {
-  id: number;
-  area: number;
+  id: string;
+  areaId: string;
   name: string;
   x: number;
   y: number;
@@ -101,6 +100,6 @@ export interface User {
   lastname: string;
   role: string;
   printer: string;
-  areas: number[];
+  areaIds: string[];
   password?: string;
 }

@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import type { OrderItem, Item, Unit, Table, Area, User, Category } from "../../types/models";
-import { useAreas, useTables } from "../../types/queries";
+import { useAreas, useCreateOrder, useTables } from "../../types/queries";
 import { QuantityBlink } from "../../ui/quantity-blink";
 import { Link, useLocation } from "wouter";
+import { TableSelectModal } from "./table-select";
+import type { CurrentOrder } from "../../types/state";
 
 type OrderDetailProps = {
-  orderItems: OrderItem[];
+  currentOrder: CurrentOrder;
+  setCurrentOrder: (order: CurrentOrder | ((order: CurrentOrder) => CurrentOrder)) => void;
   items: Item[];
   units: Unit[];
   categories: Category[];
   user: User;
   updateOrderItemCount: (orderitem: OrderItem, count: number) => void;
-  saveOrder: (cb?: () => void) => void;
 };
 
 function getTableButtonStyle(table?: Table & { area?: Area }) {
@@ -33,29 +35,63 @@ function openAmount(orderitems: OrderItem[]) {
 export const OrderDetail: React.FC<OrderDetailProps> = ({
   units,
   items,
-  orderItems,
+  currentOrder,
+  setCurrentOrder,
   updateOrderItemCount,
-  saveOrder,
 }) => {
   const [tabbedIndex, setTabbedIndex] = useState<number | null>(null);
   const queryTables = useTables();
   const queryAreas = useAreas();
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [showTableModal, setShowTableModal] = useState(false);
-  const [table, setTable] = useState<Table | null>(null);
   const [location, navigate] = useLocation();
+  const createOrderMutation = useCreateOrder();
 
   if (queryTables.isLoading || queryAreas.isLoading) {
     return <div>Lade...</div>;
   }
 
+  function saveOrder(onSuccess: () => void) {
+    if (!table) {
+      return;
+    }
+    createOrderMutation.mutate(
+      {
+        order: {
+          tableId: table.id,
+          orderitems: currentOrder.orderItems.map(oi => ({
+            itemId: oi.itemId,
+            count: oi.count,
+            extras: oi.extras,
+            price: oi.price,
+          })),
+        }
+      },
+      {
+        onSuccess: () => {
+          onSuccess();
+        },
+      }
+    );
+  }
+
+  function setTable(table: Table) {
+    setCurrentOrder((co) => ({ ...co, tableId: table.id }));
+  }
+
+  const tables = queryTables.data?.tables || [];
+  const areas = queryAreas.data?.areas || [];
+
+  const table = tables.find(t => currentOrder.tableId && t.id === currentOrder.tableId);
+
+  const currentTableArea = table ? areas.find(a => a.id === table.areaId) : undefined;
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
       <h2 className="text-xl font-bold mb-4">Bestellung</h2>
       <div className="overflow-x-auto mb-4 overflow-y-auto max-h-96">
         <table className="min-w-full border rounded-lg">
           <tbody>
-            {orderItems.map((orderitem, idx) => {
+            {currentOrder.orderItems.map((orderitem, idx) => {
               const item = items.find(i => i.id === orderitem.itemId);
               const unit = item ? item.unitId ? units.find(u => u.id === item.unitId) : undefined : undefined;
               const isTabbed = tabbedIndex === idx;
@@ -106,7 +142,7 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
             style={getTableButtonStyle(table)}
             onClick={() => setShowTableModal(true)}
           >
-            Tisch: {table?.shortname}
+            Tisch:  {currentTableArea?.short}{table.name}
           </button>
         ) : (
           <button className="px-4 py-2 rounded bg-red-200" onClick={() => {
@@ -118,12 +154,13 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
             Tisch auswählen
           </button>
         )}
-        <p className="font-bold text-lg">Summe: € {openAmount(orderItems).toFixed(2)}</p>
+        <p className="font-bold text-lg">Summe: € {openAmount(currentOrder.orderItems).toFixed(2)}</p>
 
       </div>
       <div className="flex gap-2">
         <button className="px-4 py-2 bg-green-500 text-white rounded disabled:opacity-20 flex items-center gap-2" disabled={!table} onClick={() => {
           saveOrder(() => {
+
             navigate("/order/pay");
           });
         }}>
@@ -137,6 +174,16 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
           title="Zurück"
         >Zurück</Link>
       </div>
+      <TableSelectModal
+        open={showTableModal}
+        onClose={() => setShowTableModal(false)}
+        tables={tables}
+        areas={areas}
+        onSelectTable={(table) => {
+          setTable(table);
+          setShowTableModal(false);
+        }}
+      />
 
     </div >
   );

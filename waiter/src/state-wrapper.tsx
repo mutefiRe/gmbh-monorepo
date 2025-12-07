@@ -5,12 +5,21 @@ import { useCategories, useItems, useUnits } from "./types/queries";
 import { useCallback, useMemo } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { OrderItem } from "./types/models";
+import { CURRENT_ORDER_KEY, type CurrentOrder } from "./types/state";
+import { OrderHistory } from "./components/order-history";
+import { PayDetail } from "./components/pay-main";
+
+
 
 export function StateWrapper() {
   const queryCategories = useCategories();
   const queryItems = useItems();
   const unitsQuery = useUnits();
-  const [orderItems, setOrderItems] = useLocalStorage<OrderItem[]>("order", []);
+
+  const [currentOrder, setCurrentOrder] = useLocalStorage<CurrentOrder>(CURRENT_ORDER_KEY, { orderItems: [], tableId: null });
+  const [orderItems, setOrderItems] = useMemo(() => [currentOrder.orderItems, (orderItems: OrderItem[]) => {
+    setCurrentOrder({ ...currentOrder, orderItems });
+  }], [currentOrder, setCurrentOrder]);
 
   const categories = queryCategories.data?.categories || [];
   const units = unitsQuery.data?.units || [];
@@ -66,19 +75,19 @@ export function StateWrapper() {
   return (
     <Switch>
       <Route path="/order/new" >
-        <OrderMain categories={sortedCategories} items={sortedItems} units={units} addItemToOrder={addItemToOrderCallback} orderItems={orderItems} />
+        <OrderMain categories={sortedCategories} items={sortedItems} units={units} addItemToOrder={addItemToOrderCallback} currentOrder={currentOrder} setCurrentOrder={setCurrentOrder} />
       </Route>
       <Route path="/order/edit" >
-        <OrderDetail categories={sortedCategories} items={sortedItems} units={units} orderItems={orderItems} updateOrderItemCount={updateOrderItemCountCallback} />
+        <OrderDetail categories={sortedCategories} items={sortedItems} units={units} currentOrder={currentOrder} updateOrderItemCount={updateOrderItemCountCallback} setCurrentOrder={setCurrentOrder} />
       </Route>
       <Route path="/orders">
-        {(params) => <div>All orders</div>}
+        {(params) => <OrderHistory />}
       </Route>
       <Route path="/user/:userId/orders">
         {(params) => <div>All orders made from a specific user {params?.userId}</div>}
       </Route>
       <Route path="/orders/:orderId">
-        {(params) => <div>Order Detail for order {params?.orderId}</div>}
+        {(params) => <PayDetail orderId={params?.orderId || ""} items={sortedItems} units={units} />}
       </Route>
       <Route path="/details">
         <div>Order Details Page</div>

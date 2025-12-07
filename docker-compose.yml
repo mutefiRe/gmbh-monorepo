@@ -14,14 +14,6 @@ services:
       PORT: "8080"
     depends_on:
       - mysql
-  order:
-    build: order/
-    ports:
-      - "4200:4200"
-      - "7020:7020" # dev server
-    volumes:
-      - ./order/app:/app/app
-      # - shared_app:/app/dist
   mysql:
     image: mysql:8.0.44-bookworm
     environment:
@@ -46,7 +38,6 @@ services:
       # - shared_app:/app/order:ro
     depends_on:
       - api
-      - order
     extra_hosts:
       - "gmbh.local:127.0.0.2"
 volumes:

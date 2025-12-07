@@ -43,8 +43,8 @@ export const useItem = (id: number) => useQuery({ queryKey: ['item', id], queryF
 export const useOrganizations = () => useQuery({ queryKey: ['organizations'], queryFn: () => apiFetch<Organization[]>('/api/organizations') });
 export const useOrganization = (id: number) => useQuery({ queryKey: ['organization', id], queryFn: () => apiFetch<Organization>(`/api/organizations/${id}`) });
 
-export const useOrders = () => useQuery({ queryKey: ['orders'], queryFn: () => apiFetch<Order[]>('/api/order') });
-export const useOrder = (id: number) => useQuery({ queryKey: ['order', id], queryFn: () => apiFetch<Order>(`/api/order/${id}`) });
+export const useOrders = () => useQuery({ queryKey: ['orders'], queryFn: () => apiFetch<{ orders: Order[] }>('/api/orders') });
+export const useOrder = (id: number) => useQuery({ queryKey: ['order', id], queryFn: () => apiFetch<{ order: Order }>(`/api/orders/${id}`) });
 
 export const useOrderItems = () => useQuery({ queryKey: ['orderitems'], queryFn: () => apiFetch<OrderItem[]>('/api/orderitems') });
 export const useOrderItem = (id: number) => useQuery({ queryKey: ['orderitem', id], queryFn: () => apiFetch<OrderItem>(`/api/orderitems/${id}`) });
@@ -81,9 +81,9 @@ export const useCreateOrganization = () => useMutation({ mutationFn: (data: Part
 export const useUpdateOrganization = () => useMutation({ mutationFn: (data: Partial<Organization> & { id: number }) => apiFetch<Organization>(`/api/organizations/${data.id}`, { method: 'PUT', body: JSON.stringify(data) }) });
 export const useDeleteOrganization = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/organizations/${id}`, { method: 'DELETE' }) });
 
-export const useCreateOrder = () => useMutation({ mutationFn: (data: Partial<Order>) => apiFetch<Order>('/api/order/', { method: 'POST', body: JSON.stringify(data) }) });
-export const useUpdateOrder = () => useMutation({ mutationFn: (data: Partial<Order> & { id: number }) => apiFetch<Order>(`/api/order/${data.id}`, { method: 'PUT', body: JSON.stringify(data) }) });
-export const useDeleteOrder = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/order/${id}`, { method: 'DELETE' }) });
+export const useCreateOrder = () => useMutation({ mutationFn: (data: Partial<Order>) => apiFetch<Order>('/api/orders', { method: 'POST', body: JSON.stringify(data) }) });
+export const useUpdateOrder = () => useMutation({ mutationFn: (data: Partial<Order> & { id: number }) => apiFetch<Order>(`/api/orders/${data.id}`, { method: 'PUT', body: JSON.stringify(data) }) });
+export const useDeleteOrder = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/orders/${id}`, { method: 'DELETE' }) });
 
 export const useCreateOrderItem = () => useMutation({ mutationFn: (data: Partial<OrderItem>) => apiFetch<OrderItem>('/api/orderitems/', { method: 'POST', body: JSON.stringify(data) }) });
 export const useUpdateOrderItem = () => useMutation({ mutationFn: (data: Partial<OrderItem> & { id: number }) => apiFetch<OrderItem>(`/api/orderitems/${data.id}`, { method: 'PUT', body: JSON.stringify(data) }) });
