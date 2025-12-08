@@ -64,8 +64,9 @@ router.get('/:id', function (req, res) {
   });
 });
 
+
 /**
- * @api {get} api/order Request all order
+ * @api {get} api/orders Request all order
  * @apiGroup Order
  * @apiName Getorder
 
@@ -80,8 +81,7 @@ router.get('/:id', function (req, res) {
  */
 
 router.get('/', function (req, res) {
-  const userId = req.decoded?.id || null;
-  db.Order.findAll({ where: { userId }, include: [{ model: db.Orderitem }], order: [['createdAt', 'DESC']] }).then(orders => {
+  db.Order.findAll({ include: [{ model: db.Orderitem }], order: [['createdAt', 'DESC']] }).then(orders => {
     orders = JSON.parse(JSON.stringify(orders));
 
     res.send({ orders });
@@ -93,6 +93,41 @@ router.get('/', function (req, res) {
     });
   });
 });
+
+/**
+ * @api {get} api/orders/byuser/:userId Request all order
+ * @apiGroup Order
+ * @apiName Getorder
+
+ * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
+ * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
+
+ * @apiSuccess {Object[]} order Order
+ * @apiUse orderAttributes
+
+ * @apiPermission waiter
+ * @apiPermission admin
+ */
+
+router.get('/byuser/:userId', function (req, res) {
+  db.Order.findAll({
+    where: {
+      userId:
+        req.params.userId
+    }, include: [{ model: db.Orderitem }], order: [['createdAt', 'DESC']]
+  }).then(orders => {
+    orders = JSON.parse(JSON.stringify(orders));
+
+    res.send({ orders });
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
+    });
+  });
+});
+
 
 /**
  * @api {post} api/order/ Create one order
@@ -108,6 +143,7 @@ router.get('/', function (req, res) {
  */
 
 router.post('/', async function (req, res) {
+  const userId = req.decoded?.id || null;
 
   let order;
   if (req.body.order?.id) {
@@ -118,8 +154,6 @@ router.post('/', async function (req, res) {
     return res.send({ order });
   }
 
-
-
   const requestOrder = req.body.order;
   if (!requestOrder || !requestOrder.orderitems?.length) {
     return res.status(400).send({
@@ -128,11 +162,12 @@ router.post('/', async function (req, res) {
       }
     });
   }
+  requestOrder.userId = userId;
   const orderitems = requestOrder.orderitems;
   let orderId = null;
   db.Order.create(requestOrder).then(order => {
-    orderitems.map(x => {
-      x.orderId = order.id;
+    orderitems.map(orderitem => {
+      orderitem.orderId = order.id;
     });
     orderId = order.id;
     return db.Orderitem.bulkCreate(orderitems);
@@ -170,7 +205,7 @@ router.post('/', async function (req, res) {
 
 router.put('/:id', function (req, res) {
   const requestOrder = req.body.order;
-  db.Order.findById(req.params.id).then(order => {
+  db.Order.findOne({ where: { id: req.params.id } }).then(order => {
     return order.update(req.body.order);
   }).then(() => {
     const promises = [];
@@ -182,7 +217,7 @@ router.put('/:id', function (req, res) {
     }
     return Promise.all(promises);
   }).then(() => {
-    return db.Order.findById(req.params.id, { include: [{ model: db.Orderitem }] });
+    return db.Order.findOne({ where: { id: req.params.id }, include: [{ model: db.Orderitem }] });
   }).then(order => {
     res.send({ order });
   }).catch(error => {

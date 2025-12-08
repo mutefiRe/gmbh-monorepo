@@ -71,7 +71,8 @@ export function DebugOverlay() {
     };
   }, []);
 
-  if (messages.length === 0) {
+  const [visible, setVisible] = useState(true);
+  if (messages.length === 0 || !visible) {
     return null;
   }
   return (
@@ -93,6 +94,12 @@ export function DebugOverlay() {
         whiteSpace: "pre-wrap"
       }}
     >
+      <button
+        style={{ position: "absolute", top: 4, right: 8, background: "#222", color: "#fff", border: "none", borderRadius: 4, padding: "2px 8px", cursor: "pointer", zIndex: 10000 }}
+        onClick={() => setVisible(false)}
+      >
+        Hide
+      </button>
       {messages.map((msg, idx) => (
         <div key={idx} style={{ marginBottom: "4px" }}>
           {msg}

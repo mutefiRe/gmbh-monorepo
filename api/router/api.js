@@ -7,6 +7,19 @@ const config = require('../config/config');
 const fs = require("fs");
 const normalizedPath = require("path").join(__dirname, "api");
 
+const areas = require('./api/areas');
+const users = require('./api/users');
+const organizations = require('./api/organizations');
+const items = require('./api/items');
+const categories = require('./api/categories');
+const units = require('./api/units');
+const tables = require('./api/tables');
+const orders = require('./api/orders');
+const orderitems = require('./api/orderitems');
+const settings = require('./api/settings');
+
+
+
 acl.config({
   baseUrl: 'api',
   filename: 'acl.json',
@@ -20,10 +33,6 @@ acl.config({
  */
 
 router.use(function (req, res, next) {
-  if (true) {
-    // for DEV purposes, we skip token verification
-    return next();
-  }
   // Use optional chaining and fallback to empty object for robustness
   const token = (req.body?.token)
     || (req.query?.token)
@@ -47,12 +56,17 @@ router.use(function (req, res, next) {
   }
 });
 
-// router.use(acl.authorize);
 
-
-fs.readdirSync(normalizedPath).forEach(function (file) {
-  router.use(`/${file.split(".js")[0]}`, require("./api/" + file));
-});
+router.use("/areas", areas);
+router.use("/users", users);
+router.use("/organizations", organizations);
+router.use("/items", items);
+router.use("/categories", categories);
+router.use("/units", units);
+router.use("/tables", tables);
+router.use("/orders", orders);
+router.use("/orderitems", orderitems);
+router.use("/settings", settings);
 
 router.get('/', function (req, res) {
   res.status(200).send({ "msg": "you have access to the api" });

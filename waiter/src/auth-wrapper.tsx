@@ -1,0 +1,61 @@
+import { createContext, useContext } from "react";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import { useUser } from "./types/queries";
+
+type AuthProviderProps = {
+  children: React.ReactNode;
+};
+
+type AuthContextType = {
+  isLoading: boolean;
+  userId: string | null | undefined;
+  token: string;
+  user: ReturnType<typeof useUser>;
+  setToken: (token: string) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [jwt, setJwt] = useLocalStorage<string>("gmbh-auth-jwt", "") || "";
+  const decodedJwt = jwt ? JSON.parse(atob(jwt.split(".")[1])) : null;
+
+  const userId = decodedJwt?.id;
+
+  const user = useUser(userId, { enabled: !!userId });
+
+  if (user.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  function logout() {
+    setJwt("");
+  }
+
+  const auth = {
+    isLoading: user.isLoading,
+    userId: userId,
+    token: jwt,
+    user,
+    setToken: setJwt,
+    logout,
+  }
+
+  return (
+    <AuthContext.Provider value={auth}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+
+function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
+
+export { AuthContext, useAuth };

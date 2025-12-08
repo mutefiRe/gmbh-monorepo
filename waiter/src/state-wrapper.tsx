@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "wouter";
 import OrderMain from "./components/order-main";
 import { OrderDetail } from "./components/order-detail";
-import { useCategories, useItems, useUnits } from "./types/queries";
+import { useAreas, useCategories, useItems, useTables, useUnits } from "./types/queries";
 import { useCallback, useMemo } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { OrderItem } from "./types/models";
@@ -15,6 +15,8 @@ export function StateWrapper() {
   const queryCategories = useCategories();
   const queryItems = useItems();
   const unitsQuery = useUnits();
+  const areasQuery = useAreas();
+  const tablesQuery = useTables();
 
   const [currentOrder, setCurrentOrder] = useLocalStorage<CurrentOrder>(CURRENT_ORDER_KEY, { orderItems: [], tableId: null });
   const [orderItems, setOrderItems] = useMemo(() => [currentOrder.orderItems, (orderItems: OrderItem[]) => {
@@ -23,6 +25,8 @@ export function StateWrapper() {
 
   const categories = queryCategories.data?.categories || [];
   const units = unitsQuery.data?.units || [];
+  const areas = areasQuery.data?.areas || [];
+  const tables = tablesQuery.data?.tables || [];
 
   // Sort categories by name
   const sortedCategories = useMemo(
@@ -32,6 +36,16 @@ export function StateWrapper() {
   const sortedItems = useMemo(
     () => [...queryItems.data?.items || []].sort((a, b) => a.name.localeCompare(b.name)),
     [queryItems.data]
+  );
+
+  const sortedTables = useMemo(
+    () => [...tables].sort((a, b) => a.name.localeCompare(b.name, { numeric: true })),
+    [tables]
+  );
+
+  const sortedAreas = useMemo(
+    () => [...areas].sort((a, b) => a.name.localeCompare(b.name)),
+    [areas]
   );
 
 
@@ -78,7 +92,7 @@ export function StateWrapper() {
         <OrderMain categories={sortedCategories} items={sortedItems} units={units} addItemToOrder={addItemToOrderCallback} currentOrder={currentOrder} setCurrentOrder={setCurrentOrder} />
       </Route>
       <Route path="/order/edit" >
-        <OrderDetail categories={sortedCategories} items={sortedItems} units={units} currentOrder={currentOrder} updateOrderItemCount={updateOrderItemCountCallback} setCurrentOrder={setCurrentOrder} />
+        <OrderDetail categories={sortedCategories} items={sortedItems} units={units} currentOrder={currentOrder} updateOrderItemCount={updateOrderItemCountCallback} setCurrentOrder={setCurrentOrder} areas={sortedAreas} tables={sortedTables} />
       </Route>
       <Route path="/orders">
         {(params) => <OrderHistory />}
@@ -87,7 +101,7 @@ export function StateWrapper() {
         {(params) => <div>All orders made from a specific user {params?.userId}</div>}
       </Route>
       <Route path="/orders/:orderId">
-        {(params) => <PayDetail orderId={params?.orderId || ""} items={sortedItems} units={units} />}
+        {(params) => <PayDetail orderId={params?.orderId || ""} items={sortedItems} units={units} categories={sortedCategories} tables={tables} areas={areas} />}
       </Route>
       <Route path="/details">
         <div>Order Details Page</div>

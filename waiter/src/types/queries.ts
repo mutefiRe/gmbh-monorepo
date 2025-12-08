@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, type UndefinedInitialDataOptions } from '@tanstack/react-query';
 import type {
   Area,
   Category,
@@ -18,13 +18,20 @@ const API_BASE = '';
 
 // Improved API client with error handling
 const apiFetch = async <T>(url: string, options?: RequestInit): Promise<T> => {
+  const token = localStorage.getItem("gmbh-auth-jwt");
+  if (token) {
+    options = {
+      ...options,
+      headers: {
+        ...(options?.headers || {}),
+        'x-access-token': `${JSON.parse(token)}`,
+        ['Content-Type']: 'application/json',
+      },
+    };
+  }
   const res = await fetch(API_BASE + url, {
     credentials: 'include',
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options?.headers || {})
-    }
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -45,6 +52,7 @@ export const useOrganization = (id: number) => useQuery({ queryKey: ['organizati
 
 export const useOrders = () => useQuery({ queryKey: ['orders'], queryFn: () => apiFetch<{ orders: Order[] }>('/api/orders') });
 export const useOrder = (id: number) => useQuery({ queryKey: ['order', id], queryFn: () => apiFetch<{ order: Order }>(`/api/orders/${id}`) });
+export const useOrdersByUser = (userId: string, options?: UndefinedInitialDataOptions) => useQuery({ queryKey: ['ordersbyuser', userId], queryFn: () => apiFetch<{ orders: Order[] }>(`/api/orders/byuser/${userId}`), ...options });
 
 export const useOrderItems = () => useQuery({ queryKey: ['orderitems'], queryFn: () => apiFetch<OrderItem[]>('/api/orderitems') });
 export const useOrderItem = (id: number) => useQuery({ queryKey: ['orderitem', id], queryFn: () => apiFetch<OrderItem>(`/api/orderitems/${id}`) });
@@ -62,7 +70,7 @@ export const useUnits = () => useQuery({ queryKey: ['units'], queryFn: () => api
 export const useUnit = (id: number) => useQuery({ queryKey: ['unit', id], queryFn: () => apiFetch<Unit>(`/api/units/${id}`) });
 
 export const useUsers = () => useQuery({ queryKey: ['users'], queryFn: () => apiFetch<User[]>('/api/users') });
-export const useUser = (id: number) => useQuery({ queryKey: ['user', id], queryFn: () => apiFetch<User>(`/api/users/${id}`) });
+export const useUser = (id: number, options?: Omit<UndefinedInitialDataOptions, "queryKey">) => useQuery({ queryKey: ['user', id], queryFn: () => apiFetch<User>(`/api/users/${id}`), ...options });
 
 // Mutation hooks for POST/PUT/DELETE endpoints
 export const useCreateArea = () => useMutation({ mutationFn: (data: Partial<Area>) => apiFetch<Area>('/api/areas/', { method: 'POST', body: JSON.stringify(data) }) });
@@ -82,7 +90,7 @@ export const useUpdateOrganization = () => useMutation({ mutationFn: (data: Part
 export const useDeleteOrganization = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/organizations/${id}`, { method: 'DELETE' }) });
 
 export const useCreateOrder = () => useMutation({ mutationFn: (data: Partial<Order>) => apiFetch<Order>('/api/orders', { method: 'POST', body: JSON.stringify(data) }) });
-export const useUpdateOrder = () => useMutation({ mutationFn: (data: Partial<Order> & { id: number }) => apiFetch<Order>(`/api/orders/${data.id}`, { method: 'PUT', body: JSON.stringify(data) }) });
+export const useUpdateOrder = () => useMutation({ mutationFn: (data: { order: Partial<Order> & { id: string } }) => apiFetch<Order>(`/api/orders/${data.order.id}`, { method: 'PUT', body: JSON.stringify(data) }) },);
 export const useDeleteOrder = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/orders/${id}`, { method: 'DELETE' }) });
 
 export const useCreateOrderItem = () => useMutation({ mutationFn: (data: Partial<OrderItem>) => apiFetch<OrderItem>('/api/orderitems/', { method: 'POST', body: JSON.stringify(data) }) });
@@ -108,3 +116,5 @@ export const useDeleteUnit = () => useMutation({ mutationFn: (id: number) => api
 export const useCreateUser = () => useMutation({ mutationFn: (data: Partial<User>) => apiFetch<User>('/api/users/', { method: 'POST', body: JSON.stringify(data) }) });
 export const useUpdateUser = () => useMutation({ mutationFn: (data: Partial<User> & { id: number }) => apiFetch<User>(`/api/users/${data.id}`, { method: 'PUT', body: JSON.stringify(data) }) });
 export const useDeleteUser = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/users/${id}`, { method: 'DELETE' }) });
+
+export const useAuthenticateUser = () => useMutation({ mutationFn: (data: { username: string; password: string }) => apiFetch<{ token: string }>('/authenticate', { method: 'POST', body: JSON.stringify(data) }) });
