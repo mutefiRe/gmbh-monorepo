@@ -1,15 +1,1 @@
-define({
-  "name": "GMBH-API",
-  "version": "1.1.0",
-  "description": "Made with 🍺",
-  "title": "API of GMBH",
-  "sampleUrl": false,
-  "defaultVersion": "0.0.0",
-  "apidoc": "0.3.0",
-  "generator": {
-    "name": "apidoc",
-    "time": "2025-11-29T10:14:13.403Z",
-    "url": "http://apidocjs.com",
-    "version": "0.17.7"
-  }
-});
+define({  "name": "GMBH-API",  "version": "1.1.0",  "description": "Made with 🍺",  "title": "API of GMBH",  "sampleUrl": false,  "defaultVersion": "0.0.0",  "apidoc": "0.3.0",  "generator": {    "name": "apidoc",    "time": "2025-12-12T17:02:43.987Z",    "url": "http://apidocjs.com",    "version": "0.17.7"  }});

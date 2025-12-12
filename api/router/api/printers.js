@@ -29,6 +29,7 @@ let lockSearch = false;
  */
 
 router.get('/', function (req, res) {
+  console.log("get printers")
   db.Printer.findAll().then(printers => {
     res.send({ printers });
   }).catch(error => {

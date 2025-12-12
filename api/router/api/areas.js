@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const db = require('../../models');
+const requireRole = require('../permissions');
 
 /**
  * @apiDefine areaAttributes
@@ -35,7 +36,8 @@ const db = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function (req, res) {
+// waiter or admin
+router.get('/:id', requireRole('waiter', 'admin'), function (req, res) {
   db.Area.findOne({ where: { id: req.params.id } }).then(area => {
     res.send({ area });
   });
@@ -56,7 +58,8 @@ router.get('/:id', function (req, res) {
  * @apiPermission admin
  */
 
-router.get('/', function (req, res) {
+// waiter or admin
+router.get('/', requireRole('waiter', 'admin'), function (req, res) {
   db.Area.findAll({ include: [{ model: db.Table }, { model: db.User }] }).then(data => {
     const areas = JSON.parse(JSON.stringify(data));
     for (let i = 0; i < areas.length; i++) {
@@ -85,7 +88,8 @@ router.get('/', function (req, res) {
  * @apiPermission admin
  */
 
-router.post('/', function (req, res) {
+// admin only
+router.post('/', requireRole('admin'), function (req, res) {
   const io = req.app.get('io');
   db.Area.create(req.body.area).then(area => {
     res.send({ area });
@@ -111,7 +115,8 @@ router.post('/', function (req, res) {
  * @apiPermission admin
  */
 
-router.put('/:id', function (req, res) {
+// admin only
+router.put('/:id', requireRole('admin'), function (req, res) {
   const io = req.app.get('io');
   db.Area.findOne({ where: { id: req.params.id } }).then(area => {
     if (area === null) throw new Error("area not found");
@@ -138,7 +143,8 @@ router.put('/:id', function (req, res) {
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function (req, res) {
+// admin only
+router.delete('/:id', requireRole('admin'), function (req, res) {
   const io = req.app.get('io');
   db.Area.findOne({ where: { id: req.params.id } }).then(area => {
     if (area === null) throw new Error("area not found");

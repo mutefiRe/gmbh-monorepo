@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     customTables: { type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue: false },
     instantPay: { type: DataTypes.BOOLEAN, allowNull: false, unique: false, defalutValue: true },
     showItemPrice: { type: DataTypes.BOOLEAN, allowNull: true, unique: false, defalutValue: true },
-    expiresTime: { type: DataTypes.STRING, allowNull: false, unique: false, defaultValue: "72h" }
+    expiresTime: { type: DataTypes.STRING, allowNull: false, unique: false, defaultValue: "168h" }
   });
 
   Setting.associate = models => {

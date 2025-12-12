@@ -16,7 +16,6 @@ const config = require('../config/config.js');
  */
 
 router.post('/', function (req, res) {
-  console.log(req.body)
   db.User.findOne({
     where: {
       username: req.body.username

@@ -74,16 +74,17 @@ router.get('/:id', function (req, res) {
  * @apiPermission admin
  */
 
-router.get('/', function (req, res) {
-  db.Item.findAll().then(items => {
+router.get('/', async function (req, res) {
+  try {
+    const items = await db.Item.findAll();
     res.send({ items });
-  }).catch(error => {
+  } catch (error) {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
       }
     });
-  });
+  }
 });
 
 /**
@@ -98,18 +99,19 @@ router.get('/', function (req, res) {
  * @apiPermission admin
  */
 
-router.post('/', function (req, res) {
+router.post('/', async function (req, res) {
   const io = req.app.get('io');
-  db.Item.create(req.body.item).then(item => {
+  try {
+    const item = await db.Item.create(req.body.item);
     res.send({ item });
     io.sockets.emit("update", { item });
-  }).catch(error => {
+  } catch (error) {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
       }
     });
-  });
+  }
 });
 
 /**
@@ -126,21 +128,21 @@ router.post('/', function (req, res) {
  * @apiPermission admin
  */
 
-router.put('/:id', function (req, res) {
+router.put('/:id', async function (req, res) {
   const io = req.app.get('io');
-  db.Item.findOne({ where: { id: req.params.id } }).then(item => {
+  try {
+    const item = await db.Item.findOne({ where: { id: req.params.id } });
     if (item === null) throw new Error("item not found");
-    return item.update(req.body.item);
-  }).then(item => {
+    const updatedItem = await item.update(req.body.item);
     res.send({ item });
     io.sockets.emit("update", { item });
-  }).catch(error => {
+  } catch (error) {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
       }
     });
-  });
+  }
 });
 
 /**
@@ -153,18 +155,19 @@ router.put('/:id', function (req, res) {
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function (req, res) {
+router.delete('/:id', async function (req, res) {
   const io = req.app.get('io');
-  db.Item.destroy({ where: { id: req.params.id } }).then(() => {
+  try {
+    await db.Item.destroy({ where: { id: req.params.id } });
     res.send({});
-    io.sockets.emit("delete", { 'type': 'item', 'id': item.id });
-  }).catch(error => {
+    io.sockets.emit("delete", { 'type': 'item', 'id': req.params.id });
+  } catch (error) {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
       }
     });
-  });
+  }
 });
 
 module.exports = router;

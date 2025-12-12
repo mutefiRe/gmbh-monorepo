@@ -70,7 +70,25 @@ export const useUnits = () => useQuery({ queryKey: ['units'], queryFn: () => api
 export const useUnit = (id: number) => useQuery({ queryKey: ['unit', id], queryFn: () => apiFetch<Unit>(`/api/units/${id}`) });
 
 export const useUsers = () => useQuery({ queryKey: ['users'], queryFn: () => apiFetch<User[]>('/api/users') });
-export const useUser = (id: number, options?: Omit<UndefinedInitialDataOptions, "queryKey">) => useQuery({ queryKey: ['user', id], queryFn: () => apiFetch<User>(`/api/users/${id}`), ...options });
+export const useUser = (id: number, options?: Omit<UndefinedInitialDataOptions, "queryKey">) => useQuery({
+  queryKey: ['user', id],
+  queryFn: async () => {
+    try {
+      return await apiFetch<User>(`/api/users/${id}`);
+    } catch (err: any) {
+      // Only handle 400 for the current user
+      if (err instanceof Error && err.message && typeof window !== 'undefined') {
+        // Optionally, check if id matches current user id if available
+        if (err.message.includes('400')) {
+          localStorage.removeItem("gmbh-auth-jwt");
+          window.location.reload();
+        }
+      }
+      throw err;
+    }
+  },
+  ...options
+});
 
 // Mutation hooks for POST/PUT/DELETE endpoints
 export const useCreateArea = () => useMutation({ mutationFn: (data: Partial<Area>) => apiFetch<Area>('/api/areas/', { method: 'POST', body: JSON.stringify(data) }) });

@@ -42,7 +42,7 @@ const db = require('../../models');
  */
 
 router.get('/:id', function (req, res) {
-  db.Table.find({ where: { id: req.params.id } }).then(table => {
+  db.Table.findOne({ where: { id: req.params.id } }).then(table => {
     res.send({ table });
   }).catch(error => {
     res.status(400).send({
@@ -95,36 +95,19 @@ router.get('/', function (req, res) {
 router.post('/', function (req, res) {
   const io = req.app.get('io');
   let table = req.body.table;
-  if (table.custom) {
-    db.Area.findOrCreate({
-      where: { name: '_custom', short: '*', color: '#A7292E' }
-    }).then(area => {
-      io.sockets.emit("update", { area: area[0] });
-      table.areaId = area[0].id;
-      db.Table.create(table).then(tables => {
-        io.sockets.emit("update", { tables });
-        res.send({ tables });
-      });
-    }).catch(error => {
-      res.status(400).send({
-        'errors': {
-          'msg': error && error.errors && error.errors[0].message || error.message
-        }
-      });
-    });
-  } else {
-    db.Table.create(req.body.table).then(table => {
-      io.sockets.emit("update", { table });
-      res.send({ table });
-    }).catch(error => {
-      res.status(400).send({
-        'errors': {
-          'msg': error && error.errors && error.errors[0].message || error.message
-        }
-      });
 
+  db.Table.create(req.body.table).then(table => {
+    io.sockets.emit("update", { table });
+    res.send({ table });
+  }).catch(error => {
+    res.status(400).send({
+      'errors': {
+        'msg': error && error.errors && error.errors[0].message || error.message
+      }
     });
-  }
+
+  });
+
 });
 
 /**
@@ -143,7 +126,7 @@ router.post('/', function (req, res) {
 
 router.put('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Table.find({ where: { id: req.params.id } }).then(table => {
+  db.Table.findOne({ where: { id: req.params.id } }).then(table => {
     if (table === null) throw new Error('table not found');
     return table.update(req.body.table);
   }).then(table => {
@@ -170,7 +153,7 @@ router.put('/:id', function (req, res) {
 
 router.delete('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Table.find({ where: { id: req.params.id } }).then(table => {
+  db.Table.findOne({ where: { id: req.params.id } }).then(table => {
     if (table === null) throw new Error('table not found');
     return table.destroy();
   }).then(() => {
