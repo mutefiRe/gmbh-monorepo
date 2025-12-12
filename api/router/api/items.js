@@ -33,7 +33,7 @@ const db = require('../../models');
  * @api {get} api/items/:id Request Item
  * @apiGroup Item
  * @apiName GetItem
- * @apiParam {Number} id Items unique ID.
+ * @apiParam {number} string Items unique ID.
 
   *@apiUse token
 
@@ -119,7 +119,7 @@ router.post('/', function (req, res) {
  * @apiUse token
  * @apiParam {Object} items
  * @apiSuccess {Object} items
- * @apiParam {Number} id
+ * @apiParam {number} string
  * @apiUse itemParams
  * @apiUse itemAttributes
  *
@@ -147,7 +147,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/items/:id Delete one item
  * @apiGroup Item
  * @apiName DeleteItem
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}

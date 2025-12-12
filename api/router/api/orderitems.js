@@ -31,7 +31,7 @@ const db = require('../../models');
  * @api {get} api/orderitems/:id Request Orderitem
  * @apiGroup Orderitem
  * @apiName GetOrderitem
- * @apiParam {Number} id Orderitems unique ID.
+ * @apiParam {number} string Orderitems unique ID.
 
   *@apiUse token
 
@@ -128,7 +128,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/orderitems/:id Delete one orderitem
  * @apiGroup Orderitem
  * @apiName DeleteOrderitem
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}

@@ -30,7 +30,7 @@ const db = require('../../models');
  * @api {get} api/organizations/:id Request Orangization
  * @apiGroup Orangization
  * @apiName GetOrganization
- * @apiParam {Number} id Organizations unique ID.
+ * @apiParam {number} string Organizations unique ID.
 
   *@apiUse token
 
@@ -149,7 +149,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/organizations/:id Delete one organization
  * @apiGroup Orangization
  * @apiName DeleteOrangization
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}

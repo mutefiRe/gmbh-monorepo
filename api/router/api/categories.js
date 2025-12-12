@@ -1,7 +1,7 @@
 'use strict';
 
 const router = require('express').Router();
-const db     = require('../../models');
+const db = require('../../models');
 
 /**
  * @apiDefine categoryAttributes
@@ -32,7 +32,7 @@ const db     = require('../../models');
  * @api {get} api/categories/:id Request Category
  * @apiGroup Category
  * @apiName GetCategory
- * @apiParam {Number} id Categorys unique ID.
+ * @apiParam {number} string Categorys unique ID.
 
   *@apiUse token
 
@@ -43,9 +43,9 @@ const db     = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res){
-  db.Category.find({where: {id: req.params.id}}).then(category => {
-    res.send({category});
+router.get('/:id', function (req, res) {
+  db.Category.find({ where: { id: req.params.id } }).then(category => {
+    res.send({ category });
 
   }).catch(error => {
     res.status(400).send({
@@ -71,9 +71,9 @@ router.get('/:id', function(req, res){
  * @apiPermission admin
  */
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   db.Category.findAll().then(categories => {
-    res.send({categories});
+    res.send({ categories });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -96,11 +96,11 @@ router.get('/', function(req, res) {
  * @apiPermission admin
  */
 
-router.post('/', function(req, res){
+router.post('/', function (req, res) {
   const io = req.app.get('io');
   db.Category.create(req.body.category).then(category => {
-    res.send({category});
-    io.sockets.emit("update", {category});
+    res.send({ category });
+    io.sockets.emit("update", { category });
   }).catch(error => {
     res.status(400).send({
       'errors': {
@@ -123,42 +123,42 @@ router.post('/', function(req, res){
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res){
+router.put('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Category.find({where: {id: req.params.id}})
-  .then(category => {
-    if (category === null) throw new "category not found";
-    return category.update(req.body.category);
-  }).then(category => {
-    res.send({category});
-    io.sockets.emit("update", {category});
-  }).catch(error => {
-    res.status(400).send({
-      'errors': {
-        'msg': error && error.errors && error.errors[0].message || error.message
-      }
+  db.Category.find({ where: { id: req.params.id } })
+    .then(category => {
+      if (category === null) throw new "category not found";
+      return category.update(req.body.category);
+    }).then(category => {
+      res.send({ category });
+      io.sockets.emit("update", { category });
+    }).catch(error => {
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
     });
-  });
 });
 
 /**
  * @api {delete} api/categories/:id Delete one category
  * @apiGroup Category
  * @apiName DeleteCategory
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res){
+router.delete('/:id', function (req, res) {
   const io = req.app.get('io');
-  db.Category.find({where: {id: req.params.id}}).then(category => {
+  db.Category.find({ where: { id: req.params.id } }).then(category => {
     if (category === null) throw new "category not found";
     return category.destroy();
   }).then(category => {
     res.send({});
-    io.sockets.emit("delete", {'type': 'category', 'id': category.id});
+    io.sockets.emit("delete", { 'type': 'category', 'id': category.id });
   }).catch(error => {
     res.status(400).send({
       'errors': {

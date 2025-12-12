@@ -30,7 +30,7 @@ const db = require('../../models');
  * @api {get} api/tables/:id Request Table
  * @apiGroup Table
  * @apiName GetTable
- * @apiParam {Number} id Tables unique ID.
+ * @apiParam {number} string Tables unique ID.
 
   *@apiUse token
 
@@ -41,7 +41,7 @@ const db = require('../../models');
  * @apiPermission admin
  */
 
-router.get('/:id', function(req, res) {
+router.get('/:id', function (req, res) {
   db.Table.find({ where: { id: req.params.id } }).then(table => {
     res.send({ table });
   }).catch(error => {
@@ -68,7 +68,7 @@ router.get('/:id', function(req, res) {
  * @apiPermission admin
  */
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   db.Table.findAll().then(tables => {
     res.send({ tables });
   }).catch(error => {
@@ -92,7 +92,7 @@ router.get('/', function(req, res) {
  * @apiPermission admin
  */
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
   const io = req.app.get('io');
   let table = req.body.table;
   if (table.custom) {
@@ -135,13 +135,13 @@ router.post('/', function(req, res) {
  * @apiParam {Object} tables
  * @apiUse tableAttributes
  * @apiSuccess {Object} tables
- * @apiParam {Number} id
+ * @apiParam {number} string
  * @apiUse tableParams
  *
  * @apiPermission admin
  */
 
-router.put('/:id', function(req, res) {
+router.put('/:id', function (req, res) {
   const io = req.app.get('io');
   db.Table.find({ where: { id: req.params.id } }).then(table => {
     if (table === null) throw new Error('table not found');
@@ -162,13 +162,13 @@ router.put('/:id', function(req, res) {
  * @api {delete} api/tables/:id Delete one table
  * @apiGroup Table
  * @apiName DeleteTable
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
  */
 
-router.delete('/:id', function(req, res) {
+router.delete('/:id', function (req, res) {
   const io = req.app.get('io');
   db.Table.find({ where: { id: req.params.id } }).then(table => {
     if (table === null) throw new Error('table not found');

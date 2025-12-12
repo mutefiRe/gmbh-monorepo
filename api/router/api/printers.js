@@ -44,7 +44,7 @@ router.get('/', function (req, res) {
  * @api {get} api/printers/:id Request Setting
  * @apiGroup Printer
  * @apiName GetPrinter
- * @apiParam {Number} id printers unique ID.
+ * @apiParam {number} string printers unique ID.
 
   *@apiUse token
 
@@ -73,7 +73,7 @@ router.get('/:id', function (req, res) {
  * @api {post} api/printers/:id test print
  * @apiGroup Printer
  * @apiName TestPrinter
- * @apiParam {Number} id printers unique ID.
+ * @apiParam {number} string printers unique ID.
 
   *@apiUse token
 
@@ -133,7 +133,7 @@ router.post('/update', function (req, res) {
  * @api {put} api/printers/:id Updates one printer
  * @apiGroup Printer
  * @apiName UpdatePrinter
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiUse token
  * @apiUse printersItem
@@ -164,7 +164,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/printers/:id Delete one printer
  * @apiGroup Printer
  * @apiName DeletePrinter
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}

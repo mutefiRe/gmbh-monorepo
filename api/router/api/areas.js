@@ -24,7 +24,7 @@ const db = require('../../models');
  * @api {get} api/areas/:id Request Area
  * @apiGroup Area
  * @apiName GetArea
- * @apiParam {Number} id Areas unique ID.
+ * @apiParam {string} id Areas unique ID.
 
   *@apiUse token
 
@@ -132,7 +132,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/areas/:id Delete one table
  * @apiGroup Area
  * @apiName DeleteArea
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}

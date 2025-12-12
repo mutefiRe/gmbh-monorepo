@@ -19,7 +19,7 @@ const db = require('../../models');
  * @api {get} api/units/:id Request Unit
  * @apiGroup Unit
  * @apiName GetUnit
- * @apiParam {Number} id units unique ID.
+ * @apiParam {number} string units unique ID.
 
   *@apiUse token
 
@@ -104,7 +104,7 @@ router.post('/', function (req, res) {
  * @apiParam {Object} units
  * @apiUse unitAttributes
  * @apiSuccess {Object} units
- * @apiParam {Number} id
+ * @apiParam {number} string
  *
  * @apiPermission admin
  */
@@ -130,7 +130,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/units/:id Delete one unit
  * @apiGroup Unit
  * @apiName DeleteUnit
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}

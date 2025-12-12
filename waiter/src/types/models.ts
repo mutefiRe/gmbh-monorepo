@@ -67,7 +67,7 @@ export interface Printer {
 }
 
 export interface Setting {
-  id: number;
+  id: string;
   name: string;
   beginDate: string | Date;
   endDate: string | Date;
@@ -94,7 +94,7 @@ export interface Unit {
 }
 
 export interface User {
-  id: number;
+  id: string;
   username: string;
   firstname: string;
   lastname: string;

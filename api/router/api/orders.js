@@ -39,7 +39,7 @@ const db = require('../../models');
  * @api {get} api/order/:id Request Order
  * @apiGroup Order
  * @apiName GetOrder
- * @apiParam {Number} id Orders unique ID.
+ * @apiParam {number} string Orders unique ID.
 
   *@apiUse token
 
@@ -194,7 +194,7 @@ router.post('/', async function (req, res) {
  * @apiUse token
  * @apiParam {Object} order
  * @apiSuccess {Object} order
- * @apiParam {Number} id Orders unique ID.
+ * @apiParam {number} string Orders unique ID.
 
  * @apiUse orderParams
  * @apiUse orderAttributes
@@ -233,7 +233,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/order/:id Delete one order
  * @apiGroup Order
  * @apiName DeleteOrder
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}

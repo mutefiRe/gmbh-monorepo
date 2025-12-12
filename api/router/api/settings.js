@@ -33,7 +33,7 @@ const db = require('../../models');
  * @api {get} api/settings/:id Request Setting
  * @apiGroup Setting
  * @apiName GetSetting
- * @apiParam {Number} id Settings unique ID.
+ * @apiParam {number} string Settings unique ID.
 
   *@apiUse token
 
@@ -119,7 +119,7 @@ router.post('/', function (req, res) {
  * @apiName UpdateSetting
  * @apiUse token
  * @apiParam {Object} settings
- * @apiParam {Number} id
+ * @apiParam {number} string
  * @apiUse settingParams
  * @apiSuccess {Object} settings
  * @apiUse settingAttributes
@@ -155,7 +155,7 @@ router.put('/:id', function (req, res) {
  * @api {delete} api/settings/:id Delete one setting
  * @apiGroup Setting
  * @apiName DeleteSetting
- * @apiParam {number} id Id
+ * @apiParam {number} string Id
  *
  * @apiPermission admin
  * @apiSuccess {object} object empty Object {}
