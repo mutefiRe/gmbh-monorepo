@@ -3,31 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GmBh Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            keyframes: {
-              zoomIn: {
-                '0%': { opacity: '0', transform: 'scale(0.95)' },
-                '100%': { opacity: '1', transform: 'scale(1)' },
-              },
-              fadeIn: {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
-              }
-            },
-            animation: {
-              zoomIn: 'zoomIn 0.2s ease-out',
-              fadeIn: 'fadeIn 0.2s ease-out',
-            }
-          }
-        }
-      }
-    </script>
-    <script type="importmap">
+
+    <title>g.m.b.h. Admin</title>
+
+    <!-- <script type="importmap">
     {
       "imports": {
         "react/": "https://esm.sh/react@^19.2.3/",
@@ -39,7 +18,9 @@
         "@tanstack/react-query": "https://esm.sh/@tanstack/react-query@5.66.0"
       }
     }
-    </script>
+    </script> -->
+    <link href="/src/style.css" rel="stylesheet">
+
   <link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-slate-50 text-slate-900 font-sans antialiased">

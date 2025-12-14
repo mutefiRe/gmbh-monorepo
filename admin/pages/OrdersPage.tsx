@@ -45,11 +45,11 @@ export const OrdersPage: React.FC = () => {
               <div className="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="bg-white p-2 rounded border border-slate-200 shadow-sm">
-                    <Receipt size={20} className="text-blue-600" />
+                    <Receipt size={20} className="text-primary" />
                   </div>
                   <div>
                     <h3 className="font-bold text-slate-800">{getTableName(order.tableId)}</h3>
-                    <p className="text-xs text-slate-500">Bestellung #{order.id}</p>
+                    <p className="text-xs text-slate-500">Bestellung #{order.number}</p>
                   </div>
                 </div>
                 <div className="text-right">

@@ -3,6 +3,7 @@ import { AppContext } from '../App';
 import { SimpleCardEditor } from '../components/SimpleCardEditor';
 import { Printer as PrinterIcon, Search } from 'lucide-react';
 import { Printer } from '../types';
+import { PrimaryButton } from '../components/PrimaryButton';
 
 export const PrintersPage: React.FC = () => {
   const context = useContext(AppContext);
@@ -16,20 +17,20 @@ export const PrintersPage: React.FC = () => {
       </div>
       <div>
         <h3 className="font-bold text-slate-800">{printer.name}</h3>
-        <p className="text-xs text-blue-500 font-mono mt-1">{printer.systemName}</p>
+        <p className="text-xs text-primary-500 font-mono mt-1">{printer.systemName}</p>
       </div>
     </div>
   );
 
   const scanButton = (
-    <button
+    <PrimaryButton
       onClick={scanPrinters}
       disabled={isScanningPrinters}
-      className="flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-3 rounded-xl hover:bg-slate-200 transition-colors font-medium disabled:opacity-50 active:scale-95 border border-slate-200"
+      className="flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-3 rounded-xl hover:bg-slate-200 transition-colors font-medium active:scale-95 border border-slate-200"
+      icon={<Search size={20} className={isScanningPrinters ? 'animate-spin' : ''} />}
     >
-      <Search size={20} className={isScanningPrinters ? 'animate-spin' : ''} />
       {isScanningPrinters ? 'Suche...' : 'Netzwerk scannen'}
-    </button>
+    </PrimaryButton>
   );
 
   return (

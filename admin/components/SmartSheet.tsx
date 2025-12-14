@@ -84,7 +84,7 @@ export const SmartSheet: React.FC<SmartSheetProps> = ({
     <div className="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden relative">
       {isLoading && (
         <div className="absolute inset-0 bg-white/50 z-20 flex items-center justify-center backdrop-blur-sm">
-          <Loader2 className="animate-spin text-blue-600" size={32} />
+          <Loader2 className="animate-spin text-primary" size={32} />
         </div>
       )}
 
@@ -102,7 +102,7 @@ export const SmartSheet: React.FC<SmartSheetProps> = ({
         </div>
         <button
           onClick={addNewItem}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm active:scale-95"
+          className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm active:scale-95"
         >
           <Plus size={18} />
           Hinzufügen
@@ -224,7 +224,7 @@ export const SmartSheet: React.FC<SmartSheetProps> = ({
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={() => startEdit(item)}
-                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                    className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition-colors"
                   >
                     Bearbeiten
                   </button>

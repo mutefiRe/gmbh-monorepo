@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { UtensilsCrossed, Loader2 } from 'lucide-react';
+import { PrimaryButton } from '../components/PrimaryButton';
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -28,12 +29,12 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden animate-zoomIn">
-        <div className="bg-blue-600 p-8 text-center">
+        <div className="bg-primary-600 p-8 text-center">
           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
             <UtensilsCrossed size={32} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white">GmBh Admin</h1>
-          <p className="text-blue-100 mt-2">Willkommen zurück</p>
+          <p className="text-primary-200 mt-2">Willkommen zurück</p>
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
@@ -67,13 +68,14 @@ export const LoginPage: React.FC = () => {
             />
           </div>
 
-          <button
+          <PrimaryButton
             type="submit"
             disabled={isLoading}
-            className="w-full bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+            icon={isLoading ? <Loader2 size={20} className="animate-spin" /> : undefined}
           >
-            {isLoading ? <Loader2 size={20} className="animate-spin" /> : 'Anmelden'}
-          </button>
+            {isLoading ? 'Anmelden...' : 'Anmelden'}
+          </PrimaryButton>
 
           <div className="text-center text-xs text-slate-400 mt-4">
             Demo: admin / admin

@@ -85,7 +85,7 @@ export const Dashboard: React.FC = () => {
           value={`${totalRevenue.toFixed(2)} €`}
           subtext="+12.5%"
           icon={ShoppingBag}
-          color="bg-blue-500"
+          color="bg-primary-1000"
         />
         <StatCard
           title="Bestellungen"
@@ -124,7 +124,7 @@ export const Dashboard: React.FC = () => {
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   formatter={(value: number) => [`${value.toFixed(2)} €`, 'Umsatz']}
                 />
-                <Bar dataKey="sales" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={40} />
+                <Bar dataKey="sales" fill="var(--color-primary-500)" radius={[4, 4, 0, 0]} barSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -133,18 +133,22 @@ export const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <h3 className="text-lg font-bold text-slate-800 mb-6">Letzte Aktivitäten</h3>
           <div className="space-y-6">
-            {orders.slice(0, 5).map((order) => (
-              <div key={order.id} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
-                  ORD
+            {orders.slice(0, 5).map((order) => {
+              const orderitems = order.orderitems || [];
+              const orderTotal = orderitems.reduce((sum, oi) => sum + oi.price * oi.count, 0);
+              return (
+                <div key={order.id} className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-primary-100 text-primary flex items-center justify-center font-bold text-xs">
+                    ORD
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-slate-800">Neue Bestellung #{order.number}</p>
+                    <p className="text-xs text-slate-500">Tisch {order.table}</p>
+                  </div>
+                  <span className="text-sm font-bold text-slate-700">{orderTotal.toFixed(2)} €</span>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-slate-800">Neue Bestellung #{order.id}</p>
-                  <p className="text-xs text-slate-500">Tisch {order.table}</p>
-                </div>
-                <span className="text-sm font-bold text-slate-700">{order.totalAmount.toFixed(2)} €</span>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

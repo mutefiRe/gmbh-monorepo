@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { NotificationProvider } from './NotificationProvider';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -26,8 +25,8 @@ const NavItem = ({ to, icon: Icon, label, active }: { to: string, icon: any, lab
   <Link
     to={to}
     className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${active
-      ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-      : 'text-slate-500 hover:bg-white hover:text-blue-600 hover:shadow-sm'
+      ? 'bg-primary-500 text-white shadow-md shadow-primary-200'
+      : 'text-slate-500 hover:bg-white hover:text-primary hover:shadow-sm'
       }`}
   >
     <Icon size={20} />
@@ -36,16 +35,16 @@ const NavItem = ({ to, icon: Icon, label, active }: { to: string, icon: any, lab
 );
 
 const getPageTitle = (path: string) => {
-  switch (path) {
-    case '/': return 'Übersicht';
-    case '/orders': return 'Bestellungen';
-    case '/items': return 'Speisekarte';
-    case '/categories': return 'Kategorien';
-    case '/areas': return 'Bereiche & Tische';
-    case '/staff': return 'Personal';
-    case '/units': return 'Einheiten';
-    case '/printers': return 'Drucker';
-    default: return 'GmBh Admin';
+  switch (path.split('/')?.[1]) {
+    case '': return 'Übersicht';
+    case 'orders': return 'Bestellungen';
+    case 'items': return 'Speisekarte';
+    case 'categories': return 'Kategorien';
+    case 'areas': return 'Bereiche & Tische';
+    case 'users': return 'Benutzer';
+    case 'units': return 'Einheiten';
+    case 'printers': return 'Drucker';
+    default: return 'g.m.b.h. Admin';
   }
 }
 
@@ -55,18 +54,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <NotificationProvider>
-      <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
       {/* Sidebar for desktop */}
       <aside className="w-64 bg-slate-100 border-r border-slate-200 hidden md:flex flex-col">
         <div className="p-6">
           <div className="flex items-center gap-2 text-slate-800">
-            <div className="p-2 bg-blue-600 rounded-lg text-white">
+            <div className="p-2 bg-primary-600 rounded-lg text-white">
               <UtensilsCrossed size={24} />
             </div>
             <div>
-              <h1 className="text-xl font-bold leading-tight">GmBh</h1>
-              <span className="text-xs font-semibold tracking-widest text-blue-600 uppercase">Admin</span>
+              <h1 className="text-xl font-bold leading-tight">g.m.b.h.</h1>
+              <span className="text-xs font-semibold tracking-widest text-primary uppercase">Admin</span>
             </div>
           </div>
         </div>
@@ -80,16 +78,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <NavItem to="/items" icon={Menu} label="Speisekarte" active={location.pathname === '/items'} />
           <NavItem to="/categories" icon={Layers} label="Kategorien" active={location.pathname === '/categories'} />
           <NavItem to="/areas" icon={Map} label="Bereiche & Tische" active={location.pathname === '/areas'} />
-          <NavItem to="/staff" icon={Users} label="Personal" active={location.pathname === '/staff'} />
+          <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
           <NavItem to="/units" icon={Ruler} label="Einheiten" active={location.pathname === '/units'} />
           <NavItem to="/printers" icon={Printer} label="Drucker" active={location.pathname === '/printers'} />
         </nav>
 
         <div className="p-4 border-t border-slate-200 space-y-2">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-slate-500 hover:bg-slate-200 transition-colors">
-            <Settings size={20} />
-            <span className="font-medium">Einstellungen</span>
-          </button>
+          <NavItem
+            to="/settings"
+            icon={Settings}
+            label="Einstellungen"
+            active={location.pathname === '/settings'}
+          />
           <button
             onClick={logout}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors"
@@ -107,15 +107,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <aside className="relative w-64 bg-slate-100 border-r border-slate-200 flex flex-col h-full z-50 animate-slide-in-left">
             <div className="p-6 flex items-center justify-between">
               <div className="flex items-center gap-2 text-slate-800">
-                <div className="p-2 bg-blue-600 rounded-lg text-white">
+                <div className="p-2 bg-primary-600 rounded-lg text-white">
                   <UtensilsCrossed size={24} />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold leading-tight">GmBh</h1>
-                  <span className="text-xs font-semibold tracking-widest text-blue-600 uppercase">Admin</span>
+                  <h1 className="text-xl font-bold leading-tight">g.m.b.h.</h1>
+                  <span className="text-xs font-semibold tracking-widest text-primary uppercase">Admin</span>
                 </div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} className="ml-4 p-2 text-slate-400 hover:text-blue-600">
+              <button onClick={() => setSidebarOpen(false)} className="ml-4 p-2 text-slate-400 hover:text-primary">
                 <X size={24} />
               </button>
             </div>
@@ -128,15 +128,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <NavItem to="/items" icon={Menu} label="Speisekarte" active={location.pathname === '/items'} />
               <NavItem to="/categories" icon={Layers} label="Kategorien" active={location.pathname === '/categories'} />
               <NavItem to="/areas" icon={Map} label="Bereiche & Tische" active={location.pathname === '/areas'} />
-              <NavItem to="/staff" icon={Users} label="Personal" active={location.pathname === '/staff'} />
+              <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
               <NavItem to="/units" icon={Ruler} label="Einheiten" active={location.pathname === '/units'} />
               <NavItem to="/printers" icon={Printer} label="Drucker" active={location.pathname === '/printers'} />
             </nav>
             <div className="p-4 border-t border-slate-200 space-y-2">
-              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-slate-500 hover:bg-slate-200 transition-colors">
-                <Settings size={20} />
-                <span className="font-medium">Einstellungen</span>
-              </button>
+              <NavItem
+                to="/settings"
+                icon={Settings}
+                label="Einstellungen"
+                active={location.pathname === '/settings'}
+              />
               <button
                 onClick={logout}
                 className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors"
@@ -146,7 +148,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               </button>
             </div>
           </aside>
-        </div>
+        </div >
       )}
 
       {/* Main Content */}
@@ -155,22 +157,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 shrink-0 z-20">
           <div className="flex items-center gap-4">
             {/* Burger menu for mobile */}
-            <button className="md:hidden p-2 text-slate-400 hover:text-blue-600" onClick={() => setSidebarOpen(true)}>
+            <button className="md:hidden p-2 text-slate-400 hover:text-primary" onClick={() => setSidebarOpen(true)}>
               <Menu size={24} />
             </button>
             <h2 className="text-lg font-semibold text-slate-700 capitalize">
               {getPageTitle(location.pathname)}
             </h2>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 text-slate-400 hover:text-blue-600 transition-colors">
-              <Bell size={20} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-            </button>
-            <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
-              DM
-            </div>
-          </div>
+
         </header>
 
         {/* Content Scroll Area */}
@@ -180,7 +174,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </main>
-    </div>
-  </NotificationProvider>
+    </div >
   );
 };

@@ -14,6 +14,8 @@ import { LoginPage } from './pages/LoginPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { api } from './services/api';
 import { Item, User, Area, Table, Category, Order, Unit, Printer } from './types';
+import { NotificationProvider, useNotification } from './components/NotificationProvider';
+import { SettingsPage } from './pages/SettingsPage';
 
 // Create Query Client
 const queryClient = new QueryClient({
@@ -25,7 +27,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export const AppContext = React.createContext<{
+type AppContextType = {
   items: Item[];
   setItems: (items: Item[]) => void;
   updateItem: (item: Item) => void;
@@ -69,11 +71,14 @@ export const AppContext = React.createContext<{
 
   orders: Order[];
   isLoading: boolean;
-} | null>(null);
+} | null;
+
+export const AppContext = React.createContext<AppContextType>(null);
 
 const AuthenticatedApp = () => {
   const { isAuthenticated } = useAuth();
   const qc = useQueryClient();
+  const nf = useNotification();
 
   // Queries
   const { data: items = [], isLoading: itemsLoading } = useQuery({ queryKey: ['items'], queryFn: api.getItems, enabled: isAuthenticated });
@@ -86,68 +91,211 @@ const AuthenticatedApp = () => {
   const { data: orders = [] } = useQuery({ queryKey: ['orders'], queryFn: api.getOrders, enabled: isAuthenticated });
 
   // Mutations
-  const createItemMutation = useMutation({ mutationFn: api.createItem, onSuccess: () => qc.invalidateQueries({ queryKey: ['items'] }) });
-  const updateItemMutation = useMutation({ mutationFn: api.updateItem, onSuccess: () => qc.invalidateQueries({ queryKey: ['items'] }) });
-  const deleteItemMutation = useMutation({ mutationFn: api.deleteItem, onSuccess: () => qc.invalidateQueries({ queryKey: ['items'] }) });
 
-  const createUserMutation = useMutation({ mutationFn: api.createUser, onSuccess: () => qc.invalidateQueries({ queryKey: ['users'] }) });
-  const updateUserMutation = useMutation({ mutationFn: api.updateUser, onSuccess: () => qc.invalidateQueries({ queryKey: ['users'] }) });
-  const deleteUserMutation = useMutation({ mutationFn: api.deleteUser, onSuccess: () => qc.invalidateQueries({ queryKey: ['users'] }) });
+  // --- Mutations with onError and improved onSuccess ---
+  const createItemMutation = useMutation({
+    mutationFn: api.createItem,
+    onError: () => nf.notify('Fehler beim Erstellen des Artikels', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['items'] });
+      nf.notify('Artikel erstellt', 'success');
+    }
+  });
+  const updateItemMutation = useMutation({
+    mutationFn: api.updateItem,
+    onError: () => nf.notify('Fehler beim Aktualisieren des Artikels', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['items'] });
+      nf.notify('Artikel aktualisiert', 'success');
+    }
+  });
+  const deleteItemMutation = useMutation({
+    mutationFn: api.deleteItem,
+    onError: () => nf.notify('Fehler beim Löschen des Artikels', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['items'] });
+      nf.notify('Artikel gelöscht', 'success');
+    }
+  });
 
-  const createAreaMutation = useMutation({ mutationFn: api.createArea, onSuccess: () => qc.invalidateQueries({ queryKey: ['areas'] }) });
-  const updateAreaMutation = useMutation({ mutationFn: api.updateArea, onSuccess: () => qc.invalidateQueries({ queryKey: ['areas'] }) });
-  const deleteAreaMutation = useMutation({ mutationFn: api.deleteArea, onSuccess: () => qc.invalidateQueries({ queryKey: ['areas'] }) });
+  const createUserMutation = useMutation({
+    mutationFn: api.createUser,
+    onError: () => nf.notify('Fehler beim Erstellen des Benutzers', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['users'] });
+      nf.notify('Benutzer erstellt', 'success');
+    }
+  });
+  const updateUserMutation = useMutation({
+    mutationFn: api.updateUser,
+    onError: () => nf.notify('Fehler beim Aktualisieren des Benutzers', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['users'] });
+      nf.notify('Benutzer aktualisiert', 'success');
+    }
+  });
+  const deleteUserMutation = useMutation({
+    mutationFn: api.deleteUser,
+    onError: () => nf.notify('Fehler beim Löschen des Benutzers', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['users'] });
+      nf.notify('Benutzer gelöscht', 'success');
+    }
+  });
 
-  const createTableMutation = useMutation({ mutationFn: api.createTable, onSuccess: () => qc.invalidateQueries({ queryKey: ['tables'] }) });
-  const updateTableMutation = useMutation({ mutationFn: api.updateTable, onSuccess: () => qc.invalidateQueries({ queryKey: ['tables'] }) });
-  const deleteTableMutation = useMutation({ mutationFn: api.deleteTable, onSuccess: () => qc.invalidateQueries({ queryKey: ['tables'] }) });
+  const createAreaMutation = useMutation({
+    mutationFn: api.createArea,
+    onError: () => nf.notify('Fehler beim Erstellen des Bereichs', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['areas'] });
+      nf.notify('Bereich erstellt', 'success');
+    }
+  });
+  const updateAreaMutation = useMutation({
+    mutationFn: api.updateArea,
+    onError: () => nf.notify('Fehler beim Aktualisieren des Bereichs', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['areas'] });
+      nf.notify('Bereich aktualisiert', 'success');
+    }
+  });
+  const deleteAreaMutation = useMutation({
+    mutationFn: api.deleteArea,
+    onError: () => nf.notify('Fehler beim Löschen des Bereichs', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['areas'] });
+      nf.notify('Bereich gelöscht', 'success');
+    }
+  });
 
-  const createUnitMutation = useMutation({ mutationFn: api.createUnit, onSuccess: () => qc.invalidateQueries({ queryKey: ['units'] }) });
-  const updateUnitMutation = useMutation({ mutationFn: api.updateUnit, onSuccess: () => qc.invalidateQueries({ queryKey: ['units'] }) });
-  const deleteUnitMutation = useMutation({ mutationFn: api.deleteUnit, onSuccess: () => qc.invalidateQueries({ queryKey: ['units'] }) });
+  const createTableMutation = useMutation({
+    mutationFn: api.createTable,
+    onError: () => nf.notify('Fehler beim Erstellen des Tisches', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['tables'] });
+      nf.notify('Tisch erstellt', 'success');
+    }
+  });
+  const updateTableMutation = useMutation({
+    mutationFn: api.updateTable,
+    onError: () => nf.notify('Fehler beim Aktualisieren des Tisches', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['tables'] });
+      nf.notify('Tisch aktualisiert', 'success');
+    }
+  });
+  const deleteTableMutation = useMutation({
+    mutationFn: api.deleteTable,
+    onError: () => nf.notify('Fehler beim Löschen des Tisches', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['tables'] });
+      nf.notify('Tisch gelöscht', 'success');
+    }
+  });
 
-  const createPrinterMutation = useMutation({ mutationFn: api.createPrinter, onSuccess: () => qc.invalidateQueries({ queryKey: ['printers'] }) });
-  const updatePrinterMutation = useMutation({ mutationFn: api.updatePrinter, onSuccess: () => qc.invalidateQueries({ queryKey: ['printers'] }) });
-  const deletePrinterMutation = useMutation({ mutationFn: api.deletePrinter, onSuccess: () => qc.invalidateQueries({ queryKey: ['printers'] }) });
-  const scanPrintersMutation = useMutation({ mutationFn: api.scanPrinters, onSuccess: () => qc.invalidateQueries({ queryKey: ['printers'] }) });
+  const createUnitMutation = useMutation({
+    mutationFn: api.createUnit,
+    onError: () => nf.notify('Fehler beim Erstellen der Einheit', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['units'] });
+      nf.notify('Einheit erstellt', 'success');
+    }
+  });
+  const updateUnitMutation = useMutation({
+    mutationFn: api.updateUnit,
+    onError: () => nf.notify('Fehler beim Aktualisieren der Einheit', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['units'] });
+      nf.notify('Einheit aktualisiert', 'success');
+    }
+  });
+  const deleteUnitMutation = useMutation({
+    mutationFn: api.deleteUnit,
+    onError: () => nf.notify('Fehler beim Löschen der Einheit', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['units'] });
+      nf.notify('Einheit gelöscht', 'success');
+    }
+  });
 
-  const createCategoryMutation = useMutation({ mutationFn: api.createCategory, onSuccess: () => qc.invalidateQueries({ queryKey: ['categories'] }) });
-  const updateCategoryMutation = useMutation({ mutationFn: api.updateCategory, onSuccess: () => qc.invalidateQueries({ queryKey: ['categories'] }) });
-  const deleteCategoryMutation = useMutation({ mutationFn: api.deleteCategory, onSuccess: () => qc.invalidateQueries({ queryKey: ['categories'] }) });
+  const createPrinterMutation = useMutation({
+    mutationFn: api.createPrinter,
+    onError: () => nf.notify('Fehler beim Erstellen des Druckers', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['printers'] });
+      nf.notify('Drucker erstellt', 'success');
+    }
+  });
+  const updatePrinterMutation = useMutation({
+    mutationFn: api.updatePrinter,
+    onError: () => nf.notify('Fehler beim Aktualisieren des Druckers', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['printers'] });
+      nf.notify('Drucker aktualisiert', 'success');
+    }
+  });
+  const deletePrinterMutation = useMutation({
+    mutationFn: api.deletePrinter,
+    onError: () => nf.notify('Fehler beim Löschen des Druckers', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['printers'] });
+      nf.notify('Drucker gelöscht', 'success');
+    }
+  });
+  const scanPrintersMutation = useMutation({
+    mutationFn: api.scanPrinters,
+    onError: () => nf.notify('Fehler beim Scannen der Drucker', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['printers'] });
+      nf.notify('Netzwerkdrucker aktualisiert', 'success');
+    }
+  });
 
+  const createCategoryMutation = useMutation({
+    mutationFn: api.createCategory,
+    onError: () => nf.notify('Fehler beim Erstellen der Kategorie', 'error'),
+    onSuccess: (category) => {
+      qc.invalidateQueries({ queryKey: ['categories'] });
+      nf.notify(`Kategorie erstellt: ${category.name}`, 'success');
+    }
+  });
+  const updateCategoryMutation = useMutation({
+    mutationFn: api.updateCategory,
+    onError: () => nf.notify('Fehler beim Aktualisieren der Kategorie', 'error'),
+    onSuccess: (category) => {
+      qc.invalidateQueries({ queryKey: ['categories'] });
+      nf.notify(`Kategorie aktualisiert: ${category.name}`, 'success');
+    }
+  });
+  const deleteCategoryMutation = useMutation({
+    mutationFn: api.deleteCategory,
+    onError: () => nf.notify('Fehler beim Löschen der Kategorie', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['categories'] });
+      nf.notify(`Kategorie gelöscht.`, 'success');
+    }
+  });
 
   if (!isAuthenticated) {
     return <LoginPage />;
   }
 
-  // --- Adapters for Legacy "setState" style props expected by pages ---
-  const handleSetItems = (newItems: Item[]) => console.warn("setItems deprecated");
-  const handleSetUsers = (newUsers: User[]) => console.warn("setUsers deprecated");
-  const handleSetAreas = (newAreas: Area[]) => console.warn("setAreas deprecated");
-
-  // Special case: AreasPage does bulk table operations using setTables.
-  const handleSetTables = (newTables: Table[]) => {
-    qc.setQueryData(['tables'], newTables);
-  };
 
   const isLoading = itemsLoading || usersLoading || areasLoading || tablesLoading || unitsLoading || printersLoading || categoriesLoading;
 
   return (
     <AppContext.Provider value={{
       items,
-      setItems: handleSetItems,
       updateItem: (i) => updateItemMutation.mutate(i),
       addItem: (i) => createItemMutation.mutate(i),
       deleteItem: (id) => deleteItemMutation.mutate(id),
 
       users,
-      setUsers: handleSetUsers,
       updateUser: (u) => updateUserMutation.mutate(u),
       addUser: (u) => createUserMutation.mutate(u),
       deleteUser: (id) => deleteUserMutation.mutate(id),
 
       areas,
-      setAreas: handleSetAreas,
       updateArea: (a) => updateAreaMutation.mutate(a),
       addArea: (a) => createAreaMutation.mutate(a),
       deleteArea: (id) => deleteAreaMutation.mutate(id),
@@ -176,18 +324,26 @@ const AuthenticatedApp = () => {
 
       orders,
       isLoading
-    }}>
+    } as AppContextType}>
       <Router>
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/items" element={<ItemsPage />} />
-            <Route path="/staff" element={<UsersPage />} />
+            <Route path="/items/:id" element={<ItemsPage />} />
+            <Route path="/users/:id" element={<UsersPage />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/areas/new" element={<AreasPage />} />
+            <Route path="/areas/:id/tables" element={<AreasPage />} />
+            <Route path="/areas/:id" element={<AreasPage />} />
             <Route path="/areas" element={<AreasPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/categories/:id" element={<CategoriesPage />} />
             <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/units/:id" element={<UnitsPage />} />
             <Route path="/units" element={<UnitsPage />} />
             <Route path="/printers" element={<PrintersPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>
@@ -198,12 +354,22 @@ const AuthenticatedApp = () => {
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <AuthenticatedApp />
-      </AuthProvider>
-    </QueryClientProvider>
+    <NotificationProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <AuthenticatedApp />
+        </AuthProvider>
+      </QueryClientProvider>
+    </NotificationProvider >
   );
 };
 
 export default App;
+
+export function useAppContext(): AppContextType {
+  const context = React.useContext(AppContext) as AppContextType;
+  if (!context) {
+    throw new Error('useAppContext must be used within an AppContext.Provider');
+  }
+  return context;
+}

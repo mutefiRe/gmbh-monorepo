@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Edit2, Plus, Trash2, X, Check } from 'lucide-react';
-import { useNotification } from './NotificationProvider';
+import { PrimaryButton } from './PrimaryButton';
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface TableCardEditorProps<T> {
   data: T[];
   title: string;
-  columns: { key: keyof T; label: string; render?: (item: T) => React.ReactNode }[];
+  columns: {
+    key: keyof T; label: string; render?: (item: T) => React.ReactNode, sortable?: boolean,
+    sortFn?: (a: T, b: T, direction: 'asc' | 'desc') => number;
+  }[];
   onAdd: (item: Partial<T>) => void;
   onEdit: (item: T) => void;
   onDelete: (id: any) => void;
-  fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select'; options?: { label: string; value: any }[] }[];
-  sortable?: boolean;
-  sortFn?: (a: T, b: T, direction: 'asc' | 'desc') => number;
+  fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select'; options?: { label: string; value: any }[], optional?: boolean, }[];
+
 }
 
 export function TableCardEditor<T extends { id: any }>({
@@ -23,14 +26,27 @@ export function TableCardEditor<T extends { id: any }>({
   onDelete,
   fields
 }: TableCardEditorProps<T> & { categories?: { id: any; name: string; icon?: string }[] }) {
-  
+
   // Filter and sorting state
   const [filter, setFilter] = useState('');
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<Partial<T> | null>(null);
+  const params = useParams();
+  const navigate = useNavigate();
   const [confirmDelete, setConfirmDelete] = useState<{ id: any } | null>(null);
+
+  const [editingItem, setEditingItem] = useState<Partial<T> | null>(null);
+  useEffect(() => {
+    let item: Partial<T> | null = null;
+    if (params.id === 'new') {
+      item = {} as Partial<T>;
+    } else if (params.id) {
+      item = data.find(d => String(d.id) === params.id) || null;
+    }
+    setEditingItem(item);
+  }, [params.id, data]);
+
+  const isModalOpen = editingItem !== null;
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,44 +59,41 @@ export function TableCardEditor<T extends { id: any }>({
   };
 
   const openAddModal = () => {
-    setEditingItem({});
-    setIsModalOpen(true);
+    navigate('/items/new');
   };
 
   const openEditModal = (item: T) => {
-    setEditingItem({ ...item });
-    setIsModalOpen(true);
+    navigate(`/items/${item.id}`);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setEditingItem(null);
+    navigate('/items');
   };
 
-        const handleDelete = (id: any) => {
-        setConfirmDelete({ id });
-      };
+  const handleDelete = (id: any) => {
+    setConfirmDelete({ id });
+  };
 
-      const confirmDeleteAction = () => {
-        if (confirmDelete) {
-          onDelete(confirmDelete.id);
-          setConfirmDelete(null);
-        }
-      };
+  const confirmDeleteAction = () => {
+    if (confirmDelete) {
+      onDelete(confirmDelete.id);
+      setConfirmDelete(null);
+    }
+  };
 
   const handleFieldChange = (key: keyof T, value: any) => {
-
     if (editingItem) {
       setEditingItem({ ...editingItem, [key]: value });
-  const [loading, setLoading] = useState(false);
-  const notification = useNotification();
+
     }
   };
 
   // Filtering
   let filtered = data;
   if (filter) {
-    filtered = filtered.filter(item => (item.name || '').toLowerCase().includes(filter.toLowerCase()));
+    filtered = filtered.filter(item => (
+      Object.values(item).some(val => String(val).toLowerCase().includes(filter.toLowerCase()))
+    ));
   }
 
   // Sorting
@@ -117,13 +130,23 @@ export function TableCardEditor<T extends { id: any }>({
     grouped = [{ group: '', items: sorted }];
   }
 
+  const submitButtonDisabled = () => {
+    if (!editingItem) return true;
+    for (const field of fields) {
+      if (!field.optional && (editingItem[field.key] === undefined || editingItem[field.key] === null || editingItem[field.key] === '')) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-sm font-semibold active:scale-95"
+          className="flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl hover:bg-primary-700 transition-colors shadow-sm font-semibold active:scale-95"
         >
           <Plus size={20} />
           Hinzufügen
@@ -137,6 +160,16 @@ export function TableCardEditor<T extends { id: any }>({
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
+        { /* reset filter button */}
+        {filter && (
+          <button
+            onClick={() => setFilter('')}
+            className="text-slate-500 hover:text-slate-700 transition-colors p-2 rounded-lg hover:bg-slate-100 bg-gray-50"
+            title="Filter zurücksetzen"
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
       {grouped.map((group, idx) => (
         <div key={group.group + idx} className="overflow-x-auto">
@@ -152,7 +185,7 @@ export function TableCardEditor<T extends { id: any }>({
                 {columns.map(col => (
                   <th
                     key={col.key as string}
-                    className={`px-2 py-2 md:px-4 text-left text-xs font-semibold text-slate-500 uppercase ${col.sortable ? 'cursor-pointer select-none hover:text-blue-600' : ''}`}
+                    className={`px-2 py-2 md:px-4 text-left text-xs font-semibold text-slate-500 uppercase ${col.sortable ? 'cursor-pointer select-none hover:text-primary' : ''}`}
                     onClick={() => {
                       if (col.sortable) {
                         if (sortKey === col.key) {
@@ -180,7 +213,7 @@ export function TableCardEditor<T extends { id: any }>({
                 </tr>
               ) : (
                 group.items.map(item => (
-                  <tr key={item.id} className="hover:bg-blue-50 transition-colors">
+                  <tr key={item.id} className="hover:bg-primary-100 transition-colors">
                     {columns.map(col => (
                       <td key={col.key as string} className="px-2 py-2 md:px-4 whitespace-nowrap md:whitespace-normal">
                         {col.render ? col.render(item) : (item[col.key] as any)}
@@ -189,7 +222,7 @@ export function TableCardEditor<T extends { id: any }>({
                     <td className="px-2 py-2 md:px-4 text-center whitespace-nowrap">
                       <button
                         onClick={() => openEditModal(item)}
-                        className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
+                        className="p-2 text-primary hover:bg-primary-100 rounded-lg"
                         title="Bearbeiten"
                       >
                         <Edit2 size={18} />
@@ -202,24 +235,24 @@ export function TableCardEditor<T extends { id: any }>({
                         <Trash2 size={18} />
                       </button>
                     </td>
-                        {/* Delete Confirm Dialog */}
-                        {confirmDelete && (
-                          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                            <div className="bg-white rounded-xl shadow-xl p-6 w-80 max-w-full flex flex-col items-center animate-zoomIn">
-                              <div className="mb-4 text-lg text-center text-slate-800 font-semibold">Wirklich löschen?</div>
-                              <div className="flex gap-4 mt-2">
-                                <button
-                                  className="px-4 py-2 rounded bg-slate-200 hover:bg-slate-300 text-slate-700"
-                                  onClick={() => setConfirmDelete(null)}
-                                >Abbrechen</button>
-                                <button
-                                  className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white"
-                                  onClick={confirmDeleteAction}
-                                >Löschen</button>
-                              </div>
-                            </div>
+                    {/* Delete Confirm Dialog */}
+                    {confirmDelete && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                        <div className="bg-white rounded-xl shadow-xl p-6 w-80 max-w-full flex flex-col items-center animate-zoomIn">
+                          <div className="mb-4 text-lg text-center text-slate-800 font-semibold">Wirklich löschen?</div>
+                          <div className="flex gap-4 mt-2">
+                            <button
+                              className="px-4 py-2 rounded bg-slate-200 hover:bg-slate-300 text-slate-700"
+                              onClick={() => setConfirmDelete(null)}
+                            >Abbrechen</button>
+                            <button
+                              className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white"
+                              onClick={confirmDeleteAction}
+                            >Löschen</button>
                           </div>
-                        )}
+                        </div>
+                      </div>
+                    )}
                   </tr>
                 ))
               )}
@@ -285,13 +318,13 @@ export function TableCardEditor<T extends { id: any }>({
                 >
                   Abbrechen
                 </button>
-                <button
+                <PrimaryButton
                   type="submit"
-                  className="px-8 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-semibold shadow-md shadow-blue-200 flex items-center gap-2 active:scale-95 transition-transform"
+                  icon={<Check size={20} />}
+                  disabled={submitButtonDisabled()}
                 >
-                  <Check size={20} />
                   Speichern
-                </button>
+                </PrimaryButton>
               </div>
             </form>
           </div>

@@ -142,7 +142,7 @@ export const api = {
   },
   createCategory: async (category: Partial<Category>): Promise<Category> => {
     if (USE_MOCK) { await delay(MOCK_DELAY); return { ...category, id: Date.now() } as Category; }
-    return (await client<{ category: Category }>(API_BASE + 'categories', { body: { categories: category } as any })).category;
+    return (await client<{ category: Category }>(API_BASE + 'categories', { body: { category: category } as any })).category;
   },
   updateCategory: async (category: Category): Promise<Category> => {
     if (USE_MOCK) { await delay(MOCK_DELAY); return category; }

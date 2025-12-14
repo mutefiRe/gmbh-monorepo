@@ -31,22 +31,28 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     <NotificationContext.Provider value={{ notify }}>
       {children}
       <div className="fixed top-4 right-4 z-[9999] space-y-2">
-        {notifications.map((n) => (
-          <div
-            key={n.id}
-            className={`px-4 py-3 rounded-lg shadow-lg text-white font-semibold animate-fadeIn ${
-              n.type === 'success' ? 'bg-green-600' : n.type === 'error' ? 'bg-red-600' : 'bg-blue-600'
-            }`}
-          >
-            {n.message}
-          </div>
-        ))}
+        {notifications.map((n) => {
+          let title = '';
+          if (n.type === 'success') title = 'Erfolg';
+          else if (n.type === 'error') title = 'Fehler';
+          else title = 'Info';
+          return (
+            <div
+              key={n.id}
+              className={`px-4 py-3 rounded-lg shadow-lg text-white font-semibold animate-fadeIn ${n.type === 'success' ? 'bg-green-600' : n.type === 'error' ? 'bg-red-600' : 'bg-primary-600'
+                }`}
+            >
+              <h3 className="mb-1 " >{title}</h3>
+              <div className="text-sm">{n.message}</div>
+            </div>
+          )
+        })}
       </div>
     </NotificationContext.Provider>
   );
 };
 
-export const useNotification = () => {
+export const useNotification: () => NotificationContextProps = () => {
   const ctx = useContext(NotificationContext);
   if (!ctx) throw new Error('useNotification must be used within NotificationProvider');
   return ctx;
