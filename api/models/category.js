@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   Category.associate = models => {
     Category.hasMany(models.Category, { as: 'children', foreignKey: "categoryId" });
     Category.hasMany(models.Item, { onDelete: 'NO ACTION' });
-    Category.belongsTo(models.Printer);
+    Category.belongsTo(models.Printer, { as: 'printer', foreignKey: "printerId" });
     Category.belongsTo(models.Category, { as: 'father', foreignKey: "categoryId" });
   };
 

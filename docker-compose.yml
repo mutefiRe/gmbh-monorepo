@@ -12,8 +12,12 @@ services:
       GMBH_DB_PORT: "3306"
       GMBH_DB_DIALECT: mysql
       PORT: "8080"
+      CUPS_SERVER: "${CUPS_SERVER}"
+      PRINTER_API_URL: "http://host.docker.internal:8761"
     depends_on:
       - mysql
+    cap_add:
+      - NET_RAW
   mysql:
     image: mysql:8.0.44-bookworm
     environment:
@@ -38,8 +42,13 @@ services:
       # - shared_app:/app/order:ro
     depends_on:
       - api
-    extra_hosts:
-      - "gmbh.local:127.0.0.2"
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOZZLE_NO_ANALYTICS=true
+    restart: always
 volumes:
   mysql_data:
   shared_app:

@@ -71,6 +71,11 @@ export function DebugOverlay() {
     };
   }, []);
 
+  const t = true;
+  if (t) {
+    return null;
+  }
+
   const [visible, setVisible] = useState(true);
   if (messages.length === 0 || !visible) {
     return null;

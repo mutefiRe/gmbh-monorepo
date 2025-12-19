@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { OrderItem, Item, Unit, Table, Area, User, Category } from "../../types/models";
-import { useCreateOrder } from "../../types/queries";
+import { useCreateOrder, usePrintOrder } from "../../types/queries";
 import { QuantityBlink } from "../../ui/quantity-blink";
 import { Link, useLocation } from "wouter";
 import { TableSelectModal } from "./table-select";
@@ -48,13 +48,16 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
   const [showTableModal, setShowTableModal] = useState(false);
   const [location, navigate] = useLocation();
   const createOrderMutation = useCreateOrder();
+  const printMutation = usePrintOrder();
 
-
-  function saveOrder() {
+  async function saveOrder() {
     if (!table) {
       return;
     }
-    createOrderMutation.mutate(
+    try {
+
+    
+    const data = await createOrderMutation.mutateAsync(
       {
         order: {
           tableId: table.id,
@@ -66,14 +69,22 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
           })),
         }
       },
-      {
-        onSuccess: (data) => {
-          const orderID = data.order.id;
-          setCurrentOrder({ orderItems: [], tableId: null });
-          navigate(`/orders/${orderID}`);
-        },
-      }
     );
+    const orderID = data.order.id;
+
+  
+    // Trigger print after order is created
+    await printMutation.mutateAsync({
+      print: {
+        orderId: orderID,
+        printId: currentOrder.printId || "",
+      }
+    });
+    setCurrentOrder({ orderItems: [], tableId: null });
+    navigate(`/orders/${orderID}`);
+    } catch (error) {
+      console.error("Error saving order:", error);
+    }
   }
 
   function setTable(table: Table) {

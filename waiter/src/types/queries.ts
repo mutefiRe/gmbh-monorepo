@@ -50,9 +50,20 @@ export const useItem = (id: number) => useQuery({ queryKey: ['item', id], queryF
 export const useOrganizations = () => useQuery({ queryKey: ['organizations'], queryFn: () => apiFetch<Organization[]>('/api/organizations') });
 export const useOrganization = (id: number) => useQuery({ queryKey: ['organization', id], queryFn: () => apiFetch<Organization>(`/api/organizations/${id}`) });
 
-export const useOrders = () => useQuery({ queryKey: ['orders'], queryFn: () => apiFetch<{ orders: Order[] }>('/api/orders') });
+export const useOrders = (skip = 0, limit?: number) =>
+  useQuery({
+    queryKey: ['orders', skip, limit],
+    queryFn: () => apiFetch<{ orders: Order[]; count: number; total: number }>(`/api/orders?skip=${skip}${typeof limit === 'number' ? `&limit=${limit}` : ''}`)
+  });
+
 export const useOrder = (id: number) => useQuery({ queryKey: ['order', id], queryFn: () => apiFetch<{ order: Order }>(`/api/orders/${id}`) });
-export const useOrdersByUser = (userId: string, options?: UndefinedInitialDataOptions) => useQuery({ queryKey: ['ordersbyuser', userId], queryFn: () => apiFetch<{ orders: Order[] }>(`/api/orders/byuser/${userId}`), ...options });
+
+export const useOrdersByUser = (userId: string, skip = 0, limit?: number, options?: UndefinedInitialDataOptions) =>
+  useQuery({
+    queryKey: ['ordersbyuser', userId, skip, limit],
+    queryFn: () => apiFetch<{ orders: Order[]; count: number; total: number }>(`/api/orders/byuser/${userId}?skip=${skip}${typeof limit === 'number' ? `&limit=${limit}` : ''}`),
+    ...options
+  });
 
 export const useOrderItems = () => useQuery({ queryKey: ['orderitems'], queryFn: () => apiFetch<OrderItem[]>('/api/orderitems') });
 export const useOrderItem = (id: number) => useQuery({ queryKey: ['orderitem', id], queryFn: () => apiFetch<OrderItem>(`/api/orderitems/${id}`) });
@@ -136,3 +147,4 @@ export const useUpdateUser = () => useMutation({ mutationFn: (data: Partial<User
 export const useDeleteUser = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/users/${id}`, { method: 'DELETE' }) });
 
 export const useAuthenticateUser = () => useMutation({ mutationFn: (data: { username: string; password: string }) => apiFetch<{ token: string }>('/authenticate', { method: 'POST', body: JSON.stringify(data) }) });
+export const usePrintOrder = () => useMutation({ mutationFn: (data: { print: { orderId: string, printId: string } }) => apiFetch<{ print: { printId: string; orderId: string; } }>('/api/prints', { method: 'POST', body: JSON.stringify(data) }) });

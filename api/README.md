@@ -23,9 +23,19 @@ port: 3306
 ```
 #### Install
 ```
-sudo apt-get install libcups2-dev
 npm install
 ```
+
+#### Printer API integration
+This service proxies printing and discovery to the Go printer API.
+
+Environment:
+```
+PRINTER_API_URL=http://localhost:8761
+```
+
+Optional query params:
+- `GET /api/printers?includeQueue=true` includes queue status per printer.
 
 #### API Testing with Postman
 Testing our API Funktionality is easy with Postman.
@@ -84,4 +94,3 @@ We love consistent commiting
 Copyright (c) 2015 Alexander Gabriel, Sebastian Huber, Konrad Kleeberger, Josef Krabath, Daniel Trojer
 
 Proprietary software
-

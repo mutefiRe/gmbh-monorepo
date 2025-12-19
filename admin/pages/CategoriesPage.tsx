@@ -41,7 +41,7 @@ export const CategoriesPage: React.FC = () => {
       fields={[
         { key: 'name', label: 'Name', type: 'text' },
         { key: 'icon', label: 'Icon', type: 'emoji' },
-        { key: 'printer', label: 'Standard-Drucker', type: 'select', options: printers.map(p => ({ label: p.name, value: p.systemName })), optional: true },
+        { key: 'printerId', label: 'Standard-Drucker', type: 'select', options: printers.map(p => ({ label: p.name, value: p.id })), optional: true },
         { key: 'enabled', label: 'Aktiv', type: 'boolean' }
       ]}
     />

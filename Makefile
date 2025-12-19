@@ -1,8 +1,18 @@
 db-connect:
 	docker compose exec mysql mysql -u gmbh -p gmbh
 
+
+define set-cups-server
+  @if [ "$(shell uname)" = "Darwin" ]; then \
+    export CUPS_SERVER=host.docker.internal:631; \
+  else \
+    export CUPS_SERVER=/var/run/cups/cups.sock; \
+  fi; \
+  
+endef
+
 compose:
-	docker compose up --build
+	$(set-cups-server) docker compose up --build
 
 composed:
-	docker compose up -d --build
+	$(set-cups-server) docker compose up -d --build

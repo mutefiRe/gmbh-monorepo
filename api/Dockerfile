@@ -6,6 +6,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN apt-get update && apt-get install -y \
   cups \
   nmap \
+  net-tools \
   libcups2-dev python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g node-gyp

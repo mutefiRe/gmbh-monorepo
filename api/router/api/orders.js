@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const db = require('../../models');
+const logger = require('../../util/logger');
 
 /**
  * @apiDefine orderAttributes
@@ -80,18 +81,32 @@ router.get('/:id', function (req, res) {
  * @apiPermission admin
  */
 
-router.get('/', function (req, res) {
-  db.Order.findAll({ include: [{ model: db.Orderitem }], order: [['createdAt', 'DESC']] }).then(orders => {
-    orders = JSON.parse(JSON.stringify(orders));
+router.get('/', async function (req, res) {
+  try {
+    const skip = parseInt(req.query.skip, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || null;
+    const findOptions = {
+      include: [{ model: db.Orderitem }],
+      order: [['createdAt', 'DESC']],
+      offset: skip
+    };
+    if (limit !== null) {
+      findOptions.limit = limit;
+    }
 
-    res.send({ orders });
-  }).catch(error => {
+    // Get total count
+    const total = await db.Order.count();
+    // Get paginated orders
+    const orders = await db.Order.findAll(findOptions);
+    const count = orders.length;
+    res.send({ orders: JSON.parse(JSON.stringify(orders)), count, total });
+  } catch (error) {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
       }
     });
-  });
+  }
 });
 
 /**
@@ -109,23 +124,33 @@ router.get('/', function (req, res) {
  * @apiPermission admin
  */
 
-router.get('/byuser/:userId', function (req, res) {
-  db.Order.findAll({
-    where: {
-      userId:
-        req.params.userId
-    }, include: [{ model: db.Orderitem }], order: [['createdAt', 'DESC']]
-  }).then(orders => {
-    orders = JSON.parse(JSON.stringify(orders));
+router.get('/byuser/:userId', async function (req, res) {
+  try {
+    const skip = parseInt(req.query.skip, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || null;
+    const findOptions = {
+      where: { userId: req.params.userId },
+      include: [{ model: db.Orderitem }],
+      order: [['createdAt', 'DESC']],
+      offset: skip
+    };
+    if (limit !== null) {
+      findOptions.limit = limit;
+    }
 
-    res.send({ orders });
-  }).catch(error => {
+    // Get total count for this user
+    const total = await db.Order.count({ where: { userId: req.params.userId } });
+    // Get paginated orders
+    const orders = await db.Order.findAll(findOptions);
+    const count = orders.length;
+    res.send({ orders: JSON.parse(JSON.stringify(orders)), count, total });
+  } catch (error) {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
       }
     });
-  });
+  }
 });
 
 
@@ -156,6 +181,7 @@ router.post('/', async function (req, res) {
 
   const requestOrder = req.body.order;
   if (!requestOrder || !requestOrder.orderitems?.length) {
+    logger.error('No order or orderitems provided in create order request');
     return res.status(400).send({
       'errors': {
         'msg': 'No order provided'
@@ -175,9 +201,10 @@ router.post('/', async function (req, res) {
     return db.Order.findOne({ where: { id: orderId }, include: [{ model: db.Orderitem }] });
   }).then(data => {
     const order = JSON.parse(JSON.stringify(data));
-
+    logger.info(`Created order ${order.id} with ${order.orderitems.length} items`);
     res.send({ order });
   }).catch(error => {
+    logger.error(`Error creating order: ${error.message}`);
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message

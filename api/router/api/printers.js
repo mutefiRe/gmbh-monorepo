@@ -4,6 +4,8 @@ const router = require('express').Router();
 const db = require('../../models');
 const control = require('../../printer/control');
 const print = require('../../printer/print');
+const printerApi = require('../../printer/printer_api');
+const logger = require('../../util/logger');
 
 let lockSearch = false;
 
@@ -28,17 +30,41 @@ let lockSearch = false;
  * @apiPermission admin
  */
 
-router.get('/', function (req, res) {
-  console.log("get printers")
-  db.Printer.findAll().then(printers => {
-    res.send({ printers });
-  }).catch(error => {
+router.get('/', async function (req, res) {
+  try {
+    const printers = await db.Printer.findAll();
+    const statuses = await Promise.all(printers.map(async (printer) => {
+      try {
+        const status = await printerApi.status(printer.systemName);
+        return { key: printer.systemName, online: status.online };
+      } catch (err) {
+        return { key: printer.systemName, online: false };
+      }
+    }));
+    const includeQueue = String(req.query.includeQueue || '').toLowerCase() === 'true';
+    const queues = includeQueue ? await Promise.all(printers.map(async (printer) => {
+      try {
+        const queue = await printerApi.queue(printer.systemName);
+        return { key: printer.systemName, queue };
+      } catch (err) {
+        return { key: printer.systemName, queue: null };
+      }
+    })) : [];
+    const statusMap = new Map(statuses.map((s) => [s.key, s.online]));
+    const queueMap = new Map(queues.map((q) => [q.key, q.queue]));
+    const printersWithStatus = printers.map((printer) => Object.assign({}, printer.toJSON(), {
+      reachable: statusMap.get(printer.systemName) || false,
+      queue: includeQueue ? queueMap.get(printer.systemName) : undefined
+    }));
+    res.send({ printers: printersWithStatus });
+  } catch (error) {
     res.status(400).send({
       'errors': {
         'msg': error && error.errors && error.errors[0].message || error.message
       }
     });
-  });
+  }
+
 });
 
 /**
@@ -116,18 +142,31 @@ router.post('/:id/testprint', function (req, res) {
  * @apiPermission admin
  */
 
-router.post('/update', function (req, res) {
-  res.status(200).send();
+router.post('/update', async function (req, res) {
   const io = req.app.get('io');
   if (!lockSearch) {
     lockSearch = true;
-    control.updatePrinters()
-      .then((printers) => {
-        io.sockets.emit("update", { printers: printers.slice(printers.length / 2, printers.length) });
-        lockSearch = false;
-      })
+    try {
+      const _printers = await control.updatePrinters();
+      const printers = _printers || [];
+      logger.info(`Updated printers: ${printers.length} printers found`);
+      io.sockets.emit("update", { printers: printers.slice(printers.length / 2, printers.length) });
+      res.send({ status: 'ok' });
+      return;
+    } catch (error) {
+      logger.error('Error updating printers:', error);
+      res.status(400).send({
+        'errors': {
+          'msg': error && error.errors && error.errors[0].message || error.message
+        }
+      });
+      return;
+    } finally {
+      lockSearch = false;
+    }
   }
-
+  res.status(423);
+  res.send({ status: 'locked' });
 });
 
 /**

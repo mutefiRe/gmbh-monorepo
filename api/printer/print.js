@@ -1,25 +1,30 @@
 'use strict';
 
-const printer = require('@timokunze/node-printer');
 const layout = require('./layout');
+const printerApi = require('./printer_api');
+const logger = require('../util/logger');
 
 class Print {
   deliveryNote(order) {
     const printers = new Map();
     order.orderitems.forEach((orderitem) => {
       const printer = (orderitem.item.category.printer || {}).systemName;
-      if (printers.has(printer)) {
-        printers.get(printer).push(orderitem);
+      if (!printer) return;
+      console.log(`printer: ${JSON.stringify(orderitem.item.category)}`)
+      if (printers.has(printer.systemName)) {
+        printers.get(printer.systemName).push(orderitem);
       } else {
-        printers.set(printer, [orderitem]);
+        printers.set(printer.systemName, [orderitem]);
       }
     });
 
+    const jobs = [];
     printers.forEach((orderitems, printer) => {
       const orderPrinter = order;
       orderPrinter.orderitems = orderitems;
-      this.printJob(printer, layout.deliveryNote(orderPrinter));
-    })
+      jobs.push(this.printJob(printer, layout.deliveryNote(orderPrinter)));
+    });
+    return Promise.all(jobs);
   }
 
   tokenCoin(data, printer, eventName) {
@@ -28,34 +33,27 @@ class Print {
     tokens.forEach((token) => {
       printSequence = printSequence.concat(token);
     })
-    this.printJob(printer, printSequence);
+    return this.printJob(printer, printSequence);
   }
 
   bill(order, printer) {
-    this.printJob(printer, layout.bill(order));
+    return this.printJob(printer, layout.bill(order));
   }
 
   test(printer) {
-    this.printJob(printer.systemName, layout.printerTest(printer));
+    return this.printJob(printer.systemName, layout.printerTest(printer));
   }
 
   printJob(printerName, data) {
-    const self = this;
-    console.log(`recieved print job for printer ${printerName}`);
-    printer.printDirect({
-      data: self._toBuffer(data),
-      printer: printerName,
-      type: 'RAW',
-      success(jobID) {
-        console.log('sent to printer with ID: ' + jobID);
-      },
-      error(err) {
-        const StringDecoder = require('string_decoder').StringDecoder;
-        const decoder = new StringDecoder('utf8');
-        console.log('Printer not working', err);
-        console.log(decoder.write(self._toBuffer(data)));
-      }
-    });
+    const payload = this._toBuffer(data);
+    logger.info({ printerId: printerName }, 'received print job');
+    return printerApi.printRaw(printerName, payload)
+      .then((result) => {
+        logger.info({ printerId: printerName, bytesSent: result.bytesSent }, 'print sent');
+      })
+      .catch((err) => {
+        logger.error({ printerId: printerName, err: err && err.message }, 'print failed');
+      });
   }
 
   _toBuffer(data) {

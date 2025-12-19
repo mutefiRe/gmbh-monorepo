@@ -9,8 +9,6 @@ import { CURRENT_ORDER_KEY, type CurrentOrder } from "./types/state";
 import { OrderHistory } from "./components/order-history";
 import { PayDetail } from "./components/pay-main";
 
-
-
 export function StateWrapper() {
   const queryCategories = useCategories();
   const queryItems = useItems();

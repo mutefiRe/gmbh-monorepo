@@ -18,8 +18,7 @@ const orders = require('./api/orders');
 const orderitems = require('./api/orderitems');
 const settings = require('./api/settings');
 const printers = require('./api/printers');
-
-
+const prints = require('./api/prints');
 
 acl.config({
   baseUrl: 'api',
@@ -69,6 +68,7 @@ router.use("/orders", orders);
 router.use("/orderitems", orderitems);
 router.use("/settings", settings);
 router.use("/printers", printers);
+router.use("/prints", prints);
 
 router.get('/', function (req, res) {
   res.status(200).send({ "msg": "you have access to the api" });

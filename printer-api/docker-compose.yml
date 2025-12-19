@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  printer-api:
+    build: .
+    image: mutefire/gmbh-v2-printer-api:latest
+    ports:
+      - "8761:8761"
+    env_file:
+      - .env
+    restart: unless-stopped
+  printer-api-usb:
+    build: .
+    image: mutefire/gmbh-v2-printer-api:latest
+    profiles: ["usb"]
+    ports:
+      - "8761:8761"
+    env_file:
+      - .env
+    environment:
+      ENABLE_USB: "true"
+    privileged: true
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb
+    restart: unless-stopped

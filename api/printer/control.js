@@ -1,50 +1,48 @@
-const execCallbackstyle = require('child_process').exec;
-const Network = require('./network');
 const db = require('../models');
+const logger = require('../util/logger');
+const printerApi = require('./printer_api');
 
 module.exports = {
-  addPrinter(systemName, ip) {
-    const command = `lpadmin -p ${systemName} -v socket://${ip}:9100/ -E`;
-    return exec(command);
+  addPrinter() {
+    return Promise.resolve();
   },
-  removePrinter(systemName) {
-    const command = `lpadmin -x ${systemName}`;
-    return exec(command);
+  removePrinter() {
+    return Promise.resolve();
   },
-  updatePrinters() {
-    return Network.getPrinterIps()
-      .then((printersIps) => {
-        const ips = new Map();
-        printersIps.forEach((ip) => {
-          ips.set(ip, null);
-        })
-        return ips;
-      })
-      .then((ips) => {
-        return Network.addMacToIpsMap(ips)
-      })
-      .then((ips) => {
-        const promises = [];
-        ips.forEach((printer, ip) => promises.push(this.addPrinter(printer, ip)));
-        ips.forEach((printer) => promises.push(
-          db.Printer.create({systemName: printer})
-          .catch(() => {
-            return false;
-          })
-        ));
-        return Promise.all(promises);
-      })
+  async updatePrinters() {
+    const result = await printerApi.discover();
+    const printers = result.printers || [];
+    const stored = [];
+
+    for (const printer of printers) {
+      const systemName = printer.id;
+      const name = buildPrinterName(printer);
+      try {
+        const [record, created] = await db.Printer.findOrCreate({
+          where: { systemName },
+          defaults: { name }
+        });
+        if (!created && record.name !== name) {
+          await record.update({ name });
+        }
+        stored.push(record);
+      } catch (e) {
+        logger.error(`Failed to create or find printer ${systemName} in DB: ${e.message}`);
+      }
+    }
+    return stored;
   }
 }
 
-function exec(command) {
-  return new Promise((resolve, reject) => {
-    execCallbackstyle(command, (error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
-      }
-    })
-  })
+function buildPrinterName(printer) {
+  if (printer.labels && printer.labels.mac) {
+    return `Printer ${printer.labels.mac}`;
+  }
+  if (printer.labels && printer.labels.ip) {
+    return `Printer ${printer.labels.ip}`;
+  }
+  if (printer.usb && printer.usb.product) {
+    return `Printer ${printer.usb.product}`;
+  }
+  return `Printer ${printer.id}`;
 }
