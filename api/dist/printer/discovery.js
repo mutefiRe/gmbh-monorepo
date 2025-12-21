@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const usb = require('usb');
 const net = require('net');
 // ESC/POS USB Vendor/Product IDs (add more as needed)
@@ -20,7 +22,7 @@ async function discoverWifiPrinters(subnet = '192.168.1.', start = 1, end = 254,
     const scanPromises = [];
     for (let i = start; i <= end; i++) {
         const ip = `${subnet}${i}`;
-        scanPromises.push(new Promise(resolve => {
+        scanPromises.push(new Promise((resolve) => {
             const socket = new net.Socket();
             let isPrinter = false;
             socket.setTimeout(timeout);

@@ -18,7 +18,19 @@ export const ItemsPage: React.FC = () => {
       data={sortedItems}
       categories={categories}
       columns={[
-        { key: 'name', label: 'Name', sortable: true },
+        {
+          key: 'name',
+          label: 'Name',
+          sortable: true,
+          render: item => (
+            <div>
+              <div className="font-semibold text-slate-800">{item.name}</div>
+              <div className="text-xs text-slate-500">
+                {categories.find(c => c.id === item.categoryId)?.name || '-'}
+              </div>
+            </div>
+          )
+        },
         { key: 'price', label: 'Preis', render: item => `${item.price} €`, sortable: true },
         { key: 'amount', label: 'Menge', sortable: true },
         {
@@ -28,7 +40,6 @@ export const ItemsPage: React.FC = () => {
             return dir === 'asc' ? aUnit.localeCompare(bUnit, 'de') : bUnit.localeCompare(aUnit, 'de');
           }
         },
-        { key: 'tax', label: 'Steuer', render: item => `${item.tax} %`, sortable: true },
         {
           key: 'enabled', label: 'Status', render: item => item.enabled ? 'Aktiv' : 'Inaktiv', sortable: true, sortFn: (a, b, dir) => {
             return dir === 'asc' ? Number(b.enabled) - Number(a.enabled) : Number(a.enabled) - Number(b.enabled);
@@ -38,15 +49,14 @@ export const ItemsPage: React.FC = () => {
       onAdd={addItem}
       onEdit={updateItem}
       onDelete={deleteItem}
-      dialogHint="Preis in EUR, Steuer in Prozent. Menge und Einheit werden in der Kasse angezeigt."
+      dialogHint="Preis in EUR. Menge und Einheit werden in der Kasse angezeigt."
       fields={[
-        { key: 'name', label: 'Name', type: 'text' },
-        { key: 'price', label: 'Preis', type: 'number' },
-        { key: 'amount', label: 'Menge', type: 'number' },
-        { key: 'categoryId', label: 'Kategorie', type: 'select', options: categories.map(c => ({ label: c.name, value: c.id })) },
-        { key: 'unitId', label: 'Einheit', type: 'select', options: units.map(u => ({ label: u.name, value: u.id })) },
-        { key: 'tax', label: 'Steuer', type: 'number' },
-        { key: 'enabled', label: 'Aktiv', type: 'boolean' },
+        { key: 'name', label: 'Name', type: 'text', row: 0, width: 'full' },
+        { key: 'categoryId', label: 'Kategorie', type: 'select', options: categories.map(c => ({ label: c.name, value: c.id })), row: 1, width: 'full' },
+        { key: 'price', label: 'Preis', type: 'number', row: 2, width: 'full' },
+        { key: 'amount', label: 'Menge', type: 'number', row: 3, width: 'half' },
+        { key: 'unitId', label: 'Einheit', type: 'select', options: units.map(u => ({ label: u.name, value: u.id })), row: 3, width: 'half' },
+        { key: 'enabled', label: 'Aktiv', type: 'boolean', row: 4, width: 'full', inline: true },
       ]}
     />
   );

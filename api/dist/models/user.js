@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require("bcrypt");
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define("user", {
@@ -28,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
     };
     User.associate = models => {
         User.belongsToMany(models.Area, { through: 'userarea' });
-        User.belongsTo(models.Printer);
     };
     User.addHook('beforeCreate', function (user) {
         user.password = User.generateHash(user.password);

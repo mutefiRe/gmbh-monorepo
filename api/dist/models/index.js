@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const sequelize_1 = require("sequelize");
-const DBconfig_1 = __importDefault(require("../config/DBconfig"));
-const config = (0, DBconfig_1.default)();
+const dbConfig = require("../config/DBconfig");
+const config = dbConfig();
 const sequelize = new sequelize_1.Sequelize(config.database, config.user, config.password, config.options);
 const db = {};
 fs_1.default
@@ -16,7 +16,7 @@ fs_1.default
     .forEach((file) => {
     const modelFactory = require(path_1.default.join(__dirname, file));
     const factory = modelFactory.default || modelFactory;
-    const model = factory(sequelize, sequelize_1.Sequelize.DataTypes);
+    const model = factory(sequelize, sequelize_1.DataTypes);
     db[capitalize(model.name)] = model;
 });
 Object.keys(db).forEach((modelName) => {
@@ -29,3 +29,5 @@ exports.default = db;
 function capitalize(s) {
     return s && s[0].toUpperCase() + s.slice(1);
 }
+// Support CommonJS require() import style.
+module.exports = db;

@@ -7,6 +7,8 @@ import { ProductList } from "./product-list";
 import { PreviewList } from "./preview-list";
 import type { CurrentOrder } from "../../types/state";
 import type { OrderItem } from "../../types/models";
+import { Notice } from "../../ui/notice";
+import { pendingOrdersMessage, pendingPaymentsMessage } from "../../lib/offlineMessages";
 
 interface OrderMainProps {
   categories: Category[];
@@ -15,6 +17,9 @@ interface OrderMainProps {
   currentOrder: CurrentOrder;
   addItemToOrder: (item: OrderItem) => void;
   updateOrderItemCount: (orderItem: OrderItem, count: number) => void;
+  canReachServer?: boolean;
+  pendingOrders?: number;
+  pendingPayments?: number;
   children?: ReactNode;
 }
 
@@ -25,17 +30,32 @@ export function OrderMain({
   addItemToOrder,
   currentOrder,
   updateOrderItemCount,
+  canReachServer = true,
+  pendingOrders = 0,
+  pendingPayments = 0,
   children,
 }: OrderMainProps) {
   const [, navigate] = useLocation();
 
 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const pendingMessage = pendingOrdersMessage(pendingOrders, canReachServer);
+  const paymentMessage = pendingPaymentsMessage(pendingPayments, canReachServer);
 
 
   return (<>
     {children}
-    <div className="grid grid-rows-[1fr_auto] h-[calc(100dvh-60px)] w-full overflow-x-hidden bg-slate-50">
+    <div className="grid grid-rows-[auto_1fr_auto] h-[calc(100dvh-60px)] w-full overflow-x-hidden bg-slate-50">
+      {pendingMessage && (
+        <div className="px-3 pt-3">
+          <Notice variant="warning" message={pendingMessage} />
+        </div>
+      )}
+      {paymentMessage && (
+        <div className="px-3 pt-3">
+          <Notice variant="warning" message={paymentMessage} />
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-10 w-full h-[calc(100%)] gap-3 p-3 overflow-x-hidden min-h-0">
         <section className="lg:col-span-7 h-full overflow-hidden bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-0 order-2 lg:order-1">
           <div className="px-4 py-3 border-b border-slate-100 bg-slate-50 shrink-0">

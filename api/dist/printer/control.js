@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const db = require('../models');
 const logger = require('../util/logger');
 const printerApi = require('./printer_api');

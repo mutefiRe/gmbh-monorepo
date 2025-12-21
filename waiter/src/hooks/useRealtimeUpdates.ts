@@ -13,6 +13,7 @@ type UpdatePayload = {
   area?: { eventId?: string };
   table?: { eventId?: string };
   organization?: { eventId?: string };
+  notification?: { eventId?: string };
 };
 
 type DeletePayload = {
@@ -30,7 +31,8 @@ const getPayloadEventId = (payload: UpdatePayload | DeletePayload) =>
   ?? (payload as UpdatePayload).unit?.eventId
   ?? (payload as UpdatePayload).area?.eventId
   ?? (payload as UpdatePayload).table?.eventId
-  ?? (payload as UpdatePayload).organization?.eventId;
+  ?? (payload as UpdatePayload).organization?.eventId
+  ?? (payload as UpdatePayload).notification?.eventId;
 
 export const useRealtimeUpdates = () => {
   const auth = useAuth();
@@ -46,6 +48,7 @@ export const useRealtimeUpdates = () => {
     });
 
     const isEventMismatch = (payload: UpdatePayload | DeletePayload) => {
+      // Prevent cross-event updates from mutating the current event's cache.
       const payloadEventId = getPayloadEventId(payload);
       if (!payloadEventId || !auth.eventId) return false;
       return payloadEventId !== auth.eventId;
@@ -53,6 +56,14 @@ export const useRealtimeUpdates = () => {
 
     const handleUpdate = (payload: UpdatePayload) => {
       if (!payload || isEventMismatch(payload)) return;
+      if (payload.notification) {
+        // Push notification updates into the unread tracker without forcing a full refetch.
+        queryClient.invalidateQueries({ queryKey: ["notifications"], exact: false });
+        const createdAt = (payload.notification as any)?.createdAt;
+        if (createdAt) {
+          window.dispatchEvent(new CustomEvent("gmbh-notification-received", { detail: { ts: createdAt } }));
+        }
+      }
       if (payload.item) queryClient.invalidateQueries({ queryKey: ["items"] });
       if (payload.category) queryClient.invalidateQueries({ queryKey: ["categories"] });
       if (payload.unit) queryClient.invalidateQueries({ queryKey: ["units"] });
@@ -101,11 +112,13 @@ export const useRealtimeUpdates = () => {
 
     socket.on("update", handleUpdate);
     socket.on("delete", handleDelete);
+    socket.on("notification", handleUpdate);
     socket.connect();
 
     return () => {
       socket.off("update", handleUpdate);
       socket.off("delete", handleDelete);
+      socket.off("notification", handleUpdate);
       socket.disconnect();
     };
   }, [auth.eventId, auth.token, queryClient]);

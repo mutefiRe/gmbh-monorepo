@@ -1,5 +1,7 @@
-import React, { useContext } from 'react';
-import { AppContext } from '../App';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 import {
   TrendingUp,
   Users,
@@ -13,9 +15,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line
+  ResponsiveContainer
 } from 'recharts';
 
 const StatCard = ({ title, value, subtext, icon: Icon, color }: any) => (
@@ -29,48 +29,88 @@ const StatCard = ({ title, value, subtext, icon: Icon, color }: any) => (
         <Icon size={24} className="text-white" />
       </div>
     </div>
-    <div className="mt-4 flex items-center text-sm">
-      <span className="text-green-500 font-medium flex items-center gap-1">
-        <TrendingUp size={14} />
-        {subtext}
-      </span>
-      <span className="text-slate-400 ml-2">vs. letzte Woche</span>
-    </div>
+    {subtext ? (
+      <div className="mt-4 flex items-center text-sm">
+        <span className="text-green-500 font-medium flex items-center gap-1">
+          <TrendingUp size={14} />
+          {subtext}
+        </span>
+      </div>
+    ) : null}
   </div>
 );
 
 export const Dashboard: React.FC = () => {
-  const context = useContext(AppContext);
+  const { isAuthenticated } = useAuth();
+  const eventId = api.getEventId() || 'active';
+  const summaryQuery = useQuery({
+    queryKey: ['stats', 'summary', eventId],
+    queryFn: api.getStatsSummary,
+    enabled: isAuthenticated
+  });
+  const salesHalfHourQuery = useQuery({
+    queryKey: ['stats', 'sales-half-hour', eventId],
+    queryFn: api.getStatsSalesHalfHour,
+    enabled: isAuthenticated
+  });
+  const recentOrdersQuery = useQuery({
+    queryKey: ['stats', 'recent-orders', eventId],
+    queryFn: () => api.getStatsRecentOrders(5),
+    enabled: isAuthenticated
+  });
+  const topItemsQuery = useQuery({
+    queryKey: ['stats', 'top-items', eventId],
+    queryFn: () => api.getStatsTopItems(15),
+    enabled: isAuthenticated
+  });
 
-  if (!context) return null;
-  const { orders, tables } = context;
+  const isLoading = summaryQuery.isLoading
+    || salesHalfHourQuery.isLoading
+    || recentOrdersQuery.isLoading
+    || topItemsQuery.isLoading;
+  const isError = summaryQuery.isError
+    || salesHalfHourQuery.isError
+    || recentOrdersQuery.isError
+    || topItemsQuery.isError;
+  const summary = summaryQuery.data;
+  const salesHour = salesHalfHourQuery.data?.data;
+  const recentOrders = recentOrdersQuery.data?.recentOrders ?? [];
+  const topItems = topItemsQuery.data?.items ?? [];
 
-  const totalRevenue = orders.reduce((acc, order) => {
-    const orderitems = order.orderitems || [];
-    const orderTotal = orderitems.reduce((sum, oi) => sum + oi.price * oi.count, 0);
-    return acc + orderTotal;
-  }, 0);
-  const activeTables = tables.filter(t => t.enabled).length; // Simplified logic
-  const data = Array.from({ length: 7 }).map((_, index) => {
-    const day = new Date();
-    day.setDate(day.getDate() - (6 - index));
-    const dayString = day.toLocaleDateString('de-DE', { weekday: 'short' });
-    const sales = orders
-      .filter(order => {
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
+          <p className="text-slate-500">Lade Statistiken…</p>
+        </div>
+      </div>
+    );
+  }
 
-        const orderDate = new Date(order.createdAt);
-        return orderDate.getDate() === day.getDate() &&
-          orderDate.getMonth() === day.getMonth() &&
-          orderDate.getFullYear() === day.getFullYear();
-      })
-      .reduce((sum, order) => {
-        const orderitems = order.orderitems || [];
-        const orderTotal = orderitems.reduce((oiSum, oi) => oiSum + oi.price * oi.count, 0);
-        return sum + orderTotal;
-      }, 0);
+  if (isError || !summary) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
+          <p className="text-rose-600">Statistiken konnten nicht geladen werden.</p>
+        </div>
+      </div>
+    );
+  }
 
-    return { name: dayString, sales };
-  })
+  const salesBuckets = salesHour?.buckets ?? [];
+  const data = salesBuckets.map((bucket) => ({
+    name: new Intl.DateTimeFormat('de-DE', {
+      timeZone: 'UTC',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date(bucket.ts)),
+    total: bucket.total,
+    paid: bucket.paid
+  }));
 
   return (
     <div className="space-y-8">
@@ -85,29 +125,25 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Gesamtumsatz"
-          value={`${totalRevenue.toFixed(2)} €`}
-          subtext="+12.5%"
+          value={`${summary.totalRevenue.toFixed(2)} €`}
           icon={ShoppingBag}
           color="bg-primary-1000"
         />
         <StatCard
           title="Bestellungen"
-          value={orders.length}
-          subtext="+4.3%"
+          value={summary.ordersCount}
           icon={Clock}
           color="bg-orange-500"
         />
         <StatCard
           title="Aktivierte Tische"
-          value={activeTables}
-          subtext="+2"
+          value={summary.activeTables}
           icon={Users}
           color="bg-emerald-500"
         />
         <StatCard
           title="Durchschn. Bestellwert"
-          value={`${(totalRevenue / (orders.length || 1)).toFixed(2)} €`}
-          subtext="+1.2%"
+          value={`${summary.averageOrderValue.toFixed(2)} €`}
           icon={TrendingUp}
           color="bg-purple-500"
         />
@@ -115,7 +151,7 @@ export const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-800 mb-6">Umsatzübersicht</h3>
+          <h3 className="text-lg font-bold text-slate-800 mb-6">Umsatz pro halbe Stunde</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
@@ -127,7 +163,8 @@ export const Dashboard: React.FC = () => {
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   formatter={(value: number) => [`${value.toFixed(2)} €`, 'Umsatz']}
                 />
-                <Bar dataKey="sales" fill="var(--color-primary-500)" radius={[4, 4, 0, 0]} barSize={40} />
+                <Bar dataKey="total" fill="#94a3b8" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="paid" fill="var(--color-primary-500)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -136,23 +173,52 @@ export const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <h3 className="text-lg font-bold text-slate-800 mb-6">Letzte Aktivitäten</h3>
           <div className="space-y-6">
-            {orders.slice(0, 5).map((order) => {
-              const orderitems = order.orderitems || [];
-              const orderTotal = orderitems.reduce((sum, oi) => sum + oi.price * oi.count, 0);
-              return (
-                <div key={order.id} className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary-100 text-primary flex items-center justify-center font-bold text-xs">
-                    ORD
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-slate-800">Neue Bestellung #{order.number}</p>
-                    <p className="text-xs text-slate-500">Tisch {order.table}</p>
-                  </div>
-                  <span className="text-sm font-bold text-slate-700">{orderTotal.toFixed(2)} €</span>
+            {recentOrders.map((order) => (
+              <div key={order.id} className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary-100 text-primary flex items-center justify-center font-bold text-xs">
+                  ORD
                 </div>
-              )
-            })}
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-slate-800">Neue Bestellung #{order.number}</p>
+                  <p className="text-xs text-slate-500">{order.tableName}</p>
+                </div>
+                <span className="text-sm font-bold text-slate-700">{order.total.toFixed(2)} €</span>
+              </div>
+            ))}
           </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-slate-800">Meistverkaufte Artikel</h3>
+          <span className="text-xs text-slate-400">Top 15</span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm text-slate-600">
+            <thead className="text-xs uppercase tracking-wide text-slate-400">
+              <tr>
+                <th className="py-2 text-left font-semibold">Artikel</th>
+                <th className="py-2 text-right font-semibold">Menge</th>
+                <th className="py-2 text-right font-semibold">Umsatz</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topItems.length === 0 ? (
+                <tr>
+                  <td className="py-3 text-slate-400" colSpan={3}>Noch keine Verkäufe</td>
+                </tr>
+              ) : (
+                topItems.map((item) => (
+                  <tr key={item.name} className="border-t border-slate-100">
+                    <td className="py-2 text-slate-700 font-medium">{item.name}</td>
+                    <td className="py-2 text-right">{item.amount}</td>
+                    <td className="py-2 text-right">{item.revenue.toFixed(2)} €</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

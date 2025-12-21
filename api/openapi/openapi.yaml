@@ -79,6 +79,35 @@ paths:
                 properties:
                   status:
                     type: string
+  /api/notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Request recent notifications
+      parameters:
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: Notifications list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/areas:
     get:
       tags:
@@ -1303,6 +1332,121 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/stats/summary:
+    get:
+      tags:
+        - Statistics
+      summary: Dashboard summary stats
+      responses:
+        '200':
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSummary'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stats/sales-by-day:
+    get:
+      tags:
+        - Statistics
+      summary: Sales by day
+      responses:
+        '200':
+          description: Sales by day
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSalesByDayResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stats/sales-by-half-hour:
+    get:
+      tags:
+        - Statistics
+      summary: Sales by half hour
+      parameters:
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: end
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Sales by half hour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSalesByHourResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stats/recent-orders:
+    get:
+      tags:
+        - Statistics
+      summary: Recent orders
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Recent orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardRecentOrdersResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/stats/top-items:
+    get:
+      tags:
+        - Statistics
+      summary: Top selling items
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Top items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardTopItemsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/orders:
     get:
       tags:
@@ -1792,8 +1936,6 @@ components:
         amount:
           type: number
         price:
-          type: number
-        tax:
           type: number
         sort:
           type: number
@@ -2316,11 +2458,168 @@ components:
             - orderId
       required:
         - print
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        eventId:
+          type: string
+        entityType:
+          type: string
+        entityId:
+          type: string
+          nullable: true
+        action:
+          type: string
+        message:
+          type: string
+        meta:
+          type: object
+          nullable: true
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - eventId
+        - entityType
+        - action
+        - message
+        - createdAt
+    NotificationListResponse:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        count:
+          type: integer
+        total:
+          type: integer
+      required:
+        - notifications
+        - count
+        - total
     SalesValue:
       type: object
       properties:
         sales:
           type: number
+    DashboardSummary:
+      type: object
+      properties:
+        totalRevenue:
+          type: number
+        ordersCount:
+          type: integer
+        activeTables:
+          type: integer
+        averageOrderValue:
+          type: number
+      required:
+        - totalRevenue
+        - ordersCount
+        - activeTables
+        - averageOrderValue
+    DashboardSalesByDayResponse:
+      type: object
+      properties:
+        salesByDay:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSalesByDay'
+      required:
+        - salesByDay
+    DashboardSalesByHourResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DashboardSalesHour'
+      required:
+        - data
+    DashboardSalesByDay:
+      type: object
+      properties:
+        date:
+          type: string
+        sales:
+          type: number
+      required:
+        - date
+        - sales
+    DashboardSalesHour:
+      type: object
+      properties:
+        buckets:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSalesBucket'
+      required:
+        - buckets
+    DashboardSalesBucket:
+      type: object
+      properties:
+        ts:
+          type: string
+          format: date-time
+        total:
+          type: number
+        paid:
+          type: number
+      required:
+        - ts
+        - total
+        - paid
+    DashboardRecentOrdersResponse:
+      type: object
+      properties:
+        recentOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardRecentOrder'
+      required:
+        - recentOrders
+    DashboardTopItemsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardTopItem'
+      required:
+        - items
+    DashboardRecentOrder:
+      type: object
+      properties:
+        id:
+          type: string
+        number:
+          type: integer
+        total:
+          type: number
+        tableName:
+          type: string
+      required:
+        - id
+        - number
+        - total
+        - tableName
+    DashboardTopItem:
+      type: object
+      properties:
+        name:
+          type: string
+        amount:
+          type: number
+        revenue:
+          type: number
+      required:
+        - name
+        - amount
+        - revenue
     ChartResponse:
       type: object
       additionalProperties: true

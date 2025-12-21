@@ -47,13 +47,14 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const pino_http_1 = __importDefault(require("pino-http"));
 const js_yaml_1 = __importDefault(require("js-yaml"));
 const OpenApiValidator = __importStar(require("express-openapi-validator"));
-const config_1 = __importDefault(require("./config/config"));
+const umzug_1 = require("umzug");
+const config = require('./config/config');
 const index_1 = __importDefault(require("./models/index"));
-const logger_1 = __importDefault(require("./util/logger"));
-const api_1 = __importDefault(require("./router/api"));
-const authenticate_1 = __importDefault(require("./router/authenticate"));
-const teapot_1 = __importDefault(require("./router/teapot"));
-const error_1 = __importDefault(require("./router/error"));
+const logger = require('./util/logger');
+const api = require('./router/api');
+const authenticate = require('./router/authenticate');
+const teapot = require('./router/teapot');
+const error = require('./router/error');
 const api_auth_1 = __importDefault(require("./middleware/api-auth"));
 // Import Modules
 const app = (0, express_1.default)();
@@ -62,19 +63,62 @@ const io = new socket_io_1.Server(server);
 app.set("io", io);
 app.set("server", server);
 io.use(socketio_jwt_1.default.authorize({
-    secret: config_1.default.secret,
+    secret: config.secret,
     handshake: true
 }));
-index_1.default.sequelize.sync();
-server.listen(process.env.PORT || 8080, function () {
-    const port = process.env.PORT || 8080;
-    logger_1.default.info({ port }, 'server listening');
+const runMigrations = async () => {
+    const umzug = new umzug_1.Umzug({
+        migrations: {
+            glob: path_1.default.join(process.cwd(), 'migrations', '*.js')
+        },
+        context: {
+            queryInterface: index_1.default.sequelize.getQueryInterface(),
+            Sequelize: index_1.default.sequelize.Sequelize
+        },
+        storage: new umzug_1.SequelizeStorage({ sequelize: index_1.default.sequelize }),
+        logger: {
+            info: (message) => logger.info({ message }, 'migration'),
+            warn: (message) => logger.warn({ message }, 'migration'),
+            error: (message) => logger.error({ message }, 'migration'),
+            debug: (message) => logger.debug({ message }, 'migration')
+        }
+    });
+    await umzug.up();
+};
+const startServer = async () => {
+    const shouldMigrate = process.env.GMBH_DB_AUTO_MIGRATE !== 'false';
+    if (shouldMigrate) {
+        await runMigrations();
+    }
+    else {
+        logger.info('db migrations disabled');
+    }
+    server.listen(process.env.PORT || 8080, function () {
+        const port = process.env.PORT || 8080;
+        logger.info({ port }, 'server listening');
+    });
+};
+startServer().catch((err) => {
+    logger.error({ err }, 'failed to start server');
+    process.exit(1);
 });
 // Routing
 app.use(express_1.default.json({ limit: '5mb' }));
 app.use(express_1.default.urlencoded({ limit: '5mb', extended: true }));
 app.use((0, cookie_parser_1.default)());
-app.use((0, pino_http_1.default)({ logger: logger_1.default }));
+const logLevel = (process.env.LOG_LEVEL || '').toLowerCase();
+const enableRequestLogs = logLevel === 'debug';
+app.use((0, pino_http_1.default)({
+    logger,
+    autoLogging: enableRequestLogs,
+    customLogLevel: (req, res, err) => {
+        if (err || res.statusCode >= 500)
+            return 'error';
+        if (res.statusCode >= 400)
+            return 'warn';
+        return 'info';
+    }
+}));
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', process.env.GMBH_FRONTEND || '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -126,13 +170,13 @@ if (fs_1.default.existsSync(openapiSpecPath)) {
     app.use(validator);
 }
 else {
-    logger_1.default.warn({ openapiSpecPath }, 'openapi spec not found; request validation disabled');
+    logger.warn({ openapiSpecPath }, 'openapi spec not found; request validation disabled');
 }
 app.use('/api', api_auth_1.default);
-app.use('/authenticate', authenticate_1.default);
-app.use('/api', api_1.default);
-app.use('/teapot', teapot_1.default);
-app.use('/error', error_1.default);
+app.use('/authenticate', authenticate);
+app.use('/api', api);
+app.use('/teapot', teapot);
+app.use('/error', error);
 /**
  * @api {get} check/ Health Check
  * @apiName HealthCheck
@@ -148,10 +192,10 @@ io.on('connection', function (socket) {
     });
 });
 process.on('unhandledRejection', (reason, p) => {
-    logger_1.default.error({ reason, promise: p }, 'unhandled rejection');
+    logger.error({ reason, promise: p }, 'unhandled rejection');
     // application specific logging, throwing an error, or other logic here
 });
 process.on('uncaughtException', (err) => {
-    logger_1.default.error({ err }, 'uncaught exception');
+    logger.error({ err }, 'uncaught exception');
 });
 module.exports = server;

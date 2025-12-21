@@ -12,6 +12,9 @@ import { OrderItemActions } from "../../ui/order-item-actions";
 import { useConnectionStatus } from "../../hooks/useConnectionStatus";
 import { enqueueOfflineOrder } from "../../lib/offlineOrders";
 import { useAuth } from "../../auth-wrapper";
+import { Notice } from "../../ui/notice";
+import { pendingOrdersMessage, pendingPaymentsMessage } from "../../lib/offlineMessages";
+import { useOfflineOrderQueue } from "../../hooks/useOfflineOrderQueue";
 
 type OrderDetailProps = {
   currentOrder: CurrentOrder;
@@ -52,6 +55,10 @@ export function OrderDetail({
   const connection = useConnectionStatus();
   const canReachServer = connection.canReachServer;
   const auth = useAuth();
+  const { pendingOrders, pendingPayments } = useOfflineOrderQueue();
+  const [notice, setNotice] = useState<{ message: string; variant?: "info" | "warning" | "error" | "success" } | null>(null);
+  const pendingMessage = pendingOrdersMessage(pendingOrders, canReachServer);
+  const paymentMessage = pendingPaymentsMessage(pendingPayments, canReachServer);
 
   async function saveOrder() {
     if (!table) {
@@ -61,6 +68,15 @@ export function OrderDetail({
       const id = typeof crypto !== "undefined" && "randomUUID" in crypto
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      const orderItemsWithIds = currentOrder.orderItems.map((oi) => ({
+        id: typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        itemId: oi.itemId,
+        count: oi.count,
+        extras: oi.extras,
+        price: Number(oi.price),
+      }));
       enqueueOfflineOrder({
         id,
         createdAt: new Date().toISOString(),
@@ -70,20 +86,16 @@ export function OrderDetail({
         order: {
           id,
           tableId: table.id,
-          orderitems: currentOrder.orderItems.map(oi => ({
-            itemId: oi.itemId,
-            count: oi.count,
-            extras: oi.extras,
-            price: Number(oi.price),
-          }))
+          orderitems: orderItemsWithIds
         }
       }, { userId: auth.userId ?? null, eventId: auth.eventId ?? null });
       setCurrentOrder({ orderItems: [], tableId: null, printId: "" });
-      navigate("/order/new");
-      alert("Offline: Bestellung gespeichert und wird automatisch gesendet, sobald die Verbindung wieder da ist.");
+      navigate(`/orders/${id}`);
+      setNotice({ message: "Offline: Bestellung gespeichert und wird automatisch gesendet, sobald die Verbindung wieder da ist.", variant: "warning" });
       return;
     }
     try {
+      setNotice(null);
 
     
     const data = await createOrderMutation.mutateAsync({
@@ -116,7 +128,7 @@ export function OrderDetail({
     setCurrentOrder({ orderItems: [], tableId: null, printId: "" });
     navigate(`/orders/${orderID}`);
     } catch (error) {
-      console.error("Error saving order:", error);
+      setNotice({ message: "Bestellung konnte nicht gesendet werden.", variant: "error" });
     }
   }
 
@@ -133,6 +145,21 @@ export function OrderDetail({
       <div className="mb-2 shrink-0">
         <h2 className="text-xl font-bold text-slate-800">Bestellung</h2>
         <p className="text-xs text-slate-500">Positionen prüfen, Tisch wählen und abschicken.</p>
+        {pendingMessage && (
+          <div className="mt-2">
+            <Notice message={pendingMessage} variant="warning" />
+          </div>
+        )}
+        {paymentMessage && (
+          <div className="mt-2">
+            <Notice message={paymentMessage} variant="warning" />
+          </div>
+        )}
+        {notice && (
+          <div className="mt-2">
+            <Notice message={notice.message} variant={notice.variant} />
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">

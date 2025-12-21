@@ -12,7 +12,7 @@ RUN cd admin && npm ci
 COPY admin ./admin
 RUN cd admin && npm run build
 
-FROM nginx:latest
+FROM nginx:alpine
 WORKDIR /app
 COPY --from=waiter_build /app/waiter/dist/ /app/waiter/
 COPY --from=admin_build /app/admin/dist/ /app/admin/

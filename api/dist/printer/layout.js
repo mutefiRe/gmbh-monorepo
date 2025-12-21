@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const PAPER_FULL_CUT = [0x1d, 0x56, 0x00];
 const PAPER_PART_CUT = [0x1d, 0x56, 0x01];
 const CHAR_CODE = [27, 116, 6]; // West Europe
@@ -11,26 +13,29 @@ class layout {
     deliveryNote(order) {
         const printData = [];
         printData.push(CHAR_CODE);
-        printData.push(util.lpad(`${order.table.name}/${areaName(order.table.area)}`, 48), ENTER);
-        printData.push(TXT_2HEIGHT, t.deliveryNoteTitle, TXT_NORMAL, ENTER);
+        const divider = Array(49).join('-');
+        const headerLine = `T ${order.table?.name || '-'} / ${areaName(order.table?.area)}`;
+        printData.push(util.cpad(headerLine, 48), ENTER);
+        printData.push(TXT_2HEIGHT, util.cpad(t.deliveryNoteTitle, 48), TXT_NORMAL, ENTER);
         printData.push(util.rpad(`${t.nr} ${order.number}`, 24), util.lpad(util.formatDate(order.createdAt), 24), ENTER);
-        printData.push(ENTER);
-        printData.push(util.rpad(t.quantity, 7).concat(' ', util.rpad(t.item, 40), ENTER));
+        printData.push(divider, ENTER);
+        printData.push(util.rpad(t.quantity, 7), ' ', util.rpad(t.item, 40), ENTER);
+        printData.push(divider, ENTER);
         order.orderitems.forEach((orderitem) => {
             let orderItemString = orderitem.item.name;
             if (orderitem.item.category.showAmount) {
                 orderItemString = `${orderItemString} ${showAmount(orderitem.item.amount)}${orderitem.item.unit.name}`;
             }
-            let line = util.rpad(`${orderitem.count} x`, 7) + ' ' + util.rpad(orderItemString) + '\n';
+            let line = util.rpad(`${orderitem.count} x`, 7) + ' ' + util.rpad(orderItemString, 40) + '\n';
             if (orderitem.extras) {
-                const line_count = Math.ceil(orderitem.extras.length / 40);
-                line += Array(8).join(' ') + orderitem.extras.substr(0, 40) + '\n';
-                for (let i = 1; i < line_count; i++) {
-                    line += Array(8).join(' ') + orderitem.extras.substr(i * 40, 40) + '\n';
-                }
+                const extrasLines = wrapText(orderitem.extras, 42);
+                extrasLines.forEach((extraLine) => {
+                    line += `    + ${extraLine}\n`;
+                });
             }
             printData.push(line);
         });
+        printData.push(divider, ENTER);
         printData.push(FEED, PAPER_PART_CUT);
         return printData.reduce((a, b) => a.concat(b));
     }
@@ -108,5 +113,17 @@ function showAmount(data) {
 }
 function areaName(area) {
     return area ? area.name : " - ";
+}
+function wrapText(text, width) {
+    if (!text)
+        return [];
+    const normalized = String(text).trim();
+    if (!normalized)
+        return [];
+    const lines = [];
+    for (let i = 0; i < normalized.length; i += width) {
+        lines.push(normalized.substr(i, width));
+    }
+    return lines;
 }
 module.exports = new layout();

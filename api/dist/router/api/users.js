@@ -1,39 +1,7 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const router = require('express').Router();
 const db = require('../../models');
-/**
- * @apiDefine userAttributes
- * @apiSuccess {Number}  users.id Autoincremented Identifier of the user
- * @apiSuccess {String}  users.username Username
- * @apiSuccess {String}  users.firstname Firstname of the user
- * @apiSuccess {String}  users.lastname Lastname of the user
- * @apiSuccess {String}  users.role waiter or admin
- * @apiSuccess {String}  users.printer Printername on the Server
- * @apiSuccess {Number[]}  users.areas Areas assigned to the user
- */
-/**
- * @apiDefine userParams
- * @apiParam {Number}  users.id
- * @apiParam {String}  users.username
- * @apiParam {String}  users.firstname
- * @apiParam {String}  users.lastname
- * @apiParam {String}  users.role
- * @apiParam {String}  users.printer
- */
-/**
- * @api {get} api/users/:id Request User
- * @apiGroup User
- * @apiName GetUser
- * @apiParam {number} string Users unique ID.
-
-  *@apiUse token
-
- * @apiSuccess {Object} users User
- * @apiUse userAttributes
-
- * @apiPermission waiter
- * @apiPermission admin
- */
 router.get('/:id', function (req, res) {
     db.User.findOne({ where: { id: req.params.id }, include: [{ model: db.Area }] }).then(user => {
         if (user)
@@ -53,22 +21,8 @@ router.get('/:id', function (req, res) {
         });
     });
 });
-/**
- * @api {get} api/users Request all users
- * @apiGroup User
- * @apiName GetUsers
-
- * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
- * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
-
- * @apiSuccess {Object[]} users User
- * @apiUse userAttributes
-
- * @apiPermission waiter
- * @apiPermission admin
- */
 router.get('/', function (req, res) {
-    db.User.findAll({ attributes: ['id', 'username', 'firstname', 'lastname', 'role', 'printerId'], include: [{ model: db.Area }] }).then(users => {
+    db.User.findAll({ attributes: ['id', 'username', 'firstname', 'lastname', 'role'], include: [{ model: db.Area }] }).then(users => {
         res.send({ users });
     }).catch(error => {
         res.status(400).send({
@@ -78,17 +32,6 @@ router.get('/', function (req, res) {
         });
     });
 });
-/**
- * @api {post} api/users/ Create one user
- * @apiGroup User
- * @apiName PostUser
- * @apiUse token
- * @apiParam {Object} users
- * @apiUse userParams
- * @apiParam {String} users.password
- *
- * @apiPermission admin
- */
 router.post('/', function (req, res) {
     const io = req.app.get('io');
     db.User.create(req.body.user).then(user => {
@@ -102,20 +45,6 @@ router.post('/', function (req, res) {
         });
     });
 });
-/**
- * @api {put} api/users/:id Update one user
- * @apiGroup User
- * @apiName UpdateUser
- * @apiUse token
- * @apiParam {Object} users
- * @apiSuccess {Object} users
- * @apiUse userParams
- * @apiUse userAttributes
- * @apiParam {String} users.password
- * @apiParam {number} string
- *
- * @apiPermission admin
- */
 router.put('/:id', function (req, res) {
     const io = req.app.get('io');
     db.User.findOne({ where: { id: req.params.id } }).then(user => {
@@ -137,30 +66,24 @@ router.put('/:id', function (req, res) {
         });
     });
 });
-/**
- * @api {delete} api/users/:id Delete one user
- * @apiGroup User
- * @apiName DeleteUser
- * @apiParam {number} string Id
- *
- * @apiPermission admin
- * @apiSuccess {object} object empty Object {}
- */
-router.delete('/:id', function (req, res) {
+router.delete('/:id', async function (req, res) {
     const io = req.app.get('io');
-    db.User.findOne({ where: { id: req.params.id } }).then(user => {
-        if (user === null)
+    try {
+        const user = await db.User.findOne({ where: { id: req.params.id } });
+        if (user === null) {
             throw new Error('user not found');
-        return user.destroy();
-    }).then(() => {
+        }
+        const userId = user.id;
+        await user.destroy();
         res.send({});
-        io.sockets.emit("delete", { 'type': 'user', 'id': user.id });
-    }).catch(error => {
+        io.sockets.emit("delete", { type: 'user', id: userId });
+    }
+    catch (error) {
         res.status(400).send({
             'errors': {
                 'msg': error && error.errors && error.errors[0].message || error.message
             }
         });
-    });
+    }
 });
 module.exports = router;

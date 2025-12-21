@@ -1,20 +1,22 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const layout = require('./layout');
 const printerApi = require('./printer_api');
 const logger = require('../util/logger');
 class Print {
-    deliveryNote(order) {
+    deliveryNote(order, fallbackPrinter) {
         const printers = new Map();
         order.orderitems.forEach((orderitem) => {
             const printer = (orderitem.item.category.printer || {}).systemName;
-            if (!printer)
+            const printerName = printer || fallbackPrinter;
+            if (!printerName)
                 return;
             console.log(`printer: ${JSON.stringify(orderitem.item.category)}`);
-            if (printers.has(printer.systemName)) {
-                printers.get(printer.systemName).push(orderitem);
+            if (printers.has(printerName)) {
+                printers.get(printerName).push(orderitem);
             }
             else {
-                printers.set(printer.systemName, [orderitem]);
+                printers.set(printerName, [orderitem]);
             }
         });
         const jobs = [];

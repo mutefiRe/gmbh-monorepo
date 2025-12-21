@@ -121,4 +121,4 @@ router.get("/logout", function (req: Request, res: Response) {
     `);
 });
 
-export default router;
+module.exports = router;

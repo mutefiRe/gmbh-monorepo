@@ -1,14 +1,19 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require('chai');
 const app = require('../server');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
-const { clean } = require('./helper');
+const { clean, getEventId, withAuth } = require('./helper');
 const expect = chai.expect;
 chai.use(chaiHttp);
 describe('/api route -> check restriction access', () => {
-    before(clean);
+    let eventId;
+    before(async () => {
+        await clean();
+        eventId = getEventId();
+    });
     const token = jwt.sign({
         username: "test",
         firstname: "test",
@@ -16,19 +21,22 @@ describe('/api route -> check restriction access', () => {
         role: "admin"
     }, config.secret, { expiresIn: '24h' });
     it('should response status 200 to api call, when send with token', () => {
-        return chai.request(app)
-            .get('/api/orders')
-            .send({ token })
+        return withAuth(chai.request(app).get('/api/orders'), token, eventId)
             .then(res => {
             expect(res.status).to.equal(200);
         });
     });
+    it('should respond to healthz', () => {
+        return withAuth(chai.request(app).get('/api/healthz'), token)
+            .then(res => {
+            expect(res.status).to.equal(200);
+            expect(res.body.status).to.equal('ok');
+        });
+    });
     it('should response status 400 to api call, when send with wrong token', () => {
-        return chai.request(app)
-            .get('/api/orders')
-            .send({ token: token + 1 })
+        return withAuth(chai.request(app).get('/api/orders'), token + 1, eventId)
             .catch(res => {
-            expect(res.status).equal(400);
+            expect(res.status).equal(401);
             expect(res.response).to.be.json;
             expect(res.response.status).to.equal(401);
             expect(res.response.text).to.contain("auth.tokenError");
@@ -37,9 +45,8 @@ describe('/api route -> check restriction access', () => {
     it('should response status 400 to api call, when send without token', () => {
         return chai.request(app)
             .get('/api/orders')
-            .send({})
             .catch(res => {
-            expect(res.status).to.equal(400);
+            expect(res.status).to.equal(401);
             expect(res.response).to.be.json;
             expect(res.response.status).to.equal(401);
             expect(res.response.text).to.contain('auth.tokenError');
@@ -52,11 +59,9 @@ describe('/api route -> check restriction access', () => {
             lastname: "test",
             role: "admin"
         }, config.secret, { expiresIn: '0' });
-        return chai.request(app)
-            .get('/api/orders')
-            .send({ token: expiredToken })
+        return withAuth(chai.request(app).get('/api/orders'), expiredToken, eventId)
             .catch(res => {
-            expect(res.status).to.equal(400);
+            expect(res.status).to.equal(401);
             expect(res.response).to.be.json;
             expect(res.response.status).to.equal(401);
             expect(res.response.text).to.contain("auth.tokenError");
@@ -70,17 +75,13 @@ describe('/api route -> check restriction access', () => {
             role: "waiter"
         }, config.secret, { expiresIn: '24h' });
         it('should response with 403 for DELETE method (waiter: /orders/:id)', () => {
-            return chai.request(app)
-                .delete('/api/orders/1')
-                .send({ token: tokenWaiter })
+            return withAuth(chai.request(app).delete('/api/orders/1'), tokenWaiter, eventId)
                 .catch(res => {
                 expect(res.status).to.equal(403);
             });
         });
         it('should be able to access PUT method (waiter: /orders/:id)', () => {
-            return chai.request(app)
-                .put('/api/orders/1')
-                .send({ token: tokenWaiter })
+            return withAuth(chai.request(app).put('/api/orders/1'), tokenWaiter, eventId)
                 .then(res => {
                 expect(res.status).to.equal(200);
             })
@@ -89,9 +90,7 @@ describe('/api route -> check restriction access', () => {
             });
         });
         it('should be able to access GET method (waiter: /orders/:id)', () => {
-            return chai.request(app)
-                .get('/api/orders/1')
-                .send({ token: tokenWaiter })
+            return withAuth(chai.request(app).get('/api/orders/1'), tokenWaiter, eventId)
                 .then(res => {
                 expect(res.status).to.equal(200);
             });

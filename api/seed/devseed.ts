@@ -145,7 +145,6 @@ module.exports = async function () {
         faker.Helpers.randomize(beilagen),
       amount: 1,
       price: faker.Helpers.randomNumber(20) + 1,
-      tax: 0.1,
       unitId: unit.id,
       categoryId: cat.id,
       eventId
@@ -192,27 +191,12 @@ module.exports = async function () {
     defaults: { name: "l", eventId }
   });
   await db.Item.bulkCreate([
-    { name: "Bier", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Bier", amount: 0.33, price: 2.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Radler", amount: 0.5, price: 2.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Radler", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Grüner Veltliner", amount: 0.125, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Grüner Veltliner", amount: 0.25, price: 5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Spätburgunder", amount: 0.125, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Spätburgunder", amount: 0.25, price: 5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Weißer Spritzer", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Roter Spritzer", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit.id, categoryId: alcCat.id, eventId }
   ]);
   let [clUnit] = await db.Unit.findOrCreate({
     where: { name: "cl", eventId },
     defaults: { name: "cl", eventId }
   });
   await db.Item.bulkCreate([
-    { name: "Klopfer", amount: 2, price: 2.5, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Jägermeister", amount: 2, price: 2.5, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Obstler", amount: 4, price: 2, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Williams-Schnaps", amount: 4, price: 2, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id, eventId },
-    { name: "Nuss-Schnaps", amount: 4, price: 2, tax: 0.2, unitId: clUnit.id, categoryId: alcCat.id, eventId }
   ]);
 
   /* NONALCOHOLICS */
@@ -236,7 +220,6 @@ module.exports = async function () {
       name: x,
       amount: 1,
       price: Number((Math.round(Math.random() * 20 * 10) / 10).toFixed(2)),
-      tax: 0.2,
       unitId: stkUnit.id,
       categoryId: coffeeCat.id,
       eventId
@@ -262,7 +245,6 @@ module.exports = async function () {
       name: x,
       amount: 1,
       price: Number((Math.round(Math.random() * 20 * 10) / 10).toFixed(2)),
-      tax: 0.2,
       unitId: stkUnit2.id,
       categoryId: dessertCat.id,
       eventId
@@ -285,14 +267,6 @@ module.exports = async function () {
     defaults: { name: "l", eventId }
   });
   await db.Item.bulkCreate([
-    { name: "Coca Cola", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId },
-    { name: "Coca Cola", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId },
-    { name: "Fanta", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId },
-    { name: "Fanta", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId },
-    { name: "Sprite", amount: 0.3, price: 2.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId },
-    { name: "Sprite", amount: 0.5, price: 3.5, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId },
-    { name: "Mineral", amount: 0.3, price: 2, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId },
-    { name: "Mineral", amount: 0.5, price: 3, tax: 0.2, unitId: lUnit2.id, categoryId: nonAlcCat.id, eventId }
   ]);
 
   let [terrace] = await db.Area.findOrCreate({

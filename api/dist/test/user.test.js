@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require('chai');
 const expect = chai.expect;
 const app = require('../server');
@@ -6,7 +7,7 @@ const db = require('../models/index');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
-const { clean, removeTimestamps } = require('./helper');
+const { clean, removeTimestamps, withAuth } = require('./helper');
 chai.use(chaiHttp);
 const token = jwt.sign({
     id: 1,
@@ -18,20 +19,11 @@ const token = jwt.sign({
 describe('/user route', () => {
     before(clean);
     describe('users exists', () => {
-        const printer1 = "277056cb-b639-4365-9532-563ca57d714d";
-        const printer2 = "a0470f0b-6e43-4773-895d-72bc08c19439";
         before(() => {
-            return db.Printer.bulkCreate([{
-                    id: printer1,
-                    systemName: "test"
-                }, {
-                    id: printer2,
-                    systemName: "test2"
-                }])
-                .then(db.User.bulkCreate([
-                { id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", role: "admin", printerId: printer1 },
+            return db.User.bulkCreate([
+                { id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", role: "admin" },
                 { id: 2, username: "test2", firstname: "test2", lastname: "test2", password: "test2", role: "waiter" }
-            ]));
+            ]);
         });
         describe('GET users', () => {
             const expectedResponse = {
@@ -41,7 +33,6 @@ describe('/user route', () => {
                         "firstname": "test1",
                         "lastname": "test1",
                         "role": "admin",
-                        "printerId": printer1,
                         "areas": []
                     }, {
                         "id": "2",
@@ -49,23 +40,18 @@ describe('/user route', () => {
                         "firstname": "test2",
                         "lastname": "test2",
                         "role": "waiter",
-                        "printerId": null,
                         "areas": []
                     }]
             };
             it('should get one user', () => {
-                return chai.request(app)
-                    .get('/api/users/1')
-                    .send({ token })
+                return withAuth(chai.request(app).get('/api/users/1'), token)
                     .then(res => {
                     expect(res.status).to.equal(200);
                     expect(res.body.user.username).to.equal("test1");
                 });
             });
             it('should get all users', () => {
-                return chai.request(app)
-                    .get('/api/users/')
-                    .send({ token })
+                return withAuth(chai.request(app).get('/api/users/'), token)
                     .then(res => {
                     expect(res.status).to.equal(200);
                     expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
@@ -79,14 +65,11 @@ describe('/user route', () => {
                     firstname: "firstname",
                     lastname: "lastname",
                     password: "password",
-                    role: "admin",
-                    printerId: null
+                    role: "admin"
                 }
             };
             it('user should exist', () => {
-                return chai.request(app)
-                    .post('/api/users')
-                    .set("x-access-token", token)
+                return withAuth(chai.request(app).post('/api/users'), token)
                     .send(requestBody)
                     .then(res => {
                     expect(res.status).to.equal(200);
@@ -98,7 +81,6 @@ describe('/user route', () => {
                     expect(user.firstname).to.eq("firstname");
                     expect(user.lastname).to.eq("lastname");
                     expect(user.role).to.eq("admin");
-                    expect(user.printerId).to.eq(null);
                 });
             });
         });
@@ -109,14 +91,11 @@ describe('/user route', () => {
                     firstname: "firstname",
                     lastname: "lastname",
                     password: "password",
-                    role: "admin",
-                    printerId: printer2
+                    role: "admin"
                 }
             };
             it('user should have changed', () => {
-                return chai.request(app)
-                    .put('/api/users/1')
-                    .set("x-access-token", token)
+                return withAuth(chai.request(app).put('/api/users/1'), token)
                     .send(requestBody)
                     .then(res => {
                     expect(res.status).to.equal(200);
@@ -128,7 +107,6 @@ describe('/user route', () => {
                     expect(user.firstname).to.eq("firstname");
                     expect(user.lastname).to.eq("lastname");
                     expect(user.role).to.eq("admin");
-                    expect(user.printerId).to.eq(printer2);
                 });
             });
         });

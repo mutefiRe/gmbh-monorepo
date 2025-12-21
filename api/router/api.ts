@@ -1,28 +1,29 @@
 import { Router, type Request, type Response } from 'express';
-const resolveDefault = (mod: any) => mod?.default || mod;
-const areas = resolveDefault(require('./api/areas'));
-const users = resolveDefault(require('./api/users'));
-const organizations = resolveDefault(require('./api/organizations'));
-const items = resolveDefault(require('./api/items'));
-const categories = resolveDefault(require('./api/categories'));
-const units = resolveDefault(require('./api/units'));
-const tables = resolveDefault(require('./api/tables'));
-const orders = resolveDefault(require('./api/orders'));
-const orderitems = resolveDefault(require('./api/orderitems'));
-const settings = resolveDefault(require('./api/settings'));
-const printers = resolveDefault(require('./api/printers'));
-const prints = resolveDefault(require('./api/prints'));
-const statistics = resolveDefault(require('./api/statistics'));
-const stats = resolveDefault(require('./api/stats'));
-const events = resolveDefault(require('./api/events'));
-const eventScope = resolveDefault(require('../middleware/event-scope'));
-const eventReadOnly = resolveDefault(require('../middleware/event-readonly'));
+const areas = require('./api/areas');
+const users = require('./api/users');
+const organizations = require('./api/organizations');
+const items = require('./api/items');
+const categories = require('./api/categories');
+const units = require('./api/units');
+const tables = require('./api/tables');
+const orders = require('./api/orders');
+const orderitems = require('./api/orderitems');
+const settings = require('./api/settings');
+const printers = require('./api/printers');
+const prints = require('./api/prints');
+const statistics = require('./api/statistics');
+const stats = require('./api/stats');
+const events = require('./api/events');
+const notifications = require('./api/notifications');
+const eventScope = require('../middleware/event-scope');
+const eventReadOnly = require('../middleware/event-readonly');
 
 const router = Router();
 
 router.use("/users", users);
 router.use("/printers", printers);
 router.use("/events", events);
+router.use("/notifications", eventScope, notifications);
 router.use("/areas", eventScope, eventReadOnly, areas);
 router.use("/organizations", eventScope, eventReadOnly, organizations);
 router.use("/items", eventScope, eventReadOnly, items);
@@ -44,4 +45,4 @@ router.get('/healthz', function (req: Request, res: Response) {
   res.status(200).send({ status: 'ok' });
 });
 
-export default router;
+module.exports = router;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Printer } from "lucide-react";
 import { useOrder, usePrintOrder, useUpdateOrder } from "../../types/queries";
 import type { Area, Category, Item, OrderItem, Table, Unit } from "../../types/models";
@@ -7,6 +7,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useConnectionStatus } from "../../hooks/useConnectionStatus";
 import { enqueueOfflinePayment, hasPendingPayment } from "../../lib/offlinePayments";
 import { useAuth } from "../../auth-wrapper";
+import { Notice } from "../../ui/notice";
+import { getOfflineOrderById, subscribeOfflineOrders, updateOfflineOrderCounts } from "../../lib/offlineOrders";
+import { offlineOrderPaymentMessage, pendingPaymentsMessage } from "../../lib/offlineMessages";
 
 type PayDetailProps = {
   orderId: string;
@@ -33,15 +36,60 @@ export function PayDetail({
   const connection = useConnectionStatus();
   const canReachServer = connection.canReachServer;
   const auth = useAuth();
-  const order = orderQuery.data?.order;
+  const [offlineOrder, setOfflineOrder] = useState(() =>
+    getOfflineOrderById(orderId, { userId: auth.userId ?? null, eventId: auth.eventId ?? null })
+  );
+
+  useEffect(() => {
+    const scope = { userId: auth.userId ?? null, eventId: auth.eventId ?? null };
+    const update = () => setOfflineOrder(getOfflineOrderById(orderId, scope));
+    const unsubscribe = subscribeOfflineOrders(update);
+    update();
+    return () => unsubscribe();
+  }, [auth.eventId, auth.userId, orderId]);
+
+  const offlineFallback = useMemo(() => {
+    if (!offlineOrder) return null;
+    const orderitems = offlineOrder.order.orderitems.map((item, index) => ({
+      id: item.id || `${offlineOrder.id}-${index}`,
+      extras: item.extras ?? "",
+      count: item.count,
+      countPaid: item.countPaid ?? 0,
+      countFree: item.countFree ?? 0,
+      price: item.price,
+      itemId: item.itemId,
+      orderId: offlineOrder.id
+    }));
+    const totalAmount = orderitems.reduce((sum, item) => sum + item.count * item.price, 0);
+    return {
+      id: offlineOrder.id,
+      number: undefined,
+      createdAt: offlineOrder.createdAt,
+      totalAmount,
+      userId: offlineOrder.userId || "",
+      tableId: offlineOrder.order.tableId,
+      printCount: 0,
+      orderitems
+    };
+  }, [offlineOrder]);
+
+  const order = orderQuery.data?.order ?? offlineFallback ?? undefined;
+  const isOfflineOrder = Boolean(offlineOrder);
   const orderitems = order?.orderitems || [];
   const [itemMarks, setItemMarks] = useState<Record<string, number>>(() => {
     const entries = (order?.orderitems || [])
       .flatMap(item => (item.id ? [[item.id, 0]] : []));
     return Object.fromEntries(entries);
   });
+  useEffect(() => {
+    if (!order?.orderitems) return;
+    const entries = order.orderitems.flatMap((item) => (item.id ? [[item.id, 0]] : []));
+    setItemMarks(Object.fromEntries(entries));
+  }, [order?.id]);
+  const [notice, setNotice] = useState<{ message: string; variant?: "info" | "warning" | "error" | "success" } | null>(null);
   const isPaying = updateOrderMutation.isPending;
   const isPrinting = printMutation.isPending;
+  const shouldQueuePayment = isOfflineOrder || !canReachServer;
   const pendingPayment = order?.id
     ? hasPendingPayment(order.id, { userId: auth.userId ?? null, eventId: auth.eventId ?? null })
     : false;
@@ -50,6 +98,22 @@ export function PayDetail({
     const id = oi.id ?? "";
     return sum + ((itemMarks[id] || 0) * oi.price);
   }, 0);
+  const statusNotice = isOfflineOrder
+    ? {
+        variant: "warning" as const,
+        message: offlineOrderPaymentMessage()
+      }
+    : !canReachServer
+      ? {
+          variant: "warning" as const,
+          message: "Offline: Zahlung wird gespeichert. Drucken ist erst nach der Verbindung möglich."
+        }
+      : pendingPayment
+        ? {
+            variant: "warning" as const,
+            message: pendingPaymentsMessage(1, canReachServer) || "Ausstehende Zahlung wird gesendet."
+          }
+        : null;
   const table = tables.find(t => t.id === order?.tableId);
   const area = table ? areas.find(a => a.id === table.areaId) : undefined;
   function incrementMarked(id: string, max: number) {
@@ -60,11 +124,15 @@ export function PayDetail({
   }
   async function onReprint() {
     if (!order?.id) {
-      alert("Bestellung nicht verfügbar.");
+      setNotice({ message: "Bestellung nicht verfügbar.", variant: "error" });
+      return;
+    }
+    if (isOfflineOrder) {
+      setNotice({ message: "Bestellung ist noch nicht gesendet. Drucken ist erst nach dem Sync möglich.", variant: "warning" });
       return;
     }
     if (!canReachServer) {
-      alert("Offline: Drucken ist deaktiviert.");
+      setNotice({ message: "Offline: Drucken ist deaktiviert.", variant: "warning" });
       return;
     }
     const printedCount = order.printCount ?? 0;
@@ -73,6 +141,7 @@ export function PayDetail({
       : "Bitte nur drucken, wenn der Druck wirklich verloren gegangen ist.";
     const confirmed = window.confirm(`Bestellungsbon nochmal drucken?\n\n${warning}`);
     if (!confirmed) return;
+    setNotice(null);
     await printMutation.mutateAsync({
       print: {
         orderId: order.id,
@@ -83,7 +152,7 @@ export function PayDetail({
   }
   async function onPaySelected() {
     if (!order?.id) {
-      alert("Bestellung nicht verfügbar.");
+      setNotice({ message: "Bestellung nicht verfügbar.", variant: "error" });
       return;
     }
     const orderPayment: { id: string; orderitems: Array<Pick<OrderItem, 'id' | 'price' | 'countPaid' | 'countFree' | 'count'>> } = {
@@ -99,7 +168,7 @@ export function PayDetail({
         };
       }),
     };
-    if (!canReachServer) {
+    if (shouldQueuePayment) {
       const queueId = typeof crypto !== "undefined" && "randomUUID" in crypto
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -111,15 +180,31 @@ export function PayDetail({
         orderId: order.id,
         order: orderPayment as any
       }, { userId: auth.userId ?? null, eventId: auth.eventId ?? null });
+      if (isOfflineOrder) {
+        const updates = Object.entries(itemMarks)
+          .filter(([, count]) => count > 0)
+          .map(([id, count]) => ({
+            id,
+            countPaidDelta: count,
+            countFreeDelta: forFree ? count : 0
+          }));
+        updateOfflineOrderCounts(order.id, updates, { userId: auth.userId ?? null, eventId: auth.eventId ?? null });
+      }
       setItemMarks({});
-      alert("Offline: Zahlung gespeichert und wird automatisch übertragen, sobald die Verbindung wieder da ist.");
+      setNotice({
+        message: isOfflineOrder
+          ? "Ausstehend: Zahlung gespeichert und wird automatisch übertragen, sobald die Bestellung gesendet wurde."
+          : "Offline: Zahlung gespeichert und wird automatisch übertragen, sobald die Verbindung wieder da ist.",
+        variant: "warning"
+      });
       return;
     }
+    setNotice(null);
     await updateOrderMutation.mutateAsync({ order: orderPayment });
     await client.invalidateQueries({ queryKey: ['order', orderId] });
     setItemMarks({});
   }
-  if (orderQuery.isError) return <div>Fehler beim Laden der Bestellung.</div>;
+  if (orderQuery.isError && !offlineFallback) return <div>Fehler beim Laden der Bestellung.</div>;
   if (!order) return <div>Bestellung nicht gefunden.</div>;
 
   return (
@@ -127,6 +212,16 @@ export function PayDetail({
       <div className="mb-2 shrink-0">
         <h2 className="text-xl font-bold text-slate-800">Zahlung</h2>
         <p className="text-xs text-slate-500">Bestellung prüfen und bezahlte Positionen markieren.</p>
+        {statusNotice && (
+          <div className="mt-2">
+            <Notice message={statusNotice.message} variant={statusNotice.variant} />
+          </div>
+        )}
+        {notice && (
+          <div className="mt-2">
+            <Notice message={notice.message} variant={notice.variant} />
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
@@ -135,9 +230,6 @@ export function PayDetail({
             <p className="text-sm font-semibold text-slate-800">Bestellung Nr. {order?.number || order?.id}</p>
             {order.tableId && (
               <p className="text-xs text-slate-500">Tisch: {area?.short}{table?.name}</p>
-            )}
-            {pendingPayment && (
-              <p className="text-[0.7rem] text-amber-700 font-semibold">Zahlung wartet auf Sync</p>
             )}
           </div>
           <div className="text-right">
@@ -152,7 +244,7 @@ export function PayDetail({
           <button
             className="inline-flex items-center gap-2 rounded-md border border-primary-500 bg-white px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary-50 disabled:opacity-50 disabled:border-slate-200 disabled:text-slate-400"
             onClick={onReprint}
-            disabled={!canReachServer || isPrinting}
+            disabled={!canReachServer || isPrinting || isOfflineOrder}
           >
             <Printer size={14} />
             Bon nochmal drucken
@@ -163,11 +255,6 @@ export function PayDetail({
           <div className="flex items-center justify-center h-full text-lg font-semibold text-slate-400">Keine Artikel vorhanden.</div>
         ) : (
           <>
-            {!canReachServer && (
-              <div className="px-4 py-2 text-xs font-semibold text-amber-700 bg-amber-50 border-b border-amber-100">
-                Offline: Zahlung wird gespeichert, Drucken ist deaktiviert.
-              </div>
-            )}
             {orderitems.every(oi => oi.countPaid && oi.countPaid >= oi.count) && (
               <div className="px-4 py-3 text-center text-sm font-semibold text-emerald-700 bg-emerald-50 border-b border-emerald-100">
                 Alles bezahlt

@@ -383,7 +383,8 @@ module.exports = {
       },
       tax: {
         type: Sequelize.DECIMAL(10, 2),
-        allowNull: false
+        allowNull: true,
+        defaultValue: 0
       },
       group: {
         type: Sequelize.INTEGER,

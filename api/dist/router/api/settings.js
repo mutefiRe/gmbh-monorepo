@@ -1,11 +1,11 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const router = require('express').Router();
 const db = require('../../models');
 const requireRole = require('../permissions');
 async function loadSetting() {
     return db.Setting.findOne({
         include: [
-            { model: db.Printer, as: 'receiptPrinter' },
             { model: db.Event, as: 'activeEvent' }
         ]
     });

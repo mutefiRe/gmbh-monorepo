@@ -1,9 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const db = require('../models');
 async function eventScope(req, res, next) {
     try {
         const headerEventId = req.header('x-event-id');
         const setting = await db.Setting.findOne();
         if (headerEventId) {
+            // Allow explicit event selection via header, even if it's inactive.
             const event = await db.Event.findOne({ where: { id: headerEventId } });
             if (!event) {
                 res.status(404).send({ errors: { msg: 'event not found' } });
@@ -15,6 +18,7 @@ async function eventScope(req, res, next) {
             next();
             return;
         }
+        // Fall back to the single active event when no header is provided.
         if (!setting || !setting.activeEventId) {
             res.status(400).send({ errors: { msg: 'no active event configured' } });
             return;

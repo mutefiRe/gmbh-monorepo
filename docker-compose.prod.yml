@@ -10,7 +10,6 @@ services:
       GMBH_DB_PORT: "3306"
       GMBH_DB_DIALECT: mysql
       PORT: "8080"
-      CUPS_SERVER: "${CUPS_SERVER}"
       PRINTER_API_URL: "${PRINTER_API_URL:-http://printer-api:8761}"
     depends_on:
       mysql:
@@ -47,10 +46,11 @@ services:
       - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
       - ./nginx/certs/server:/etc/nginx/certs/server:ro
       - ./nginx/certs/ca:/etc/nginx/certs/ca:ro
-      - ./nginx/cert-install:/app/cert-install:ro
       # assets are baked into the image
     depends_on:
       - api
+      - fake-printer
+      - dozzle
     restart: unless-stopped
 
   printer-api:
@@ -59,6 +59,13 @@ services:
       - printer-api/.env
     environment:
       EXTRA_PRINTER_HOSTS: "${EXTRA_PRINTER_HOSTS:-localhost,host.docker.internal}"
+    restart: unless-stopped
+  fake-printer:
+    build: fake-printer/
+    environment:
+      PRINT_PORT: "9100"
+      UI_PORT: "9101"
+      HOST: "0.0.0.0"
     restart: unless-stopped
   dozzle:
     image: amir20/dozzle:latest

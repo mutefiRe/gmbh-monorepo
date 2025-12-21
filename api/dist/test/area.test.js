@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require('chai');
 const expect = chai.expect;
 const app = require('../server');
@@ -6,7 +7,7 @@ const db = require('../models/index');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
-const { clean, removeTimestamps } = require('./helper');
+const { clean, removeTimestamps, getEventId, withAuth } = require('./helper');
 chai.use(chaiHttp);
 const token = jwt.sign({
     id: 1,
@@ -16,12 +17,16 @@ const token = jwt.sign({
     role: "admin"
 }, config.secret, { expiresIn: '24h' });
 describe('/area route', () => {
-    before(clean);
+    let eventId;
+    before(async () => {
+        await clean();
+        eventId = getEventId();
+    });
     describe('areas exists', () => {
         before(() => {
             return db.Area.bulkCreate([
-                { id: 1, name: "area1", enabled: false, short: "A" },
-                { id: 2, name: "area2", color: "blue", short: "B" }
+                { id: 1, name: "area1", enabled: false, short: "A", eventId },
+                { id: 2, name: "area2", color: "blue", short: "B", eventId }
             ]);
         });
         describe('GET areas', () => {
@@ -33,7 +38,8 @@ describe('/area route', () => {
                         tables: [],
                         users: [],
                         color: null,
-                        enabled: false
+                        enabled: false,
+                        eventId
                     }, {
                         id: "2",
                         name: "area2",
@@ -41,22 +47,19 @@ describe('/area route', () => {
                         tables: [],
                         users: [],
                         color: "blue",
-                        enabled: true
+                        enabled: true,
+                        eventId
                     }]
             };
             it('should get one area', () => {
-                return chai.request(app)
-                    .get('/api/areas/1')
-                    .send({ token })
+                return withAuth(chai.request(app).get('/api/areas/1'), token, eventId)
                     .then(res => {
                     expect(res.status).to.equal(200);
                     expect(res.body.area.name).to.equal("area1");
                 });
             });
             it('should get all areas', () => {
-                return chai.request(app)
-                    .get('/api/areas/')
-                    .send({ token })
+                return withAuth(chai.request(app).get('/api/areas/'), token, eventId)
                     .then(res => {
                     expect(res.status).to.equal(200);
                     expect(res.body.areas.length).to.equal(2);
@@ -72,9 +75,7 @@ describe('/area route', () => {
                 }
             };
             it('area should exist', () => {
-                return chai.request(app)
-                    .post('/api/areas')
-                    .set("x-access-token", token)
+                return withAuth(chai.request(app).post('/api/areas'), token, eventId)
                     .send(requestBody)
                     .then(res => {
                     expect(res.status).to.equal(200);
@@ -94,9 +95,7 @@ describe('/area route', () => {
                 }
             };
             it('area should have changed', () => {
-                return chai.request(app)
-                    .put('/api/areas/1')
-                    .set("x-access-token", token)
+                return withAuth(chai.request(app).put('/api/areas/1'), token, eventId)
                     .send(requestBody)
                     .then(res => {
                     expect(res.status).to.equal(200);

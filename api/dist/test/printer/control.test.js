@@ -1,8 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const proxyquire = require('proxyquire');
 const chai = require('chai');
 const expect = chai.expect;
 const db = require('../../models');
-const { clean } = require('./helper');
+const { clean } = require('../helper');
 const control = proxyquire('../../printer/control', {
     './network': {
         getPrinterIps() {

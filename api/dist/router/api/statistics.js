@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const router = require('express').Router();
 const db = require('../../models');
 const colors = ['#009493', '#da3f71', '#b1723b', '#8dc63f', '#3977b8', '#40b391', '#b74775', '#365b94', '#00787c', '#fbae4e', '#d6954e', '#b1723b', '#c9313a', '#a7292e', '#8e251b', '#da3f71', '#b74775', '#79426'];

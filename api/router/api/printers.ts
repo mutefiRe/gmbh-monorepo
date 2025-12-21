@@ -153,4 +153,4 @@ router.delete('/:id', async function (req: Request, res: Response) {
   }
 });
 
-export default router;
+module.exports = router;

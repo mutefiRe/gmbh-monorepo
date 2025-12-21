@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const logger = require('../util/logger');
 function baseUrl() {
     const raw = process.env.PRINTER_API_URL || 'http://localhost:8761';
@@ -9,7 +10,7 @@ async function discover(params = {}) {
     Object.entries(params).forEach(([key, value]) => {
         if (value === undefined || value === null || value === '')
             return;
-        url.searchParams.set(key, value);
+        url.searchParams.set(key, String(value));
     });
     const res = await fetch(url.toString());
     if (!res.ok) {

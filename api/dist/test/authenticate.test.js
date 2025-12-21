@@ -1,30 +1,22 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const app = require('../server');
 const db = require('../models/index');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
+const { clean } = require('./helper');
 chai.use(chaiHttp);
 describe('/authenticate route', () => {
-    before(() => {
-        return Promise.all([
-            db.User.create({
-                username: "test",
-                firstname: "max",
-                lastname: "mustermann",
-                password: "test",
-                role: "admin"
-            }),
-            db.Setting.create({
-                name: "Testsetting",
-                begin_date: "nodate",
-                end_date: "nodate",
-                instantPay: true,
-                customTables: false,
-                receiptPrinter: "GMBH-WLAN",
-                expiresTime: "72h"
-            })
-        ]);
+    before(async () => {
+        await clean();
+        await db.User.create({
+            username: "test",
+            firstname: "max",
+            lastname: "mustermann",
+            password: "test",
+            role: "admin"
+        });
     });
     describe('with valid username', () => {
         const username = "test";
@@ -47,7 +39,7 @@ describe('/authenticate route', () => {
                     .post('/authenticate')
                     .send({ username, password })
                     .catch(res => {
-                    expect(res.status).to.equal(400);
+                    expect(res.status).to.equal(401);
                     expect(res.response).to.be.json;
                     expect(res.response.text).to.contain('errors');
                 });
@@ -61,7 +53,7 @@ describe('/authenticate route', () => {
                 .post('/authenticate')
                 .send({ username, password: 'test1' })
                 .catch(res => {
-                expect(res.status).to.equal(400);
+                expect(res.status).to.equal(401);
                 expect(res.response).to.be.json;
                 expect(res.response.text).to.contain('errors');
             });

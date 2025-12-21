@@ -6,10 +6,14 @@ import { useAuth } from "../auth-wrapper";
 export function useOfflineOrderQueue() {
   const auth = useAuth();
   const scope = { userId: auth.userId ?? null, eventId: auth.eventId ?? null };
-  const [pendingCount, setPendingCount] = useState(() => getOfflineOrders(scope).length + getOfflinePayments(scope).length);
+  const [pendingOrders, setPendingOrders] = useState(() => getOfflineOrders(scope).length);
+  const [pendingPayments, setPendingPayments] = useState(() => getOfflinePayments(scope).length);
 
   useEffect(() => {
-    const update = () => setPendingCount(getOfflineOrders(scope).length + getOfflinePayments(scope).length);
+    const update = () => {
+      setPendingOrders(getOfflineOrders(scope).length);
+      setPendingPayments(getOfflinePayments(scope).length);
+    };
     const unsubscribeOrders = subscribeOfflineOrders(update);
     const unsubscribePayments = subscribeOfflinePayments(update);
     update();
@@ -19,5 +23,5 @@ export function useOfflineOrderQueue() {
     };
   }, [scope.eventId, scope.userId]);
 
-  return { pendingCount };
+  return { pendingCount: pendingOrders + pendingPayments, pendingOrders, pendingPayments };
 }

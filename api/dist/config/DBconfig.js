@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = function () {
     switch (process.env.NODE_ENV) {
         case 'development':
@@ -10,7 +12,7 @@ module.exports = function () {
                     host: process.env.GMBH_DB_HOST || "localhost",
                     port: process.env.GMBH_DB_PORT || 3306,
                     dialect: process.env.GMBH_DB_DIALECT || 'mysql',
-                    timezone: 'Europe/Vienna'
+                    timezone: '+01:00'
                 }
             };
         case 'test':
@@ -19,12 +21,11 @@ module.exports = function () {
                 user: process.env.GMBH_DB_USER || "root",
                 password: process.env.GMBH_DB_PASSWORD || "",
                 options: {
-                    pool: false,
                     logging: false,
                     host: process.env.GMBH_DB_HOST || "localhost",
                     port: process.env.GMBH_DB_PORT || 3306,
                     dialect: process.env.GMBH_DB_DIALECT || 'mysql',
-                    timezone: 'Europe/Vienna'
+                    timezone: '+01:00'
                 }
             };
         case 'production':
@@ -37,7 +38,7 @@ module.exports = function () {
                     host: process.env.GMBH_DB_HOST || "localhost",
                     port: process.env.GMBH_DB_PORT || 3306,
                     dialect: process.env.GMBH_DB_DIALECT || 'postgres',
-                    timezone: 'Europe/Vienna'
+                    timezone: '+01:00'
                 }
             };
         case 'test-ci':
@@ -46,12 +47,11 @@ module.exports = function () {
                 user: process.env.GMBH_DB_USER || "root",
                 password: process.env.GMBH_DB_PASSWORD || "GMBH",
                 options: {
-                    pool: false,
                     logging: false,
                     host: process.env.GMBH_IP || "mysql",
                     port: process.env.GMBH_DB_PORT || 3306,
                     dialect: process.env.GMBH_DB_DIALECT || 'mysql',
-                    timezone: 'Europe/Vienna'
+                    timezone: '+01:00'
                 }
             };
         default:
@@ -64,7 +64,7 @@ module.exports = function () {
                     host: process.env.GMBH_IP || "localhost",
                     port: process.env.GMBH_DB_PORT || 3306,
                     dialect: process.env.GMBH_DB_DIALECT || 'mysql',
-                    timezone: 'Europe/Vienna'
+                    timezone: '+01:00'
                 }
             };
     }

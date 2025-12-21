@@ -1,0 +1,54 @@
+services:
+  mysql:
+    image: mysql:8.0.44-bookworm
+    environment:
+      MYSQL_DATABASE: gmbh_chaos
+      MYSQL_USER: gmbh
+      MYSQL_PASSWORD: gmbh
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_chaos_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -prootpassword"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  api:
+    build: api/
+    environment:
+      NODE_ENV: test
+      GMBH_DB_USER: gmbh
+      GMBH_DB_PASSWORD: gmbh
+      GMBH_DB_NAME: gmbh_chaos
+      GMBH_DB_TEST: gmbh_chaos
+      GMBH_DB_HOST: mysql
+      GMBH_DB_PORT: "3306"
+      GMBH_DB_DIALECT: mysql
+      PORT: "8080"
+      GMBH_DB_AUTO_MIGRATE: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:8080/api/healthz', res => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  chaos:
+    image: node:22-alpine
+    working_dir: /app/api
+    environment:
+      CHAOS_API_BASE: http://api:8080
+    volumes:
+      - ./api:/app/api
+    command: sh -c "npm install && npm run chaos-test"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  mysql_chaos_data:

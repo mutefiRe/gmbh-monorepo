@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     Event.hasMany(models.Area, { foreignKey: 'eventId' });
     Event.hasMany(models.Category, { foreignKey: 'eventId' });
     Event.hasMany(models.Item, { foreignKey: 'eventId' });
+    Event.hasMany(models.Notification, { foreignKey: 'eventId' });
     Event.hasMany(models.Unit, { foreignKey: 'eventId' });
     Event.hasMany(models.Table, { foreignKey: 'eventId' });
     Event.hasMany(models.Organization, { foreignKey: 'eventId' });

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = (sequelize, DataTypes) => {
     const Setting = sequelize.define("setting", {
         id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
@@ -12,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         activeEventId: { type: DataTypes.UUID, allowNull: true, unique: false }
     });
     Setting.associate = models => {
-        Setting.belongsTo(models.Printer, { as: 'receiptPrinter' });
         Setting.belongsTo(models.Event, { as: 'activeEvent', foreignKey: 'activeEventId' });
     };
     return Setting;

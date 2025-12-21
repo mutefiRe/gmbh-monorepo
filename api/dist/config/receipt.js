@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = {
     quantity: 'Menge',
     item: 'Artikel',

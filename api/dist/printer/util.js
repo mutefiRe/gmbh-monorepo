@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const error = 'Does not make any sense. Update your layout.';
 class util {
     formatDate(date) {

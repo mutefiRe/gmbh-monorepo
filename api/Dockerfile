@@ -1,15 +1,8 @@
-FROM node:24-bookworm
+FROM node:24-alpine
 
-ENV PYTHON=python3
-RUN ln -s /usr/bin/python3 /usr/bin/python
+ENV PYTHON=/usr/bin/python3
 
-RUN apt-get update && apt-get install -y \
-  cups \
-  nmap \
-  net-tools \
-  libcups2-dev python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g node-gyp
 
 WORKDIR /app
 
@@ -19,4 +12,3 @@ RUN npm install
 COPY . .
 
 CMD [ "npm", "run", "start" ]
-

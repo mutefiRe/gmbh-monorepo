@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = (sequelize, DataTypes) => {
     const Printer = sequelize.define("printer", {
         id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
@@ -5,9 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         name: { type: DataTypes.STRING, allowNull: true, unique: false }
     });
     Printer.associate = models => {
-        Printer.hasMany(models.User, { target: "printer" });
         Printer.hasMany(models.Category, { target: "printer" });
-        Printer.hasMany(models.Setting, { target: "printer" });
     };
     return Printer;
 };

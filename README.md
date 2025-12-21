@@ -6,7 +6,7 @@ Disclaimer: This project is based on the original idea of g.m.b.h. and its origi
 A local-network, web-based order system for small events and venues. The stack is split into:
 - API (Node/Express + MySQL)
 - Admin UI (React)
-- Waiter UI (React, PWA)
+- Waiter UI (React)
 - Printer API (Go, ESC/POS)
 - Fake printer (ESC/POS simulator)
 - Nginx + CUPS configs
@@ -34,23 +34,6 @@ Stop containers:
 
 Reset data volumes (destructive):
 - `make clean`
-
-## Certificate & PWA (Android/iOS)
-For fullscreen PWA mode, install the local HTTPS certificate once.
-
-1) Download the certificate (local Wi‑Fi):
-   - `http://gmbh.local/cert-install`
-2) Android (Chrome):
-   - Open `myCA.pem` → install as CA certificate
-   - Settings → Security → Install certificate (path varies by device)
-3) iOS/iPadOS (Safari):
-   - Install profile: Settings → Profile Downloaded → Install
-   - Enable trust: Settings → General → About → Certificate Trust Settings
-4) Install the PWA:
-   - Android: Chrome → Add to Home screen
-   - iOS: Share → Add to Home Screen
-
-Note: The app works without internet, but server and devices must be on the same Wi‑Fi.
 
 ## Local dev (without Docker)
 Run each service in its folder:

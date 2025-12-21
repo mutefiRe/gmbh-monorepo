@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = (sequelize, DataTypes) => {
     const Organization = sequelize.define("organization", {
         id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },

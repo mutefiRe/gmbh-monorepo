@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const escpos = require('escpos');
 escpos.USB = require('escpos-usb'); // Ensure escpos-usb is installed
 function listUsbPrinters() {

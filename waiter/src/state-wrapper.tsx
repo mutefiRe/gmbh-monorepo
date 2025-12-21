@@ -11,12 +11,15 @@ import { OrderHistory } from "./components/order-history";
 import { PayDetail } from "./components/pay-main";
 import { Settings } from "./components/settings";
 import { Intro } from "./components/intro";
+import { Notifications } from "./components/notifications";
+import { LoadingScreen } from "./ui/loading-screen";
 import { useConnectionStatus } from "./hooks/useConnectionStatus";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./auth-wrapper";
 import { flushOfflineOrders } from "./lib/offlineOrders";
 import { flushOfflinePayments } from "./lib/offlinePayments";
 import { useRealtimeUpdates } from "./hooks/useRealtimeUpdates";
+import { useOfflineOrderQueue } from "./hooks/useOfflineOrderQueue";
 
 const uniqueById = <T extends { id: string | number }>(items: T[]) => {
   const seen = new Set<string | number>();
@@ -28,7 +31,9 @@ const uniqueById = <T extends { id: string | number }>(items: T[]) => {
 };
 
 export function StateWrapper() {
+  const auth = useAuth();
   const connection = useConnectionStatus();
+  const { pendingCount, pendingOrders, pendingPayments } = useOfflineOrderQueue();
   useRealtimeUpdates();
   const canReachServer = connection.canReachServer;
   const queryCategories = useCategories({ enabled: canReachServer });
@@ -37,7 +42,6 @@ export function StateWrapper() {
   const areasQuery = useAreas({ enabled: canReachServer });
   const tablesQuery = useTables({ enabled: canReachServer });
   const queryClient = useQueryClient();
-  const auth = useAuth();
   const [fontScale, setFontScale] = useFontScale();
 
   const [currentOrder, setCurrentOrder] = useLocalStorage<CurrentOrder>(CURRENT_ORDER_KEY, { orderItems: [], tableId: null, printId: "" });
@@ -61,7 +65,7 @@ export function StateWrapper() {
   );
 
   const sortedTables = useMemo(
-    () => [...tables].sort((a, b) => a.name.localeCompare(b.name, { numeric: true })),
+    () => [...tables].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true })),
     [tables]
   );
 
@@ -173,13 +177,7 @@ export function StateWrapper() {
   }, [auth.eventId, auth.userId, canReachServer]);
 
   if (isBootstrapping) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="rounded-xl border border-slate-200 bg-white px-6 py-4 text-sm font-semibold text-slate-600 shadow-sm">
-          Daten werden geladen...
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!canReachServer && !hasCachedData) {
@@ -202,6 +200,9 @@ export function StateWrapper() {
           addItemToOrder={addItemToOrderCallback}
           updateOrderItemCount={updateOrderItemCountCallback}
           currentOrder={currentOrder}
+          canReachServer={canReachServer}
+          pendingOrders={pendingOrders}
+          pendingPayments={pendingPayments}
         />
       </Route>
       <Route path="/order/edit" >
@@ -223,7 +224,7 @@ export function StateWrapper() {
         <Settings fontScale={fontScale} onFontScaleChange={setFontScale} />
       </Route>
       <Route path="/notifications">
-        <div>Notifications Page</div>
+        <Notifications />
       </Route>
       <Route path="/intro">
         <Intro />

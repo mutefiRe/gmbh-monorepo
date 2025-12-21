@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require('chai');
 const expect = chai.expect;
 const app = require('../server');
@@ -6,7 +7,7 @@ const db = require('../models/index');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
-const { clean, removeTimestamps } = require('./helper');
+const { clean, removeTimestamps, getEventId, withAuth } = require('./helper');
 chai.use(chaiHttp);
 const token = jwt.sign({
     id: 1,
@@ -16,11 +17,15 @@ const token = jwt.sign({
     role: "admin"
 }, config.secret, { expiresIn: '24h' });
 describe('/order route', () => {
-    before(clean);
+    let eventId;
+    before(async () => {
+        await clean();
+        eventId = getEventId();
+    });
     describe('orders exists', () => {
         before(() => {
             return db.User.create({ id: 1, username: "test1", firstname: "test1", lastname: "test1", password: "test1", role: "admin" })
-                .then(() => db.Unit.create({ id: 1, name: "unit1" }))
+                .then(() => db.Unit.create({ id: 1, name: "unit1", eventId }))
                 .then(() => db.Category.create({
                 id: 1,
                 name: "category",
@@ -28,34 +33,38 @@ describe('/order route', () => {
                 description: "newCategory",
                 icon: null,
                 showAmount: true,
-                printer: null
+                printer: null,
+                eventId
             }))
                 .then(() => db.Item.create({
                 id: 1,
                 name: "item",
                 amount: 0.5,
                 price: 3.5,
-                tax: 0.1,
                 sort: null,
                 categoryId: 1,
-                unitId: 1
+                unitId: 1,
+                eventId
             }))
                 .then(() => db.Table.create({
                 id: 1,
                 name: "table",
                 x: 1,
                 y: 1,
-                areaId: null
+                areaId: null,
+                eventId
             }))
                 .then(() => db.Order.create({
                 id: 1,
                 tableId: 1,
-                userId: 1
+                userId: 1,
+                eventId
             }))
                 .then(() => db.Order.create({
                 id: 2,
                 tableId: 1,
-                userId: 1
+                userId: 1,
+                eventId
             }))
                 .then(() => db.Orderitem.create({
                 id: 1,
@@ -84,8 +93,10 @@ describe('/order route', () => {
                         id: "1",
                         number: 1,
                         totalAmount: 10.5,
+                        printCount: 0,
                         tableId: "1",
                         userId: "1",
+                        eventId,
                         orderitems: [{
                                 id: "1",
                                 extras: "extras",
@@ -99,8 +110,10 @@ describe('/order route', () => {
                     }, {
                         id: "2",
                         totalAmount: 10.5,
+                        printCount: 0,
                         tableId: "1",
                         userId: "1",
+                        eventId,
                         orderitems: [{
                                 id: "2",
                                 extras: null,
@@ -114,9 +127,7 @@ describe('/order route', () => {
                     }]
             };
             it('should get one order', () => {
-                return chai.request(app)
-                    .get('/api/orders/1')
-                    .send({ token })
+                return withAuth(chai.request(app).get('/api/orders/1'), token, eventId)
                     .then(res => {
                     expect(res.status).to.equal(200);
                     removeTimestamps(res.body.order);
@@ -127,9 +138,7 @@ describe('/order route', () => {
                 });
             });
             it('should get all orders', () => {
-                return chai.request(app)
-                    .get('/api/orders/')
-                    .send({ token })
+                return withAuth(chai.request(app).get('/api/orders/'), token, eventId)
                     .then(res => {
                     expect(removeTimestamps(res.body.orders[0].orderitems)).to.deep.equal(expectedResponse.orders[0].orderitems);
                     expect(res.body.orders[0].id).to.equal('1');
@@ -141,19 +150,19 @@ describe('/order route', () => {
         describe('POST order', () => {
             const requestBody = {
                 order: {
-                    id: 5,
+                    id: "5",
                     totalAmount: 15.0,
-                    tableId: 1,
-                    userId: 1,
+                    tableId: "1",
+                    userId: "1",
                     orderitems: [{
-                            id: 10,
+                            id: "10",
                             extras: null,
                             count: 3,
                             countFree: 0,
                             countPaid: 1,
                             price: 3.5,
-                            itemId: 1,
-                            orderId: 1
+                            itemId: "1",
+                            orderId: "1"
                         }]
                 }
             };
@@ -162,8 +171,10 @@ describe('/order route', () => {
                     id: "5",
                     number: 3,
                     totalAmount: 15.0,
+                    printCount: 0,
                     tableId: "1",
                     userId: "1",
+                    eventId,
                     orderitems: [{
                             id: "10",
                             extras: null,
@@ -177,9 +188,7 @@ describe('/order route', () => {
                 }
             };
             it('order should exist', () => {
-                return chai.request(app)
-                    .post('/api/orders')
-                    .set("x-access-token", token)
+                return withAuth(chai.request(app).post('/api/orders'), token, eventId)
                     .send(requestBody)
                     .then(res => {
                     expect(res.status).to.equal(200);
@@ -195,26 +204,7 @@ describe('/order route', () => {
         describe('PUT order', () => {
             const requestBody = {
                 order: {
-                    id: 1,
-                    totalAmount: 0.0,
-                    tableId: "1",
-                    userId: "1",
-                    orderitems: [{
-                            id: 1,
-                            extras: null,
-                            count: 3,
-                            countFree: 0,
-                            countPaid: 3,
-                            price: 3.5,
-                            itemId: "1",
-                            orderId: "1"
-                        }]
-                }
-            };
-            const expectedResponse = {
-                order: {
                     id: "1",
-                    number: 1,
                     totalAmount: 0.0,
                     tableId: "1",
                     userId: "1",
@@ -230,10 +220,29 @@ describe('/order route', () => {
                         }]
                 }
             };
+            const expectedResponse = {
+                order: {
+                    id: "1",
+                    number: 1,
+                    totalAmount: 0.0,
+                    printCount: 0,
+                    tableId: "1",
+                    userId: "1",
+                    eventId,
+                    orderitems: [{
+                            id: "1",
+                            extras: null,
+                            count: 3,
+                            countFree: 0,
+                            countPaid: 3,
+                            price: 3.5,
+                            itemId: "1",
+                            orderId: "1"
+                        }]
+                }
+            };
             it('order should have changed', () => {
-                return chai.request(app)
-                    .put('/api/orders/1')
-                    .set("x-access-token", token)
+                return withAuth(chai.request(app).put('/api/orders/1'), token, eventId)
                     .send(requestBody)
                     .then(res => {
                     expect(res.status).to.equal(200);

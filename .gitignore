@@ -1,1 +1,5 @@
 node_modules
+nginx/certs/ca/*
+nginx/certs/server/*
+!nginx/certs/ca/.gitkeep
+!nginx/certs/server/.gitkeep

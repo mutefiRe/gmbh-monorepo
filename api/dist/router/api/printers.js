@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const models_1 = __importDefault(require("../../models"));
-const control_1 = __importDefault(require("../../printer/control"));
-const print_1 = __importDefault(require("../../printer/print"));
-const printer_api_1 = __importDefault(require("../../printer/printer_api"));
-const logger_1 = __importDefault(require("../../util/logger"));
+const control = require('../../printer/control');
+const print = require('../../printer/print');
+const printerApi = require('../../printer/printer_api');
+const logger = require('../../util/logger');
 const router = (0, express_1.Router)();
 let lockSearch = false;
 router.get('/', async function (req, res) {
@@ -16,7 +16,7 @@ router.get('/', async function (req, res) {
         const printers = await models_1.default.Printer.findAll();
         const statuses = await Promise.all(printers.map(async (printer) => {
             try {
-                const status = await printer_api_1.default.status(printer.systemName);
+                const status = await printerApi.status(printer.systemName);
                 return { key: printer.systemName, online: status.online };
             }
             catch (err) {
@@ -26,7 +26,7 @@ router.get('/', async function (req, res) {
         const includeQueue = String(req.query.includeQueue || '').toLowerCase() === 'true';
         const queues = includeQueue ? await Promise.all(printers.map(async (printer) => {
             try {
-                const queue = await printer_api_1.default.queue(printer.systemName);
+                const queue = await printerApi.queue(printer.systemName);
                 return { key: printer.systemName, queue };
             }
             catch (err) {
@@ -81,7 +81,7 @@ router.post('/:id/testprint', async function (req, res) {
             });
             return;
         }
-        print_1.default.test(printer.dataValues);
+        print.test(printer.dataValues);
         res.send({});
     }
     catch (error) {
@@ -97,15 +97,15 @@ router.post('/update', async function (req, res) {
     if (!lockSearch) {
         lockSearch = true;
         try {
-            const _printers = await control_1.default.updatePrinters();
+            const _printers = await control.updatePrinters();
             const printers = _printers || [];
-            logger_1.default.info(`Updated printers: ${printers.length} printers found`);
+            logger.info(`Updated printers: ${printers.length} printers found`);
             io.sockets.emit("update", { printers: printers.slice(printers.length / 2, printers.length) });
             res.send({ status: 'ok' });
             return;
         }
         catch (error) {
-            logger_1.default.error('Error updating printers:', error);
+            logger.error('Error updating printers:', error);
             res.status(400).send({
                 errors: {
                     msg: error?.errors?.[0]?.message || error?.message
@@ -146,7 +146,7 @@ router.delete('/:id', async function (req, res) {
         if (printer === null) {
             throw new Error('printer not found');
         }
-        await Promise.all([printer.destroy(), control_1.default.removePrinter(printer.systemName)]);
+        await Promise.all([printer.destroy(), control.removePrinter(printer.systemName)]);
         res.send({});
         io.sockets.emit("delete", { type: 'printer', id: req.params.id });
     }
@@ -158,4 +158,4 @@ router.delete('/:id', async function (req, res) {
         });
     }
 });
-exports.default = router;
+module.exports = router;

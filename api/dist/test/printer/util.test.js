@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const util = require('../../printer/util');
 const chai = require('chai');
 const expect = chai.expect;

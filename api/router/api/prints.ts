@@ -5,29 +5,6 @@ const router = express.Router();
 const db = require('../../models/index');
 const printerService = require('../../printer/print');
 
-/**
- * @apiDefine printsParams
- * @apiParam {String}  print.id
- * @apiParam {String}  print.order
- * @apiParam {Boolean} print.isBill
- */
-
-/**
- * @api {post} api/prints start print job
- * @apiGroup Prints
- * @apiName StartPrint
-
- * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
- * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
-
- * @apiUse printsParams
-
- * @apiSuccess {Object} containing order.id and print.id
-
- * @apiPermission waiter
- * @apiPermission admin
- */
-
 router.post('/', async function (req, res) {
   const printRequest = req.body.print;
   if (!printRequest || !printRequest.orderId) {

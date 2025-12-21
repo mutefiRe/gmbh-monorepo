@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
@@ -39,6 +39,7 @@ const getPayloadEventId = (payload: UpdatePayload | DeletePayload) =>
 export const useRealtimeUpdates = () => {
   const { token } = useAuth();
   const queryClient = useQueryClient();
+  const lastStatsInvalidate = useRef(0);
 
   useEffect(() => {
     if (!token) return;
@@ -50,11 +51,20 @@ export const useRealtimeUpdates = () => {
     });
 
     const isEventMismatch = (payload: UpdatePayload | DeletePayload) => {
+      // Ignore cross-event updates so admin stays scoped to the selected event.
       const payloadEventId = getPayloadEventId(payload);
       if (!payloadEventId) return false;
       const currentEventId = api.getEventId();
       if (!currentEventId) return false;
       return payloadEventId !== currentEventId;
+    };
+
+    const invalidateStats = () => {
+      // Throttle stats refetches so rapid order updates don't overload the API.
+      const now = Date.now();
+      if (now - lastStatsInvalidate.current < 10_000) return;
+      lastStatsInvalidate.current = now;
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
     };
 
     const handleUpdate = (payload: UpdatePayload) => {
@@ -67,7 +77,10 @@ export const useRealtimeUpdates = () => {
       if (payload.organization) queryClient.invalidateQueries({ queryKey: ["organizations"] });
       if (payload.user) queryClient.invalidateQueries({ queryKey: ["users"] });
       if (payload.printer || payload.printers) queryClient.invalidateQueries({ queryKey: ["printers"] });
-      if (payload.type === "order") queryClient.invalidateQueries({ queryKey: ["orders"] });
+      if (payload.type === "order") {
+        queryClient.invalidateQueries({ queryKey: ["orders"] });
+        invalidateStats();
+      }
     };
 
     const handleDelete = (payload: DeletePayload) => {
@@ -99,6 +112,7 @@ export const useRealtimeUpdates = () => {
           break;
         case "order":
           queryClient.invalidateQueries({ queryKey: ["orders"] });
+          invalidateStats();
           break;
         default:
           break;

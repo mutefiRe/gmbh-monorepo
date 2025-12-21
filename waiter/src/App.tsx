@@ -1,9 +1,5 @@
 
 import './App.css'
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
 import { Link, Route, Switch, Router, Redirect, useLocation } from "wouter";
 
 
@@ -17,18 +13,20 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useConnectionStatus } from './hooks/useConnectionStatus';
 import { useOfflineOrderQueue } from './hooks/useOfflineOrderQueue';
 import { Modal } from './ui/modal';
-
-const queryClient = new QueryClient()
+import { ConnectionPill } from "./ui/connection-pill";
+import { MenuLink } from "./ui/menu-link";
+import { useUnreadNotifications } from "./hooks/useUnreadNotifications";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const onOrdersPage = location.startsWith("/orders");
   const connection = useConnectionStatus();
   const { pendingCount } = useOfflineOrderQueue();
-  useAuth();
+  const auth = useAuth();
   const [authError, setAuthError] = useState<{ code?: string; message?: string } | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { hasUnread: hasUnreadNotifications, unreadLabel } = useUnreadNotifications(auth.eventId, !!auth.token);
 
   useEffect(() => {
     const handler = (event: Event) => {
@@ -39,6 +37,7 @@ function App() {
     window.addEventListener('gmbh-auth-error', handler);
     return () => window.removeEventListener('gmbh-auth-error', handler);
   }, [isLoggingOut]);
+
 
   const authErrorTitle = authError?.code?.includes('auth.eventChanged')
     ? 'Event wurde gewechselt'
@@ -53,12 +52,11 @@ function App() {
       : 'Sie sind nicht mehr autorisiert. Bitte melden Sie sich erneut an.';
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router >
+    <Router >
 
-        <AuthProvider>
+      <AuthProvider>
 
-          <div className="App">
+        <div className="App">
             <DebugOverlay />
             <Modal
               open={!!authError}
@@ -74,7 +72,7 @@ function App() {
                   onClick={() => {
                     setIsLoggingOut(true);
                     setAuthError(null);
-                    window.location.href = '#/logout';
+                    navigate('/logout');
                   }}
                 >
                   Abmelden
@@ -96,13 +94,16 @@ function App() {
                     <button
                       type="button"
                       onClick={() => setMenuOpen(true)}
-                      className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+                      className="relative p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
                       aria-label="Menü öffnen"
                     >
                       <Menu size={20} />
+                      {hasUnreadNotifications && (
+                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-primary-600 ring-2 ring-white" />
+                      )}
                     </button>
                     <div className="flex items-center gap-2">
-                      <StatusPill status={connection.status} pendingCount={pendingCount} />
+                      <ConnectionPill status={connection.status} pendingCount={pendingCount} />
                     </div>
                     <Link
                       className={() => "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-primary-300 text-primary-700 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors"}
@@ -112,6 +113,7 @@ function App() {
                       <span>{onOrdersPage ? "Bestellung aufnehmen" : "Letzte Bestellungen"}</span>
                     </Link>
                   </header>
+                  
 
                   {menuOpen && (
                     <div
@@ -137,54 +139,43 @@ function App() {
                           </button>
                         </div>
                         <div className="grid gap-2">
-                          <Link
-                            className={() => "flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"}
+                          <MenuLink
                             href="/order/new"
+                            label="Bestellen"
+                            icon={<ShoppingCart size={18} />}
                             onClick={() => setMenuOpen(false)}
-                          >
-                            <ShoppingCart size={18} />
-                            <span>Bestellen</span>
-                          </Link>
-                          <Link
-                            className={() => "flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"}
+                          />
+                          <MenuLink
                             href="/orders"
+                            label="Historie"
+                            icon={<ReceiptText size={18} />}
                             onClick={() => setMenuOpen(false)}
-                          >
-                            <ReceiptText size={18} />
-                            <span>Historie</span>
-                          </Link>
-                          <Link
-                            className={() => "flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"}
-                            href="/intro"
-                            onClick={() => setMenuOpen(false)}
-                          >
-                            <BookOpen size={18} />
-                            <span>Einführung</span>
-                          </Link>
-                          <Link
-                            className={() => "flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"}
+                          />
+                          <MenuLink
                             href="/settings"
+                            label="Einstellungen"
+                            icon={<Settings size={18} />}
                             onClick={() => setMenuOpen(false)}
-                          >
-                            <Settings size={18} />
-                            <span>Einstellungen</span>
-                          </Link>
-                          <Link
-                            className={() => "flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"}
+                          />
+                          <MenuLink
                             href="/notifications"
+                            label={`Benachrichtigungen${unreadLabel ? ` (${unreadLabel})` : ""}`}
+                            icon={<Bell size={18} />}
                             onClick={() => setMenuOpen(false)}
-                          >
-                            <Bell size={18} />
-                            <span>Hinweise</span>
-                          </Link>
-                          <Link
-                            className={() => "flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"}
+                            showIndicator={hasUnreadNotifications}
+                          />
+                          <MenuLink
+                            href="/intro"
+                            label="Einführung"
+                            icon={<BookOpen size={18} />}
+                            onClick={() => setMenuOpen(false)}
+                          />
+                          <MenuLink
                             href="/logout"
+                            label="Logout"
+                            icon={<LogOut size={18} />}
                             onClick={() => setMenuOpen(false)}
-                          >
-                            <LogOut size={18} />
-                            <span>Logout</span>
-                          </Link>
+                          />
                         </div>
                       </div>
                     </div>
@@ -202,10 +193,8 @@ function App() {
 
           </div>
 
-        </AuthProvider>
-      </Router>
-
-    </QueryClientProvider >
+      </AuthProvider>
+    </Router>
   )
 }
 
@@ -221,36 +210,4 @@ function LoggedInGuard({ children }: { children: ReactNode }) {
   }
 
   return <>{children}</>;
-}
-
-function StatusPill({ status, pendingCount }: { status: string; pendingCount: number }) {
-  if (status === "checking") {
-    return (
-      <span className="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 text-slate-500">
-        Prüfe Verbindung...
-      </span>
-    );
-  }
-
-  if (status === "online") {
-    return (
-      <span className="text-xs font-semibold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700">
-        Verbunden{pendingCount > 0 ? ` · ${pendingCount} ausstehend` : ""}
-      </span>
-    );
-  }
-
-  if (status === "server-unreachable") {
-    return (
-      <span className="text-xs font-semibold px-2 py-1 rounded-full bg-amber-100 text-amber-700">
-        Server nicht erreichbar{pendingCount > 0 ? ` · ${pendingCount} ausstehend` : ""}
-      </span>
-    );
-  }
-
-  return (
-    <span className="text-xs font-semibold px-2 py-1 rounded-full bg-rose-100 text-rose-700">
-      Offline{pendingCount > 0 ? ` · ${pendingCount} ausstehend` : ""}
-    </span>
-  );
 }

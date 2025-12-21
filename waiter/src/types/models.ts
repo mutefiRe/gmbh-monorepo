@@ -23,7 +23,6 @@ export interface Item {
   name: string;
   amount: string;
   price: number;
-  tax: number;
   sort: number;
   category: number;
   unitId: string;
@@ -55,11 +54,23 @@ export interface OrderItem {
 export interface Order {
   id: string;
   number?: string;
+  createdAt?: string;
   totalAmount: number;
   userId: string;
   tableId: string;
   printCount: number;
   orderitems?: OrderItem[];
+}
+
+export interface Notification {
+  id: string;
+  eventId: string;
+  entityType: string;
+  entityId?: string | null;
+  action: string;
+  message: string;
+  meta?: Record<string, unknown> | null;
+  createdAt?: string;
 }
 
 export interface Printer {

@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useUser } from "./types/queries";
+import { LoadingScreen } from "./ui/loading-screen";
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -28,7 +29,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const user = useUser(userId ?? "", { enabled: !!userId });
 
   if (user.isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <LoadingScreen
+        title="Anmeldung wird geprüft"
+        subtitle="Benutzerdaten werden geladen."
+      />
+    );
   }
 
   function logout() {

@@ -17,7 +17,16 @@ interface TableCardEditorProps<T> {
   onAdd: (item: Partial<T>) => void;
   onEdit: (item: T) => void;
   onDelete: (id: any) => void;
-  fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select'; options?: { label: string; value: any }[], optional?: boolean, }[];
+  fields: {
+    key: keyof T;
+    label: string;
+    type: 'text' | 'number' | 'boolean' | 'select';
+    options?: { label: string; value: any }[];
+    optional?: boolean;
+    row?: number;
+    width?: 'half' | 'full';
+    inline?: boolean;
+  }[];
   dialogHint?: React.ReactNode;
 
 }
@@ -300,42 +309,62 @@ export function TableCardEditor<T extends { id: any }>({
                   {dialogHint}
                 </div>
               )}
-              {fields.map((field) => (
-                <div key={field.key as string}>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    {field.label}
-                  </label>
-                  {field.type === 'boolean' ? (
-                    <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => handleFieldChange(field.key, !editingItem?.[field.key])}
-                        className={`w-14 h-8 rounded-full transition-colors relative ${editingItem?.[field.key] ? 'bg-green-500' : 'bg-slate-300'}`}
-                      >
-                        <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all shadow-sm ${editingItem?.[field.key] ? 'left-7' : 'left-1'}`} />
-                      </button>
-                      <span className="font-medium text-slate-600">{editingItem?.[field.key] ? 'Aktiv' : 'Inaktiv'}</span>
-                    </div>
-                  ) : field.type === 'select' ? (
-                    <select
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
-                      value={editingItem?.[field.key] as string}
-                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
+              {Object.entries(fields.reduce<Record<number, typeof fields>>((acc, field, idx) => {
+                const row = field.row ?? idx;
+                acc[row] = acc[row] ? [...acc[row], field] : [field];
+                return acc;
+              }, {})).map(([rowKey, rowFields]) => (
+                <div key={rowKey} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {rowFields.map((field) => (
+                    <div
+                      key={field.key as string}
+                      className={field.width === 'full' ? 'md:col-span-2' : ''}
                     >
-                      <option value="">Bitte wählen</option>
-                      {field.options?.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      type={field.type}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
-                      value={editingItem?.[field.key] as string || ''}
-                      onChange={(e) => handleFieldChange(field.key, field.type === 'number' ? Number(e.target.value) : e.target.value)}
-                      placeholder={`${field.label} eingeben`}
-                    />
-                  )}
+                      {field.type === 'boolean' ? (
+                        <div className={field.inline ? 'flex items-center justify-between gap-4' : ''}>
+                          <label className={`block text-sm font-semibold text-slate-700 ${field.inline ? '' : 'mb-2'}`}>
+                            {field.label}
+                          </label>
+                          <div className={`flex items-center gap-3 ${field.inline ? 'mb-0' : ''}`}>
+                            <button
+                              type="button"
+                              onClick={() => handleFieldChange(field.key, !editingItem?.[field.key])}
+                              className={`w-14 h-8 rounded-full transition-colors relative ${editingItem?.[field.key] ? 'bg-green-500' : 'bg-slate-300'}`}
+                            >
+                              <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all shadow-sm ${editingItem?.[field.key] ? 'left-7' : 'left-1'}`} />
+                            </button>
+                            <span className="font-medium text-slate-600">{editingItem?.[field.key] ? 'Aktiv' : 'Inaktiv'}</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <label className="block text-sm font-semibold text-slate-700 mb-2">
+                            {field.label}
+                          </label>
+                          {field.type === 'select' ? (
+                            <select
+                              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
+                              value={editingItem?.[field.key] as string}
+                              onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                            >
+                              <option value="">Bitte wählen</option>
+                              {field.options?.map(opt => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type={field.type}
+                              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
+                              value={editingItem?.[field.key] as string || ''}
+                              onChange={(e) => handleFieldChange(field.key, field.type === 'number' ? Number(e.target.value) : e.target.value)}
+                              placeholder={`${field.label} eingeben`}
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
                 </div>
               ))}
               <div className="pt-6 flex justify-end gap-3">

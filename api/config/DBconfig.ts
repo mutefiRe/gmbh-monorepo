@@ -19,7 +19,6 @@ module.exports = function(){
         user:     process.env.GMBH_DB_USER     || "root",
         password: process.env.GMBH_DB_PASSWORD || "",
         options: {
-          pool:     false,
           logging:  false,
           host:     process.env.GMBH_DB_HOST    || "localhost",
           port:     process.env.GMBH_DB_PORT    || 3306,
@@ -46,7 +45,6 @@ module.exports = function(){
         user:     process.env.GMBH_DB_USER     || "root",
         password: process.env.GMBH_DB_PASSWORD || "GMBH",
         options: {
-          pool:      false,
           logging:   false,
           host:      process.env.GMBH_IP             || "mysql",
           port:      process.env.GMBH_DB_PORT    || 3306,

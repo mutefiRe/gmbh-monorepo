@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = __importDefault(require("../config/config"));
+const config = require('../config/config');
 const index_1 = __importDefault(require("../models/index"));
 const router = (0, express_1.Router)();
 router.post('/', function (req, res) {
@@ -23,7 +23,7 @@ router.post('/', function (req, res) {
                 const tokenPayload = thisUser.createAuthUser({
                     eventId: setting?.activeEventId || null
                 });
-                const token = jsonwebtoken_1.default.sign(tokenPayload, config_1.default.secret, { expiresIn: expiresTime });
+                const token = jsonwebtoken_1.default.sign(tokenPayload, config.secret, { expiresIn: expiresTime });
                 res.send({ token });
             });
         }
@@ -39,7 +39,7 @@ router.post('/', function (req, res) {
 });
 // should render the user name
 router.get("/", function (req, res) {
-    const cookies = req.cookies || req.cookie || {};
+    const cookies = req.cookies || {};
     const token = cookies['x-gmbh-token'];
     if (!token) {
         return res.status(401).send(`
@@ -51,7 +51,7 @@ router.get("/", function (req, res) {
       </html>
     `);
     }
-    jsonwebtoken_1.default.verify(token, config_1.default.secret, function (error, decoded) {
+    jsonwebtoken_1.default.verify(token, config.secret, function (error, decoded) {
         if (error) {
             return res.status(401).send(`
         <html>
@@ -74,7 +74,7 @@ router.get("/", function (req, res) {
 });
 router.get("/login", function (req, res) {
     // if logged in already render a logout page
-    const cookies = req.cookies || req.cookie || {};
+    const cookies = req.cookies || {};
     if (cookies['x-gmbh-token']) {
         return res.send(`
       <html>
@@ -119,4 +119,4 @@ router.get("/logout", function (req, res) {
       </html>
     `);
 });
-exports.default = router;
+module.exports = router;

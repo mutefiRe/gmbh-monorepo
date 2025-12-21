@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = (sequelize, DataTypes) => {
     const Category = sequelize.define("category", {
         id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
@@ -12,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             unique: false,
             validate: { is: /^#([A-F0-9]{3}|[A-F0-9]{6})$/i }
-        }
+        },
+        printerId: { type: DataTypes.UUID, allowNull: true, unique: false },
+        categoryId: { type: DataTypes.UUID, allowNull: true, unique: false }
     });
     Category.associate = models => {
         Category.hasMany(models.Category, { as: 'children', foreignKey: "categoryId" });

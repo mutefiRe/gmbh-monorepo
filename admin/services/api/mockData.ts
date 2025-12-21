@@ -39,11 +39,11 @@ export const initialPrinters: Printer[] = [
 ];
 
 export const initialItems: Item[] = [
-  { id: "1", name: 'Cola', price: 3.50, tax: 19, categoryId: "1", unitId: "2", enabled: true },
-  { id: "2", name: 'Bier', price: 4.50, tax: 19, categoryId: "1", unitId: "2", enabled: true },
-  { id: "3", name: 'Caesar Salad', price: 12.00, tax: 7, categoryId: "2", unitId: "1", enabled: true },
-  { id: "4", name: 'Rumpsteak', price: 28.00, tax: 7, categoryId: "3", unitId: "1", enabled: true },
-  { id: "5", name: 'Vanilleeis', price: 6.50, tax: 7, categoryId: "4", unitId: "1", enabled: true },
+  { id: "1", name: 'Cola', price: 3.50, categoryId: "1", unitId: "2", enabled: true, amount: 0.33 },
+  { id: "2", name: 'Bier', price: 4.50, categoryId: "1", unitId: "2", enabled: true, amount: 0.5 },
+  { id: "3", name: 'Caesar Salad', price: 12.00, categoryId: "2", unitId: "1", enabled: true, amount: 1 },
+  { id: "4", name: 'Rumpsteak', price: 28.00, categoryId: "3", unitId: "1", enabled: true, amount: 1 },
+  { id: "5", name: 'Vanilleeis', price: 6.50, categoryId: "4", unitId: "1", enabled: true, amount: 1 },
 ];
 
 export const initialOrders: Order[] = [

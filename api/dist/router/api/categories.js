@@ -1,43 +1,8 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const router = require('express').Router();
 const db = require('../../models');
-/**
- * @apiDefine categoryAttributes
- * @apiSuccess {Number}  categories.id Autoincremented Identifier of the category
- * @apiSuccess {String}  categories.name Name of the category
- * @apiSuccess {Boolean}  categories.enabled Flag if the Category is enabled
- * @apiSuccess {String}  categories.description
- * @apiSuccess {String}  categories.icon identifier of the icon shown for the category
- * @apiSuccess {Boolean}  categories.showAmount Flag if the Amount and Unit is shown in the item
- * @apiSuccess {String}  categories.printer Dedicaded Printer (where orders of this categories should be printed)
- * @apiSuccess {Number} categories.çategory Parentcategory
- */
-/**
- * @apiDefine categoryParams
- * @apiParam {Number}  categories.id Autoincremented Identifier of the category
- * @apiParam {String}  categories.name Name of the category
- * @apiParam {Boolean}  categories.enabled Flag if the Category is enabled
- * @apiParam {String}  categories.description
- * @apiParam {String}  categories.icon identifier of the icon shown for the category
- * @apiParam {Boolean}  categories.showAmount Flag if the Amount and Unit is shown in the item
- * @apiParam {String}  categories.printer Dedicaded Printer (where orders of this categories should be printed)
- * @apiParam {Number[]} categories.categories Subcategories
- * @apiParam {Number} categories.çategory Parentcategory
- */
-/**
- * @api {get} api/categories/:id Request Category
- * @apiGroup Category
- * @apiName GetCategory
- * @apiParam {number} string Categorys unique ID.
-
-  *@apiUse token
-
- * @apiSuccess {Object} categories Category
- * @apiUse categoryAttributes
-
- * @apiPermission waiter
- * @apiPermission admin
- */
+const { createNotification } = require('../../util/notifications');
 router.get('/:id', function (req, res) {
     db.Category.findOne({ where: { id: req.params.id, eventId: req.eventId } }).then(category => {
         res.send({ category });
@@ -49,20 +14,6 @@ router.get('/:id', function (req, res) {
         });
     });
 });
-/**
- * @api {get} api/categories Request all categories
- * @apiGroup Category
- * @apiName Getcategories
-
- * @apiParam {string} x-access-token JSONWebToken | Mandatory if not set as header
- * @apiHeader {string} x-access-token JSONWebToken | Mandatory if not in params
-
- * @apiSuccess {Object[]} categories Category
- * @apiUse categoryAttributes
-
- * @apiPermission waiter
- * @apiPermission admin
- */
 router.get('/', function (req, res) {
     db.Category.findAll({ where: { eventId: req.eventId } }).then(categories => {
         res.send({ categories });
@@ -74,24 +25,23 @@ router.get('/', function (req, res) {
         });
     });
 });
-/**
- * @api {post} api/categories/ Create one category
- * @apiGroup Category
- * @apiName PostCategory
- * @apiUse token
- * @apiParam {Object} categories
- * @apiSuccess {Object} categories
- * @apiUse categoryParams
- * @apiUse categoryAttributes
- *
- * @apiPermission admin
- */
 router.post('/', function (req, res) {
     const io = req.app.get('io');
     const payload = { ...req.body.category, eventId: req.eventId };
     db.Category.create(payload).then(category => {
         res.send({ category });
-        io.sockets.emit("update", { category });
+        io.sockets.emit("update", { category, eventId: req.eventId });
+        createNotification({
+            eventId: req.eventId,
+            entityType: 'category',
+            entityId: category.id,
+            action: 'created',
+            message: `Neue Kategorie: ${category.name}`
+        }).then((notification) => {
+            if (notification) {
+                io.sockets.emit("notification", { notification, eventId: req.eventId });
+            }
+        });
     }).catch(error => {
         res.status(400).send({
             'errors': {
@@ -100,18 +50,6 @@ router.post('/', function (req, res) {
         });
     });
 });
-/**
- * @api {put} api/categories/:id Update one category
- * @apiGroup Category
- * @apiName UpdateCategory
- * @apiUse token
- * @apiParam {Object} categories
- * @apiSuccess {Object} categories
- * @apiUse categoryParams
- * @apiUse categoryAttributes
- *
- * @apiPermission admin
- */
 router.put('/:id', async function (req, res) {
     if (!req.body.category) {
         res.status(400).send({
@@ -131,7 +69,7 @@ router.put('/:id', async function (req, res) {
         await category.update({ ...req.body.category, eventId: req.eventId });
         await category.save();
         res.send({ category });
-        io.sockets.emit("update", { category });
+        io.sockets.emit("update", { category, eventId: req.eventId });
     }
     catch (error) {
         res.status(400).send({
@@ -141,24 +79,15 @@ router.put('/:id', async function (req, res) {
         });
     }
 });
-/**
- * @api {delete} api/categories/:id Delete one category
- * @apiGroup Category
- * @apiName DeleteCategory
- * @apiParam {number} string Id
- *
- * @apiPermission admin
- * @apiSuccess {object} object empty Object {}
- */
 router.delete('/:id', function (req, res) {
     const io = req.app.get('io');
     db.Category.findOne({ where: { id: req.params.id, eventId: req.eventId } }).then(category => {
         if (category === null)
-            throw new "category not found";
+            throw new Error('category not found');
         return category.destroy();
     }).then(category => {
         res.send({});
-        io.sockets.emit("delete", { 'type': 'category', 'id': category.id });
+        io.sockets.emit("delete", { 'type': 'category', 'id': category.id, eventId: req.eventId });
     }).catch(error => {
         res.status(400).send({
             'errors': {

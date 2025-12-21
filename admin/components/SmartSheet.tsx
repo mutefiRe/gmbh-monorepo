@@ -69,7 +69,6 @@ export const SmartSheet: React.FC<SmartSheetProps> = ({
       id: tempId,
       name: '',
       price: 0,
-      tax: 0.10,
       categoryId: categories[0]?.id || '',
       enabled: true,
       unitId: units[0]?.id || '',
@@ -140,16 +139,6 @@ export const SmartSheet: React.FC<SmartSheetProps> = ({
                       step="0.01"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Steuer</label>
-                    <input
-                      type="number"
-                      className="w-full p-2 rounded border border-slate-200 bg-white"
-                      value={editBuffer.tax || 0}
-                      onChange={e => handleEditChange('tax', parseFloat(e.target.value))}
-                      step="0.01"
-                    />
-                  </div>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
                   <div>
@@ -216,7 +205,6 @@ export const SmartSheet: React.FC<SmartSheetProps> = ({
                   <div className="font-bold text-lg text-slate-800 flex-1">{item.name}</div>
                   <div className="text-slate-500">{item.price} €</div>
                   <div className="text-slate-500">{categories.find(c => c.id === item.categoryId)?.name || '-'}</div>
-                  <div className="text-slate-500">{item.tax}%</div>
                   <div className="text-slate-500">{item.amount}</div>
                   <div className="text-slate-500">{units.find(u => u.id === item.unitId)?.name || '-'}</div>
                   <div className="text-slate-500">{item.enabled ? 'Aktiv' : 'Inaktiv'}</div>

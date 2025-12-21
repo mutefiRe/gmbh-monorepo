@@ -1,4 +1,5 @@
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 const chai = require('chai');
 const expect = chai.expect;
 const app = require('../server');
@@ -6,7 +7,7 @@ const db = require('../models/index');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
-const { clean, removeTimestamps } = require('./helper');
+const { clean, removeTimestamps, withAuth } = require('./helper');
 chai.use(chaiHttp);
 const token = jwt.sign({
     id: 1,
@@ -41,9 +42,7 @@ describe('/printer route', () => {
                             name: "kitchen"
                         }]
                 };
-                return chai.request(app)
-                    .get('/api/printers')
-                    .send({ token })
+                return withAuth(chai.request(app).get('/api/printers'), token)
                     .then(res => {
                     expect(res.status).to.equal(200);
                     expect(removeTimestamps(res.body)).to.deep.equal(expectedResponse);
@@ -65,9 +64,7 @@ describe('/printer route', () => {
                         name: "Fancy Printer"
                     }
                 };
-                return chai.request(app)
-                    .put('/api/printers/1')
-                    .set("x-access-token", token)
+                return withAuth(chai.request(app).put('/api/printers/1'), token)
                     .send(requestBody)
                     .then(res => {
                     expect(res.status).to.equal(200);

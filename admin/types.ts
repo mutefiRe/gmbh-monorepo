@@ -58,7 +58,6 @@ export interface Item {
   name: string;
   amount: number;
   price: number;
-  tax: number;
   categoryId: string; // Category ID
   unitId?: string; // Unit ID
   enabled: boolean;

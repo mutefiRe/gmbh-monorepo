@@ -1,4 +1,5 @@
 import { apiFetch } from "../types/queries";
+import { getOfflineOrders } from "./offlineOrders";
 
 export type OfflinePayment = {
   id: string;
@@ -81,8 +82,13 @@ export async function flushOfflinePayments(scope?: QueueScope) {
   const queue = readQueue(scope);
   if (queue.length === 0) return;
   const remaining: OfflinePayment[] = [];
+  const pendingOrders = new Set(getOfflineOrders(scope).map((entry) => entry.id));
   for (let index = 0; index < queue.length; index += 1) {
     const entry = queue[index];
+    if (pendingOrders.has(entry.orderId)) {
+      remaining.push(entry);
+      continue;
+    }
     try {
       await apiFetch(`/api/orders/${entry.orderId}`, {
         method: "PUT",

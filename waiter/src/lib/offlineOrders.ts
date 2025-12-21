@@ -4,8 +4,11 @@ export type OfflineOrderPayload = {
   id: string;
   tableId: string;
   orderitems: {
+    id?: string;
     itemId: string;
     count: number;
+    countPaid?: number;
+    countFree?: number;
     extras?: string | null;
     price: number;
   }[];
@@ -35,12 +38,45 @@ function resolveKey(scope?: QueueScope) {
   return `${STORAGE_KEY}:${user}:${event}`;
 }
 
+function generateId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 function readQueue(scope?: QueueScope): OfflineOrder[] {
   const raw = localStorage.getItem(resolveKey(scope));
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    let mutated = false;
+    const normalized = parsed.map((entry: OfflineOrder) => {
+      let entryMutated = false;
+      const orderitems = entry.order?.orderitems || [];
+      const updatedItems = orderitems.map((item) => {
+        const next = {
+          ...item,
+          id: item.id || generateId(),
+          countPaid: item.countPaid ?? 0,
+          countFree: item.countFree ?? 0
+        };
+        if (next.id !== item.id || next.countPaid !== item.countPaid || next.countFree !== item.countFree) {
+          entryMutated = true;
+        }
+        return next;
+      });
+      if (entryMutated) {
+        mutated = true;
+        return { ...entry, order: { ...entry.order, orderitems: updatedItems } };
+      }
+      return entry;
+    });
+    if (mutated) {
+      localStorage.setItem(resolveKey(scope), JSON.stringify(normalized));
+    }
+    return normalized;
   } catch (_) {
     return [];
   }
@@ -53,6 +89,34 @@ function writeQueue(queue: OfflineOrder[], scope?: QueueScope) {
 
 export function getOfflineOrders(scope?: QueueScope) {
   return readQueue(scope);
+}
+
+export function getOfflineOrderById(orderId: string, scope?: QueueScope) {
+  return readQueue(scope).find((entry) => entry.id === orderId) || null;
+}
+
+export function updateOfflineOrderCounts(
+  orderId: string,
+  updates: Array<{ id: string; countPaidDelta: number; countFreeDelta?: number }>,
+  scope?: QueueScope
+) {
+  const queue = readQueue(scope);
+  const entry = queue.find((item) => item.id === orderId);
+  if (!entry) return;
+  const orderitems = entry.order?.orderitems || [];
+  const updatedItems = orderitems.map((item) => {
+    const update = updates.find((candidate) => candidate.id === item.id);
+    if (!update) return item;
+    const nextPaid = Math.max(0, (item.countPaid ?? 0) + update.countPaidDelta);
+    const nextFree = Math.max(0, (item.countFree ?? 0) + (update.countFreeDelta ?? 0));
+    return {
+      ...item,
+      countPaid: Math.min(item.count, nextPaid),
+      countFree: Math.min(item.count, nextFree)
+    };
+  });
+  entry.order = { ...entry.order, orderitems: updatedItems };
+  writeQueue(queue, scope);
 }
 
 export function enqueueOfflineOrder(order: OfflineOrder, scope?: QueueScope) {

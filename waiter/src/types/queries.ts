@@ -7,6 +7,7 @@ import type {
   Order,
   OrderItem,
   Printer,
+  Notification,
   Setting,
   Table,
   Unit,
@@ -83,7 +84,6 @@ export const useItems = (options?: QueryOptions<{ items: Item[] }>) =>
         items: data.items.map(item => ({
           ...item,
           price: Number(item.price),
-          tax: Number(item.tax),
         }))
       };
     },
@@ -116,6 +116,13 @@ export const usePrinters = () => useQuery<Printer[]>({ queryKey: ['printers'], q
 export const usePrinter = (id: string) => useQuery<Printer>({ queryKey: ['printer', id], queryFn: () => apiFetch<Printer>(`/api/printers/${id}`) });
 
 export const useSettings = () => useQuery<{ setting: Setting }>({ queryKey: ['settings'], queryFn: () => apiFetch<{ setting: Setting }>('/api/settings') });
+
+export const useNotifications = (skip = 0, limit = 5, options?: QueryOptions<{ notifications: Notification[]; count: number; total: number }>) =>
+  useQuery<{ notifications: Notification[]; count: number; total: number }>({
+    queryKey: ['notifications', skip, limit],
+    queryFn: () => apiFetch<{ notifications: Notification[]; count: number; total: number }>(`/api/notifications?skip=${skip}&limit=${limit}`),
+    ...options
+  });
 
 export const useTables = (options?: QueryOptions<{ tables: Table[] }>) =>
   useQuery<{ tables: Table[] }>({
