@@ -3,7 +3,7 @@
   "description": "Real-Time festival order system",
   "version": "1.2.0",
   "homepage": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "keywords": [
     "order",
     "system"
@@ -21,29 +21,49 @@
     "node": "24.x"
   },
   "scripts": {
-    "test": "NODE_ENV=test PORT=8081 mocha test --recursive",
-    "test-ci": "NODE_ENV=test-ci mocha test --recursive",
+    "build": "tsc -p tsconfig.json",
+    "prestart": "npm run build",
+    "test": "NODE_ENV=test PORT=8081 npm run build && mocha dist/test --recursive",
+    "test-ci": "NODE_ENV=test-ci npm run build && mocha dist/test --recursive",
     "fix-style": "eslint --fix .",
     "lint": "eslint .",
-    "dev": "NODE_ENV=development nodemon server",
-    "start": "node server",
-    "docs": "node_modules/apidoc/bin/apidoc -i . -o docs/ -e node_modules"
+    "dev": "NODE_ENV=development tsx watch server.ts",
+    "start": "node dist/server.js",
+    "migrate": "sequelize-cli db:migrate",
+    "migrate:undo": "sequelize-cli db:migrate:undo",
+    "migrate:undo:all": "sequelize-cli db:migrate:undo:all",
+    "seed": "tsx -r dotenv/config seed/index.ts",
+    "seed:dev": "tsx -r dotenv/config seed/index.ts dev",
+    "seed:blank": "tsx -r dotenv/config seed/index.ts blank"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express-openapi-validator": "^5.6.0",
     "express": "^5.1.0",
     "express-acl": "^2.0.9",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.15.3",
     "pino": "^10.1.0",
+    "sequelize-cli": "^6.6.3",
     "sequelize": "^6.37.7",
     "socket.io": "^4.8.1",
-    "socketio-jwt": "^4.6.2"
+    "socketio-jwt": "^4.6.2",
+    "umzug": "^3.8.0",
+    "pino-http": "^9.0.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "apidoc": "^0.17.5",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.6.2",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/mocha": "^10.0.10",
     "babel-eslint": "^10.1.0",
     "chai": "^6.2.1",
     "chai-http": "^5.1.2",
@@ -53,6 +73,8 @@
     "nodemon": "^3.1.11",
     "proxyquire": "^2.1.3",
     "request": "^2.88.2",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }

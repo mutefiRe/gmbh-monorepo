@@ -34,6 +34,7 @@ export const UsersPage: React.FC = () => {
     <SimpleCardEditor<User & { password?: string }>
       gridClassName='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6'
       title="Mitarbeiter"
+      description="Rollen steuern die Zugriffsrechte im Admin und in der Kasse."
       data={users}
       renderCard={renderUserCard}
       onAdd={(newUser) => {
@@ -49,13 +50,13 @@ export const UsersPage: React.FC = () => {
       onDelete={(id) => {
         deleteUser(id);
       }}
+      dialogHint="Passwort nur bei neuen Benutzern setzen."
       fields={[
         { key: 'username', label: 'Benutzername', type: 'text' },
         { key: 'firstname', label: 'Vorname', type: 'text' },
         { key: 'lastname', label: 'Nachname', type: 'text' },
         { key: 'role', label: 'Rolle', type: 'select', options: [{ label: 'Admin', value: 'admin' }, { label: 'Kellner', value: 'waiter' }] },
-        isNew ? { key: 'password', label: 'Passwort', type: 'password' } : null,
-        { key: 'printer', label: 'Standard-Drucker', type: 'text' }
+        isNew ? { key: 'password', label: 'Passwort', type: 'password' } : null
       ].filter(Boolean) as any[]}
     />
   );

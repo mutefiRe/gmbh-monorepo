@@ -1,0 +1,74 @@
+services:
+  api:
+    build: api/
+    environment:
+      NODE_ENV: production
+      GMBH_DB_USER: gmbh
+      GMBH_DB_PASSWORD: gmbh
+      GMBH_DB_NAME: gmbh
+      GMBH_DB_HOST: mysql
+      GMBH_DB_PORT: "3306"
+      GMBH_DB_DIALECT: mysql
+      PORT: "8080"
+      CUPS_SERVER: "${CUPS_SERVER}"
+      PRINTER_API_URL: "${PRINTER_API_URL:-http://printer-api:8761}"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0.44-bookworm
+    environment:
+      MYSQL_DATABASE: gmbh
+      MYSQL_USER: gmbh
+      MYSQL_PASSWORD: gmbh
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -prootpassword"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+
+  nginx:
+    image: gmbh-reverse-proxy:latest
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
+      - ./nginx/certs/server:/etc/nginx/certs/server:ro
+      - ./nginx/certs/ca:/etc/nginx/certs/ca:ro
+      - ./nginx/cert-install:/app/cert-install:ro
+      # assets are baked into the image
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  printer-api:
+    build: printer-api/
+    env_file:
+      - printer-api/.env
+    environment:
+      EXTRA_PRINTER_HOSTS: "${EXTRA_PRINTER_HOSTS:-localhost,host.docker.internal}"
+    restart: unless-stopped
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_BASE=/dozzle
+      - DOZZLE_BASE_PATH=/dozzle
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

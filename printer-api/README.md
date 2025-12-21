@@ -1,5 +1,7 @@
 # Printer API
 
+Disclaimer: This project is based on the original idea of g.m.b.h. and its original source code, enhanced and extended with AI.
+
 Stateless discovery + print + status API for ESC/POS printers. Design goal: run without CUPS for POS thermal printers.
 
 ## API docs
@@ -58,6 +60,8 @@ Print queue:
 - In-memory per-printer queue with retry (200ms, 500ms, 1s).
 - `PRINT_QUEUE_SIZE` sets max jobs per printer (default 100).
 - Queue status: `GET /v1/printers/{id}/queue`.
+- `EXTRA_PRINTER_HOSTS` adds comma-separated hostnames/IPs (optionally `host:port`) to check alongside subnet scanning.
+- `DISCOVERY_REFRESH_MS` refreshes discovery cache on an interval (default 300000ms).
 
 ## Docker
 

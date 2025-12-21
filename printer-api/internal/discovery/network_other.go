@@ -8,6 +8,6 @@ import (
 	"escpos-service/internal/model"
 )
 
-func DiscoverNetworkPrinters(timeout time.Duration, maxHosts int, ports []int, hostFilter map[byte]struct{}) ([]model.PrinterRef, error) {
-	return nil, nil
+func DiscoverNetworkPrinters(timeout time.Duration, maxHosts int, ports []int, hostFilter map[byte]struct{}, extraHosts []string) ([]model.PrinterRef, error) {
+	return discoverExtraHosts(timeout, ports, extraHosts), nil
 }

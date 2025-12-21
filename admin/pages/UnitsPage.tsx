@@ -7,7 +7,7 @@ import { Unit } from '../types';
 export const UnitsPage: React.FC = () => {
   const context = useContext(AppContext);
   if (!context) return null;
-  const { units, addUnit, updateUnit, deleteUnit } = context;
+  const { units, addUnit, updateUnit, deleteUnit, unitsLoading, unitsSaving } = context;
 
   const renderUnitCard = (unit: Unit) => (
     <div className="flex items-center gap-4">
@@ -25,11 +25,15 @@ export const UnitsPage: React.FC = () => {
     <SimpleCardEditor<Unit>
       gridClassName='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6'
       title="Einheiten"
+      description="Einheiten werden bei Artikeln angezeigt, z.B. l, cl oder Stk."
+      isLoading={unitsLoading}
+      isSaving={unitsSaving}
       data={units}
       renderCard={renderUnitCard}
       onAdd={(item) => addUnit(item)}
       onEdit={(item) => updateUnit(item)}
       onDelete={(id) => deleteUnit(id)}
+      dialogHint="Kurz und eindeutig, damit die Anzeige in der Kasse sauber bleibt."
       fields={[
         { key: 'name', label: 'Name', type: 'text' }
       ]}

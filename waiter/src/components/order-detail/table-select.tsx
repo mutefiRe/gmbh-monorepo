@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Modal } from "../../ui/modal";
-import { useAreas, useTables } from "../../types/queries";
 import type { Area, Table } from "../../types/models";
 
 type TableSelectModalProps = {
@@ -22,48 +21,69 @@ export function TableSelectModal({
   const filteredTables = selectedAreaId
     ? tables.filter(table => table.areaId === selectedAreaId)
     : tables;
+  const sortedTables = [...filteredTables].sort((a, b) =>
+    a.name.localeCompare(b.name, "de", { numeric: true, sensitivity: "base" })
+  );
 
   return (
     <Modal
       open={open}
       onClose={onClose}
       title="Tisch auswählen"
+      contentClassName="w-[94vw] max-w-5xl"
     >
       <div className="mb-4">
-        <label className="block mb-2 font-bold">Bereich auswählen:</label>
-        <select
-          className="w-full p-2 border rounded"
-          value={selectedAreaId || ""}
-          onChange={(e) => setSelectedAreaId(e.target.value || null)}
-        >
-          <option value="">Alle Bereiche</option>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setSelectedAreaId(null)}
+            className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-colors ${
+              selectedAreaId === null
+                ? "bg-primary-50 border-primary-300 text-primary-700"
+                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+            }`}
+          >
+            Alle Bereiche
+          </button>
           {areas.map(area => (
-            <option key={area.id} value={area.id}>{area.name}</option>
+            <button
+              key={area.id}
+              type="button"
+              onClick={() => setSelectedAreaId(area.id)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-colors ${
+                selectedAreaId === area.id
+                  ? "bg-primary-50 border-primary-300 text-primary-700"
+                  : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              {area.name}
+            </button>
           ))}
-        </select>
+        </div>
       </div>
-      <div className="max-h-60 overflow-y-auto">
-        <ul>
-          {filteredTables.map(table => {
+      <div className="max-h-[60vh] overflow-y-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          {sortedTables.map(table => {
             const area = areas.find(a => a.id === table.areaId);
             if (!area) {
               return null;
             }
 
             return (
-              <li key={table.id}>
-                <button
-                  className="w-full text-left p-2 hover:bg-gray-200 rounded"
-                  onClick={() => {
-                    onSelectTable(table);
-                  }}
-                >
+              <button
+                key={table.id}
+                className="w-full text-left p-3 rounded-lg border border-slate-200 bg-slate-50 hover:bg-primary-50 hover:border-primary-300 transition-colors"
+                onClick={() => {
+                  onSelectTable(table);
+                }}
+              >
+                <div className="text-base font-semibold text-slate-800">
                   {area.short} {table.name}
-                </button>
-              </li>
+                </div>
+              </button>
             )
           })}
-        </ul>
+        </div>
       </div>
     </Modal>
   );

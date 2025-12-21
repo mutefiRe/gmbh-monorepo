@@ -16,6 +16,8 @@ import { api } from './services/api';
 import { Item, User, Area, Table, Category, Order, Unit, Printer } from './types';
 import { NotificationProvider, useNotification } from './components/NotificationProvider';
 import { SettingsPage } from './pages/SettingsPage';
+import { EventsPage } from './pages/EventsPage';
+import { useRealtimeUpdates } from './hooks/useRealtimeUpdates';
 
 // Create Query Client
 const queryClient = new QueryClient({
@@ -71,12 +73,23 @@ type AppContextType = {
 
   orders: Order[];
   isLoading: boolean;
+  itemsLoading: boolean;
+  itemsSaving: boolean;
+  categoriesLoading: boolean;
+  categoriesSaving: boolean;
+  areasLoading: boolean;
+  areasSaving: boolean;
+  tablesLoading: boolean;
+  tablesSaving: boolean;
+  unitsLoading: boolean;
+  unitsSaving: boolean;
 } | null;
 
 export const AppContext = React.createContext<AppContextType>(null);
 
 const AuthenticatedApp = () => {
   const { isAuthenticated } = useAuth();
+  useRealtimeUpdates();
   const qc = useQueryClient();
   const nf = useNotification();
 
@@ -88,7 +101,8 @@ const AuthenticatedApp = () => {
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({ queryKey: ['categories'], queryFn: api.getCategories, enabled: isAuthenticated });
   const { data: units = [], isLoading: unitsLoading } = useQuery({ queryKey: ['units'], queryFn: api.getUnits, enabled: isAuthenticated });
   const { data: printers = [], isLoading: printersLoading } = useQuery({ queryKey: ['printers'], queryFn: api.getPrinters, enabled: isAuthenticated });
-  const { data: orders = [] } = useQuery({ queryKey: ['orders'], queryFn: api.getOrders, enabled: isAuthenticated });
+  const { data: ordersResponse } = useQuery({ queryKey: ['orders'], queryFn: () => api.getOrders(), enabled: isAuthenticated });
+  const orders = ordersResponse?.orders ?? [];
 
   // Mutations
 
@@ -276,6 +290,12 @@ const AuthenticatedApp = () => {
     }
   });
 
+  const itemsSaving = createItemMutation.isPending || updateItemMutation.isPending || deleteItemMutation.isPending;
+  const categoriesSaving = createCategoryMutation.isPending || updateCategoryMutation.isPending || deleteCategoryMutation.isPending;
+  const areasSaving = createAreaMutation.isPending || updateAreaMutation.isPending || deleteAreaMutation.isPending;
+  const tablesSaving = createTableMutation.isPending || updateTableMutation.isPending || deleteTableMutation.isPending;
+  const unitsSaving = createUnitMutation.isPending || updateUnitMutation.isPending || deleteUnitMutation.isPending;
+
   if (!isAuthenticated) {
     return <LoginPage />;
   }
@@ -323,7 +343,17 @@ const AuthenticatedApp = () => {
       deleteCategory: (id) => deleteCategoryMutation.mutate(id),
 
       orders,
-      isLoading
+      isLoading,
+      itemsLoading: itemsLoading,
+      itemsSaving,
+      categoriesLoading: categoriesLoading,
+      categoriesSaving,
+      areasLoading: areasLoading,
+      areasSaving,
+      tablesLoading: tablesLoading,
+      tablesSaving,
+      unitsLoading: unitsLoading,
+      unitsSaving
     } as AppContextType}>
       <Router>
         <Layout>
@@ -343,6 +373,7 @@ const AuthenticatedApp = () => {
             <Route path="/units/:id" element={<UnitsPage />} />
             <Route path="/units" element={<UnitsPage />} />
             <Route path="/printers" element={<PrintersPage />} />
+            <Route path="/events" element={<EventsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

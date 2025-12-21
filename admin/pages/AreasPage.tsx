@@ -10,7 +10,7 @@ import { api } from '@/services/api';
 export const AreasPage: React.FC = () => {
   const context = useContext(AppContext);
   if (!context) return null;
-  const { areas, addArea, updateArea, deleteArea, tables, createTable, updateTable, deleteTable } = context;
+  const { areas, addArea, updateArea, deleteArea, tables, createTable, updateTable, deleteTable, areasLoading, areasSaving, tablesLoading, tablesSaving } = context;
   const params = useParams();
   const navigate = useNavigate();
   const matchesTables = useMatch('/areas/:id/tables');
@@ -82,6 +82,7 @@ export const AreasPage: React.FC = () => {
         createTable={createTable}
         updateTable={updateTable}
         deleteTable={deleteTable}
+        isSaving={tablesSaving}
         api={api}
       />
     );
@@ -91,6 +92,9 @@ export const AreasPage: React.FC = () => {
     <SimpleCardEditor<Area>
       gridClassName='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6'
       title="Tischpläne"
+      description="Bereiche strukturieren die Tische und erscheinen in Bestellungen."
+      isLoading={areasLoading || tablesLoading}
+      isSaving={areasSaving}
       data={areas}
       // You may need to update renderCard to use TableManager via routing if not already done
       renderCard={renderAreaCard}
@@ -101,6 +105,7 @@ export const AreasPage: React.FC = () => {
           deleteArea(id);
         }
       }}
+      dialogHint="Kürzel wird in der Kasse vor dem Tischnamen angezeigt."
       fields={[
         { key: 'name', label: 'Name', type: 'text' },
         { key: 'short', label: 'Kürzel', type: 'text' },

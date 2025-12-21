@@ -1,12 +1,34 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { AppContext } from '../App';
 import { Clock, Receipt, User } from 'lucide-react';
 import { itemAmountString } from '@/lib/utils';
+import { api } from '../services/api';
 
 export const OrdersPage: React.FC = () => {
   const context = useContext(AppContext);
   if (!context) return null;
-  const { orders, tables, items, users, areas, units } = context;
+  const { tables, items, users, areas, units } = context;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageParam = Number(searchParams.get('page') || '1');
+  const page = Number.isFinite(pageParam) && pageParam > 0 ? Math.floor(pageParam) : 1;
+  const limit = 12;
+  const { data: ordersResponse, isLoading } = useQuery({
+    queryKey: ['orders', page, limit],
+    queryFn: () => api.getOrders({ skip: (page - 1) * limit, limit })
+  });
+  const orders = ordersResponse?.orders ?? [];
+  const total = ordersResponse?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setSearchParams({ page: String(totalPages) });
+    } else if (page < 1) {
+      setSearchParams({ page: '1' });
+    }
+  }, [page, totalPages, setSearchParams]);
 
   const getItemName = (id: string) => {
     const item = items.find(i => i.id === id);
@@ -32,11 +54,37 @@ export const OrdersPage: React.FC = () => {
         <h1 className="text-2xl font-bold text-slate-800">Aktuelle Bestellungen</h1>
         <p className="text-slate-500">Übersicht über aktive Bestellungen und Status.</p>
       </div>
+      <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        Tipp: Mit der Pagination kannst du ältere Bestellungen schnell durchsehen.
+      </div>
+
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
+        <div>
+          {total === 0 ? 'Keine Bestellungen' : `Zeige ${(page - 1) * limit + 1}-${(page - 1) * limit + orders.length} von ${total}`}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={() => setSearchParams({ page: String(Math.max(1, page - 1)) })}
+            disabled={page <= 1}
+          >
+            Zurück
+          </button>
+          <span className="text-slate-600">
+            Seite {Math.min(page, totalPages)} / {totalPages}
+          </span>
+          <button
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={() => setSearchParams({ page: String(Math.min(totalPages, page + 1)) })}
+            disabled={page >= totalPages}
+          >
+            Weiter
+          </button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {orders.map(order => {
-          console.log('Rendering order', order);
-
           const allPaid = order.orderitems.every(oi => oi.countPaid && oi.countPaid >= oi.count);
           const totalPrice = order.orderitems.reduce((sum, oi) => sum + oi.price * oi.count, 0);
 
@@ -89,7 +137,7 @@ export const OrdersPage: React.FC = () => {
         })}
         {orders.length === 0 && (
           <div className="col-span-full py-20 text-center text-slate-400 bg-white rounded-xl border border-dashed border-slate-300">
-            Keine aktiven Bestellungen im Moment.
+            {isLoading ? 'Bestellungen werden geladen...' : 'Keine aktiven Bestellungen im Moment.'}
           </div>
         )}
       </div>

@@ -1,14 +1,15 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useUser } from "./types/queries";
 
 type AuthProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 type AuthContextType = {
   isLoading: boolean;
   userId: string | null | undefined;
+  eventId: string | null | undefined;
   token: string;
   user: ReturnType<typeof useUser>;
   setToken: (token: string) => void;
@@ -22,8 +23,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const decodedJwt = jwt ? JSON.parse(atob(jwt.split(".")[1])) : null;
 
   const userId = decodedJwt?.id;
+  const eventId = decodedJwt?.eventId;
 
-  const user = useUser(userId, { enabled: !!userId });
+  const user = useUser(userId ?? "", { enabled: !!userId });
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -36,6 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const auth = {
     isLoading: user.isLoading,
     userId: userId,
+    eventId: eventId,
     token: jwt,
     user,
     setToken: setJwt,

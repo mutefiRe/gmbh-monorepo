@@ -4,21 +4,30 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const apiTarget = env.VITE_API_TARGET || "http://localhost:8080";
+
   return {
     server: {
       port: 3000,
       http: true,
       proxy: {
         "/api": {
-          target: "http://localhost:8080",
+          target: apiTarget,
           changeOrigin: true,
           secure: false,
         },
         "/authenticate": {
-          target: "http://localhost:8080",
+          target: apiTarget,
           changeOrigin: true,
           secure: false,
         },
+        "/socket.io": {
+          target: apiTarget,
+          changeOrigin: true,
+          secure: false,
+          ws: true
+        }
       }
     },
     plugins: [react(), tailwindcss()],

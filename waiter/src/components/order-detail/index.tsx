@@ -1,10 +1,17 @@
-import React, { useState } from "react";
-import type { OrderItem, Item, Unit, Table, Area, User, Category } from "../../types/models";
+import { useState } from "react";
+import { Armchair, ChevronLeft, ReceiptText, Send } from "lucide-react";
+import type { OrderItem, Item, Unit, Table, Area, Category } from "../../types/models";
 import { useCreateOrder, usePrintOrder } from "../../types/queries";
 import { QuantityBlink } from "../../ui/quantity-blink";
 import { Link, useLocation } from "wouter";
 import { TableSelectModal } from "./table-select";
 import type { CurrentOrder } from "../../types/state";
+import { useExtrasHistory } from "../../hooks/useExtrasHistory";
+import { itemAmountString } from "../../lib/itemAmountString";
+import { OrderItemActions } from "../../ui/order-item-actions";
+import { useConnectionStatus } from "../../hooks/useConnectionStatus";
+import { enqueueOfflineOrder } from "../../lib/offlineOrders";
+import { useAuth } from "../../auth-wrapper";
 
 type OrderDetailProps = {
   currentOrder: CurrentOrder;
@@ -14,17 +21,8 @@ type OrderDetailProps = {
   tables: Table[];
   areas: Area[];
   categories: Category[];
-  user: User;
   updateOrderItemCount: (orderitem: OrderItem, count: number) => void;
 };
-
-function getTableButtonStyle(table?: Table & { area?: Area }) {
-  if (!table || !table.area) return {};
-  return {
-    backgroundColor: table.area.color,
-    color: table.area.textcolor,
-  };
-}
 
 function openAmount(orderitems: OrderItem[]) {
   let total = 0;
@@ -34,42 +32,71 @@ function openAmount(orderitems: OrderItem[]) {
   return total;
 }
 
-export const OrderDetail: React.FC<OrderDetailProps> = ({
+export function OrderDetail({
   areas,
   tables,
   units,
   items,
+  categories,
   currentOrder,
   setCurrentOrder,
   updateOrderItemCount,
-}) => {
+}: OrderDetailProps) {
   const [tabbedIndex, setTabbedIndex] = useState<number | null>(null);
-  const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [showTableModal, setShowTableModal] = useState(false);
-  const [location, navigate] = useLocation();
+  const [, navigate] = useLocation();
   const createOrderMutation = useCreateOrder();
   const printMutation = usePrintOrder();
+  const { recordExtrasForItems } = useExtrasHistory();
+  const isSubmitting = createOrderMutation.isPending || printMutation.isPending;
+  const connection = useConnectionStatus();
+  const canReachServer = connection.canReachServer;
+  const auth = useAuth();
 
   async function saveOrder() {
     if (!table) {
       return;
     }
-    try {
-
-    
-    const data = await createOrderMutation.mutateAsync(
-      {
+    if (!canReachServer) {
+      const id = typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      enqueueOfflineOrder({
+        id,
+        createdAt: new Date().toISOString(),
+        userId: auth.userId ?? null,
+        eventId: auth.eventId ?? null,
+        printId: currentOrder.printId || "",
         order: {
+          id,
           tableId: table.id,
           orderitems: currentOrder.orderItems.map(oi => ({
             itemId: oi.itemId,
             count: oi.count,
             extras: oi.extras,
-            price: oi.price,
-          })),
+            price: Number(oi.price),
+          }))
         }
-      },
-    );
+      }, { userId: auth.userId ?? null, eventId: auth.eventId ?? null });
+      setCurrentOrder({ orderItems: [], tableId: null, printId: "" });
+      navigate("/order/new");
+      alert("Offline: Bestellung gespeichert und wird automatisch gesendet, sobald die Verbindung wieder da ist.");
+      return;
+    }
+    try {
+
+    
+    const data = await createOrderMutation.mutateAsync({
+      order: {
+        tableId: table.id,
+        orderitems: currentOrder.orderItems.map(oi => ({
+          itemId: oi.itemId,
+          count: oi.count,
+          extras: oi.extras,
+          price: Number(oi.price),
+        })),
+      }
+    });
     const orderID = data.order.id;
 
   
@@ -80,7 +107,13 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
         printId: currentOrder.printId || "",
       }
     });
-    setCurrentOrder({ orderItems: [], tableId: null });
+    recordExtrasForItems(
+      currentOrder.orderItems.map(orderitem => ({
+        itemId: String(orderitem.itemId),
+        extras: orderitem.extras ?? null,
+      }))
+    );
+    setCurrentOrder({ orderItems: [], tableId: null, printId: "" });
     navigate(`/orders/${orderID}`);
     } catch (error) {
       console.error("Error saving order:", error);
@@ -96,101 +129,132 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
 
   const currentTableArea = table ? areas.find(a => a.id === table.areaId) : undefined;
   return (
-    <div className="w-full max-w-screen-lg mx-auto p-4">
-      <h2 className="text-xl font-bold mb-4">Bestellung</h2>
-      <div className="bg-white rounded-lg shadow-2xl border border-gray-200 mb-4">
-        <table className="min-w-full shadow-lg overflow-hidden">
-          <thead className="bg-gray-200 sticky top-0 z-10 rounded-t-lg">
-            <tr>
-              <th className="px-2 py-1 text-left">Menge</th>
-              <th className="px-2 py-1 text-left">Artikel</th>
-              <th className="px-2 py-1 text-left">Extras</th>
-              <th className="px-2 py-1 text-right">Preis</th>
-            </tr>
-          </thead>
-        </table>
-        <div className="max-h-96 overflow-y-auto">
-          <table className="min-w-full">
-            <tbody>
-              {currentOrder.orderItems.map((orderitem, idx) => {
-                const item = items.find(i => i.id === orderitem.itemId);
-                const unit = item ? item.unitId ? units.find(u => u.id === item.unitId) : undefined : undefined;
-                const isTabbed = tabbedIndex === idx;
-                return (
-                  <tr key={orderitem.itemId + "_" + orderitem.extras} className={`relative ${isTabbed ? 'bg-gray-100' : 'hover:bg-blue-50 cursor-pointer'}`} onClick={() => !isTabbed && setTabbedIndex(idx)} style={{ height: '56px' }}>
-                    <td className="px-2 py-1"><QuantityBlink quantity={orderitem.count} color="#000" /></td>
-                    <td className="px-2 py-1">{item?.name} {item?.amount}{unit?.name}</td>
-                    <td className="px-2 py-1">{orderitem.extras}</td>
-                    <td className="px-2 py-1 text-right">€ {(orderitem.price * orderitem.count).toFixed(2)}</td>
-                    {isTabbed && (
-                      <td
-                        className="absolute left-0 top-0 w-full h-full flex items-center z-10"
-                        style={{ padding: 0, background: 'rgba(243,244,246,0.85)' }} // Tailwind gray-100 with opacity
-                        colSpan={4}
-                      >
-                        <div className="flex w-full justify-end gap-2 pr-4">
-                          <button
-                            className="block w-10 h-10 rounded bg-gray-200 text-xl flex items-center justify-center hover:bg-gray-300"
-                            title="Abbrechen"
-                            onClick={(e) => { e.stopPropagation(); setTabbedIndex(null); }}
-                          >↩️</button>
-                          <button
-                            className="block w-10 h-10 rounded bg-blue-200 text-lg flex items-center justify-center hover:bg-blue-300"
-                            title="-1"
-                            onClick={(e) => { e.stopPropagation(); updateOrderItemCount(orderitem, orderitem.count - 1); if (orderitem.count - 1 <= 0) { setTabbedIndex(null); } }}
-                          >- 1</button>
-                          <button
-                            className="block w-10 h-10 rounded bg-red-200 text-xl flex items-center justify-center hover:bg-red-300"
-                            title="Löschen"
-                            onClick={(e) => { e.stopPropagation(); updateOrderItemCount(orderitem, 0); setTabbedIndex(null); }}
-                          >🗑️</button>
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+    <div className="w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
+      <div className="mb-2 shrink-0">
+        <h2 className="text-xl font-bold text-slate-800">Bestellung</h2>
+        <p className="text-xs text-slate-500">Positionen prüfen, Tisch wählen und abschicken.</p>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
+        <div className="px-3 py-2 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="bg-white p-2 rounded border border-slate-200 shadow-sm">
+              <ReceiptText size={20} className="text-primary" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-800">Positionen</h3>
+              <p className="text-[0.7rem] text-slate-500">{currentOrder.orderItems.length} Artikel</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-[0.7rem] text-slate-500">Summe</p>
+            <p className="text-base font-bold text-slate-800">€ {openAmount(currentOrder.orderItems).toFixed(2)}</p>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+          {currentOrder.orderItems.map((orderitem, idx) => {
+            const item = items.find(i => i.id === orderitem.itemId);
+            const unit = item ? item.unitId ? units.find(u => u.id === item.unitId) : undefined : undefined;
+            const category = item ? categories.find(cat => cat.id === item.categoryId) : undefined;
+            const categoryColor = category?.color || "#64748b";
+            const isTabbed = tabbedIndex === idx;
+            return (
+              <div key={orderitem.itemId + "_" + orderitem.extras} className="px-3 py-1.5 relative">
+                <button
+                  className={`w-full flex items-center justify-between text-left rounded-lg px-2 py-1.5 transition ${isTabbed ? 'bg-primary-50 ring-1 ring-primary-200' : 'hover:bg-slate-50'}`}
+                  onClick={() => setTabbedIndex(isTabbed ? null : idx)}
+                  type="button"
+                >
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <span className="h-6 w-1 rounded-full" style={{ backgroundColor: categoryColor }} />
+                    <QuantityBlink quantity={orderitem.count} color={categoryColor} />
+                    <div className="min-w-0">
+                      <p className="text-slate-800 font-medium truncate">
+                        {item?.name}
+                        {item?.amount && (
+                          <span> {itemAmountString(item.amount)}{unit?.name}</span>
+                        )}
+                      </p>
+                      <p className="text-xs text-slate-500 truncate">{orderitem.extras || 'Ohne Extras'}</p>
+                    </div>
+                  </div>
+                  <span className="text-slate-600 font-medium">€ {(orderitem.price * orderitem.count).toFixed(2)}</span>
+                </button>
+                {isTabbed && (
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-white border border-slate-200 rounded-xl shadow-lg flex items-center gap-2 p-2 z-10">
+                    <OrderItemActions
+                      onDecrement={() => {
+                        updateOrderItemCount(orderitem, orderitem.count - 1);
+                      }}
+                      onDelete={() => {
+                        updateOrderItemCount(orderitem, 0);
+                        setTabbedIndex(null);
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {currentOrder.orderItems.length === 0 && (
+            <div className="p-6 text-center text-slate-400">
+              Keine Positionen in dieser Bestellung.
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-4 justify-between">
+      <div className="flex flex-wrap items-center gap-3 mb-3 justify-between shrink-0">
         {table?.name ? (
           <button
-            className="px-4 py-2 rounded bg-gray-200"
-            style={getTableButtonStyle(table)}
+            className="rounded-md border border-primary-300 bg-primary-50 px-4 py-2 text-primary-700"
             onClick={() => setShowTableModal(true)}
           >
-            Tisch:  {currentTableArea?.short}{table.name}
+            <span className="inline-flex items-center gap-2">
+              <Armchair size={16} />
+              Tisch: {currentTableArea?.short}{table.name}
+            </span>
           </button>
         ) : (
-          <button className="px-4 py-2 rounded bg-red-200" onClick={() => {
-            setShowTableModal(true)
-          }}>
-            <span role="img" >
-              🪑
+          <button
+            className="rounded-md border border-primary-200 bg-primary-50 px-4 py-2 text-primary-700"
+            onClick={() => {
+              setShowTableModal(true);
+            }}
+          >
+            <span className="inline-flex items-center gap-2">
+              <Armchair size={16} />
+              Tisch auswählen
             </span>
-            Tisch auswählen
           </button>
         )}
-        <p className="font-bold text-lg">Summe: € {openAmount(currentOrder.orderItems).toFixed(2)}</p>
-
+        <p className="font-semibold text-slate-700">Summe: € {openAmount(currentOrder.orderItems).toFixed(2)}</p>
       </div>
-      <div className="flex gap-2">
-        <button className="px-4 py-2 bg-green-500 text-white rounded disabled:opacity-20 flex items-center gap-2" disabled={!table} onClick={() => {
-          saveOrder();
-        }}>
-          <span role="img" >✅</span>
-          Bestellung abschicken
-        </button>
 
+      <div className="flex gap-2 shrink-0 justify-between items-center">
         <Link
-          className="px-4 py-2 rounded bg-gray-100 text-xl flex items-center justify-center"
+          className="rounded-md border border-slate-200 bg-white px-4 py-2 text-slate-700"
           href="/order"
           title="Zurück"
-        >Zurück</Link>
+        >
+          <span className="inline-flex items-center gap-2">
+            <ChevronLeft size={16} />
+            Zurück
+          </span>
+        </Link>
+        <button
+          className="rounded-md bg-primary px-4 py-2 text-primary-contrast inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
+          disabled={!table || isSubmitting}
+          onClick={() => {
+            saveOrder();
+          }}
+        >
+          {isSubmitting ? 'Wird gesendet...' : 'Bestellung abschicken'}
+          <Send size={16} />
+        </button>
       </div>
+
       <TableSelectModal
         open={showTableModal}
         onClose={() => setShowTableModal(false)}
@@ -201,7 +265,6 @@ export const OrderDetail: React.FC<OrderDetailProps> = ({
           setShowTableModal(false);
         }}
       />
-
-    </div >
+    </div>
   );
-};
+}

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -14,7 +16,8 @@ import {
   Ruler,
   Printer,
   Layers,
-  X
+  X,
+  Calendar
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -44,6 +47,8 @@ const getPageTitle = (path: string) => {
     case 'users': return 'Benutzer';
     case 'units': return 'Einheiten';
     case 'printers': return 'Drucker';
+    case 'events': return 'Events';
+    case 'settings': return 'Einstellungen';
     default: return 'g.m.b.h. Admin';
   }
 }
@@ -51,7 +56,54 @@ const getPageTitle = (path: string) => {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const { logout } = useAuth();
+  const queryClient = useQueryClient();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data: eventsResponse } = useQuery({
+    queryKey: ['events'],
+    queryFn: api.getEvents
+  });
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(api.getEventId());
+  const events = eventsResponse?.events ?? [];
+  const activeEventId = eventsResponse?.activeEventId ?? null;
+  const previousActiveId = useRef<string | null>(null);
+
+  const selectedEvent = useMemo(
+    () => events.find((event) => event.id === selectedEventId),
+    [events, selectedEventId]
+  );
+  const selectedIsActive = selectedEvent ? selectedEvent.id === activeEventId : false;
+
+  useEffect(() => {
+    if (!events.length) {
+      return;
+    }
+    const activeId = activeEventId || events[0]?.id || null;
+    const currentId = selectedEventId;
+    const current = currentId ? events.find((event) => event.id === currentId) : undefined;
+    const hasCurrent = Boolean(current);
+    const shouldAdoptActive = Boolean(
+      activeId
+      && (
+        !hasCurrent
+        || (previousActiveId.current && currentId === previousActiveId.current && activeId !== currentId)
+      )
+    );
+
+    if (activeId && shouldAdoptActive) {
+      setSelectedEventId(activeId);
+      api.setEventId(activeId);
+      queryClient.invalidateQueries();
+    }
+
+    previousActiveId.current = activeId;
+  }, [activeEventId, events, queryClient, selectedEventId]);
+
+  const handleEventChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextEventId = event.target.value;
+    setSelectedEventId(nextEventId);
+    api.setEventId(nextEventId);
+    queryClient.invalidateQueries();
+  };
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
@@ -81,6 +133,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
           <NavItem to="/units" icon={Ruler} label="Einheiten" active={location.pathname === '/units'} />
           <NavItem to="/printers" icon={Printer} label="Drucker" active={location.pathname === '/printers'} />
+          <NavItem to="/events" icon={Calendar} label="Events" active={location.pathname === '/events'} />
         </nav>
 
         <div className="p-4 border-t border-slate-200 space-y-2">
@@ -131,6 +184,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
               <NavItem to="/units" icon={Ruler} label="Einheiten" active={location.pathname === '/units'} />
               <NavItem to="/printers" icon={Printer} label="Drucker" active={location.pathname === '/printers'} />
+              <NavItem to="/events" icon={Calendar} label="Events" active={location.pathname === '/events'} />
             </nav>
             <div className="p-4 border-t border-slate-200 space-y-2">
               <NavItem
@@ -164,6 +218,34 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               {getPageTitle(location.pathname)}
             </h2>
           </div>
+          {events.length > 0 && (
+            <div className="hidden sm:flex items-center gap-3">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Event</span>
+              <div className="flex items-center gap-2">
+                <select
+                  value={selectedEventId || ''}
+                  onChange={handleEventChange}
+                  className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+                >
+                  {events.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {event.name}{event.id === activeEventId ? ' (aktiv)' : ''}
+                    </option>
+                  ))}
+                </select>
+                {selectedEvent && (
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${selectedIsActive
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'bg-slate-100 text-slate-500'
+                      }`}
+                  >
+                    {selectedIsActive ? 'Aktiv' : 'Inaktiv'}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
 
         </header>
 

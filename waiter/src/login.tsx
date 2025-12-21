@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useAuthenticateUser } from "./types/queries";
 import { useAuth } from "./auth-wrapper";
 import { Redirect } from "wouter";
@@ -10,7 +10,7 @@ export function Login() {
   const authenticateUserMutation = useAuthenticateUser();
   const auth = useAuth();
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: FormEvent) {
     e.preventDefault();
     try {
       const data = await authenticateUserMutation.mutateAsync({ username, password })
@@ -59,6 +59,21 @@ export function Login() {
           <button type="button" className="bg-gray-100 py-2 rounded hover:bg-gray-200" onClick={() => setShowQR(true)}>
             Oder mit QR-Code anmelden
           </button>
+          <p className="text-xs text-gray-400 text-center">
+            Wenn nichts lädt: App zurücksetzen.
+          </p>
+          <button
+            type="button"
+            className="text-xs font-semibold text-gray-500 underline hover:text-gray-700"
+            onClick={() => {
+              if (window.confirm("App wirklich zurücksetzen?")) {
+                localStorage.clear();
+                window.location.reload();
+              }
+            }}
+          >
+            App zurücksetzen
+          </button>
         </form>
       ) : (
         <div className="flex flex-col items-center gap-4">
@@ -71,6 +86,21 @@ export function Login() {
           </button>
           <button className="text-blue-500 underline" onClick={() => setShowQR(false)}>
             Zurück zum Login
+          </button>
+          <p className="text-xs text-gray-400 text-center">
+            Wenn nichts lädt: App zurücksetzen.
+          </p>
+          <button
+            type="button"
+            className="text-xs font-semibold text-gray-500 underline hover:text-gray-700"
+            onClick={() => {
+              if (window.confirm("App wirklich zurücksetzen?")) {
+                localStorage.clear();
+                window.location.reload();
+              }
+            }}
+          >
+            App zurücksetzen
           </button>
         </div>
       )}

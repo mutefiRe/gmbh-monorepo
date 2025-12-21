@@ -24,6 +24,9 @@ func NewRouter(cfg config.Config, logger qlog.Logger) http.Handler {
 		writeSwaggerUI(w, "/openapi.yaml")
 	})
 	srv := &APIServer{cfg: cfg, metrics: metrics, logger: logger}
+	if cfg.DiscoveryRefresh > 0 {
+		srv.StartDiscoveryLoop()
+	}
 	gen.HandlerFromMux(srv, r)
 	return r
 }

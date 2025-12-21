@@ -6,12 +6,15 @@ export const ItemsPage: React.FC = () => {
   const context = useContext(AppContext);
 
   if (!context) return <div>Laden...</div>;
-  const { items, updateItem, addItem, deleteItem, categories, units, isLoading } = context;
+  const { items, updateItem, addItem, deleteItem, categories, units, itemsLoading, itemsSaving, categoriesLoading, unitsLoading } = context;
 
   const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name, 'de'));
   return (
     <TableCardEditor
       title="Speisekarte"
+      description="Artikel, Preise und Einheiten steuern die Anzeige in der Kasse."
+      isLoading={itemsLoading || categoriesLoading || unitsLoading}
+      isSaving={itemsSaving}
       data={sortedItems}
       categories={categories}
       columns={[
@@ -35,6 +38,7 @@ export const ItemsPage: React.FC = () => {
       onAdd={addItem}
       onEdit={updateItem}
       onDelete={deleteItem}
+      dialogHint="Preis in EUR, Steuer in Prozent. Menge und Einheit werden in der Kasse angezeigt."
       fields={[
         { key: 'name', label: 'Name', type: 'text' },
         { key: 'price', label: 'Preis', type: 'number' },

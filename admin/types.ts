@@ -4,7 +4,6 @@ export interface User {
   firstname: string;
   lastname: string;
   role: 'admin' | 'waiter';
-  printer?: string;
   areas?: string[];
 }
 
@@ -32,7 +31,8 @@ export interface Category {
   enabled: boolean;
   description?: string;
   icon?: string;
-  printer?: string;
+  color?: string;
+  printerId?: string | null;
 }
 
 export interface Unit {
@@ -44,6 +44,13 @@ export interface Printer {
   id: string;
   name: string;
   systemName: string;
+}
+
+export interface Event {
+  id: string;
+  name: string;
+  beginDate?: string;
+  endDate?: string;
 }
 
 export interface Item {
@@ -73,13 +80,16 @@ export interface Order {
   userId: string; // User ID
   tableId: string; // Table ID
   orderitems: OrderItem[];
+  printCount: number;
   timestamp: Date;
 }
 
 // Stats for dashboard
 export interface DashboardStats {
-  revenueToday: number;
-  activeOrders: number;
-  occupiedTables: number;
-  topItems: { name: string; count: number }[];
+  totalRevenue: number;
+  ordersCount: number;
+  activeTables: number;
+  averageOrderValue: number;
+  salesByDay: { date: string; sales: number }[];
+  recentOrders: { id: string; number: number; total: number; tableName: string }[];
 }

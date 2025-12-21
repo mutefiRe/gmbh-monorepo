@@ -1,0 +1,2326 @@
+openapi: 3.0.3
+info:
+  title: GmbH API
+  version: 1.2.0
+servers:
+  - url: http://localhost:8080
+security:
+  - bearerAuth: []
+  - apiKeyAuth: []
+paths:
+  /authenticate:
+    get:
+      tags:
+        - Authentication
+      summary: Authentication status page
+      security: []
+      responses:
+        '200':
+          description: HTML page
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags:
+        - Authentication
+      summary: Get token for user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api:
+    get:
+      tags:
+        - Health
+      summary: API root
+      responses:
+        '200':
+          description: API root response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+  /api/healthz:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /api/areas:
+    get:
+      tags:
+        - Area
+      summary: Request all areas
+      responses:
+        '200':
+          description: Areas list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AreaListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Area
+      summary: Create one area
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AreaCreateRequest'
+      responses:
+        '200':
+          description: Area
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AreaResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/areas/{id}:
+    get:
+      tags:
+        - Area
+      summary: Request area by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Area
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AreaResponse'
+    put:
+      tags:
+        - Area
+      summary: Update area
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AreaUpdateRequest'
+      responses:
+        '200':
+          description: Area
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AreaResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Area
+      summary: Delete area
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/categories:
+    get:
+      tags:
+        - Category
+      summary: Request all categories
+      responses:
+        '200':
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Category
+      summary: Create one category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreateRequest'
+      responses:
+        '200':
+          description: Category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/categories/{id}:
+    get:
+      tags:
+        - Category
+      summary: Request category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Category
+      summary: Update category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryUpdateRequest'
+      responses:
+        '200':
+          description: Category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Category
+      summary: Delete category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/items:
+    get:
+      tags:
+        - Item
+      summary: Request all items
+      responses:
+        '200':
+          description: Items list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Item
+      summary: Create one item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemCreateRequest'
+      responses:
+        '200':
+          description: Item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/items/{id}:
+    get:
+      tags:
+        - Item
+      summary: Request item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Item
+      summary: Update item
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUpdateRequest'
+      responses:
+        '200':
+          description: Item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Item
+      summary: Delete item
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/units:
+    get:
+      tags:
+        - Unit
+      summary: Request all units
+      responses:
+        '200':
+          description: Units list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Unit
+      summary: Create one unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitCreateRequest'
+      responses:
+        '200':
+          description: Unit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/units/{id}:
+    get:
+      tags:
+        - Unit
+      summary: Request unit by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Unit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Unit
+      summary: Update unit
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitUpdateRequest'
+      responses:
+        '200':
+          description: Unit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Unit
+      summary: Delete unit
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/tables:
+    get:
+      tags:
+        - Table
+      summary: Request all tables
+      responses:
+        '200':
+          description: Tables list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Table
+      summary: Create one table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TableCreateRequest'
+      responses:
+        '200':
+          description: Table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/tables/{id}:
+    get:
+      tags:
+        - Table
+      summary: Request table by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Table
+      summary: Update table
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TableUpdateRequest'
+      responses:
+        '200':
+          description: Table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Table
+      summary: Delete table
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users:
+    get:
+      tags:
+        - User
+      summary: Request all users
+      responses:
+        '200':
+          description: Users list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - User
+      summary: Create one user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users/{id}:
+    get:
+      tags:
+        - User
+      summary: Request user by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - User
+      summary: Update user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/organizations:
+    get:
+      tags:
+        - Organization
+      summary: Request all organizations
+      responses:
+        '200':
+          description: Organizations list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationListResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Organization
+      summary: Create one organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationCreateRequest'
+      responses:
+        '200':
+          description: Organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/organizations/{id}:
+    get:
+      tags:
+        - Organization
+      summary: Request organization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Organization
+      summary: Update organization
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationUpdateRequest'
+      responses:
+        '200':
+          description: Organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Organization
+      summary: Delete organization
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/events:
+    get:
+      tags:
+        - Event
+      summary: Request all events
+      responses:
+        '200':
+          description: Events list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Event
+      summary: Create one event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreateRequest'
+      responses:
+        '200':
+          description: Event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/events/{id}:
+    put:
+      tags:
+        - Event
+      summary: Update one event
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventUpdateRequest'
+      responses:
+        '200':
+          description: Event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Event
+      summary: Delete one event
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/settings:
+    get:
+      tags:
+        - Setting
+      summary: Request setting
+      responses:
+        '200':
+          description: Setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Setting
+      summary: Create one setting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingCreateRequest'
+      responses:
+        '200':
+          description: Setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Setting
+      summary: Update setting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingUpdateRequest'
+      responses:
+        '200':
+          description: Setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/orderitems:
+    get:
+      tags:
+        - Orderitem
+      summary: Request all orderitems
+      responses:
+        '200':
+          description: Orderitems list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderItem'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Orderitem
+      summary: Create one orderitem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderItemCreateRequest'
+      responses:
+        '200':
+          description: Orderitem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderItemResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/orderitems/{id}:
+    get:
+      tags:
+        - Orderitem
+      summary: Request orderitem by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Orderitem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderItemResponseLegacy'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Orderitem
+      summary: Update orderitem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderItemUpdateRequest'
+      responses:
+        '200':
+          description: Orderitem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderItemResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Orderitem
+      summary: Delete orderitem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/prints:
+    post:
+      tags:
+        - Prints
+      summary: Start print job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrintCreateRequest'
+      responses:
+        '200':
+          description: Print response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrintResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/statistics/sales:
+    get:
+      tags:
+        - Statistics
+      summary: Total sales
+      responses:
+        '200':
+          description: Sales value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesValue'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/statistics/sales-today:
+    get:
+      tags:
+        - Statistics
+      summary: Sales today
+      responses:
+        '200':
+          description: Sales value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesValue'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/statistics/top-selling-products:
+    get:
+      tags:
+        - Statistics
+      summary: Top selling products
+      responses:
+        '200':
+          description: Chart data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/statistics/most-sold-products:
+    get:
+      tags:
+        - Statistics
+      summary: Most sold products
+      responses:
+        '200':
+          description: Chart data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/statistics/sales-hour:
+    get:
+      tags:
+        - Statistics
+      summary: Sales per hour
+      responses:
+        '200':
+          description: Chart data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/orders:
+    get:
+      tags:
+        - Order
+      summary: Request all orders
+      parameters:
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Order
+      summary: Create one order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+      responses:
+        '200':
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/orders/byuser/{userId}:
+    get:
+      tags:
+        - Order
+      summary: Request all orders by user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/orders/{id}:
+    get:
+      tags:
+        - Order
+      summary: Request order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Order
+      summary: Update order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderUpdateRequest'
+      responses:
+        '200':
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Order
+      summary: Delete order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/printers:
+    get:
+      tags:
+        - Printer
+      summary: Request printers
+      parameters:
+        - in: query
+          name: includeQueue
+          schema:
+            type: boolean
+          required: false
+      responses:
+        '200':
+          description: Printers list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrintersResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/printers/{id}:
+    get:
+      tags:
+        - Printer
+      summary: Request printer by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Printer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrinterResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Printer
+      summary: Update printer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrinterUpdateRequest'
+      responses:
+        '200':
+          description: Printer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrinterResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Printer
+      summary: Delete printer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/printers/{id}/testprint:
+    post:
+      tags:
+        - Printer
+      summary: Test print
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/printers/update:
+    post:
+      tags:
+        - Printer
+      summary: Update printers
+      responses:
+        '200':
+          description: Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrinterStatusResponse'
+        '423':
+          description: Locked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrinterStatusResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-token
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: object
+          properties:
+            msg:
+              type: string
+          required:
+            - msg
+      required:
+        - errors
+    AuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+    Area:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        short:
+          type: string
+        enabled:
+          type: boolean
+        tables:
+          type: array
+          items:
+            type: string
+        users:
+          type: array
+          items:
+            type: string
+    AreaResponse:
+      type: object
+      properties:
+        area:
+          $ref: '#/components/schemas/Area'
+      required:
+        - area
+    AreaListResponse:
+      type: object
+      properties:
+        areas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Area'
+      required:
+        - areas
+    AreaCreateRequest:
+      type: object
+      properties:
+        area:
+          $ref: '#/components/schemas/Area'
+      required:
+        - area
+    AreaUpdateRequest:
+      type: object
+      properties:
+        area:
+          $ref: '#/components/schemas/Area'
+      required:
+        - area
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        enabled:
+          type: boolean
+        description:
+          type: string
+        icon:
+          type: string
+          description: Icon name for category display
+        color:
+          type: string
+          description: Hex color for category display
+          example: '#94a3b8'
+        showAmount:
+          type: boolean
+        printer:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+    CategoryResponse:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+      required:
+        - category
+    CategoryListResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+      required:
+        - categories
+    CategoryCreateRequest:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+      required:
+        - category
+    CategoryUpdateRequest:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+      required:
+        - category
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        amount:
+          type: number
+        price:
+          type: number
+        tax:
+          type: number
+        sort:
+          type: number
+        categoryId:
+          type: string
+        unitId:
+          type: string
+        enabled:
+          type: boolean
+    ItemResponse:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/Item'
+      required:
+        - item
+    ItemListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+      required:
+        - items
+    ItemCreateRequest:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/Item'
+      required:
+        - item
+    ItemUpdateRequest:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/Item'
+      required:
+        - item
+    Unit:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    UnitResponse:
+      type: object
+      properties:
+        unit:
+          $ref: '#/components/schemas/Unit'
+      required:
+        - unit
+    UnitListResponse:
+      type: object
+      properties:
+        units:
+          type: array
+          items:
+            $ref: '#/components/schemas/Unit'
+      required:
+        - units
+    UnitCreateRequest:
+      type: object
+      properties:
+        unit:
+          $ref: '#/components/schemas/Unit'
+      required:
+        - unit
+    UnitUpdateRequest:
+      type: object
+      properties:
+        unit:
+          $ref: '#/components/schemas/Unit'
+      required:
+        - unit
+    Table:
+      type: object
+      properties:
+        id:
+          type: string
+        areaId:
+          type: string
+        name:
+          type: string
+        x:
+          type: number
+        y:
+          type: number
+        custom:
+          type: boolean
+        enabled:
+          type: boolean
+    TableResponse:
+      type: object
+      properties:
+        table:
+          $ref: '#/components/schemas/Table'
+      required:
+        - table
+    TableListResponse:
+      type: object
+      properties:
+        tables:
+          type: array
+          items:
+            $ref: '#/components/schemas/Table'
+      required:
+        - tables
+    TableCreateRequest:
+      type: object
+      properties:
+        table:
+          $ref: '#/components/schemas/Table'
+      required:
+        - table
+    TableUpdateRequest:
+      type: object
+      properties:
+        table:
+          $ref: '#/components/schemas/Table'
+      required:
+        - table
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        role:
+          type: string
+          enum: ['admin', 'waiter']
+        areas:
+          type: array
+          items:
+            type: string
+        password:
+          type: string
+    UserResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - user
+    UserListResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      required:
+        - users
+    UserCreateRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - user
+    UserUpdateRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - user
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+        uid:
+          type: number
+        street:
+          type: string
+        street_number:
+          type: string
+        postalcode:
+          type: string
+        city:
+          type: string
+        telephone:
+          type: string
+    OrganizationResponse:
+      type: object
+      properties:
+        organization:
+          $ref: '#/components/schemas/Organization'
+      required:
+        - organization
+    OrganizationListResponse:
+      type: object
+      properties:
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organization'
+      required:
+        - organizations
+    OrganizationCreateRequest:
+      type: object
+      properties:
+        organization:
+          $ref: '#/components/schemas/Organization'
+      required:
+        - organization
+    OrganizationUpdateRequest:
+      type: object
+      properties:
+        organization:
+          $ref: '#/components/schemas/Organization'
+      required:
+        - organization
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        beginDate:
+          type: string
+          format: date-time
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    EventResponse:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+      required:
+        - event
+    EventsResponse:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        activeEventId:
+          type: string
+          nullable: true
+      required:
+        - events
+        - activeEventId
+    EventCreateRequest:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+        importFromEventId:
+          type: string
+          nullable: true
+        include:
+          type: object
+          properties:
+            units:
+              type: boolean
+            categories:
+              type: boolean
+            items:
+              type: boolean
+            areas:
+              type: boolean
+            tables:
+              type: boolean
+      required:
+        - event
+    EventUpdateRequest:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+      required:
+        - event
+    Setting:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        beginDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        instantPay:
+          type: boolean
+        customTables:
+          type: boolean
+        expiresTime:
+          type: string
+        itemShowPrice:
+          type: boolean
+    SettingResponse:
+      type: object
+      properties:
+        setting:
+          $ref: '#/components/schemas/Setting'
+      required:
+        - setting
+    SettingListResponse:
+      type: object
+      properties:
+        setting:
+          type: array
+          items:
+            $ref: '#/components/schemas/Setting'
+      required:
+        - setting
+    SettingCreateRequest:
+      type: object
+      properties:
+        setting:
+          $ref: '#/components/schemas/Setting'
+      required:
+        - setting
+    SettingUpdateRequest:
+      type: object
+      properties:
+        setting:
+          $ref: '#/components/schemas/Setting'
+      required:
+        - setting
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+        extras:
+          type: string
+        count:
+          type: integer
+        countPaid:
+          type: integer
+        countFree:
+          type: integer
+        price:
+          type: number
+        itemId:
+          type: string
+        orderId:
+          type: string
+    OrderItemResponse:
+      type: object
+      properties:
+        orderitem:
+          $ref: '#/components/schemas/OrderItem'
+      required:
+        - orderitem
+    OrderItemResponseLegacy:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/OrderItem'
+      required:
+        - item
+    OrderItemCreateRequest:
+      type: object
+      properties:
+        orderitem:
+          $ref: '#/components/schemas/OrderItem'
+      required:
+        - orderitem
+    OrderItemUpdateRequest:
+      type: object
+      properties:
+        orderitem:
+          $ref: '#/components/schemas/OrderItem'
+      required:
+        - orderitem
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        totalAmount:
+          type: number
+        printCount:
+          type: integer
+        userId:
+          type: string
+        tableId:
+          type: string
+        orderitems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderResponse:
+      type: object
+      properties:
+        order:
+          $ref: '#/components/schemas/Order'
+      required:
+        - order
+    OrderListResponse:
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        count:
+          type: integer
+        total:
+          type: integer
+      required:
+        - orders
+        - count
+        - total
+    OrderCreateRequest:
+      type: object
+      properties:
+        order:
+          $ref: '#/components/schemas/Order'
+      required:
+        - order
+    OrderUpdateRequest:
+      type: object
+      properties:
+        order:
+          $ref: '#/components/schemas/Order'
+      required:
+        - order
+    Printer:
+      type: object
+      properties:
+        id:
+          type: string
+        systemName:
+          type: string
+        name:
+          type: string
+          nullable: true
+        reachable:
+          type: boolean
+        queue:
+          type: object
+          nullable: true
+          additionalProperties: true
+    PrinterResponse:
+      type: object
+      properties:
+        printer:
+          $ref: '#/components/schemas/Printer'
+      required:
+        - printer
+    PrintersResponse:
+      type: object
+      properties:
+        printers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Printer'
+      required:
+        - printers
+    PrinterUpdateRequest:
+      type: object
+      properties:
+        printer:
+          $ref: '#/components/schemas/Printer'
+      required:
+        - printer
+    PrinterStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['ok', 'locked']
+      required:
+        - status
+    PrintRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        orderId:
+          type: string
+        isBill:
+          type: boolean
+      required:
+        - orderId
+    PrintCreateRequest:
+      type: object
+      properties:
+        print:
+          $ref: '#/components/schemas/PrintRequest'
+      required:
+        - print
+    PrintResponse:
+      type: object
+      properties:
+        print:
+          type: object
+          properties:
+            printId:
+              type: string
+            orderId:
+              type: string
+          required:
+            - printId
+            - orderId
+      required:
+        - print
+    SalesValue:
+      type: object
+      properties:
+        sales:
+          type: number
+    ChartResponse:
+      type: object
+      additionalProperties: true

@@ -3,6 +3,7 @@
 package discovery
 
 import (
+	"fmt"
 	"strings"
 
 	"escpos-service/internal/model"
@@ -10,11 +11,16 @@ import (
 	"github.com/google/gousb"
 )
 
-func DiscoverUSBPrinters() ([]model.PrinterRef, error) {
+func DiscoverUSBPrinters() (out []model.PrinterRef, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("usb discovery panic: %v", r)
+			out = nil
+		}
+	}()
+
 	ctx := gousb.NewContext()
 	defer ctx.Close()
-
-	var out []model.PrinterRef
 
 	devs, err := ctx.OpenDevices(func(desc *gousb.DeviceDesc) bool { return true })
 	if err != nil {

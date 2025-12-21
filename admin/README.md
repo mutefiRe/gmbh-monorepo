@@ -1,20 +1,30 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Admin UI
 
-# Run and deploy your AI Studio app
+Disclaimer: This project is based on the original idea of g.m.b.h. and its original source code, enhanced and extended with AI.
 
-This contains everything you need to run your app locally.
+Admin UI for managing items, categories, areas, tables, users, printers, and events.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1dWXSPaXeUBmPq3VugW3qirWhBQyvRNxH
+## Requirements
+- Node.js
+- API running on `http://localhost:8080`
 
-## Run Locally
+## Dev
+```bash
+npm install
+npm run dev
+```
 
-**Prerequisites:**  Node.js
+The dev server runs on `http://localhost:3000` and proxies:
+- `/api` -> `http://localhost:8080`
+- `/authenticate` -> `http://localhost:8080`
+- `/socket.io` -> `http://localhost:8080`
 
+## Build
+```bash
+npm run build
+npm run preview
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Notes
+- Event selection is stored in localStorage.
+- Live updates are delivered via Socket.IO.

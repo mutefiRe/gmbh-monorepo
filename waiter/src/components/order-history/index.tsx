@@ -1,24 +1,29 @@
-import React from "react"; // Keep React import for JSX namespace
 import { Link } from "wouter";
-import { useState } from "react";
-import { useItems, useOrdersByUser, useTables, useAreas } from "../../types/queries";
+import { useState, type ReactNode } from "react";
+import { useOrdersByUser, useTables, useAreas } from "../../types/queries";
 import { useAuth } from "../../auth-wrapper";
 import ProgressBar from "../common/ProgressBar";
+import { Plus } from "lucide-react";
 
-export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () => void; onBack: () => void }) {
+export function OrderHistory() {
   const auth = useAuth();
   const [filter, setFilter] = useState("orders");
+  const [page, setPage] = useState(0);
+  const pageSize = 20;
 
-  const queryOrders = useOrdersByUser(auth.userId || "", { enabled: !!auth.userId });
-  const queryItems = useItems();
+  const queryOrders = useOrdersByUser(auth.userId || "", page * pageSize, pageSize, { enabled: !!auth.userId });
   const queryTables = useTables();
   const queryAreas = useAreas();
 
-  if (queryOrders.isLoading || queryItems.isLoading || queryTables.isLoading) {
+  if (queryOrders.isLoading || queryTables.isLoading) {
     return <div>Lade...</div>;
   }
 
-  const orders = queryOrders.data?.orders || [];
+  const orders = (queryOrders.data?.orders || []).map((order) => ({
+    ...order,
+    orderitems: order.orderitems || []
+  }));
+  const total = queryOrders.data?.total ?? 0;
   const tables = queryTables.data?.tables || [];
   const areas = queryAreas.data?.areas || [];
 
@@ -40,14 +45,14 @@ export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () 
       label: string;
       className: string;
       tdClassName?: string;
-      render: (order: any) => JSX.Element | string;
+      render: (order: any) => ReactNode;
     }>
   ) {
     return (
-      <div className="orders flex-1 flex flex-col h-full min-h-0">
-        <div className="bg-white rounded-lg shadow-2xl border border-gray-200 mb-6 overflow-y-auto">
-          <table className="min-w-full shadow-lg overflow-hidden">
-            <thead className="bg-gray-200 sticky top-0 z-10 rounded-t-lg">
+      <div className="orders flex-1 flex flex-col min-h-0">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex-1 overflow-y-auto min-h-0">
+          <table className="min-w-full">
+            <thead className="bg-slate-50 sticky top-0 z-10">
               <tr>
                 {columns.map((col, i) => (
                   <th key={i} className={col.className}>
@@ -58,21 +63,11 @@ export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () 
             </thead>
             <tbody>
               {rows.map((row, idx) => {
-                let totalCount = 0;
-                let paidCount = 0;
-                row.orderitems.forEach((oi) => {
-                  totalCount += oi.count;
-                  paidCount += oi.countPaid || 0;
-                });
-                const percentPaid = totalCount === 0 ? 0 : Math.min(100, Math.round((paidCount / totalCount) * 100));
-                const rowStyle = {
-                  backgroundColor: idx % 2 === 0 ? "#fff" : "#f9fafb", // white or gray-50
-                };
+                const rowClasses = idx % 2 === 0 ? "bg-white" : "bg-slate-50/60";
                 return (
                   <Link href={`/orders/${row.id}`} key={row.id} className="contents">
                     <tr
-                      className={`transition-colors duration-150 hover:bg-blue-100 border-b last:border-b-0 cursor-pointer`}
-                      style={rowStyle}
+                      className={`transition-colors duration-150 hover:bg-primary-50 border-b border-slate-100 last:border-b-0 cursor-pointer ${rowClasses}`}
                     >
                       {columns.map((col, i) => (
                         <td key={i} className={col.tdClassName || col.className}>
@@ -95,18 +90,18 @@ export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () 
     label: string;
     className: string;
     tdClassName?: string;
-    render: (order: { number: string; createdAt: string; tableId: string; orderitems: Array<{ count: number; countPaid?: number; price: number; }> }) => JSX.Element | string;
+    render: (order: { number: string; createdAt: string; tableId: string; orderitems: Array<{ count: number; countPaid?: number; price: number; }> }) => ReactNode;
   }> = [
       {
         label: "Nr.",
-        className: "px-4 py-3 font-semibold text-gray-700 text-left",
-        tdClassName: "px-4 py-3 text-left",
+        className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-left",
+        tdClassName: "px-4 py-3 text-left text-slate-700",
         render: (order) => order.number,
       },
       {
         label: "Uhrzeit",
-        className: "px-4 py-3 font-semibold text-gray-700 text-left",
-        tdClassName: "px-4 py-3 text-left",
+        className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-left",
+        tdClassName: "px-4 py-3 text-left text-slate-700",
         render: (order) => {
           const date = new Date(order.createdAt);
           if (showFullDate) {
@@ -118,8 +113,8 @@ export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () 
       },
       {
         label: "Tisch",
-        className: "px-4 py-3 font-semibold text-gray-700 text-left",
-        tdClassName: "px-4 py-3 text-left",
+        className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-left",
+        tdClassName: "px-4 py-3 text-left text-slate-700",
         render: (order) => {
           const table = tables.find(t => t.id === order.tableId);
           const area = table ? areas.find(a => a.id === table.areaId) : undefined;
@@ -128,8 +123,8 @@ export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () 
       },
       {
         label: "Artikel (bezahlt / gesamt)",
-        className: "px-4 py-3 font-semibold text-gray-700 text-center",
-        tdClassName: "px-4 py-3 text-center",
+        className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-center",
+        tdClassName: "px-4 py-3 text-center text-slate-700",
         render: (order) => {
           let paidCount = 0;
           let totalCount = 0;
@@ -148,8 +143,8 @@ export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () 
       },
       {
         label: "Bezahlt / Gesamt (€)",
-        className: "px-4 py-3 font-semibold text-gray-700 text-right",
-        tdClassName: "px-4 py-3 text-right",
+        className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-right",
+        tdClassName: "px-4 py-3 text-right text-slate-700",
         render: (order) => {
           let paidPrice = 0;
           let totalPrice = 0;
@@ -172,36 +167,73 @@ export function OrderHistory({ goToOrderDetail, onBack }: { goToOrderDetail: () 
     return openCount > 0;
   });
 
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const currentPage = Math.min(page + 1, totalPages);
+
   return (
-    <div className="w-full flex flex-col items-center justify-start bg-gray-50" style={{ minHeight: 'calc(100vh - 50px)' }}>
-      <div className="w-full max-w-screen-lg flex flex-col flex-1 p-6 h-full">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Bestellverlauf</h2>
-        <div className="flex gap-4 mb-6">
+    <div className="w-full flex flex-col items-center justify-start bg-gray-50 h-[calc(100dvh-56px)]">
+      <div className="w-full max-w-screen-lg flex flex-col flex-1 p-4 h-full min-h-0">
+        <h2 className="text-xl font-bold mb-3 text-gray-800">Bestellverlauf</h2>
+        <div className="flex gap-3 mb-3">
           <button
-            className={`default-btn px-4 py-2 rounded-lg font-semibold ${filter === "orders" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700"}`}
+            className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${
+              filter === "orders"
+                ? "bg-primary-600 text-white border-primary-600"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
+            }`}
             onClick={() => setFilter("orders")}
           >
             Bestellungen
           </button>
           <button
-            className={`default-btn px-4 py-2 rounded-lg font-semibold ${filter === "tables" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700"}`}
+            className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${
+              filter === "tables"
+                ? "bg-primary-600 text-white border-primary-600"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
+            }`}
             onClick={() => setFilter("tables")}
           >
             Offene Bestellungen
           </button>
         </div>
-        <div className="flex-1 flex flex-col h-full">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
+          <div>
+            {total === 0
+              ? 'Keine Bestellungen'
+              : `Zeige ${page * pageSize + 1}-${page * pageSize + orders.length} von ${total}`}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={() => setPage((prev) => Math.max(0, prev - 1))}
+              disabled={page <= 0}
+            >
+              Zurück
+            </button>
+            <span className="text-slate-600">
+              Seite {currentPage} von {totalPages}
+            </span>
+            <button
+              className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={() => setPage((prev) => Math.min(totalPages - 1, prev + 1))}
+              disabled={page >= totalPages - 1}
+            >
+              Weiter
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col min-h-0">
           {filter === "orders" && renderTable(allRows, columns)}
           {filter === "tables" && renderTable(openRows, columns)}
         </div>
       </div>
-      <div className="flex justify-end w-full max-w-screen-lg p-6">
+      <div className="flex justify-end w-full max-w-screen-lg p-4">
         <button
-          className="default-btn bigbutton px-6 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition flex items-center gap-2"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-primary-300 text-primary-700 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors"
           onClick={() => window.location.href = '/order/new'}
         >
-          <span className="icon icon-return"></span>
-          Zurück zu Bestellung aufnehmen
+          <Plus size={16} />
+          Bestellung aufnehmen
         </button>
       </div>
     </div>

@@ -1,0 +1,34 @@
+services:
+  api:
+    build: api/
+    environment:
+      NODE_ENV: test
+      GMBH_DB_TEST: gmbh_test
+      GMBH_DB_USER: gmbh
+      GMBH_DB_PASSWORD: gmbh
+      GMBH_DB_HOST: mysql
+      GMBH_DB_PORT: "3306"
+      GMBH_DB_DIALECT: mysql
+      PORT: "8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: ["npm", "test"]
+  mysql:
+    image: mysql:8.0.44-bookworm
+    environment:
+      MYSQL_DATABASE: gmbh
+      MYSQL_USER: gmbh
+      MYSQL_PASSWORD: gmbh
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -prootpassword"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+volumes:
+  mysql_test_data:

@@ -49,15 +49,17 @@ export interface OrderItem {
   countFree: number;
   price: number;
   itemId: string;
-  orderId: string;
+  orderId?: string;
 }
 
 export interface Order {
   id: string;
+  number?: string;
   totalAmount: number;
   userId: string;
   tableId: string;
-  orderitems: OrderItem[];
+  printCount: number;
+  orderitems?: OrderItem[];
 }
 
 export interface Printer {
@@ -73,7 +75,6 @@ export interface Setting {
   endDate: string | Date;
   instantPay: boolean;
   customTables: boolean;
-  receiptPrinter: string;
   expiresTime: string;
   itemShowPrice: boolean;
 }
@@ -99,7 +100,6 @@ export interface User {
   firstname: string;
   lastname: string;
   role: string;
-  printer: string;
   areaIds: string[];
   password?: string;
 }

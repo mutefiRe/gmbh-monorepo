@@ -80,6 +80,23 @@ export const LoginPage: React.FC = () => {
           <div className="text-center text-xs text-slate-400 mt-4">
             Demo: admin / admin
           </div>
+          <div className="text-center text-xs text-slate-400">
+            Wenn nichts lädt: App zurücksetzen.
+          </div>
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm("App wirklich zurücksetzen?")) {
+                  localStorage.clear();
+                  window.location.reload();
+                }
+              }}
+              className="mt-3 text-xs font-semibold text-slate-500 underline hover:text-slate-700"
+            >
+              App zurücksetzen
+            </button>
+          </div>
         </form>
       </div>
     </div>

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"escpos-service/api/gen"
@@ -22,6 +23,13 @@ type APIServer struct {
 	cfg     config.Config
 	metrics *Metrics
 	logger  qlog.Logger
+	cache   discoveryCache
+}
+
+type discoveryCache struct {
+	mu      sync.Mutex
+	refs    []model.PrinterRef
+	updated time.Time
 }
 
 func (s *APIServer) Healthz(w http.ResponseWriter, r *http.Request) {
@@ -77,21 +85,8 @@ func (s *APIServer) DiscoverPrinters(w http.ResponseWriter, r *http.Request, par
 		}
 	}
 
-	var out []model.Printer
-	if enableNet {
-		netRefs, err := discovery.DiscoverNetworkPrinters(timeout, maxHosts, ports, hostFilter)
-		if err != nil {
-			s.logger.Warn("network discovery failed", qlog.Error(err))
-		}
-		out = append(out, printersFromRefs(netRefs)...)
-	}
-	if enableUSB {
-		usbRefs, err := discovery.DiscoverUSBPrinters()
-		if err != nil {
-			s.logger.Warn("usb discovery failed", qlog.Error(err))
-		}
-		out = append(out, printersFromRefs(usbRefs)...)
-	}
+	refs := s.refreshDiscovery(enableNet, enableUSB, timeout, maxHosts, ports, hostFilter)
+	out := printersFromRefs(refs)
 
 	writeJSON(w, http.StatusOK, map[string]any{"printers": out, "count": len(out)})
 }
@@ -145,7 +140,7 @@ func parseHostFilter(raw string) (map[byte]struct{}, error) {
 }
 
 func (s *APIServer) GetPrinter(w http.ResponseWriter, r *http.Request, id gen.PrinterId) {
-	ref, err := resolvePrinterRef(string(id), s.cfg)
+	ref, err := s.resolvePrinterRef(string(id))
 	if err != nil {
 		writeErr(w, http.StatusBadRequest, "invalid_printer_id", err.Error())
 		return
@@ -154,7 +149,7 @@ func (s *APIServer) GetPrinter(w http.ResponseWriter, r *http.Request, id gen.Pr
 }
 
 func (s *APIServer) GetPrinterStatus(w http.ResponseWriter, r *http.Request, id gen.PrinterId) {
-	ref, err := resolvePrinterRef(string(id), s.cfg)
+	ref, err := s.resolvePrinterRef(string(id))
 	if err != nil {
 		writeErr(w, http.StatusBadRequest, "invalid_printer_id", err.Error())
 		return
@@ -168,7 +163,7 @@ func (s *APIServer) GetPrinterStatus(w http.ResponseWriter, r *http.Request, id 
 }
 
 func (s *APIServer) Print(w http.ResponseWriter, r *http.Request, id gen.PrinterId) {
-	ref, err := resolvePrinterRef(string(id), s.cfg)
+	ref, err := s.resolvePrinterRef(string(id))
 	if err != nil {
 		writeErr(w, http.StatusBadRequest, "invalid_printer_id", err.Error())
 		return
@@ -202,7 +197,7 @@ func (s *APIServer) Print(w http.ResponseWriter, r *http.Request, id gen.Printer
 }
 
 func (s *APIServer) GetQueue(w http.ResponseWriter, r *http.Request, id gen.PrinterId) {
-	ref, err := resolvePrinterRef(string(id), s.cfg)
+	ref, err := s.resolvePrinterRef(string(id))
 	if err != nil {
 		writeErr(w, http.StatusBadRequest, "invalid_printer_id", err.Error())
 		return
@@ -216,25 +211,19 @@ func (s *APIServer) GetQueue(w http.ResponseWriter, r *http.Request, id gen.Prin
 	})
 }
 
-func resolvePrinterRef(id string, cfg config.Config) (model.PrinterRef, error) {
+func (s *APIServer) resolvePrinterRef(id string) (model.PrinterRef, error) {
 	if ref, err := model.DecodePrinterRef(id); err == nil {
 		return ref, nil
 	}
 
-	refs, err := discoverAllRefs(cfg, false)
-	if err != nil {
-		return model.PrinterRef{}, err
-	}
+	refs := s.cacheGet()
 	for _, ref := range refs {
 		if model.StableIDFromRef(ref) == id {
 			return ref, nil
 		}
 	}
 
-	refs, err = discoverAllRefs(cfg, true)
-	if err != nil {
-		return model.PrinterRef{}, err
-	}
+	refs = s.refreshDiscovery(s.cfg.EnableNetwork, s.cfg.EnableUSB, s.cfg.ScanTimeout, s.cfg.MaxHostsDefault, s.cfg.DefaultPorts, nil)
 	for _, ref := range refs {
 		if model.StableIDFromRef(ref) == id {
 			return ref, nil
@@ -243,21 +232,59 @@ func resolvePrinterRef(id string, cfg config.Config) (model.PrinterRef, error) {
 	return model.PrinterRef{}, fmt.Errorf("printer not found")
 }
 
-func discoverAllRefs(cfg config.Config, force bool) ([]model.PrinterRef, error) {
-	var refs []model.PrinterRef
-	if cfg.EnableNetwork || force {
-		netRefs, err := discovery.DiscoverNetworkPrinters(cfg.ScanTimeout, cfg.MaxHostsDefault, cfg.DefaultPorts, nil)
-		if err != nil {
-			return nil, err
-		}
-		refs = append(refs, netRefs...)
+func (s *APIServer) cacheGet() []model.PrinterRef {
+	s.cache.mu.Lock()
+	defer s.cache.mu.Unlock()
+	if len(s.cache.refs) == 0 {
+		return []model.PrinterRef{}
 	}
-	if cfg.EnableUSB || force {
+	refs := make([]model.PrinterRef, len(s.cache.refs))
+	copy(refs, s.cache.refs)
+	return refs
+}
+
+func (s *APIServer) cacheSet(refs []model.PrinterRef) {
+	s.cache.mu.Lock()
+	defer s.cache.mu.Unlock()
+	s.cache.refs = make([]model.PrinterRef, len(refs))
+	copy(s.cache.refs, refs)
+	s.cache.updated = time.Now()
+}
+
+func (s *APIServer) refreshDiscovery(enableNet, enableUSB bool, timeout time.Duration, maxHosts int, ports []int, hostFilter map[byte]struct{}) []model.PrinterRef {
+	var refs []model.PrinterRef
+	hadError := false
+	if enableNet {
+		netRefs, err := discovery.DiscoverNetworkPrinters(timeout, maxHosts, ports, hostFilter, s.cfg.ExtraHosts)
+		if err != nil {
+			s.logger.Warn("network discovery failed", qlog.Error(err))
+			hadError = true
+		} else {
+			refs = append(refs, netRefs...)
+		}
+	}
+	if enableUSB {
 		usbRefs, err := discovery.DiscoverUSBPrinters()
 		if err != nil {
-			return nil, err
+			s.logger.Warn("usb discovery failed", qlog.Error(err))
+			hadError = true
+		} else {
+			refs = append(refs, usbRefs...)
 		}
-		refs = append(refs, usbRefs...)
 	}
-	return refs, nil
+	if hadError && len(refs) == 0 {
+		return s.cacheGet()
+	}
+	s.cacheSet(refs)
+	return refs
+}
+
+func (s *APIServer) StartDiscoveryLoop() {
+	s.refreshDiscovery(s.cfg.EnableNetwork, s.cfg.EnableUSB, s.cfg.ScanTimeout, s.cfg.MaxHostsDefault, s.cfg.DefaultPorts, nil)
+	ticker := time.NewTicker(s.cfg.DiscoveryRefresh)
+	go func() {
+		for range ticker.C {
+			s.refreshDiscovery(s.cfg.EnableNetwork, s.cfg.EnableUSB, s.cfg.ScanTimeout, s.cfg.MaxHostsDefault, s.cfg.DefaultPorts, nil)
+		}
+	}()
 }

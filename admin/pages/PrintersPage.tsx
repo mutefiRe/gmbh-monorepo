@@ -36,12 +36,14 @@ export const PrintersPage: React.FC = () => {
   return (
     <SimpleCardEditor<Printer>
       title="Drucker"
+      description="Drucker werden Kategorien oder Bereichen zugewiesen."
       data={printers}
       renderCard={renderPrinterCard}
       onAdd={(item) => addPrinter(item)}
       onEdit={(item) => updatePrinter(item)}
       onDelete={(id) => deletePrinter(id)}
       customActions={scanButton}
+      dialogHint="System-Name entspricht dem CUPS/Netzwerk-Namen des Druckers."
       fields={[
         { key: 'name', label: 'Bezeichnung', type: 'text' },
         { key: 'systemName', label: 'IP / System-Name', type: 'text' }

@@ -14,6 +14,8 @@ type Config struct {
 	EnableUSB       bool
 	EnableNetwork   bool
 	DefaultPorts    []int
+	ExtraHosts      []string
+	DiscoveryRefresh time.Duration
 	PrintThrottle   time.Duration
 	PrintQueueSize  int
 }
@@ -43,6 +45,8 @@ func ConfigFromEnv() Config {
 		EnableUSB:       getenvBool("ENABLE_USB", true),
 		EnableNetwork:   getenvBool("ENABLE_NETWORK", true),
 		DefaultPorts:    ports,
+		ExtraHosts:      getenvCSV("EXTRA_PRINTER_HOSTS"),
+		DiscoveryRefresh: time.Duration(getenvInt("DISCOVERY_REFRESH_MS", 300000)) * time.Millisecond,
 		PrintThrottle:   time.Duration(getenvInt("PRINT_THROTTLE_MS", 0)) * time.Millisecond,
 		PrintQueueSize:  getenvInt("PRINT_QUEUE_SIZE", 100),
 	}
@@ -75,4 +79,19 @@ func getenvBool(k string, def bool) bool {
 	}
 	v = strings.ToLower(v)
 	return v == "1" || v == "true" || v == "yes"
+}
+
+func getenvCSV(k string) []string {
+	raw := os.Getenv(k)
+	if raw == "" {
+		return nil
+	}
+	var out []string
+	for _, part := range strings.Split(raw, ",") {
+		part = strings.TrimSpace(part)
+		if part != "" {
+			out = append(out, part)
+		}
+	}
+	return out
 }

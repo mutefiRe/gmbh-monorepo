@@ -1,4 +1,4 @@
-import { Area, Category, Item, Order, Table, Unit, User, Printer } from '../../types';
+import { Area, Category, Item, Order, Table, Unit, User, Printer, Event } from '../../types';
 import {
   initialItems, initialUsers, initialAreas,
   initialTables, initialCategories, initialOrders, initialUnits, initialPrinters
@@ -6,6 +6,7 @@ import {
 
 const BASE_URL = window.location.origin; // Adjust if your real backend is elsewhere
 const API_BASE = 'api/';
+const EVENT_STORAGE_KEY = 'gmbh-admin-event-id';
 const MOCK_DELAY = 600;
 const USE_MOCK = false; // Set to false to try real backend
 
@@ -14,6 +15,26 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Helper to get token
 const getToken = () => localStorage.getItem('gmbh-admin-auth-jwt');
+const getEventId = () => localStorage.getItem(EVENT_STORAGE_KEY);
+const setEventId = (eventId: string | null) => {
+  if (eventId) {
+    localStorage.setItem(EVENT_STORAGE_KEY, eventId);
+  } else {
+    localStorage.removeItem(EVENT_STORAGE_KEY);
+  }
+};
+
+const toNumber = (value: unknown, fallback = 0) => {
+  const parsed = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const normalizeItemForApi = (item: Partial<Item>) => ({
+  ...item,
+  amount: toNumber(item.amount),
+  price: toNumber(item.price),
+  tax: toNumber(item.tax),
+});
 
 // Generic Fetch Wrapper
 async function client<T>(endpoint: string, { body, ...customConfig }: RequestInit = {}): Promise<T> {
@@ -21,6 +42,10 @@ async function client<T>(endpoint: string, { body, ...customConfig }: RequestIni
   const headers: HeadersInit = { 'Content-Type': 'application/json' };
   if (token) {
     headers['x-access-token'] = token;
+  }
+  const eventId = getEventId();
+  if (eventId) {
+    headers['x-event-id'] = eventId;
   }
 
   const config: RequestInit = {
@@ -38,8 +63,23 @@ async function client<T>(endpoint: string, { body, ...customConfig }: RequestIni
 
   const response = await fetch(`${BASE_URL}/${endpoint}`, config);
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || 'Network Error');
+    const errorText = await response.text();
+    let errorMsg = errorText;
+    try {
+      const parsed = JSON.parse(errorText);
+      errorMsg = parsed?.errors?.msg || errorText;
+    } catch (_) {
+      // keep raw text
+    }
+    if (token && (response.status === 401 || response.status === 403)) {
+      localStorage.removeItem('gmbh-admin-auth-jwt');
+      window.location.reload();
+    }
+    if (token && response.status === 400 && (errorMsg === 'auth.tokenError' || errorMsg === 'auth.eventChanged')) {
+      localStorage.removeItem('gmbh-admin-auth-jwt');
+      window.location.reload();
+    }
+    throw new Error(errorMsg || 'Network Error');
   }
   return response.json();
 }
@@ -47,6 +87,53 @@ async function client<T>(endpoint: string, { body, ...customConfig }: RequestIni
 // --- API Methods ---
 
 export const api = {
+  getEventId,
+  setEventId,
+  getEvents: async (): Promise<{ events: Event[]; activeEventId: string | null }> => {
+    if (USE_MOCK) { await delay(MOCK_DELAY); return { events: [], activeEventId: null }; }
+    return client<{ events: Event[]; activeEventId: string | null }>(API_BASE + 'events', {
+      headers: { 'x-event-id': '' }
+    });
+  },
+  createEvent: async (payload: Partial<Event> & {
+    importFromEventId?: string;
+    include?: {
+      units?: boolean;
+      categories?: boolean;
+      items?: boolean;
+      areas?: boolean;
+      tables?: boolean;
+    };
+  }): Promise<Event> => {
+    if (USE_MOCK) {
+      await delay(MOCK_DELAY);
+      return { ...payload, id: Date.now().toString() } as Event;
+    }
+    const { importFromEventId, include, ...event } = payload;
+    return (
+      await client<{ event: Event }>(API_BASE + 'events', {
+        method: 'POST',
+        body: { event, importFromEventId, include } as any
+      })
+    ).event;
+  },
+  deleteEvent: async (eventId: string): Promise<void> => {
+    if (USE_MOCK) {
+      await delay(MOCK_DELAY);
+      return;
+    }
+    await client(`${API_BASE}events/${eventId}`, { method: 'DELETE' });
+  },
+  setActiveEvent: async (eventId: string): Promise<void> => {
+    if (USE_MOCK) {
+      await delay(MOCK_DELAY);
+      return;
+    }
+    await client<{ setting: unknown }>(API_BASE + 'settings', {
+      method: 'PUT',
+      body: { setting: { activeEventId: eventId } } as any
+    });
+  },
   login: async (username: string, password: string): Promise<{ token: string }> => {
     if (USE_MOCK) {
       await delay(800);
@@ -60,15 +147,21 @@ export const api = {
   // --- Items ---
   getItems: async (): Promise<Item[]> => {
     if (USE_MOCK) { await delay(MOCK_DELAY); return [...initialItems]; }
-    return (await client<{ items: Item[] }>(API_BASE + 'items')).items;
+    const items = (await client<{ items: Item[] }>(API_BASE + 'items')).items;
+    return items.map((item) => ({
+      ...item,
+      amount: toNumber(item.amount),
+      price: toNumber(item.price),
+      tax: toNumber(item.tax),
+    }));
   },
   createItem: async (item: Partial<Item>): Promise<Item> => {
     if (USE_MOCK) { await delay(MOCK_DELAY); return { ...item, id: Date.now().toLocaleString() } as Item; }
-    return (await client<{ item: Item }>(API_BASE + 'items', { body: { item: item } as any })).item;
+    return (await client<{ item: Item }>(API_BASE + 'items', { body: { item: normalizeItemForApi(item) } as any })).item;
   },
   updateItem: async (item: Item): Promise<Item> => {
     if (USE_MOCK) { await delay(MOCK_DELAY); return item; }
-    return (await client<{ item: Item }>(`${API_BASE}items/${item.id}`, { method: 'PUT', body: { item: item } as any })).item;
+    return (await client<{ item: Item }>(`${API_BASE}items/${item.id}`, { method: 'PUT', body: { item: normalizeItemForApi(item) } as any })).item;
   },
   deleteItem: async (id: number): Promise<void> => {
     if (USE_MOCK) { await delay(MOCK_DELAY); return; }
@@ -130,9 +223,20 @@ export const api = {
   },
 
   // --- Orders ---
-  getOrders: async (): Promise<Order[]> => {
-    if (USE_MOCK) { await delay(MOCK_DELAY); return [...initialOrders]; }
-    return (await client<{ orders: Order[] }>(API_BASE + 'orders')).orders;
+  getOrders: async (params?: { skip?: number; limit?: number }): Promise<{ orders: Order[]; count: number; total: number }> => {
+    if (USE_MOCK) {
+      await delay(MOCK_DELAY);
+      const allOrders = [...initialOrders];
+      const skip = params?.skip ?? 0;
+      const limit = params?.limit;
+      const pagedOrders = typeof limit === 'number' ? allOrders.slice(skip, skip + limit) : allOrders.slice(skip);
+      return { orders: pagedOrders, count: pagedOrders.length, total: allOrders.length };
+    }
+    const query = new URLSearchParams();
+    if (typeof params?.skip === 'number') query.set('skip', String(params.skip));
+    if (typeof params?.limit === 'number') query.set('limit', String(params.limit));
+    const queryString = query.toString();
+    return client<{ orders: Order[]; count: number; total: number }>(`${API_BASE}orders${queryString ? `?${queryString}` : ''}`);
   },
 
   // --- Categories ---
@@ -201,5 +305,27 @@ export const api = {
       return { ok: 'true' };
     }
     return client(`${API_BASE}printers/update`, { method: 'POST' });
+  },
+
+  getStats: async (): Promise<{
+    totalRevenue: number;
+    ordersCount: number;
+    activeTables: number;
+    averageOrderValue: number;
+    salesByDay: { date: string; sales: number }[];
+    recentOrders: { id: string; number: number; total: number; tableName: string }[];
+  }> => {
+    if (USE_MOCK) {
+      await delay(MOCK_DELAY);
+      return {
+        totalRevenue: 0,
+        ordersCount: 0,
+        activeTables: 0,
+        averageOrderValue: 0,
+        salesByDay: [],
+        recentOrders: []
+      };
+    }
+    return client(`${API_BASE}stats`);
   }
 };

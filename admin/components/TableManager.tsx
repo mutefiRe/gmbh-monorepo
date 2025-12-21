@@ -11,6 +11,7 @@ interface TableManagerProps {
   createTable: (table: Partial<Table>) => void;
   updateTable: (table: Table) => void;
   deleteTable: (id: string) => void;
+  isSaving?: boolean;
 }
 
 export const TableManager: React.FC<TableManagerProps> = ({
@@ -20,6 +21,7 @@ export const TableManager: React.FC<TableManagerProps> = ({
   createTable,
   updateTable,
   deleteTable,
+  isSaving = false,
 }) => {
   const [bulkAddConfig, setBulkAddConfig] = useState({ prefix: '', start: 1, count: 5 });
   const [selectedTableIds, setSelectedTableIds] = useState<string[]>([]);
@@ -99,6 +101,9 @@ export const TableManager: React.FC<TableManagerProps> = ({
           <h4 className="font-semibold text-slate-700 mb-6 flex items-center gap-2">
             <Plus size={20} /> Massen hinzufügen
           </h4>
+          <p className="text-sm text-slate-600 mb-4">
+            Tipp: Verwende ein Kürzel für schnelle Nummernserien (z.B. T 1-10).
+          </p>
           <div className="space-y-6">
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Präfix</label>
@@ -136,9 +141,11 @@ export const TableManager: React.FC<TableManagerProps> = ({
 
             <PrimaryButton
               onClick={handleBulkAdd}
+              loading={isSaving}
+              disabled={isSaving}
               className="w-full bg-primary-600 text-white py-3 rounded-xl font-bold hover:bg-primary-700 transition-colors shadow-md shadow-blue-200 active:scale-95"
             >
-              {bulkAddConfig.count} Tische generieren
+              {isSaving ? 'Tische werden erstellt...' : `${bulkAddConfig.count} Tische generieren`}
             </PrimaryButton>
           </div>
         </div>
@@ -149,8 +156,9 @@ export const TableManager: React.FC<TableManagerProps> = ({
             <div className="flex items-center gap-3">
               <button
                 onClick={toggleAllTables}
-                className="text-slate-400 hover:text-primary transition-colors p-1"
+                className={`transition-colors p-1 ${isSaving ? 'text-slate-300 cursor-not-allowed' : 'text-slate-400 hover:text-primary'}`}
                 title="Alle auswählen"
+                disabled={isSaving}
               >
                 {areAllActiveSelected
                   ? <CheckSquare size={24} className="text-primary" />
@@ -164,7 +172,11 @@ export const TableManager: React.FC<TableManagerProps> = ({
               <>
                 <button
                   onClick={handleBulkDelete}
-                  className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors text-sm font-bold active:scale-95"
+                  disabled={isSaving}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-bold active:scale-95 ${isSaving
+                    ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                    : 'text-red-600 bg-red-50 hover:bg-red-100'
+                    }`}
                 >
                   <Trash2 size={18} />
                   Löschen ({selectedTableIds.length})
@@ -180,7 +192,11 @@ export const TableManager: React.FC<TableManagerProps> = ({
                     }
                     setSelectedTableIds([]);
                   }}
-                  className="flex items-center gap-2 text-yellow-700 bg-yellow-100 px-4 py-2 rounded-lg hover:bg-yellow-200 transition-colors text-sm font-bold active:scale-95 ml-2"
+                  disabled={isSaving}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-bold active:scale-95 ml-2 ${isSaving
+                    ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                    : 'text-yellow-700 bg-yellow-100 hover:bg-yellow-200'
+                    }`}
                 >
                   <X size={18} />
                   {activeAreaTables.some(t => t.enabled && selectedTableIds.includes(t.id!)) ? 'Deaktivieren' : 'Aktivieren'}
@@ -194,7 +210,9 @@ export const TableManager: React.FC<TableManagerProps> = ({
               {activeAreaTables.map(table => (
                 <div
                   key={table.id}
-                  onClick={() => toggleTableSelection(table.id!)}
+                  onClick={() => {
+                    if (!isSaving) toggleTableSelection(table.id!);
+                  }}
                   className={
                     `cursor-pointer p-4 rounded-xl border-2 transition-all select-none flex items-center justify-between active:scale-95
                     ${!table.enabled ? 'bg-orange-100 border-orange-400 text-orange-700' : selectedTableIds.includes(table.id!)

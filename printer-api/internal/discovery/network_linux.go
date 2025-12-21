@@ -15,14 +15,20 @@ import (
 	"escpos-service/internal/model"
 )
 
-func DiscoverNetworkPrinters(timeout time.Duration, maxHosts int, ports []int, hostFilter map[byte]struct{}) ([]model.PrinterRef, error) {
-	subnets, err := localIPv4Subnets()
-	if err != nil {
-		return nil, err
+func DiscoverNetworkPrinters(timeout time.Duration, maxHosts int, ports []int, hostFilter map[byte]struct{}, extraHosts []string) ([]model.PrinterRef, error) {
+	found := discoverExtraHosts(timeout, ports, extraHosts)
+	seen := map[string]bool{}
+	for _, ref := range found {
+		seen[model.EncodePrinterRef(ref)] = true
 	}
 
-	var found []model.PrinterRef
-	seen := map[string]bool{}
+	subnets, err := localIPv4Subnets()
+	if err != nil {
+		if len(found) > 0 {
+			return found, nil
+		}
+		return nil, err
+	}
 
 	for _, sn := range subnets {
 		ips := enumerateHosts(sn, maxHosts, hostFilter)

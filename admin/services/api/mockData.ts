@@ -21,10 +21,10 @@ export const initialTables: Table[] = [
 ];
 
 export const initialCategories: Category[] = [
-  { id: 1, name: 'Getränke', enabled: true, icon: 'beer' },
-  { id: 2, name: 'Vorspeisen', enabled: true, icon: 'salad' },
-  { id: 3, name: 'Hauptspeisen', enabled: true, icon: 'utensils' },
-  { id: 4, name: 'Desserts', enabled: true, icon: 'ice-cream' },
+  { id: 1, name: 'Getränke', enabled: true, icon: 'beer', color: '#f59e0b' },
+  { id: 2, name: 'Vorspeisen', enabled: true, icon: 'salad', color: '#14b8a6' },
+  { id: 3, name: 'Hauptspeisen', enabled: true, icon: 'utensils', color: '#6366f1' },
+  { id: 4, name: 'Desserts', enabled: true, icon: 'ice-cream', color: '#f43f5e' },
 ];
 
 export const initialUnits: Unit[] = [

@@ -7,13 +7,17 @@ import { PrimaryButton } from './PrimaryButton';
 interface SimpleCardEditorProps<T> {
   data: T[];
   title: string;
+  description?: React.ReactNode;
+  isLoading?: boolean;
+  isSaving?: boolean;
   renderCard: (item: T) => React.ReactNode;
   onAdd: (item: Partial<T>) => void;
   onEdit: (item: T) => void;
   onDelete: (id: any) => void;
-  fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select' | 'emoji' | 'password'; options?: { label: string; value: any, }[], optional?: boolean }[];
+  fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select' | 'emoji' | 'icon' | 'color' | 'password'; options?: { label: string; value: any; icon?: React.ReactNode }[], optional?: boolean }[];
   customActions?: React.ReactNode;
   gridClassName?: string; // Allows customizing the grid layout
+  dialogHint?: React.ReactNode;
 }
 
 const EMOJI_OPTIONS = [
@@ -28,18 +32,23 @@ const EMOJI_OPTIONS = [
 export const SimpleCardEditor = <T extends { id: any; name?: string }>({
   data,
   title,
+  description,
+  isLoading = false,
+  isSaving = false,
   renderCard,
   onAdd,
   onEdit,
   onDelete,
   fields,
   customActions,
-  gridClassName
+  gridClassName,
+  dialogHint
 }: SimpleCardEditorProps<T>) => {
   const [editingItem, setEditingItem] = useState<Partial<T> | null>(null);
   const params = useParams();
   const navigate = useNavigate();
   const isModalOpen = editingItem !== null;
+  const isBusy = isLoading || isSaving;
 
   useEffect(() => {
     let item: Partial<T> | null = null;
@@ -76,6 +85,7 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
 
   const submitButtonDisabled = () => {
     if (!editingItem) return true;
+    if (isSaving) return true;
     for (const field of fields) {
       if (!field.optional && (editingItem[field.key] === undefined || editingItem[field.key] === null || editingItem[field.key] === '')) {
         return true;
@@ -88,28 +98,54 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
+          {description && (
+            <p className="text-sm text-slate-500 mt-1">{description}</p>
+          )}
+        </div>
         <div className="flex items-center gap-3">
           {customActions}
           <Link
             to={'new'}
             component="button"
-            className="flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl hover:bg-primary-700 transition-colors shadow-sm font-semibold active:scale-95"
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors shadow-sm font-semibold active:scale-95 ${isBusy
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              : 'bg-primary-600 text-white hover:bg-primary-700'
+              }`}
+            onClick={(event) => {
+              if (isBusy) {
+                event.preventDefault();
+              }
+            }}
           >
             <Plus size={20} />
-            Hinzufügen
+            {isSaving ? 'Speichert...' : 'Hinzufügen'}
           </Link>
         </div>
       </div>
 
       <div className={gridClassName || "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
+        {isLoading && data.length === 0 && (
+          <div className="col-span-full rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-400">
+            Daten werden geladen...
+          </div>
+        )}
         {data.map((item) => (
           <div key={item.id} className="group relative bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
             <div className="absolute top-4 right-4 flex gap-2 z-10">
               <Link
                 to={`${String(item.id)}`}
                 component="button"
-                className="p-4 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg hover:bg-primary-100 hover:text-primary hover:border-primary-200 transition-colors active:scale-95"
+                className={`p-4 bg-slate-50 border rounded-lg transition-colors active:scale-95 ${isSaving
+                  ? 'border-slate-200 text-slate-300 cursor-not-allowed'
+                  : 'border-slate-200 text-slate-600 hover:bg-primary-100 hover:text-primary hover:border-primary-200'
+                  }`}
+                onClick={(event) => {
+                  if (isSaving) {
+                    event.preventDefault();
+                  }
+                }}
                 title="Bearbeiten"
               >
                 <Edit2 size={18} />
@@ -119,7 +155,11 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
                   e.stopPropagation();
                   if (confirm('Wirklich löschen?')) onDelete(item.id);
                 }}
-                className="p-4 bg-slate-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors active:scale-95"
+                disabled={isSaving}
+                className={`p-4 bg-slate-50 border rounded-lg transition-colors active:scale-95 ${isSaving
+                  ? 'border-slate-200 text-slate-300 cursor-not-allowed'
+                  : 'border-red-200 text-red-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200'
+                  }`}
                 title="Löschen"
               >
                 <Trash2 size={18} />
@@ -156,6 +196,7 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
                   type="submit"
                   form="simple-card-editor-form"
                   icon={<Check size={20} />}
+                  loading={isSaving}
                 >
                   Speichern
                 </PrimaryButton>
@@ -164,6 +205,11 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
             className="max-w-lg"
           >
             <form id="simple-card-editor-form" onSubmit={handleSave} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+              {dialogHint && (
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                  {dialogHint}
+                </div>
+              )}
               {fields.map((field) => {
                 let fieldComponent = null;
                 switch (field.type) {
@@ -231,6 +277,82 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
                         ))}
                       </div>
                     </div>;
+                    break;
+                  case 'icon':
+                    fieldComponent = (
+                      <div className="grid grid-cols-4 gap-3">
+                        {field.options?.map(option => {
+                          const isSelected = editingItem?.[field.key] === option.value;
+                          const editingId = (editingItem as any)?.id;
+                          const normalizedOption = String(option.value || '').toLowerCase();
+                          const isUsed = data.some((item) => {
+                            if ((item as any).id === editingId) return false;
+                            const value = (item as any)[field.key];
+                            return value && String(value).toLowerCase() === normalizedOption;
+                          });
+                          const isDisabled = isUsed && !isSelected;
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              onClick={() => {
+                                if (isDisabled) return;
+                                handleFieldChange(field.key, option.value);
+                              }}
+                              className={`flex flex-col items-center justify-center gap-2 rounded-xl border p-3 text-xs font-semibold transition ${isSelected
+                                ? 'border-primary-300 bg-primary-50 text-primary-700'
+                                : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                                } ${isDisabled ? 'opacity-40 cursor-not-allowed hover:bg-white pointer-events-none' : ''}`}
+                              aria-label={option.label}
+                              title={option.label}
+                              disabled={isDisabled}
+                            >
+                              <span className="text-primary-600">{option.icon}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                    break;
+                  case 'color':
+                    fieldComponent = (
+                      <div className="space-y-3">
+                        {field.options && field.options.length > 0 && (
+                          <div className="grid grid-cols-4 gap-2">
+                            {field.options.map((option) => {
+                              const isSelected = editingItem?.[field.key] === option.value;
+                              const editingId = (editingItem as any)?.id;
+                              const normalizedOption = String(option.value || '').toLowerCase();
+                              const isUsed = data.some((item) => {
+                                if ((item as any).id === editingId) return false;
+                                const value = (item as any)[field.key];
+                                return value && String(value).toLowerCase() === normalizedOption;
+                              });
+                              const isDisabled = isUsed && !isSelected;
+                              return (
+                                <button
+                                  key={option.value}
+                                  type="button"
+                                  onClick={() => {
+                                    if (isDisabled) return;
+                                    handleFieldChange(field.key, option.value);
+                                  }}
+                                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition ${isSelected
+                                    ? 'border-primary-300 bg-primary-50 text-primary-700'
+                                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                                    } ${isDisabled ? 'opacity-40 cursor-not-allowed hover:bg-white pointer-events-none' : ''}`}
+                                  aria-label={option.label}
+                                  title={option.label}
+                                  disabled={isDisabled}
+                                >
+                                  <span className="h-4 w-4 rounded-full border border-slate-200" style={{ background: String(option.value) }} />
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
                     break;
                   case 'password':
                     fieldComponent = <input

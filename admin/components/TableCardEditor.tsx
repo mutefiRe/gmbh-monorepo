@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Edit2, Plus, Trash2, X, Check } from 'lucide-react';
 import { PrimaryButton } from './PrimaryButton';
+import { CategoryIcon } from '../lib/categoryIcons';
 import { useParams, useNavigate } from 'react-router-dom';
 
 interface TableCardEditorProps<T> {
   data: T[];
   title: string;
+  description?: React.ReactNode;
+  isLoading?: boolean;
+  isSaving?: boolean;
   columns: {
     key: keyof T; label: string; render?: (item: T) => React.ReactNode, sortable?: boolean,
     sortFn?: (a: T, b: T, direction: 'asc' | 'desc') => number;
@@ -14,17 +18,22 @@ interface TableCardEditorProps<T> {
   onEdit: (item: T) => void;
   onDelete: (id: any) => void;
   fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select'; options?: { label: string; value: any }[], optional?: boolean, }[];
+  dialogHint?: React.ReactNode;
 
 }
 
 export function TableCardEditor<T extends { id: any }>({
   data,
   title,
+  description,
+  isLoading = false,
+  isSaving = false,
   columns,
   onAdd,
   onEdit,
   onDelete,
-  fields
+  fields,
+  dialogHint
 }: TableCardEditorProps<T> & { categories?: { id: any; name: string; icon?: string }[] }) {
 
   // Filter and sorting state
@@ -125,13 +134,14 @@ export function TableCardEditor<T extends { id: any }>({
     }));
     // Add uncategorized
     const uncategorized = sorted.filter((item: any) => !item.categoryId || !cats.find((c: any) => c.id === item.categoryId));
-    if (uncategorized.length > 0) grouped.push({ group: 'Ohne Kategorie', icon: '🗂️', items: uncategorized });
+    if (uncategorized.length > 0) grouped.push({ group: 'Ohne Kategorie', icon: 'utensils', items: uncategorized });
   } else {
     grouped = [{ group: '', items: sorted }];
   }
 
   const submitButtonDisabled = () => {
     if (!editingItem) return true;
+    if (isSaving) return true;
     for (const field of fields) {
       if (!field.optional && (editingItem[field.key] === undefined || editingItem[field.key] === null || editingItem[field.key] === '')) {
         return true;
@@ -143,13 +153,22 @@ export function TableCardEditor<T extends { id: any }>({
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
+          {description && (
+            <p className="text-sm text-slate-500 mt-1">{description}</p>
+          )}
+        </div>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl hover:bg-primary-700 transition-colors shadow-sm font-semibold active:scale-95"
+          disabled={isLoading || isSaving}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors shadow-sm font-semibold active:scale-95 ${isLoading || isSaving
+            ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            : 'bg-primary-600 text-white hover:bg-primary-700'
+            }`}
         >
           <Plus size={20} />
-          Hinzufügen
+          {isSaving ? 'Speichert...' : 'Hinzufügen'}
         </button>
       </div>
       <div className="flex items-center gap-2 mb-2">
@@ -175,7 +194,7 @@ export function TableCardEditor<T extends { id: any }>({
         <div key={group.group + idx} className="overflow-x-auto">
           {group.group && (
             <div className="flex items-center gap-3 mb-2 mt-6">
-              <span className="text-2xl">{group.icon || '🗂️'}</span>
+              <CategoryIcon name={group.icon} className="text-slate-600" size={20} />
               <span className="font-bold text-lg text-slate-700">{group.group}</span>
             </div>
           )}
@@ -209,7 +228,9 @@ export function TableCardEditor<T extends { id: any }>({
             <tbody>
               {group.items.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length + 1} className="text-slate-400 italic text-center py-4">Keine Einträge vorhanden.</td>
+                  <td colSpan={columns.length + 1} className="text-slate-400 italic text-center py-4">
+                    {isLoading ? 'Daten werden geladen...' : 'Keine Einträge vorhanden.'}
+                  </td>
                 </tr>
               ) : (
                 group.items.map(item => (
@@ -222,14 +243,16 @@ export function TableCardEditor<T extends { id: any }>({
                     <td className="px-2 py-2 md:px-4 text-center whitespace-nowrap">
                       <button
                         onClick={() => openEditModal(item)}
-                        className="p-2 text-primary hover:bg-primary-100 rounded-lg"
+                        disabled={isSaving}
+                        className={`p-2 rounded-lg ${isSaving ? 'text-slate-300 cursor-not-allowed' : 'text-primary hover:bg-primary-100'}`}
                         title="Bearbeiten"
                       >
                         <Edit2 size={18} />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="p-2 text-red-600 hover:bg-red-100 rounded-lg ml-2"
+                        disabled={isSaving}
+                        className={`p-2 rounded-lg ml-2 ${isSaving ? 'text-slate-300 cursor-not-allowed' : 'text-red-600 hover:bg-red-100'}`}
                         title="Löschen"
                       >
                         <Trash2 size={18} />
@@ -272,6 +295,11 @@ export function TableCardEditor<T extends { id: any }>({
               </button>
             </div>
             <form onSubmit={handleSave} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+              {dialogHint && (
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                  {dialogHint}
+                </div>
+              )}
               {fields.map((field) => (
                 <div key={field.key as string}>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -322,6 +350,7 @@ export function TableCardEditor<T extends { id: any }>({
                   type="submit"
                   icon={<Check size={20} />}
                   disabled={submitButtonDisabled()}
+                  loading={isSaving}
                 >
                   Speichern
                 </PrimaryButton>
