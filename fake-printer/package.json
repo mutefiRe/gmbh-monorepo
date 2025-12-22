@@ -1,6 +1,7 @@
 {
   "name": "fake-printer",
   "private": true,
+  "version": "0.0.1",
   "type": "commonjs",
   "scripts": {
     "dev": "node -r ts-node/register src/server.ts",

@@ -23,8 +23,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prestart": "npm run build",
-    "test": "NODE_ENV=test PORT=8081 npm run build && node --test --test-concurrency=1 dist/test",
-    "test-ci": "NODE_ENV=test-ci npm run build && node --test --test-concurrency=1 dist/test",
+    "test": "NODE_ENV=test PORT=8081 npm run build && node --test --test-concurrency=1 dist/router",
+    "test-ci": "NODE_ENV=test-ci npm run build && node --test --test-concurrency=1 dist/router",
     "chaos-test": "NODE_ENV=test node --test __tests__/chaos.test.mjs",
     "fix-style": "eslint --fix .",
     "lint": "eslint .",

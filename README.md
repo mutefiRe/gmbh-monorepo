@@ -178,3 +178,15 @@ The production compose mounts `waiter/dist` into Nginx.
 - `make up-prod`: production compose
 - `make test-api`, `make test-api-docker`: API tests
 - `make clean`: remove docker volumes
+
+## Release management
+
+- **Version metadata**: each subproject carries its own version (`api/package.json`, `admin/package.json`, `waiter/package.json`, `fake-printer/package.json`, `printer-api/version/version.go`). Increment the relevant version before releasing.
+- **Publish images manually**: run `RELEASE_TAG=dev-1.2.3 make release-images` (default `RELEASE_TAG=latest`) to build & push Docker images for API, printer API, fake printer, and the nginx reverse proxy. The helper scripts read the version metadata and tag each image accordingly while also applying the chosen release tag.
+- **Environment variables**: override `RELEASE_REGISTRY` and `RELEASE_REPO` if you publish to a non-default registry (defaults to `docker.io/gmbh`). The release target relies on `docker` CLI being logged in before pushing.
+
+## Automated releases (GitHub Actions)
+
+- The `.github/workflows/release.yml` workflow runs on every push to `main` and can be triggered manually via “Run workflow”. It builds and pushes the Docker images using the same `make release-images` target so both automated and manual releases share the same logic.
+- The workflow exposes an optional `release_tag` input (default `latest`) that appends an extra tag on top of each service’s version tag.
+- Provide `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` as repository secrets so the workflow can authenticate with Docker Hub.

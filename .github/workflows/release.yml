@@ -1,0 +1,42 @@
+name: Release images
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Optional tag to publish alongside the version (defaults to `latest`)
+        required: false
+        default: latest
+
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    env:
+      DOCKER_REGISTRY: docker.io
+      DOCKER_REPO: gmbh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+
+      - name: Decide release tag
+        id: release-tag
+        run: |
+          TAG=${{ github.event.inputs.release_tag || 'latest' }}
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Publish Docker images
+        run: make release-images RELEASE_TAG=${{ steps.release-tag.outputs.tag }}

@@ -3,3 +3,4 @@ nginx/certs/ca/*
 nginx/certs/server/*
 !nginx/certs/ca/.gitkeep
 !nginx/certs/server/.gitkeep
+.env.dockerhub

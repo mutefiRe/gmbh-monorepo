@@ -1,6 +1,10 @@
 db-connect:
 	docker compose exec mysql mysql -u gmbh -p gmbh
 
+ifneq (,$(wildcard .env.dockerhub))
+	include .env.dockerhub
+	export
+endif
 
 ifeq ($(shell uname),Darwin)
 PRINTER_API_URL_ENV=PRINTER_API_URL=http://host.docker.internal:8761
@@ -59,3 +63,11 @@ stop:
 
 stop-prod:
 	docker compose -f docker-compose.prod.yml down --remove-orphans
+
+RELEASE_TAG ?= latest
+RELEASE_REGISTRY ?= docker.io
+RELEASE_REPO ?=gmbh
+
+.PHONY: release-images
+release-images:
+	DOCKER_REGISTRY=$(RELEASE_REGISTRY) DOCKER_REPO=$(RELEASE_REPO) node scripts/release-images.js --tag "$(RELEASE_TAG)"
