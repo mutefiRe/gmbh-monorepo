@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { getOfflineOrders, subscribeOfflineOrders } from "../../lib/offlineOrders";
 import { Notice } from "../../ui/notice";
 import { pendingOrdersMessage } from "../../lib/offlineMessages";
-import { useConnectionStatus } from "../../hooks/useConnectionStatus";
+import { useConnectionStatus } from "../../context/ConnectionStatusContext";
 
 export function OrderHistory() {
   const auth = useAuth();
@@ -213,21 +213,19 @@ export function OrderHistory() {
         <h2 className="text-xl font-bold mb-3 text-gray-800">Bestellverlauf</h2>
         <div className="flex gap-3 mb-3">
           <button
-            className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${
-              filter === "orders"
+            className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${filter === "orders"
                 ? "bg-primary-600 text-white border-primary-600"
                 : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
-            }`}
+              }`}
             onClick={() => setFilter("orders")}
           >
             Bestellungen
           </button>
           <button
-            className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${
-              filter === "tables"
+            className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${filter === "tables"
                 ? "bg-primary-600 text-white border-primary-600"
                 : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
-            }`}
+              }`}
             onClick={() => setFilter("tables")}
           >
             Offene Bestellungen

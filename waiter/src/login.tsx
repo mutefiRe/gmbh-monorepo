@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Redirect } from "wouter";
 import { useAuth } from "./auth-wrapper";
 import { useAuthenticateUser } from "./types/queries";
-import { useConnectionStatus } from "./hooks/useConnectionStatus";
+import { useConnectionStatus } from "./context/ConnectionStatusContext";
 import { ConnectionPill } from "./ui/connection-pill";
 import { Button } from "./ui/button";
 import { Notice } from "./ui/notice";

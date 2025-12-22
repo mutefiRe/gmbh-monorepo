@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../auth-wrapper";
 
-type ConnectionState = {
+export type ConnectionState = {
   isOnline: boolean;
   isServerReachable: boolean;
   canReachServer: boolean;
@@ -11,11 +11,14 @@ type ConnectionState = {
 const PING_INTERVAL_MS = 10000;
 const PING_TIMEOUT_MS = 3000;
 
-export function useConnectionStatus(): ConnectionState {
+// useConnectionStatusCheck provides real-time information about the application's connection status,
+// Please use useConnectionStatus from ConnectionStatusContext instead of this hook directly.
+export function useConnectionStatusCheck(): ConnectionState {
   const auth = useAuth();
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
   const [isServerReachable, setIsServerReachable] = useState<boolean>(true);
   const [isChecking, setIsChecking] = useState<boolean>(false);
+  const prevReachableRef = useRef<boolean>(true);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -33,6 +36,7 @@ export function useConnectionStatus(): ConnectionState {
     const ping = async () => {
       if (!isOnline) {
         setIsServerReachable(false);
+        prevReachableRef.current = false;
         return;
       }
       setIsChecking(true);
@@ -54,12 +58,21 @@ export function useConnectionStatus(): ConnectionState {
           signal: controller.signal,
         });
         if (res.ok || res.status === 401 || res.status === 403) {
-          setIsServerReachable(true);
+          if (!prevReachableRef.current) {
+            setIsServerReachable(true);
+            prevReachableRef.current = true;
+          }
         } else {
-          setIsServerReachable(false);
+          if (prevReachableRef.current) {
+            setIsServerReachable(false);
+            prevReachableRef.current = false;
+          }
         }
       } catch (error) {
-        setIsServerReachable(false);
+        if (prevReachableRef.current) {
+          setIsServerReachable(false);
+          prevReachableRef.current = false;
+        }
       } finally {
         window.clearTimeout(timeout);
         setIsChecking(false);
@@ -71,7 +84,7 @@ export function useConnectionStatus(): ConnectionState {
     return () => {
       if (interval) window.clearInterval(interval);
     };
-  }, [auth.eventId, auth.token, isOnline]);
+  }, [isOnline]);
 
   const status = useMemo<ConnectionState["status"]>(() => {
     if (!isOnline) return "offline";

@@ -13,7 +13,7 @@ import { Settings } from "./components/settings";
 import { Intro } from "./components/intro";
 import { Notifications } from "./components/notifications";
 import { LoadingScreen } from "./ui/loading-screen";
-import { useConnectionStatus } from "./hooks/useConnectionStatus";
+import { useConnectionStatus } from "./context/ConnectionStatusContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./auth-wrapper";
 import { flushOfflineOrders } from "./lib/offlineOrders";

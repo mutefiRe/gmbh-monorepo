@@ -4,7 +4,7 @@ import { useOrder, usePrintOrder, useUpdateOrder } from "../../types/queries";
 import type { Area, Category, Item, OrderItem, Table, Unit } from "../../types/models";
 import { itemAmountString } from "../../lib/itemAmountString";
 import { useQueryClient } from "@tanstack/react-query";
-import { useConnectionStatus } from "../../hooks/useConnectionStatus";
+import { useConnectionStatus } from "../../context/ConnectionStatusContext";
 import { enqueueOfflinePayment, hasPendingPayment } from "../../lib/offlinePayments";
 import { useAuth } from "../../auth-wrapper";
 import { Notice } from "../../ui/notice";
@@ -101,19 +101,19 @@ export function PayDetail({
   }, 0);
   const statusNotice = isOfflineOrder
     ? {
-        variant: "warning" as const,
-        message: offlineOrderPaymentMessage()
-      }
+      variant: "warning" as const,
+      message: offlineOrderPaymentMessage()
+    }
     : !canReachServer
       ? {
-          variant: "warning" as const,
-          message: "Offline: Zahlung wird gespeichert. Drucken ist erst nach der Verbindung möglich."
-        }
+        variant: "warning" as const,
+        message: "Offline: Zahlung wird gespeichert. Drucken ist erst nach der Verbindung möglich."
+      }
       : pendingPayment
         ? {
-            variant: "warning" as const,
-            message: pendingPaymentsMessage(1, canReachServer) || "Ausstehende Zahlung wird gesendet."
-          }
+          variant: "warning" as const,
+          message: pendingPaymentsMessage(1, canReachServer) || "Ausstehende Zahlung wird gesendet."
+        }
         : null;
   const table = tables.find(t => t.id === order?.tableId);
   const area = table ? areas.find(a => a.id === table.areaId) : undefined;

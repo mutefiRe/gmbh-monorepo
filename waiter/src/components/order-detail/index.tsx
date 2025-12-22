@@ -9,7 +9,7 @@ import type { CurrentOrder } from "../../types/state";
 import { useExtrasHistory } from "../../hooks/useExtrasHistory";
 import { itemAmountString } from "../../lib/itemAmountString";
 import { OrderItemActions } from "../../ui/order-item-actions";
-import { useConnectionStatus } from "../../hooks/useConnectionStatus";
+import { useConnectionStatus } from "../../context/ConnectionStatusContext";
 import { enqueueOfflineOrder } from "../../lib/offlineOrders";
 import { useAuth } from "../../auth-wrapper";
 import { Notice } from "../../ui/notice";
@@ -102,37 +102,37 @@ export function OrderDetail({
     try {
       setNotice(null);
 
-    
-    const data = await createOrderMutation.mutateAsync({
-      order: {
-        tableId: table?.id ?? null,
-        customTableName: table ? null : customName,
-        orderitems: currentOrder.orderItems.map(oi => ({
-          itemId: oi.itemId,
-          count: oi.count,
-          extras: oi.extras,
-          price: Number(oi.price),
-        })),
-      }
-    });
-    const orderID = data.order.id;
 
-  
-    // Trigger print after order is created
-    await printMutation.mutateAsync({
-      print: {
-        orderId: orderID,
-        printId: currentOrder.printId || "",
-      }
-    });
-    recordExtrasForItems(
-      currentOrder.orderItems.map(orderitem => ({
-        itemId: String(orderitem.itemId),
-        extras: orderitem.extras ?? null,
-      }))
-    );
-    setCurrentOrder({ orderItems: [], tableId: null, customTableName: null, printId: "" });
-    navigate(`/orders/${orderID}`);
+      const data = await createOrderMutation.mutateAsync({
+        order: {
+          tableId: table?.id ?? null,
+          customTableName: table ? null : customName,
+          orderitems: currentOrder.orderItems.map(oi => ({
+            itemId: oi.itemId,
+            count: oi.count,
+            extras: oi.extras,
+            price: Number(oi.price),
+          })),
+        }
+      });
+      const orderID = data.order.id;
+
+
+      // Trigger print after order is created
+      await printMutation.mutateAsync({
+        print: {
+          orderId: orderID,
+          printId: currentOrder.printId || "",
+        }
+      });
+      recordExtrasForItems(
+        currentOrder.orderItems.map(orderitem => ({
+          itemId: String(orderitem.itemId),
+          extras: orderitem.extras ?? null,
+        }))
+      );
+      setCurrentOrder({ orderItems: [], tableId: null, customTableName: null, printId: "" });
+      navigate(`/orders/${orderID}`);
     } catch (error) {
       setNotice({ message: "Bestellung konnte nicht gesendet werden.", variant: "error" });
     }

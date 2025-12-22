@@ -4,14 +4,18 @@ import './index.css'
 import App from './App.tsx'
 import { ErrorBoundary } from './ui/error-boundary'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ConnectionStatusProvider } from './context/ConnectionStatusContext.tsx'
 
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
+
       <QueryClientProvider client={queryClient}>
-        <App />
+        <ConnectionStatusProvider>
+          <App />
+        </ConnectionStatusProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   </StrictMode>,
