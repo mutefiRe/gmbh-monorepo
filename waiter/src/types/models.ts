@@ -57,7 +57,8 @@ export interface Order {
   createdAt?: string;
   totalAmount: number;
   userId: string;
-  tableId: string;
+  tableId: string | null;
+  customTableName?: string | null;
   printCount: number;
   orderitems?: OrderItem[];
 }
@@ -79,15 +80,23 @@ export interface Printer {
   name: string;
 }
 
+export interface Event {
+  id: string;
+  name: string;
+  beginDate: string | Date | null;
+  endDate: string | Date | null;
+  customTables: boolean;
+}
+
 export interface Setting {
   id: string;
   name: string;
   beginDate: string | Date;
   endDate: string | Date;
   instantPay: boolean;
-  customTables: boolean;
   expiresTime: string;
   itemShowPrice: boolean;
+  activeEvent?: Event | null;
 }
 
 export interface Table {

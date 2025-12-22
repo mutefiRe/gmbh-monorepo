@@ -33,7 +33,8 @@ export function OrderHistory() {
     id: string;
     number?: string;
     createdAt?: string;
-    tableId: string;
+    tableId: string | null;
+    customTableName?: string | null;
     orderitems: Array<{ count: number; countPaid?: number; price: number }>;
   };
 
@@ -48,6 +49,7 @@ export function OrderHistory() {
       number: "Offline",
       createdAt: entry.createdAt,
       tableId: entry.order.tableId,
+      customTableName: entry.order.customTableName ?? null,
       orderitems: entry.order.orderitems.map((item) => ({
         count: item.count,
         countPaid: item.countPaid ?? 0,
@@ -147,6 +149,9 @@ export function OrderHistory() {
         className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-left",
         tdClassName: "px-4 py-3 text-left text-slate-700",
         render: (order) => {
+          if (!order.tableId) {
+            return order.customTableName || "Ohne Tisch";
+          }
           const table = tables.find(t => t.id === order.tableId);
           const area = table ? areas.find(a => a.id === table.areaId) : undefined;
           return `${area?.short || ''}${table?.name || ''}`;
@@ -272,6 +277,9 @@ export function OrderHistory() {
                     {offlineRows.map((row, idx) => {
                       const table = tables.find(t => t.id === row.tableId);
                       const area = table ? areas.find(a => a.id === table.areaId) : undefined;
+                      const tableLabel = row.tableId
+                        ? `${area?.short || ''}${table?.name || ''}`
+                        : row.customTableName || "Ohne Tisch";
                       const rowClasses = idx % 2 === 0 ? "bg-amber-50/60" : "bg-amber-100/40";
                       return (
                         <Link href={`/orders/${row.id}`} key={row.id} className="contents">
@@ -290,7 +298,7 @@ export function OrderHistory() {
                                 : "-"}
                             </td>
                             <td className="px-4 py-3 text-left text-slate-700">
-                              {`${area?.short || ''}${table?.name || ''}`}
+                              {tableLabel}
                             </td>
                             <td className="px-4 py-3 text-right text-slate-700">
                               {row.orderitems.reduce((sum, item) => sum + item.count * item.price, 0).toFixed(2)} €

@@ -101,6 +101,12 @@ export const api = {
       })
     ).event;
   },
+  updateEvent: async (eventId: string, event: Partial<Event>): Promise<Event> => {
+    return (await client<{ event: Event }>(`${API_BASE}events/${eventId}`, {
+      method: 'PUT',
+      body: { event } as any
+    })).event;
+  },
   deleteEvent: async (eventId: string): Promise<void> => {
     await client(`${API_BASE}events/${eventId}`, { method: 'DELETE' });
   },

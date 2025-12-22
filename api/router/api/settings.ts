@@ -6,6 +6,7 @@ const requireRole = require('../permissions');
 
 async function loadSetting() {
   return db.Setting.findOne({
+    attributes: { exclude: ['customTables'] },
     include: [
       { model: db.Event, as: 'activeEvent' }
     ]
@@ -57,7 +58,9 @@ router.post('/', requireRole('admin'), async function (req, res) {
 });
 
 router.put('/', requireRole('admin'), async function (req, res) {
-  const setting = await db.Setting.findOne();
+  const setting = await db.Setting.findOne({
+    attributes: { exclude: ['customTables'] }
+  });
   if (!setting) {
     res.status(404).send({
       errors: { msg: "couldn't find any settings" }

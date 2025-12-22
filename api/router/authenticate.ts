@@ -13,7 +13,9 @@ router.post('/', function (req: Request, res: Response) {
   }).then(thisUser => {
     if (!thisUser) throw new Error("auth.error");
     else if (thisUser.validPassword(req.body.password)) {
-      db.Setting.findOne()
+      db.Setting.findOne({
+        attributes: { exclude: ['customTables'] }
+      })
         .then((setting) => {
           const expiresTime = setting?.expiresTime || "72h";
           const tokenPayload = thisUser.createAuthUser({

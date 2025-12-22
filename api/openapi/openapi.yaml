@@ -2163,6 +2163,8 @@ components:
           type: string
         name:
           type: string
+        customTables:
+          type: boolean
         beginDate:
           type: string
           format: date-time
@@ -2241,8 +2243,6 @@ components:
           type: string
           format: date-time
         instantPay:
-          type: boolean
-        customTables:
           type: boolean
         expiresTime:
           type: string
@@ -2338,6 +2338,11 @@ components:
           type: string
         tableId:
           type: string
+          nullable: true
+        customTableName:
+          type: string
+          minLength: 3
+          nullable: true
         orderitems:
           type: array
           items:

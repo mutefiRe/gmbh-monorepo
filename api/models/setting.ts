@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     name: { type: DataTypes.STRING, allowNull: false, unique: false },
     beginDate: { type: DataTypes.DATE, allowNull: true, unique: false },
     endDate: { type: DataTypes.DATE, allowNull: true, unique: false },
-    customTables: { type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue: false },
     instantPay: { type: DataTypes.BOOLEAN, allowNull: false, unique: false, defalutValue: true },
     showItemPrice: { type: DataTypes.BOOLEAN, allowNull: true, unique: false, defalutValue: true },
     expiresTime: { type: DataTypes.STRING, allowNull: false, unique: false, defaultValue: "168h" },

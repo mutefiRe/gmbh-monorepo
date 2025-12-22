@@ -35,7 +35,9 @@ export default async function apiAuth(req: AuthenticatedRequest, res: Response, 
     req.decoded = decoded;
     const role = (decoded as any)?.role;
     if (role === 'waiter') {
-      const setting = await db.Setting.findOne();
+      const setting = await db.Setting.findOne({
+        attributes: { exclude: ['customTables'] }
+      });
       const activeEventId = setting?.activeEventId || null;
       const tokenEventId = (decoded as any)?.eventId || null;
       if (activeEventId && tokenEventId && activeEventId !== tokenEventId) {

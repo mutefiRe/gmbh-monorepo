@@ -68,6 +68,7 @@ export function PayDetail({
       totalAmount,
       userId: offlineOrder.userId || "",
       tableId: offlineOrder.order.tableId,
+      customTableName: offlineOrder.order.customTableName ?? null,
       printCount: 0,
       orderitems
     };
@@ -116,6 +117,9 @@ export function PayDetail({
         : null;
   const table = tables.find(t => t.id === order?.tableId);
   const area = table ? areas.find(a => a.id === table.areaId) : undefined;
+  const tableLabel = order?.tableId
+    ? `${area?.short || ''}${table?.name || ''}`
+    : order?.customTableName || "Ohne Tisch";
   function incrementMarked(id: string, max: number) {
     setItemMarks(prev => ({ ...prev, [id]: Math.min((prev[id] || 0) + 1, max) }));
   }
@@ -228,9 +232,7 @@ export function PayDetail({
         <div className="px-3 py-2 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
           <div>
             <p className="text-sm font-semibold text-slate-800">Bestellung Nr. {order?.number || order?.id}</p>
-            {order.tableId && (
-              <p className="text-xs text-slate-500">Tisch: {area?.short}{table?.name}</p>
-            )}
+            <p className="text-xs text-slate-500">Tisch: {tableLabel}</p>
           </div>
           <div className="text-right">
             <p className="text-[0.7rem] text-slate-500">Auswahl</p>

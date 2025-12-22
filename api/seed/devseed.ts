@@ -83,14 +83,14 @@ module.exports = async function () {
   const event = await db.Event.create({
     name: "Testevent",
     beginDate: null,
-    endDate: null
+    endDate: null,
+    customTables: true
   });
   const setting = await db.Setting.create({
     name: "Testsetting",
     begin_date: "nodate",
     end_date: "nodate",
     instantPay: true,
-    customTables: true,
     expiresTime: "72h",
     showItemPrice: true,
     activeEventId: event.id

@@ -11,6 +11,14 @@ export function EventsPage() {
   const [pendingEventId, setPendingEventId] = useState<string | null>(null);
   const [pendingDeleteEventId, setPendingDeleteEventId] = useState<string | null>(null);
   const [importEventId, setImportEventId] = useState<string>("");
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  const [eventEdits, setEventEdits] = useState<Record<string, {
+    name: string;
+    beginDate: string;
+    endDate: string;
+    customTables: boolean;
+  }>>({});
   const [importOptions, setImportOptions] = useState({
     units: true,
     categories: false,
@@ -46,6 +54,16 @@ export function EventsPage() {
     onError: () => notify("Event konnte nicht aktiviert werden", "error")
   });
 
+  const updateEventMutation = useMutation({
+    mutationFn: ({ eventId, payload }: { eventId: string; payload: { name?: string; beginDate?: string | null; endDate?: string | null; customTables?: boolean } }) =>
+      api.updateEvent(eventId, payload),
+    onSuccess: () => {
+      notify("Event aktualisiert", "success");
+      queryClient.invalidateQueries();
+    },
+    onError: () => notify("Event konnte nicht aktualisiert werden", "error")
+  });
+
   const deleteEventMutation = useMutation({
     mutationFn: api.deleteEvent,
     onSuccess: () => {
@@ -79,6 +97,31 @@ export function EventsPage() {
   };
 
   const pendingDeleteEvent = events.find((event) => event.id === pendingDeleteEventId);
+  const getEventEdit = (eventId: string, event: { name: string; beginDate?: string; endDate?: string; customTables?: boolean }) => {
+    return eventEdits[eventId] || {
+      name: event.name || "",
+      beginDate: event.beginDate || "",
+      endDate: event.endDate || "",
+      customTables: event.customTables ?? true
+    };
+  };
+  const setEventEdit = (eventId: string, updates: Partial<{
+    name: string;
+    beginDate: string;
+    endDate: string;
+    customTables: boolean;
+  }>) => {
+    setEventEdits((prev) => {
+      const next = { ...prev };
+      next[eventId] = { ...(prev[eventId] || {}), ...updates } as {
+        name: string;
+        beginDate: string;
+        endDate: string;
+        customTables: boolean;
+      };
+      return next;
+    });
+  };
 
   return (
     <div className="p-6">
@@ -93,6 +136,16 @@ export function EventsPage() {
           <div className="space-y-3">
             {events.map((event) => {
               const isActive = event.id === activeEventId;
+              const edit = getEventEdit(event.id, event);
+              const isEditing = editingEventId === event.id;
+              const isUpdating = updateEventMutation.isPending
+                && updateEventMutation.variables?.eventId === event.id;
+              const hasChanges = (
+                edit.name.trim() !== event.name ||
+                edit.beginDate !== (event.beginDate || "") ||
+                edit.endDate !== (event.endDate || "") ||
+                edit.customTables !== (event.customTables ?? true)
+              );
               return (
                 <div key={event.id} className="flex flex-col gap-3 rounded-lg border border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
@@ -110,8 +163,104 @@ export function EventsPage() {
                         {event.endDate ? ` · Ende: ${event.endDate}` : ""}
                       </p>
                     )}
+                    {isEditing && (
+                      <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                        <div className="grid gap-3 md:grid-cols-3">
+                          <label className="flex flex-col text-sm text-slate-600">
+                            Name
+                            <input
+                              type="text"
+                              value={edit.name}
+                              onChange={(event) => setEventEdit(event.id, { name: event.target.value })}
+                              disabled={!isActive}
+                              className="mt-1 h-9 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40 disabled:bg-slate-100"
+                            />
+                          </label>
+                          <label className="flex flex-col text-sm text-slate-600">
+                            Start
+                            <input
+                              type="date"
+                              value={edit.beginDate}
+                              onChange={(event) => setEventEdit(event.id, { beginDate: event.target.value })}
+                              disabled={!isActive}
+                              className="mt-1 h-9 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40 disabled:bg-slate-100"
+                            />
+                          </label>
+                          <label className="flex flex-col text-sm text-slate-600">
+                            Ende
+                            <input
+                              type="date"
+                              value={edit.endDate}
+                              onChange={(event) => setEventEdit(event.id, { endDate: event.target.value })}
+                              disabled={!isActive}
+                              className="mt-1 h-9 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40 disabled:bg-slate-100"
+                            />
+                          </label>
+                        </div>
+                        <p className="mt-2 text-xs text-slate-500">
+                          Start und Ende sind rein informativ und haben keine Auswirkungen auf Bestellungen.
+                        </p>
+                        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600">
+                          <label className={`flex items-center gap-2 ${isActive ? "" : "opacity-50"}`}>
+                            <input
+                              type="checkbox"
+                              checked={edit.customTables}
+                              disabled={!isActive}
+                              onChange={() => setEventEdit(event.id, { customTables: !edit.customTables })}
+                            />
+                            Benutzerdefinierte Tische
+                          </label>
+                          {!isActive && (
+                            <span className="text-[0.7rem] text-slate-400">
+                              nur aktiv
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-500">
+                          Ermöglicht Bestellungen ohne festen Tisch, z. B. für Stehtische oder freie Bereiche.
+                        </p>
+                        <div className="mt-4 flex justify-end gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setEditingEventId(null)}
+                            className="h-9 rounded-lg border border-slate-200 px-4 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+                          >
+                            Schließen
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!isActive || !hasChanges || isUpdating}
+                            onClick={() => {
+                              if (!isActive) return;
+                              updateEventMutation.mutate({
+                                eventId: event.id,
+                                payload: {
+                                  name: edit.name.trim(),
+                                  beginDate: edit.beginDate || null,
+                                  endDate: edit.endDate || null,
+                                  customTables: edit.customTables
+                                } as any
+                              });
+                              setEditingEventId(null);
+                            }}
+                            className="h-9 rounded-lg bg-primary-500 px-4 text-sm font-semibold text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                          >
+                            Speichern
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <button
+                      onClick={() => {
+                        setEventEdit(event.id, getEventEdit(event.id, event));
+                        setEditingEventId((prev) => (prev === event.id ? null : event.id));
+                      }}
+                      className="h-9 rounded-lg border border-slate-200 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      {isEditing ? "Bearbeiten schließen" : "Bearbeiten"}
+                    </button>
                     <button
                       onClick={() => setPendingEventId(event.id)}
                       disabled={isActive || setActiveMutation.isPending}
@@ -140,133 +289,13 @@ export function EventsPage() {
         )}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="text-lg font-semibold text-slate-800 mb-4">Neues Event anlegen</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          <label className="flex flex-col text-sm text-slate-600">
-            Name
-            <input
-              type="text"
-              value={newEventName}
-              onChange={(event) => setNewEventName(event.target.value)}
-              className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-              placeholder="Sommerfest 2025"
-            />
-          </label>
-          <label className="flex flex-col text-sm text-slate-600">
-            Start
-            <input
-              type="date"
-              value={newEventStart}
-              onChange={(event) => setNewEventStart(event.target.value)}
-              className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-            />
-          </label>
-          <label className="flex flex-col text-sm text-slate-600">
-            Ende
-            <input
-              type="date"
-              value={newEventEnd}
-              onChange={(event) => setNewEventEnd(event.target.value)}
-              className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-            />
-          </label>
-        </div>
-        <div className="mt-6 space-y-4">
-          <div className="text-sm font-semibold text-slate-700">Daten aus bestehendem Event importieren</div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <label className="flex flex-col text-sm text-slate-600">
-              Quelle
-              <select
-                value={importEventId}
-                onChange={(event) => setImportEventId(event.target.value)}
-                className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-              >
-                <option value="">Kein Import</option>
-                {events.map((event) => (
-                  <option key={event.id} value={event.id}>
-                    {event.name}{event.id === activeEventId ? " (aktiv)" : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <div className="text-xs text-slate-500 leading-relaxed">
-              Bestellungen, Drucker und Benutzer werden nie importiert.
-              Artikel benötigen Kategorien und Einheiten. Tische benötigen Bereiche.
-            </div>
-          </div>
-          <div className={`grid gap-3 sm:grid-cols-2 ${importEventId ? "" : "opacity-50 pointer-events-none"}`}>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
-              <input
-                type="checkbox"
-                checked={importOptions.units}
-                onChange={(event) => setImportOptions((prev) => ({
-                  ...prev,
-                  units: event.target.checked
-                }))}
-              />
-              Einheiten
-            </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
-              <input
-                type="checkbox"
-                checked={importOptions.categories || importOptions.items}
-                disabled={importOptions.items}
-                onChange={(event) => setImportOptions((prev) => ({
-                  ...prev,
-                  categories: event.target.checked
-                }))}
-              />
-              Kategorien
-            </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
-              <input
-                type="checkbox"
-                checked={importOptions.items}
-                onChange={(event) => setImportOptions((prev) => ({
-                  ...prev,
-                  items: event.target.checked,
-                  units: event.target.checked ? true : prev.units,
-                  categories: event.target.checked ? true : prev.categories
-                }))}
-              />
-              Artikel
-            </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
-              <input
-                type="checkbox"
-                checked={importOptions.areas || importOptions.tables}
-                disabled={importOptions.tables}
-                onChange={(event) => setImportOptions((prev) => ({
-                  ...prev,
-                  areas: event.target.checked
-                }))}
-              />
-              Bereiche
-            </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
-              <input
-                type="checkbox"
-                checked={importOptions.tables}
-                onChange={(event) => setImportOptions((prev) => ({
-                  ...prev,
-                  tables: event.target.checked,
-                  areas: event.target.checked ? true : prev.areas
-                }))}
-              />
-              Tische
-            </label>
-          </div>
-        </div>
-        <div className="mt-4 flex justify-end">
-          <button
-            onClick={handleCreate}
-            disabled={!newEventName.trim() || createEventMutation.isPending}
-            className="h-10 rounded-lg bg-primary-500 px-5 text-sm font-semibold text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
-          >
-            Event erstellen
-          </button>
-        </div>
+      <div className="flex justify-end">
+        <button
+          onClick={() => setShowCreateDialog(true)}
+          className="h-10 rounded-lg bg-primary-500 px-5 text-sm font-semibold text-white hover:bg-primary-600"
+        >
+          Neues Event
+        </button>
       </div>
 
       <Dialog
@@ -302,6 +331,161 @@ export function EventsPage() {
           </p>
           <p>
             Bitte nur aktivieren, wenn aktuell kein Betrieb läuft, damit keine laufenden Bestellungen betroffen sind.
+          </p>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={showCreateDialog}
+        onClose={() => setShowCreateDialog(false)}
+        title={<h3 className="text-lg font-bold text-slate-800">Neues Event anlegen</h3>}
+        actions={(
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setShowCreateDialog(false)}
+              className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+            >
+              Abbrechen
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                handleCreate();
+                if (newEventName.trim()) {
+                  setShowCreateDialog(false);
+                }
+              }}
+              disabled={!newEventName.trim() || createEventMutation.isPending}
+              className="px-4 py-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+            >
+              Event erstellen
+            </button>
+          </div>
+        )}
+      >
+        <div className="p-6 space-y-4">
+          <div className="grid gap-4 md:grid-cols-3">
+            <label className="flex flex-col text-sm text-slate-600">
+              Name
+              <input
+                type="text"
+                value={newEventName}
+                onChange={(event) => setNewEventName(event.target.value)}
+                className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+                placeholder="Sommerfest 2025"
+              />
+            </label>
+            <label className="flex flex-col text-sm text-slate-600">
+              Start
+              <input
+                type="date"
+                value={newEventStart}
+                onChange={(event) => setNewEventStart(event.target.value)}
+                className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+              />
+            </label>
+            <label className="flex flex-col text-sm text-slate-600">
+              Ende
+              <input
+                type="date"
+                value={newEventEnd}
+                onChange={(event) => setNewEventEnd(event.target.value)}
+                className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+              />
+            </label>
+          </div>
+          <p className="text-xs text-slate-500">
+            Start und Ende sind rein informativ und haben keine Auswirkungen auf Bestellungen.
+          </p>
+          <div className="space-y-4">
+            <div className="text-sm font-semibold text-slate-700">Daten aus bestehendem Event importieren</div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="flex flex-col text-sm text-slate-600">
+                Quelle
+                <select
+                  value={importEventId}
+                  onChange={(event) => setImportEventId(event.target.value)}
+                  className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+                >
+                  <option value="">Kein Import</option>
+                  {events.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {event.name}{event.id === activeEventId ? " (aktiv)" : ""}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="text-xs text-slate-500 leading-relaxed">
+                Bestellungen, Drucker und Benutzer werden nie importiert.
+                Artikel benötigen Kategorien und Einheiten. Tische benötigen Bereiche.
+              </div>
+            </div>
+            <div className={`grid gap-3 sm:grid-cols-2 ${importEventId ? "" : "opacity-50 pointer-events-none"}`}>
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={importOptions.units}
+                  onChange={(event) => setImportOptions((prev) => ({
+                    ...prev,
+                    units: event.target.checked
+                  }))}
+                />
+                Einheiten
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={importOptions.categories || importOptions.items}
+                  disabled={importOptions.items}
+                  onChange={(event) => setImportOptions((prev) => ({
+                    ...prev,
+                    categories: event.target.checked
+                  }))}
+                />
+                Kategorien
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={importOptions.items}
+                  onChange={(event) => setImportOptions((prev) => ({
+                    ...prev,
+                    items: event.target.checked,
+                    units: event.target.checked ? true : prev.units,
+                    categories: event.target.checked ? true : prev.categories
+                  }))}
+                />
+                Artikel
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={importOptions.areas || importOptions.tables}
+                  disabled={importOptions.tables}
+                  onChange={(event) => setImportOptions((prev) => ({
+                    ...prev,
+                    areas: event.target.checked
+                  }))}
+                />
+                Bereiche
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={importOptions.tables}
+                  onChange={(event) => setImportOptions((prev) => ({
+                    ...prev,
+                    tables: event.target.checked,
+                    areas: event.target.checked ? true : prev.areas
+                  }))}
+                />
+                Tische
+              </label>
+            </div>
+          </div>
+          <p className="text-xs text-slate-500">
+            Benutzerdefinierte Tische erlauben freie Eingaben wie „Terrasse links“ oder „Barbereich“.
           </p>
         </div>
       </Dialog>

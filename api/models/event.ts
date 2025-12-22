@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
     name: { type: DataTypes.STRING, allowNull: false, unique: false },
     beginDate: { type: DataTypes.DATE, allowNull: true, unique: false },
-    endDate: { type: DataTypes.DATE, allowNull: true, unique: false }
+    endDate: { type: DataTypes.DATE, allowNull: true, unique: false },
+    customTables: { type: DataTypes.BOOLEAN, allowNull: false, unique: false, defaultValue: true }
   });
 
   Event.associate = models => {

@@ -179,7 +179,7 @@ export const useUpdateOrganization = () => useMutation({ mutationFn: (data: Part
 export const useDeleteOrganization = () => useMutation({ mutationFn: (id: number) => apiFetch(`/api/organizations/${id}`, { method: 'DELETE' }) });
 
 export const useCreateOrder = () => useMutation({
-  mutationFn: (data: { order: { tableId: string; orderitems: Array<Pick<OrderItem, 'itemId' | 'count' | 'extras' | 'price'>> } }) =>
+  mutationFn: (data: { order: { tableId: string | null; customTableName?: string | null; orderitems: Array<Pick<OrderItem, 'itemId' | 'count' | 'extras' | 'price'>> } }) =>
     apiFetch<{ order: Order }>('/api/orders', { method: 'POST', body: JSON.stringify(data) })
 });
 export const useUpdateOrder = () => useMutation({

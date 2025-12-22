@@ -42,8 +42,11 @@ export const OrdersPage: React.FC = () => {
     const u = users.find(user => user.id === id);
     return u ? `${u.firstname} ${u.lastname}` : 'Unbekannter Mitarbeiter';
   };
-  const getTableName = (id: string) => {
-    const t = tables.find(table => table.id === id);
+  const getTableName = (order: { tableId: string | null; customTableName?: string | null }) => {
+    if (!order.tableId) {
+      return order.customTableName ? `Tisch ${order.customTableName}` : 'Ohne Tisch';
+    }
+    const t = tables.find(table => table.id === order.tableId);
     const area = areas.find(a => a.id === t?.areaId);
     return t ? `Tisch ${area?.short}${t.name} (${area ? area.name : 'Unbekannter Bereich'})` : 'Unbekannter Tisch';
   }
@@ -96,7 +99,7 @@ export const OrdersPage: React.FC = () => {
                     <Receipt size={20} className="text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-800">{getTableName(order.tableId)}</h3>
+                    <h3 className="font-bold text-slate-800">{getTableName(order)}</h3>
                     <p className="text-xs text-slate-500">Bestellung #{order.number}</p>
                   </div>
                 </div>

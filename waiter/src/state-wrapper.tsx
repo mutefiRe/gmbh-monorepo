@@ -44,7 +44,7 @@ export function StateWrapper() {
   const queryClient = useQueryClient();
   const [fontScale, setFontScale] = useFontScale();
 
-  const [currentOrder, setCurrentOrder] = useLocalStorage<CurrentOrder>(CURRENT_ORDER_KEY, { orderItems: [], tableId: null, printId: "" });
+  const [currentOrder, setCurrentOrder] = useLocalStorage<CurrentOrder>(CURRENT_ORDER_KEY, { orderItems: [], tableId: null, customTableName: null, printId: "" });
   const [orderItems, setOrderItems] = useMemo(() => [currentOrder.orderItems, (orderItems: OrderItem[]) => {
     setCurrentOrder({ ...currentOrder, orderItems });
   }], [currentOrder, setCurrentOrder]);

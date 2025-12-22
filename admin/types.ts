@@ -51,6 +51,7 @@ export interface Event {
   name: string;
   beginDate?: string;
   endDate?: string;
+  customTables?: boolean;
 }
 
 export interface Item {
@@ -77,7 +78,8 @@ export interface Order {
   id: string;
   totalAmount: number;
   userId: string; // User ID
-  tableId: string; // Table ID
+  tableId: string | null; // Table ID
+  customTableName?: string | null;
   orderitems: OrderItem[];
   printCount: number;
   timestamp: Date;

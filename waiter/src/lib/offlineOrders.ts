@@ -2,7 +2,8 @@ import { apiFetch } from "../types/queries";
 
 export type OfflineOrderPayload = {
   id: string;
-  tableId: string;
+  tableId: string | null;
+  customTableName?: string | null;
   orderitems: {
     id?: string;
     itemId: string;

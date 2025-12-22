@@ -71,6 +71,7 @@ module.exports = {
             name: 'Training Event',
             beginDate: null,
             endDate: null,
+            customTables: true,
             createdAt: now(),
             updatedAt: now()
           }
@@ -90,7 +91,6 @@ module.exports = {
             name: 'Default Setting',
             beginDate: null,
             endDate: null,
-            customTables: false,
             instantPay: true,
             showItemPrice: true,
             expiresTime: '72h',

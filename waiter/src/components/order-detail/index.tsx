@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Armchair, ChevronLeft, ReceiptText, Send } from "lucide-react";
 import type { OrderItem, Item, Unit, Table, Area, Category } from "../../types/models";
-import { useCreateOrder, usePrintOrder } from "../../types/queries";
+import { useCreateOrder, usePrintOrder, useSettings } from "../../types/queries";
 import { QuantityBlink } from "../../ui/quantity-blink";
 import { Link, useLocation } from "wouter";
 import { TableSelectModal } from "./table-select";
@@ -57,11 +57,15 @@ export function OrderDetail({
   const auth = useAuth();
   const { pendingOrders, pendingPayments } = useOfflineOrderQueue();
   const [notice, setNotice] = useState<{ message: string; variant?: "info" | "warning" | "error" | "success" } | null>(null);
+  const settingsQuery = useSettings();
+  const allowCustomTables = settingsQuery.data?.setting?.activeEvent?.customTables ?? true;
   const pendingMessage = pendingOrdersMessage(pendingOrders, canReachServer);
   const paymentMessage = pendingPaymentsMessage(pendingPayments, canReachServer);
 
   async function saveOrder() {
-    if (!table) {
+    const customName = (currentOrder.customTableName || "").trim();
+    if (!table && customName.length < 3) {
+      setNotice({ message: "Bitte einen Tisch auswählen oder einen Namen mit mindestens 3 Zeichen eingeben.", variant: "warning" });
       return;
     }
     if (!canReachServer) {
@@ -85,11 +89,12 @@ export function OrderDetail({
         printId: currentOrder.printId || "",
         order: {
           id,
-          tableId: table.id,
+          tableId: table?.id ?? null,
+          customTableName: table ? null : customName,
           orderitems: orderItemsWithIds
         }
       }, { userId: auth.userId ?? null, eventId: auth.eventId ?? null });
-      setCurrentOrder({ orderItems: [], tableId: null, printId: "" });
+      setCurrentOrder({ orderItems: [], tableId: null, customTableName: null, printId: "" });
       navigate(`/orders/${id}`);
       setNotice({ message: "Offline: Bestellung gespeichert und wird automatisch gesendet, sobald die Verbindung wieder da ist.", variant: "warning" });
       return;
@@ -100,7 +105,8 @@ export function OrderDetail({
     
     const data = await createOrderMutation.mutateAsync({
       order: {
-        tableId: table.id,
+        tableId: table?.id ?? null,
+        customTableName: table ? null : customName,
         orderitems: currentOrder.orderItems.map(oi => ({
           itemId: oi.itemId,
           count: oi.count,
@@ -125,7 +131,7 @@ export function OrderDetail({
         extras: orderitem.extras ?? null,
       }))
     );
-    setCurrentOrder({ orderItems: [], tableId: null, printId: "" });
+    setCurrentOrder({ orderItems: [], tableId: null, customTableName: null, printId: "" });
     navigate(`/orders/${orderID}`);
     } catch (error) {
       setNotice({ message: "Bestellung konnte nicht gesendet werden.", variant: "error" });
@@ -133,11 +139,17 @@ export function OrderDetail({
   }
 
   function setTable(table: Table) {
-    setCurrentOrder((co) => ({ ...co, tableId: table.id }));
+    setCurrentOrder((co) => ({ ...co, tableId: table.id, customTableName: null }));
+  }
+
+  function setCustomTableName(value: string) {
+    setCurrentOrder((co) => ({ ...co, tableId: null, customTableName: value }));
   }
 
 
   const table = tables.find(t => currentOrder.tableId && t.id === currentOrder.tableId);
+  const customTableName = (currentOrder.customTableName || "").trim();
+  const hasValidTableSelection = Boolean(table) || customTableName.length >= 3;
 
   const currentTableArea = table ? areas.find(a => a.id === table.areaId) : undefined;
   return (
@@ -243,6 +255,16 @@ export function OrderDetail({
               Tisch: {currentTableArea?.short}{table.name}
             </span>
           </button>
+        ) : customTableName ? (
+          <button
+            className="rounded-md border border-primary-300 bg-primary-50 px-4 py-2 text-primary-700"
+            onClick={() => setShowTableModal(true)}
+          >
+            <span className="inline-flex items-center gap-2">
+              <Armchair size={16} />
+              Tisch: {customTableName}
+            </span>
+          </button>
         ) : (
           <button
             className="rounded-md border border-primary-200 bg-primary-50 px-4 py-2 text-primary-700"
@@ -272,7 +294,7 @@ export function OrderDetail({
         </Link>
         <button
           className="rounded-md bg-primary px-4 py-2 text-primary-contrast inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
-          disabled={!table || isSubmitting}
+          disabled={!hasValidTableSelection || isSubmitting}
           onClick={() => {
             saveOrder();
           }}
@@ -287,8 +309,14 @@ export function OrderDetail({
         onClose={() => setShowTableModal(false)}
         tables={tables}
         areas={areas}
+        allowCustomTables={allowCustomTables}
+        customTableName={currentOrder.customTableName || ""}
         onSelectTable={(table) => {
           setTable(table);
+          setShowTableModal(false);
+        }}
+        onSelectCustomTable={(name) => {
+          setCustomTableName(name);
           setShowTableModal(false);
         }}
       />

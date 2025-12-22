@@ -48,6 +48,11 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true
       },
+      customTables: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false
@@ -114,11 +119,6 @@ module.exports = {
       endDate: {
         type: Sequelize.DATE,
         allowNull: true
-      },
-      customTables: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
       },
       instantPay: {
         type: Sequelize.BOOLEAN,
