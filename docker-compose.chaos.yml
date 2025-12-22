@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  mysql:
+    volumes:
+      - mysql_chaos_data:/var/lib/mysql
+
+  api:
+    build: api/
+    command: sh -c "NODE_ENV=test npm start"
+
+  chaos:
+    image: node:24.12-alpine
+    working_dir: /app/api
+    environment:
+      CHAOS_API_BASE: http://api:8080
+    volumes:
+      - ./api:/app/api
+    command: sh -c "npm install && npm run chaos-test"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  mysql_chaos_data:

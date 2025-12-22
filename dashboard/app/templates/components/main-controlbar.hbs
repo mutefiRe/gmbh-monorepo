@@ -1,7 +1,0 @@
-<div class="cancel material-icons" {{action 'cancel'}}>close</div>
-<div class="save material-icons" {{action 'saveRecord'}}>done</div>
-{{#unless searchPrinters}}
-  <div class="plus" {{action 'createRecord'}}>+</div>
-{{else}}
-  <div class="plus material-icons" {{action 'searchPrinters'}}>search</div>
-{{/unless}}

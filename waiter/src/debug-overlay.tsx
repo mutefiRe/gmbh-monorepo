@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export function DebugOverlay() {
   const [messages, setMessages] = useState<string[]>([]);
@@ -71,6 +71,11 @@ export function DebugOverlay() {
     };
   }, []);
 
+  const t = true;
+  if (t) {
+    return null;
+  }
+
   const [visible, setVisible] = useState(true);
   if (messages.length === 0 || !visible) {
     return null;
@@ -86,7 +91,7 @@ export function DebugOverlay() {
         maxHeight: "30%",
         backgroundColor: "rgba(0, 0, 0, 0.8)",
         color: "white",
-        fontSize: "12px",
+        fontSize: "0.75rem",
         overflowY: "auto",
         zIndex: 9999,
         padding: "8px",

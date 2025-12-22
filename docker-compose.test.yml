@@ -1,0 +1,16 @@
+services:
+  api:
+    environment:
+      NODE_ENV: test
+      GMBH_DB_NAME: ${GMBH_DB_NAME:-gmbh_test}
+      GMBH_DB_TEST: ${GMBH_DB_TEST:-gmbh_test}
+      PORT: "8081"
+    command: ["npm", "test"]
+
+  mysql:
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  mysql_test_data:

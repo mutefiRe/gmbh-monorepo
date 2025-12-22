@@ -1,5 +1,6 @@
-import React from "react";
-import type { Category } from "@/types/models";
+import { Search } from "lucide-react";
+import { CategoryIcon } from "../../../ui/category-icon";
+import type { Category } from "../../../types/models";
 import { getCategoryColor } from "../../../lib/colors";
 
 interface CategoryListProps {
@@ -8,11 +9,11 @@ interface CategoryListProps {
   setSelectedCategory: (category: Category | null) => void;
 }
 
-export const CategoryList: React.FC<CategoryListProps> = ({
+export function CategoryList({
   categories,
   selectedCategory,
   setSelectedCategory,
-}) => {
+}: CategoryListProps) {
   const handleChangeCategory = (category: Category) => {
     if (selectedCategory === category) {
       setSelectedCategory(null);
@@ -22,57 +23,40 @@ export const CategoryList: React.FC<CategoryListProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-row gap-2 mb-4 overflow-x-auto mt-2 px-2 h-[70px]">
+    <div className="w-full flex flex-row gap-2 overflow-x-auto px-2 py-2 bg-slate-50/60 border-b border-slate-100">
       {/* All tab */}
       <button
         key="all"
         onClick={() => setSelectedCategory(null)}
-        className={`flex flex-col items-center px-4 py-2 rounded-lg border transition-colors duration-150 min-w-[80px] focus:outline-none shadow border-2`}
-        style={
-          !selectedCategory
-            ? {
-              background: '#777777ff',
-              color: '#ffffffff',
-              borderColor: '#000000ff',
-            }
-            : {
-              background: '#fff',
-              color: '#1e293b',
-              borderColor: '#d1d5db',
-            }
-        }
+        className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors duration-150 min-w-[120px] focus:outline-none ${!selectedCategory ? 'bg-slate-100 text-slate-900 border-slate-300 ring-1 ring-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
       >
-        <span className="text-2xl">🔎</span>
+        <Search size={18} />
         <span className="text-xs font-semibold">Alle</span>
       </button>
       {Array.isArray(categories) &&
         categories.map((category) => {
           const selected = selectedCategory?.id === category.id;
-          const colors = getCategoryColor(category);
+          const color = category.color || getCategoryColor(category).color;
           return (
             <button
               key={category.id}
               onClick={() => handleChangeCategory(category)}
-              className={`flex flex-col items-center px-4 py-2 rounded-lg border-2  transition-all duration-150 min-w-[80px] focus:outline-none shadow`}
-              style={
-                selected
-                  ? {
-                    background: colors.bright,
-                    color: colors.brightContrast,
-                    borderColor: colors.color,
-                  }
-                  : {
-                    background: '#fff',
-                    color: '#1e293b',
-                    borderColor: colors.color,
-                  }
-              }
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-150 min-w-[120px] focus:outline-none ${selected ? 'text-slate-900 ring-1 ring-slate-200' : 'text-slate-700 hover:bg-slate-50'}`}
+              style={{
+                backgroundColor: selected ? `${color}1a` : '#ffffff',
+                borderColor: selected ? color : '#e2e8f0'
+              }}
             >
-              <span className="text-2xl">{category.icon || '❓'}</span>
+              <CategoryIcon
+                name={category.icon}
+                className={selected ? 'text-slate-900' : 'text-slate-500'}
+                size={20}
+                style={{ color: selected ? color : color }}
+              />
               <span className="text-xs font-semibold">{category.name}</span>
             </button>
           );
         })}
     </div>
   );
-};
+}

@@ -1,0 +1,108 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: ${PROD_MYSQL_IMAGE:-mysql:8.0.44-bookworm}
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-gmbh}
+      MYSQL_USER: gmbh
+      MYSQL_PASSWORD: gmbh
+      MYSQL_ROOT_PASSWORD: rootpassword
+    restart: unless-stopped
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -prootpassword"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  api:
+    image: ${PROD_API_IMAGE:-${DOCKER_REGISTRY:-docker.io}/${DOCKER_REPO:-mutefire}/gmbh-api:latest}
+    environment:
+      NODE_ENV: production
+      GMBH_DB_USER: gmbh
+      GMBH_DB_PASSWORD: gmbh
+      GMBH_DB_NAME: ${GMBH_DB_NAME:-gmbh}
+      GMBH_DB_HOST: mysql
+      GMBH_DB_PORT: "3306"
+      GMBH_DB_DIALECT: mysql
+      PORT: "8080"
+      PRINTER_API_URL: ${PRINTER_API_URL:-http://printer-api:8761}
+      UPDATE_API_URL: http://update-api:3000
+      UPDATE_API_TOKEN: ${UPDATE_API_TOKEN:-"update-token-123"}
+      LOG_LEVEL: debug
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: ${PROD_NGINX_IMAGE:-nginx:alpine}
+    ports:
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
+      - ./nginx/certs/server:/etc/nginx/certs/server:ro
+      - ./nginx/certs/ca:/etc/nginx/certs/ca:ro
+    depends_on:
+      - api
+      - admin
+      - waiter
+      - fake-printer
+      - dozzle
+    restart: unless-stopped
+
+  admin:
+    image: ${PROD_ADMIN_IMAGE:-${DOCKER_REGISTRY:-docker.io}/${DOCKER_REPO:-mutefire}/gmbh-admin:latest}
+    restart: unless-stopped
+
+  waiter:
+    image: ${PROD_WAITER_IMAGE:-${DOCKER_REGISTRY:-docker.io}/${DOCKER_REPO:-mutefire}/gmbh-waiter:latest}
+    restart: unless-stopped
+
+  printer-api:
+    image: ${PROD_PRINTER_API_IMAGE:-${DOCKER_REGISTRY:-docker.io}/${DOCKER_REPO:-mutefire}/gmbh-printer-api:latest}
+    environment:
+      EXTRA_PRINTER_HOSTS: ${EXTRA_PRINTER_HOSTS:-localhost,host.docker.internal}
+      ENABLE_USB: "true"
+      ENABLE_NETWORK: "true"
+      SCAN_MAX_HOSTS: 20
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb:ro
+
+  fake-printer:
+    image: ${PROD_FAKE_PRINTER_IMAGE:-${DOCKER_REGISTRY:-docker.io}/${DOCKER_REPO:-mutefire}/gmbh-fake-printer:latest}
+    environment:
+      PRINT_PORT: "9100"
+      UI_PORT: "9101"
+      HOST: "0.0.0.0"
+    restart: unless-stopped
+
+  dozzle:
+    image: ${PROD_DOZZLE_IMAGE:-amir20/dozzle:v8.14}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_BASE=/dozzle
+      - DOZZLE_BASE_PATH=/dozzle
+    restart: unless-stopped
+
+  update-api:
+    image: ${PROD_UPDATE_API_IMAGE:-${DOCKER_REGISTRY:-docker.io}/${DOCKER_REPO:-mutefire}/gmbh-update-api:latest}
+    environment:
+      UPDATE_API_TOKEN: ${UPDATE_API_TOKEN:-"update-token-123"}
+      DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
+      DOCKER_REPO: ${DOCKER_REPO:-mutefire}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

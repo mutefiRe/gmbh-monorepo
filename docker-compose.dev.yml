@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  api:
+    command: sh -c "npm install && NODE_ENV=development npm run dev"
+    volumes:
+      - ./api:/app/api
+      - api_node_modules:/app/api/node_modules
+    environment:
+      NODE_ENV: development
+
+  mysql:
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+
+  reverse-proxy:
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  api_node_modules:

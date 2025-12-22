@@ -8,6 +8,8 @@ type ModalProps = {
   closeOnBackdropClick?: boolean;
   closeOnEsc?: boolean;
   actions?: ReactNode;
+  showCloseAction?: boolean;
+  contentClassName?: string;
 };
 
 import { Dialog } from '@base-ui-components/react/dialog';
@@ -19,21 +21,36 @@ export function Modal({
   closeOnBackdropClick = true,
   closeOnEsc = true,
   actions,
+  showCloseAction = true,
+  contentClassName,
 }: ModalProps) {
+  void closeOnBackdropClick;
+  void closeOnEsc;
   return (
     <Dialog.Root open={open} onOpenChange={onClose} modal>
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 bg-black  z-40" style={{ opacity: 0.8 }} />
-        <Dialog.Popup className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 min-w-[300px] max-w-[90vw]">
-            <Dialog.Title className="text-lg font-bold mb-2">{title}</Dialog.Title>
-            <div className="mb-4 text-gray-600" >
+        <Dialog.Backdrop className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
+        <Dialog.Popup className="fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className={`bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col ${contentClassName ?? ""}`}>
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+              <Dialog.Title className="text-base font-semibold text-slate-800">{title}</Dialog.Title>
+            </div>
+            <div className="flex-1 overflow-auto p-6 text-slate-600">
               {children}
             </div>
-            <div className="flex justify-end gap-2">
-              {actions}
-              <Dialog.Close className="px-4 py-2 bg-gray-200 rounded">Close</Dialog.Close>
-            </div>
+            {(actions || onClose) && (
+              <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-2">
+                {showCloseAction && (
+                  <Dialog.Close
+                    className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
+                    autoFocus
+                  >
+                    Abbrechen
+                  </Dialog.Close>
+                )}
+                {actions}
+              </div>
+            )}
           </div>
         </Dialog.Popup>
       </Dialog.Portal>

@@ -37,6 +37,10 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# Local env overrides
+.env
+
+
 
 ### NotepadPP ###
 # Notepad++ backups #
@@ -132,3 +136,4 @@ fabric.properties
 
 prints
 
+dist/*

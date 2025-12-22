@@ -1,0 +1,372 @@
+openapi: 3.0.3
+info:
+  title: ESC/POS Printer Service
+  version: 1.0.0
+  description: Stateless discovery, status, and print API for ESC/POS printers.
+servers:
+  - url: http://localhost:8761
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      operationId: healthz
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required: [ok]
+  /metrics:
+    get:
+      summary: Metrics snapshot
+      operationId: metrics
+      responses:
+        "200":
+          description: Metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+  /v1/printers/discover:
+    get:
+      summary: Discover printers
+      operationId: discoverPrinters
+      parameters:
+        - in: query
+          name: network
+          schema:
+            type: boolean
+          description: Enable network discovery
+        - in: query
+          name: usb
+          schema:
+            type: boolean
+          description: Enable USB discovery
+        - in: query
+          name: timeoutMs
+          schema:
+            type: integer
+            minimum: 1
+          description: TCP dial timeout in milliseconds
+        - in: query
+          name: maxHosts
+          schema:
+            type: integer
+            minimum: 1
+          description: Max hosts to scan per subnet
+        - in: query
+          name: ports
+          schema:
+            type: string
+          description: Comma-separated list of ports (e.g., 9100,9101)
+        - in: query
+          name: hosts
+          schema:
+            type: string
+          description: Last-octet host filter list/ranges (e.g., 1,5,10,10-120)
+      responses:
+        "200":
+          description: Discovery results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  printers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Printer"
+                  count:
+                    type: integer
+                required: [printers, count]
+  /v1/printers/{id}:
+    get:
+      summary: Get printer by ID
+      operationId: getPrinter
+      parameters:
+        - $ref: "#/components/parameters/PrinterId"
+      responses:
+        "200":
+          description: Printer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Printer"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /v1/printers/{id}/status:
+    get:
+      summary: Get printer status
+      operationId: getPrinterStatus
+      parameters:
+        - $ref: "#/components/parameters/PrinterId"
+      responses:
+        "200":
+          description: Status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrinterStatus"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+  /v1/printers/{id}/print:
+    post:
+      summary: Print a job
+      operationId: print
+      parameters:
+        - $ref: "#/components/parameters/PrinterId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrintRequest"
+            examples:
+              text:
+                summary: Text print
+                value:
+                  text:
+                    lines:
+                      - "TEST PRINT"
+                      - "Hop-E801"
+                    center: true
+                    bold: true
+                  feed: 2
+                  cut: true
+              raw:
+                summary: Raw ESC/POS bytes (base64)
+                value:
+                  rawBase64: "G0A="
+      responses:
+        "200":
+          description: Print accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  bytesSent:
+                    type: integer
+                required: [ok, bytesSent]
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+  /v1/printers/{id}/queue:
+    get:
+      summary: Queue info (stateless)
+      operationId: getQueue
+      parameters:
+        - $ref: "#/components/parameters/PrinterId"
+      responses:
+        "200":
+          description: Queue info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueStatus"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+components:
+  parameters:
+    PrinterId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Stable printer ID (preferred) or base64url-encoded PrinterRef
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            invalidPrinterId:
+              summary: Invalid printer ID
+              value:
+                error:
+                  type: invalid_printer_id
+                  message: printer not found
+    BadGateway:
+      description: Upstream printer error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            printFailed:
+              summary: Print failed
+              value:
+                error:
+                  type: print_failed
+                  message: "usb init failed: libusb: unknown error [code -99]"
+    NotImplemented:
+      description: Not implemented
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+            message:
+              type: string
+          required: [type, message]
+      required: [error]
+    Printer:
+      type: object
+      properties:
+        id:
+          type: string
+        stableId:
+          type: string
+        transport:
+          type: string
+          enum: [network, usb]
+        network:
+          $ref: "#/components/schemas/NetworkRef"
+        usb:
+          $ref: "#/components/schemas/USBRef"
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+      required: [id, transport]
+    PrinterRef:
+      type: object
+      properties:
+        transport:
+          type: string
+          enum: [network, usb]
+        network:
+          $ref: "#/components/schemas/NetworkRef"
+        usb:
+          $ref: "#/components/schemas/USBRef"
+      required: [transport]
+    NetworkRef:
+      type: object
+      properties:
+        ip:
+          type: string
+        port:
+          type: integer
+        mac:
+          type: string
+      required: [ip, port]
+    USBRef:
+      type: object
+      properties:
+        vid:
+          type: integer
+        pid:
+          type: integer
+        serial:
+          type: string
+        manufacturer:
+          type: string
+        product:
+          type: string
+      required: [vid, pid]
+    PrintRequest:
+      type: object
+      properties:
+        text:
+          $ref: "#/components/schemas/TextPrint"
+        rawBase64:
+          type: string
+        cut:
+          type: boolean
+        feed:
+          type: integer
+        drawer:
+          type: boolean
+      anyOf:
+        - required: [text]
+        - required: [rawBase64]
+    TextPrint:
+      type: object
+      properties:
+        lines:
+          type: array
+          items:
+            type: string
+        center:
+          type: boolean
+        bold:
+          type: boolean
+        doubleW:
+          type: boolean
+        doubleH:
+          type: boolean
+      required: [lines]
+    PrinterStatus:
+      type: object
+      properties:
+        transport:
+          type: string
+          enum: [network, usb]
+        online:
+          type: boolean
+        raw:
+          type: object
+          additionalProperties:
+            type: integer
+        flags:
+          type: object
+          additionalProperties:
+            type: boolean
+      required: [transport, online]
+    MetricsSnapshot:
+      type: object
+      properties:
+        totalRequests:
+          type: integer
+        totalErrors:
+          type: integer
+        avgDurationMs:
+          type: number
+        routes:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/RouteSnapshot"
+      required: [totalRequests, totalErrors, avgDurationMs, routes]
+    RouteSnapshot:
+      type: object
+      properties:
+        requests:
+          type: integer
+        errors:
+          type: integer
+        avgDurationMs:
+          type: number
+      required: [requests, errors, avgDurationMs]
+    QueueStatus:
+      type: object
+      properties:
+        supported:
+          type: boolean
+        queued:
+          type: integer
+        capacity:
+          type: integer
+        active:
+          type: boolean
+      required: [supported, queued, capacity, active]

@@ -1,45 +1,98 @@
 services:
+  mysql:
+    image: mysql:8.0.44-bookworm
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-gmbh}
+      MYSQL_USER: gmbh
+      MYSQL_PASSWORD: gmbh
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   api:
     build: api/
     ports:
       - "8080:8080"
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       GMBH_DB_USER: gmbh
       GMBH_DB_PASSWORD: gmbh
-      GMBH_DB_NAME: gmbh
+      GMBH_DB_NAME: ${GMBH_DB_NAME:-gmbh}
       GMBH_DB_HOST: mysql
       GMBH_DB_PORT: "3306"
       GMBH_DB_DIALECT: mysql
       PORT: "8080"
+      PRINTER_API_URL: ${PRINTER_API_URL:-http://printer-api:8761}
+      UPDATE_API_URL: ${UPDATE_API_URL:-}
+      UPDATE_API_TOKEN: ${UPDATE_API_TOKEN:-}
     depends_on:
       - mysql
-  mysql:
-    image: mysql:8.0.44-bookworm
-    environment:
-      MYSQL_DATABASE: gmbh
-      MYSQL_USER: gmbh
-      MYSQL_PASSWORD: gmbh
-      MYSQL_ROOT_PASSWORD: rootpassword
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-  nginx:
-    image: nginx:latest
-    ports:
-      - "0.0.0.0:443:443"
-      - "0.0.0.0:80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/certs/server:/etc/nginx/certs/server:ro
-      - ./nginx/certs/ca:/etc/nginx/certs/ca:ro
-      - ./nginx/cert-install:/app/cert-install:ro
-      # - shared_app:/app/order:ro
+    cap_add:
+      - NET_RAW
+
+  admin:
+    build:
+      context: admin/
+      args:
+        VITE_API_TARGET: "http://api:8080"
+        VITE_BASE: "/admin/"
     depends_on:
       - api
-    extra_hosts:
-      - "gmbh.local:127.0.0.2"
+
+  waiter:
+    build:
+      context: waiter/
+      args:
+        VITE_API_TARGET: "http://api:8080"
+    depends_on:
+      - api
+
+  reverse-proxy:
+    image: nginx:1.26.1-alpine
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx/nginx.proxy.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
+    depends_on:
+      - api
+      - admin
+      - waiter
+      - fake-printer
+      - dozzle
+
+  fake-printer:
+    build: fake-printer/
+    ports:
+      - "9100:9100"
+      - "9101:9101"
+    environment:
+      PRINT_PORT: "9100"
+      UI_PORT: "9101"
+      HOST: "0.0.0.0"
+
+  printer-api:
+    build: printer-api/
+    ports:
+      - "8761:8761"
+    env_file:
+      - printer-api/.env
+    environment:
+      EXTRA_PRINTER_HOSTS: "fake-printer,localhost,host.docker.internal"
+    depends_on:
+      - fake-printer
+
+  dozzle:
+    image: amir20/dozzle:v8.14
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_BASE=/dozzle
+      - DOZZLE_BASE_PATH=/dozzle
+    restart: always
+
 volumes:
   mysql_data:
-  shared_app:

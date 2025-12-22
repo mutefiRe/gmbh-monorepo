@@ -23,7 +23,6 @@ export interface Item {
   name: string;
   amount: string;
   price: number;
-  tax: number;
   sort: number;
   category: number;
   unitId: string;
@@ -49,15 +48,30 @@ export interface OrderItem {
   countFree: number;
   price: number;
   itemId: string;
-  orderId: string;
+  orderId?: string;
 }
 
 export interface Order {
   id: string;
+  number?: string;
+  createdAt?: string;
   totalAmount: number;
   userId: string;
-  tableId: string;
-  orderitems: OrderItem[];
+  tableId: string | null;
+  customTableName?: string | null;
+  printCount: number;
+  orderitems?: OrderItem[];
+}
+
+export interface Notification {
+  id: string;
+  eventId: string;
+  entityType: string;
+  entityId?: string | null;
+  action: string;
+  message: string;
+  meta?: Record<string, unknown> | null;
+  createdAt?: string;
 }
 
 export interface Printer {
@@ -66,16 +80,23 @@ export interface Printer {
   name: string;
 }
 
+export interface Event {
+  id: string;
+  name: string;
+  beginDate: string | Date | null;
+  endDate: string | Date | null;
+  customTables: boolean;
+}
+
 export interface Setting {
   id: string;
   name: string;
   beginDate: string | Date;
   endDate: string | Date;
   instantPay: boolean;
-  customTables: boolean;
-  receiptPrinter: string;
   expiresTime: string;
   itemShowPrice: boolean;
+  activeEvent?: Event | null;
 }
 
 export interface Table {
@@ -99,7 +120,6 @@ export interface User {
   firstname: string;
   lastname: string;
   role: string;
-  printer: string;
   areaIds: string[];
   password?: string;
 }
