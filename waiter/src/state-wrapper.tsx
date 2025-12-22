@@ -33,7 +33,7 @@ const uniqueById = <T extends { id: string | number }>(items: T[]) => {
 export function StateWrapper() {
   const auth = useAuth();
   const connection = useConnectionStatus();
-  const { pendingCount, pendingOrders, pendingPayments } = useOfflineOrderQueue();
+  const { pendingOrders, pendingPayments } = useOfflineOrderQueue();
   useRealtimeUpdates();
   const canReachServer = connection.canReachServer;
   const queryCategories = useCategories({ enabled: canReachServer });

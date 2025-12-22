@@ -25,7 +25,8 @@ function getVersions() {
     admin: readPackageVersion(path.join(__dirname, "..", "admin", "package.json")),
     waiter: readPackageVersion(path.join(__dirname, "..", "waiter", "package.json")),
     printerApi: readPrinterVersion(),
-    fakePrinter: readPackageVersion(path.join(__dirname, "..", "fake-printer", "package.json"))
+    fakePrinter: readPackageVersion(path.join(__dirname, "..", "fake-printer", "package.json")),
+    updateApi: readPackageVersion(path.join(__dirname, "..", "update-api", "package.json"))
   };
 }
 

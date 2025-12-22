@@ -1,84 +1,54 @@
+version: "3.9"
+
 services:
+  mysql:
+    image: mysql:8.0.44-bookworm
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-gmbh}
+      MYSQL_USER: gmbh
+      MYSQL_PASSWORD: gmbh
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   api:
-    image: node:22-alpine
-    working_dir: /app/api
-    command: sh -c "npm install && npm run dev"
+    build: api/
     ports:
       - "8080:8080"
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       GMBH_DB_USER: gmbh
       GMBH_DB_PASSWORD: gmbh
-      GMBH_DB_NAME: gmbh
+      GMBH_DB_NAME: ${GMBH_DB_NAME:-gmbh}
       GMBH_DB_HOST: mysql
       GMBH_DB_PORT: "3306"
       GMBH_DB_DIALECT: mysql
       PORT: "8080"
-      PRINTER_API_URL: "${PRINTER_API_URL:-http://printer-api:8761}"
-    volumes:
-      - ./api:/app/api
-      - api_node_modules:/app/api/node_modules
+      PRINTER_API_URL: ${PRINTER_API_URL:-http://printer-api:8761}
+      UPDATE_API_URL: ${UPDATE_API_URL:-}
+      UPDATE_API_TOKEN: ${UPDATE_API_TOKEN:-}
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     cap_add:
       - NET_RAW
-  mysql:
-    image: mysql:8.0.44-bookworm
-    environment:
-      MYSQL_DATABASE: gmbh
-      MYSQL_USER: gmbh
-      MYSQL_PASSWORD: gmbh
-      MYSQL_ROOT_PASSWORD: rootpassword
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./mysql/init:/docker-entrypoint-initdb.d:ro
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -prootpassword"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-      start_period: 10s
-  admin:
-    image: node:22-alpine
-    working_dir: /app/admin
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
-    ports:
-      - "3000:3000"
-    environment:
-      VITE_API_TARGET: "http://api:8080"
-    volumes:
-      - ./admin:/app/admin
-      - admin_node_modules:/app/admin/node_modules
-    depends_on:
-      - api
-  waiter:
-    image: node:22-alpine
-    working_dir: /app/waiter
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
-    ports:
-      - "5173:5173"
-    environment:
-      VITE_API_TARGET: "http://api:8080"
-      VITE_HTTPS: "false"
-    volumes:
-      - ./waiter:/app/waiter
-      - waiter_node_modules:/app/waiter/node_modules
-    depends_on:
-      - api
+
   reverse-proxy:
-    image: nginx:alpine
+    build:
+      context: nginx/
+      args:
+        VITE_API_TARGET: "http://api:8080"
     ports:
       - "8081:80"
     volumes:
-      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
     depends_on:
       - api
-      - admin
-      - waiter
+      - fake-printer
+      - dozzle
+
   fake-printer:
     build: fake-printer/
     ports:
@@ -88,15 +58,7 @@ services:
       PRINT_PORT: "9100"
       UI_PORT: "9101"
       HOST: "0.0.0.0"
-  dozzle:
-    image: amir20/dozzle:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - DOZZLE_NO_ANALYTICS=true
-      - DOZZLE_BASE=/dozzle
-      - DOZZLE_BASE_PATH=/dozzle
-    restart: always
+
   printer-api:
     build: printer-api/
     ports:
@@ -107,6 +69,17 @@ services:
       EXTRA_PRINTER_HOSTS: "fake-printer,localhost,host.docker.internal"
     depends_on:
       - fake-printer
+
+  dozzle:
+    image: amir20/dozzle:v8.14
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_BASE=/dozzle
+      - DOZZLE_BASE_PATH=/dozzle
+    restart: always
+
 volumes:
   mysql_data:
   admin_node_modules:

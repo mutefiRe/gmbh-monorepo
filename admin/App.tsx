@@ -17,6 +17,7 @@ import { Item, User, Area, Table, Category, Order, Unit, Printer } from './types
 import { NotificationProvider, useNotification } from './components/NotificationProvider';
 import { SettingsPage } from './pages/SettingsPage';
 import { EventsPage } from './pages/EventsPage';
+import { UpdatePage } from './pages/UpdatePage';
 import { useRealtimeUpdates } from './hooks/useRealtimeUpdates';
 
 // Create Query Client
@@ -375,6 +376,7 @@ const AuthenticatedApp = () => {
             <Route path="/printers" element={<PrintersPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/update" element={<UpdatePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>

@@ -94,3 +94,38 @@ export interface DashboardStats {
   salesByDay: { date: string; sales: number }[];
   recentOrders: { id: string; number: number; total: number; tableName: string }[];
 }
+
+export interface UpdateServiceStatus {
+  id: string;
+  label: string;
+  image: string;
+  currentVersion?: string | null;
+  availableVersion?: string | null;
+  status: 'running' | 'missing';
+  containerId?: string | null;
+}
+
+export interface UpdateStatusResponse {
+  services: UpdateServiceStatus[];
+  registry?: string;
+  repo?: string;
+}
+
+export interface UpdateRestartInfo {
+  containerId: string;
+  status: string;
+  error?: string;
+}
+
+export interface UpdatePullResponse {
+  service: string;
+  tag: string;
+  output: string;
+  restart?: UpdateRestartInfo[];
+}
+
+export interface UpdatePullResponse {
+  service: string;
+  tag: string;
+  output: string;
+}

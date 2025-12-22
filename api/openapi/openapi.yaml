@@ -2508,6 +2508,81 @@ components:
         - notifications
         - count
         - total
+    UpdateServiceStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        image:
+          type: string
+        currentVersion:
+          type: string
+          nullable: true
+        availableVersion:
+          type: string
+          nullable: true
+        status:
+          type: string
+        containerId:
+          type: string
+          nullable: true
+      required:
+        - id
+        - label
+        - image
+        - status
+    UpdateStatusResponse:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateServiceStatus'
+        registry:
+          type: string
+        repo:
+          type: string
+      required:
+        - services
+    UpdatePullRequest:
+      type: object
+      properties:
+        tag:
+          type: string
+      required:
+        - tag
+    UpdatePullResponse:
+      type: object
+      properties:
+        service:
+          type: string
+        tag:
+          type: string
+        output:
+          type: string
+        restart:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateRestartStatus'
+      required:
+        - service
+        - tag
+        - output
+    UpdateRestartStatus:
+      type: object
+      properties:
+        containerId:
+          type: string
+        status:
+          type: string
+        error:
+          type: string
+          nullable: true
+      required:
+        - containerId
+        - status
     SalesValue:
       type: object
       properties:
@@ -2628,3 +2703,63 @@ components:
     ChartResponse:
       type: object
       additionalProperties: true
+  /api/update:
+    get:
+      tags:
+        - Update
+      summary: Current image versions from the update API
+      responses:
+        '200':
+          description: Docker image statuses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateStatusResponse'
+        '404':
+          description: Update API not configured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: Update API proxy error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/update/{serviceId}/pull:
+    post:
+      tags:
+        - Update
+      summary: Trigger a docker pull for a specific service
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePullRequest'
+      responses:
+        '200':
+          description: Pull started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePullResponse'
+        '404':
+          description: Service not registered / update API not configured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: Update API proxy error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

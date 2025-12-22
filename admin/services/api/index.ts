@@ -1,4 +1,4 @@
-import { Area, Category, Item, Order, Table, Unit, User, Printer, Event } from '../../types';
+import { Area, Category, Item, Order, Table, Unit, User, Printer, Event, UpdateStatusResponse, UpdatePullResponse } from '../../types';
 
 const BASE_URL = window.location.origin; // Adjust if your real backend is elsewhere
 const API_BASE = 'api/';
@@ -114,6 +114,15 @@ export const api = {
     await client<{ setting: unknown }>(API_BASE + 'settings', {
       method: 'PUT',
       body: { setting: { activeEventId: eventId } } as any
+    });
+  },
+  getUpdateStatus: async (): Promise<UpdateStatusResponse> => {
+    return client<UpdateStatusResponse>(`${API_BASE}update`);
+  },
+  pullUpdate: async (serviceId: string, tag?: string): Promise<UpdatePullResponse> => {
+    return client<UpdatePullResponse>(`${API_BASE}update/${serviceId}/pull`, {
+      method: 'POST',
+      body: tag ? { tag } : undefined
     });
   },
   login: async (username: string, password: string): Promise<{ token: string }> => {

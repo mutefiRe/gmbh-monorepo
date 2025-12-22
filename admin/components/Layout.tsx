@@ -17,7 +17,8 @@ import {
   Printer,
   Layers,
   X,
-  Calendar
+  Calendar,
+  ArrowUpCircle
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -49,6 +50,7 @@ const getPageTitle = (path: string) => {
     case 'printers': return 'Drucker';
     case 'events': return 'Events';
     case 'settings': return 'Einstellungen';
+    case 'update': return 'Updates';
     default: return 'g.m.b.h. Admin';
   }
 }
@@ -143,6 +145,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             label="Einstellungen"
             active={location.pathname === '/settings'}
           />
+          <NavItem
+            to="/update"
+            icon={ArrowUpCircle}
+            label="Updates"
+            active={location.pathname === '/update'}
+          />
           <button
             onClick={logout}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors"
@@ -192,6 +200,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 icon={Settings}
                 label="Einstellungen"
                 active={location.pathname === '/settings'}
+              />
+              <NavItem
+                to="/update"
+                icon={ArrowUpCircle}
+                label="Updates"
+                active={location.pathname === '/update'}
               />
               <button
                 onClick={logout}

@@ -19,34 +19,40 @@ composed:
 	$(PRINTER_API_URL_ENV) docker compose up -d --build
 
 up:
-	$(PRINTER_API_URL_ENV) docker compose up --build
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml up --build
 
 up-d:
-	$(PRINTER_API_URL_ENV) docker compose up -d --build
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml up -d --build
 
 up-mac:
-	$(PRINTER_API_URL_ENV) docker compose up --build api mysql admin waiter reverse-proxy fake-printer dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml up --build api mysql admin waiter reverse-proxy fake-printer dozzle
 
 up-mac-d:
-	$(PRINTER_API_URL_ENV) docker compose up -d --build api mysql admin waiter reverse-proxy fake-printer dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml up -d --build api mysql admin waiter reverse-proxy fake-printer dozzle
 
-up-prod:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.prod.yml up -d --build
+up-dev:
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
-up-prod-mac:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.prod.yml up -d --build
+up-dev-d:
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+
+up-dev-mac:
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql admin waiter reverse-proxy fake-printer dozzle
+
+up-dev-mac-d:
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql admin waiter reverse-proxy fake-printer dozzle
 
 chaos-api:
-	COMPOSE_PROJECT_NAME=gmbh_chaos docker compose -f docker-compose.chaos.yml up --build --abort-on-container-exit --exit-code-from chaos
+	COMPOSE_FILE= COMPOSE_PROJECT_NAME=gmbh_chaos MYSQL_DATABASE=gmbh_chaos GMBH_DB_NAME=gmbh_chaos $(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.chaos.yml up --build --abort-on-container-exit --exit-code-from chaos
 
 certs:
-	CERT_HOSTS="${CERT_HOSTS:-gmbh.local,localhost}" CERT_IPS="${CERT_IPS:-127.0.0.1}" CERT_CN="${CERT_CN:-gmbh.local}" bash nginx/certs/scripts/generate_certs.sh
+	CERT_HOSTS="${CERT_HOSTS:-gmbh,gmbh.local,localhost}" CERT_IPS="${CERT_IPS:-127.0.0.1}" CERT_CN="${CERT_CN:-gmbh.local}" bash nginx/certs/scripts/generate_certs.sh
 
 test-api:
 	$(PRINTER_API_URL_ENV) GMBH_DB_TEST=gmbh_test GMBH_DB_HOST=localhost GMBH_DB_PORT=3306 npm --prefix api test
 
 test-api-docker:
-	$(PRINTER_API_URL_ENV) COMPOSE_PROJECT_NAME=gmbh_test docker compose -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from api
+	COMPOSE_FILE= COMPOSE_PROJECT_NAME=gmbh_test MYSQL_DATABASE=gmbh_test GMBH_DB_NAME=gmbh_test GMBH_DB_TEST=gmbh_test $(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from api
 
 clean:
 	@echo "This will remove Docker volumes (mysql_data, mysql_test_data) and destroy all database data and shut down the containers."
@@ -61,12 +67,21 @@ clean:
 stop:
 	docker compose down --remove-orphans
 
-stop-prod:
-	docker compose -f docker-compose.prod.yml down --remove-orphans
-
 RELEASE_TAG ?= latest
 RELEASE_REGISTRY ?= docker.io
-RELEASE_REPO ?=gmbh
+RELEASE_REPO ?=mutefire
+DOCKERHUB_USERNAME ?=
+DOCKERHUB_TOKEN ?=
+
+.PHONY: release-login
+release-login:
+ifndef DOCKERHUB_USERNAME
+	$(error DOCKERHUB_USERNAME must be set for release login)
+endif
+ifndef DOCKERHUB_TOKEN
+	$(error DOCKERHUB_TOKEN must be set for release login)
+endif
+	@printf '%s\n' "$(DOCKERHUB_TOKEN)" | docker login "$(RELEASE_REGISTRY)" -u "$(DOCKERHUB_USERNAME)" --password-stdin
 
 .PHONY: release-images
 release-images:

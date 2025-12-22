@@ -164,29 +164,23 @@ Run each service in its folder:
 - API tests (local MySQL): `make test-api`
 - API tests (Docker): `make test-api-docker`
 
+## Docker Compose structure
+
+- `docker-compose.yml` defines the full stack with build contexts so a plain `docker compose up` builds and runs all services (API, admin, waiter, nginx, printers, and utilities).
+- `docker-compose.dev.yml` only overrides commands and volume mounts to run the dev servers (hot reload and bind mounts). Use `make up-dev`/`make up-dev-d` to include the dev overlay.
+- The chaos/test targets explicitly layer their overrides on top of `docker-compose.yml` to avoid pulling in the dev overrides.
+- Production stays isolated in `prod/` with its own `docker-compose.yml` and Makefile, so you can copy `prod/` to a server and run `make up` there without the rest of the repo.
+
 ## Production
 
-- Build Waiter UI: `npm --prefix waiter run build`
-- Start production stack: `make up-prod`
-
-The production compose mounts `waiter/dist` into Nginx.
+- Build the UIs before packaging: run `npm --prefix waiter run build` and `npm --prefix admin run build` so the generated `dist` folders exist for the production bundle.
+- Copy the `prod/` folder together with the built `admin/dist` and `waiter/dist` into a production host. Inside `prod/` run `make up` (or `./Makefile` targets) to use the standalone compose stack that already wires nginx, certs, fake printer, Dozzle, update API, etc.
+- The `prod/` compose mounts the baked UI assets (`../admin/dist`, `../waiter/dist`), uses pinned Docker images, and brings up nginx with the same configuration as the dev proxy but pointing to the production services.
 
 ## Makefile targets
 
-- `make up`, `make up-d`: full stack
-- `make up-mac`, `make up-mac-d`: Mac-friendly stack
-- `make up-prod`: production compose
+- `make up-dev`, `make up-dev-d`: full dev stack (used by `make up` / `make up-d`)
+- `make up-dev-mac`, `make up-dev-mac-d`: Mac-friendly dev stack
+- `make chaos-api`: chaos test suite
 - `make test-api`, `make test-api-docker`: API tests
 - `make clean`: remove docker volumes
-
-## Release management
-
-- **Version metadata**: each subproject carries its own version (`api/package.json`, `admin/package.json`, `waiter/package.json`, `fake-printer/package.json`, `printer-api/version/version.go`). Increment the relevant version before releasing.
-- **Publish images manually**: run `RELEASE_TAG=dev-1.2.3 make release-images` (default `RELEASE_TAG=latest`) to build & push Docker images for API, printer API, fake printer, and the nginx reverse proxy. The helper scripts read the version metadata and tag each image accordingly while also applying the chosen release tag.
-- **Environment variables**: override `RELEASE_REGISTRY` and `RELEASE_REPO` if you publish to a non-default registry (defaults to `docker.io/gmbh`). The release target relies on `docker` CLI being logged in before pushing.
-
-## Automated releases (GitHub Actions)
-
-- The `.github/workflows/release.yml` workflow runs on every push to `main` and can be triggered manually via “Run workflow”. It builds and pushes the Docker images using the same `make release-images` target so both automated and manual releases share the same logic.
-- The workflow exposes an optional `release_tag` input (default `latest`) that appends an extra tag on top of each service’s version tag.
-- Provide `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` as repository secrets so the workflow can authenticate with Docker Hub.

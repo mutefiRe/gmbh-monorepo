@@ -1,9 +1,5 @@
 FROM node:24-alpine
 
-ENV PYTHON=/usr/bin/python3
-
-
-
 WORKDIR /app
 
 COPY package*.json ./
