@@ -1,8 +1,10 @@
-version: "3.9"
-
 services:
   api:
-    build: api/
+    environment:
+      NODE_ENV: test
+      GMBH_DB_NAME: ${GMBH_DB_NAME:-gmbh_test}
+      GMBH_DB_TEST: ${GMBH_DB_TEST:-gmbh_test}
+      PORT: "8081"
     command: ["npm", "test"]
 
   mysql:

@@ -85,8 +85,26 @@ const runMigrations = async () => {
     });
     await umzug.up();
 };
+const waitForDatabase = async () => {
+    const retries = Number(process.env.GMBH_DB_CONNECT_RETRIES || 30);
+    const delayMs = Number(process.env.GMBH_DB_CONNECT_DELAY_MS || 1000);
+    let attempt = 0;
+    while (attempt < retries) {
+        attempt += 1;
+        try {
+            await index_1.default.sequelize.authenticate();
+            return;
+        }
+        catch (err) {
+            logger.warn({ err, attempt, retries }, 'db connection failed, retrying');
+            await new Promise((resolve) => setTimeout(resolve, delayMs));
+        }
+    }
+    throw new Error(`db connection failed after ${retries} attempts`);
+};
 const startServer = async () => {
     const shouldMigrate = process.env.GMBH_DB_AUTO_MIGRATE !== 'false';
+    await waitForDatabase();
     if (shouldMigrate) {
         await runMigrations();
     }

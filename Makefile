@@ -31,16 +31,16 @@ up-mac-d:
 	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml up -d --build api mysql admin waiter reverse-proxy fake-printer dozzle
 
 up-dev:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql reverse-proxy fake-printer printer-api dozzle
 
 up-dev-d:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer printer-api dozzle
 
 up-dev-mac:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql admin waiter reverse-proxy fake-printer dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql reverse-proxy fake-printer printer-api dozzle
 
 up-dev-mac-d:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql admin waiter reverse-proxy fake-printer dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer printer-api dozzle
 
 chaos-api:
 	COMPOSE_FILE= COMPOSE_PROJECT_NAME=gmbh_chaos MYSQL_DATABASE=gmbh_chaos GMBH_DB_NAME=gmbh_chaos $(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.chaos.yml up --build --abort-on-container-exit --exit-code-from chaos
@@ -72,6 +72,8 @@ RELEASE_REGISTRY ?= docker.io
 RELEASE_REPO ?=mutefire
 DOCKERHUB_USERNAME ?=
 DOCKERHUB_TOKEN ?=
+FORCE_LATEST ?=0
+RELEASE_SERVICE ?=
 
 .PHONY: release-login
 release-login:
@@ -85,4 +87,4 @@ endif
 
 .PHONY: release-images
 release-images:
-	DOCKER_REGISTRY=$(RELEASE_REGISTRY) DOCKER_REPO=$(RELEASE_REPO) node scripts/release-images.js --tag "$(RELEASE_TAG)"
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 DOCKER_REGISTRY=$(RELEASE_REGISTRY) DOCKER_REPO=$(RELEASE_REPO) FORCE_LATEST=$(FORCE_LATEST) RELEASE_SERVICE=$(RELEASE_SERVICE) node scripts/release-images.js --tag "$(RELEASE_TAG)"

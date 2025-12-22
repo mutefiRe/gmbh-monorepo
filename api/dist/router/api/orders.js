@@ -83,6 +83,24 @@ router.post('/', async function (req, res) {
     const io = req.app.get('io');
     try {
         const requestOrder = req.body.order;
+        const hasTableId = Object.prototype.hasOwnProperty.call(requestOrder || {}, 'tableId');
+        const hasCustomName = Object.prototype.hasOwnProperty.call(requestOrder || {}, 'customTableName');
+        if (hasTableId || hasCustomName) {
+            if (!requestOrder?.tableId) {
+                const customName = (requestOrder?.customTableName || '').trim();
+                if (customName.length < 3) {
+                    return res.status(400).send({
+                        errors: {
+                            msg: 'customTableName must be at least 3 characters when tableId is missing'
+                        }
+                    });
+                }
+                requestOrder.customTableName = customName;
+            }
+            else {
+                requestOrder.customTableName = null;
+            }
+        }
         let order = null;
         if (requestOrder?.id) {
             order = await models_1.default.Order.findOne({
@@ -139,6 +157,24 @@ router.put('/:id', async function (req, res) {
                     msg: 'order id cannot be changed'
                 }
             });
+        }
+        const hasTableId = Object.prototype.hasOwnProperty.call(requestOrder || {}, 'tableId');
+        const hasCustomName = Object.prototype.hasOwnProperty.call(requestOrder || {}, 'customTableName');
+        if (hasTableId || hasCustomName) {
+            if (!requestOrder?.tableId) {
+                const customName = (requestOrder?.customTableName || '').trim();
+                if (customName.length < 3) {
+                    return res.status(400).send({
+                        errors: {
+                            msg: 'customTableName must be at least 3 characters when tableId is missing'
+                        }
+                    });
+                }
+                requestOrder.customTableName = customName;
+            }
+            else {
+                requestOrder.customTableName = null;
+            }
         }
         const order = await models_1.default.Order.findOne({
             where: { id: req.params.id, eventId: req.eventId }

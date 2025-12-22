@@ -4,10 +4,15 @@ const router = require('express').Router();
 const db = require('../../models');
 const requireRole = require('../permissions');
 async function loadSetting() {
-    return db.Setting.findOne();
+    return db.Setting.findOne({
+        attributes: { exclude: ['customTables'] }
+    });
 }
 async function loadSettingWithTransaction(transaction) {
-    return db.Setting.findOne({ transaction });
+    return db.Setting.findOne({
+        attributes: { exclude: ['customTables'] },
+        transaction
+    });
 }
 router.get('/', requireRole('admin'), async function (req, res) {
     const [setting, events] = await Promise.all([

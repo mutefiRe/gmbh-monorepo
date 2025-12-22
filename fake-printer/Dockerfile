@@ -7,6 +7,8 @@ COPY src ./src
 
 RUN npm install
 
+RUN npm run build
+
 EXPOSE 9100 9101
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

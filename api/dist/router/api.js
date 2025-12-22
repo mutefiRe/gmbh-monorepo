@@ -19,6 +19,8 @@ const events = require('./api/events');
 const notifications = require('./api/notifications');
 const eventScope = require('../middleware/event-scope');
 const eventReadOnly = require('../middleware/event-readonly');
+const updateRouter = require('./api/update');
+const requireRole = require('./permissions');
 const router = (0, express_1.Router)();
 router.use("/users", users);
 router.use("/printers", printers);
@@ -36,6 +38,7 @@ router.use("/settings", settings);
 router.use("/prints", eventScope, eventReadOnly, prints);
 router.use("/statistics", eventScope, eventReadOnly, statistics);
 router.use("/stats", eventScope, eventReadOnly, stats);
+router.use("/update", requireRole('admin'), updateRouter);
 router.get('/', function (req, res) {
     res.status(200).send({ "msg": "you have access to the api" });
 });

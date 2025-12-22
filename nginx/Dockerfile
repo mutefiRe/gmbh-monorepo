@@ -1,4 +1,4 @@
-FROM node:24.16.0-alpine AS waiter_build
+FROM node:24.12-alpine AS waiter_build
 WORKDIR /app
 ARG VITE_API_TARGET
 ENV VITE_API_TARGET=${VITE_API_TARGET}
@@ -7,7 +7,7 @@ RUN cd waiter && npm ci
 COPY waiter ./waiter
 RUN cd waiter && npm run build
 
-FROM node:24.16.0-alpine AS admin_build
+FROM node:24.12-alpine AS admin_build
 WORKDIR /app
 ARG VITE_API_TARGET
 ENV VITE_API_TARGET=${VITE_API_TARGET}

@@ -34,7 +34,9 @@ async function apiAuth(req, res, next) {
         req.decoded = decoded;
         const role = decoded?.role;
         if (role === 'waiter') {
-            const setting = await models_1.default.Setting.findOne();
+            const setting = await models_1.default.Setting.findOne({
+                attributes: { exclude: ['customTables'] }
+            });
             const activeEventId = setting?.activeEventId || null;
             const tokenEventId = decoded?.eventId || null;
             if (activeEventId && tokenEventId && activeEventId !== tokenEventId) {

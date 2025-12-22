@@ -7,8 +7,10 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const apiTarget = env.VITE_API_TARGET || "http://localhost:8080";
+  const basePath = env.VITE_BASE || process.env.VITE_BASE || "/admin/";
 
   return {
+    base: mode === 'production' ? basePath : '/',
     server: {
       port: 3000,
       http: true,

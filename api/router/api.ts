@@ -18,7 +18,7 @@ const notifications = require('./api/notifications');
 const eventScope = require('../middleware/event-scope');
 const eventReadOnly = require('../middleware/event-readonly');
 const updateRouter = require('./api/update');
-const requireRole = require('../permissions');
+const requireRole = require('./permissions');
 
 const router = Router();
 

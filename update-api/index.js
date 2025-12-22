@@ -12,10 +12,10 @@ const repo = process.env.DOCKER_REPO || 'gmbh';
 const agent = new http.Agent({ socketPath });
 
 const services = [
-  { id: 'gmbh-api', label: 'API', image: 'gmbh/gmbh-api', hubName: 'gmbh-api' },
-  { id: 'gmbh-printer-api', label: 'Printer API', image: 'gmbh/gmbh-printer-api', hubName: 'gmbh-printer-api' },
-  { id: 'gmbh-fake-printer', label: 'Fake Printer', image: 'gmbh/gmbh-fake-printer', hubName: 'gmbh-fake-printer' },
-  { id: 'gmbh-update-api', label: 'Update API', image: 'gmbh/gmbh-update-api', hubName: 'gmbh-update-api' }
+  { id: 'gmbh-api', label: 'API', image: 'mutefire/gmbh-api', hubName: 'gmbh-api' },
+  { id: 'gmbh-printer-api', label: 'Printer API', image: 'mutefire/gmbh-printer-api', hubName: 'gmbh-printer-api' },
+  { id: 'gmbh-fake-printer', label: 'Fake Printer', image: 'mutefire/gmbh-fake-printer', hubName: 'gmbh-fake-printer' },
+  { id: 'gmbh-update-api', label: 'Update API', image: 'mutefire/gmbh-update-api', hubName: 'gmbh-update-api' }
 ];
 
 const ensureAuth = (req, res, next) => {

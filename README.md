@@ -150,7 +150,7 @@ Run each service in its folder:
 ## Ports
 
 - API: `http://localhost:8080`
-- Admin (dev): `http://localhost:3000`
+- Admin (dev): `http://localhost:3000/admin/`
 - Waiter (dev): `https://localhost:5173`
 - Nginx (waiter): `http://localhost` / `https://localhost`
 - Nginx (admin): `http://localhost/admin` / `https://localhost/admin`
@@ -163,11 +163,12 @@ Run each service in its folder:
 
 - API tests (local MySQL): `make test-api`
 - API tests (Docker): `make test-api-docker`
+  - This uses `docker compose -f docker-compose.yml -f docker-compose.test.yml` under the hood, so `docker-compose.test.yml` is an override file and must always be combined with `docker-compose.yml` (it does not define images/builds on its own).
 
 ## Docker Compose structure
 
 - `docker-compose.yml` defines the full stack with build contexts so a plain `docker compose up` builds and runs all services (API, admin, waiter, nginx, printers, and utilities).
-- `docker-compose.dev.yml` only overrides commands and volume mounts to run the dev servers (hot reload and bind mounts). Use `make up-dev`/`make up-dev-d` to include the dev overlay.
+- `docker-compose.dev.yml` only overrides the API command and mounts MySQL init scripts, while nginx proxies to the host dev servers for admin/waiter. Use `make up-dev`/`make up-dev-d` and run `npm --prefix admin run dev` + `npm --prefix waiter run dev` locally.
 - The chaos/test targets explicitly layer their overrides on top of `docker-compose.yml` to avoid pulling in the dev overrides.
 - Production stays isolated in `prod/` with its own `docker-compose.yml` and Makefile, so you can copy `prod/` to a server and run `make up` there without the rest of the repo.
 
@@ -179,8 +180,8 @@ Run each service in its folder:
 
 ## Makefile targets
 
-- `make up-dev`, `make up-dev-d`: full dev stack (used by `make up` / `make up-d`)
-- `make up-dev-mac`, `make up-dev-mac-d`: Mac-friendly dev stack
+- `make up-dev`, `make up-dev-d`: API + infra with nginx proxying to host-run admin/waiter dev servers
+- `make up-dev-mac`, `make up-dev-mac-d`: Mac-friendly variant of the dev stack
 - `make chaos-api`: chaos test suite
 - `make test-api`, `make test-api-docker`: API tests
 - `make clean`: remove docker volumes

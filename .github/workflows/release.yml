@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       DOCKER_REGISTRY: docker.io
-      DOCKER_REPO: gmbh
+      DOCKER_REPO: mutefire
     steps:
       - name: Checkout
         uses: actions/checkout@v4

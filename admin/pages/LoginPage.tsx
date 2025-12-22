@@ -34,7 +34,7 @@ export const LoginPage: React.FC = () => {
           <div className="mx-auto mb-4 rounded-2xl bg-white p-3 w-fit">
             <img src={logo} alt="GmBh" className="h-12 w-auto" />
           </div>
-          <h1 className="text-2xl font-bold text-white">GmBh Admin</h1>
+          <h1 className="text-2xl font-bold text-white">g.m.b.h Admin</h1>
           <p className="text-primary-200 mt-2">Willkommen zurück</p>
         </div>
 

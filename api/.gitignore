@@ -135,3 +135,5 @@ fabric.properties
 .python-version
 
 prints
+
+dist/*

@@ -4,7 +4,9 @@ const db = require('../models');
 async function eventScope(req, res, next) {
     try {
         const headerEventId = req.header('x-event-id');
-        const setting = await db.Setting.findOne();
+        const setting = await db.Setting.findOne({
+            attributes: { exclude: ['customTables'] }
+        });
         if (headerEventId) {
             // Allow explicit event selection via header, even if it's inactive.
             const event = await db.Event.findOne({ where: { id: headerEventId } });

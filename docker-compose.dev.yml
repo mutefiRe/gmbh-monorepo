@@ -13,35 +13,11 @@ services:
     volumes:
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
 
-  admin:
-    build:
-      context: admin/
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./admin:/app
-      - admin_node_modules:/app/node_modules
-    environment:
-      VITE_API_TARGET: "http://api:8080"
-    depends_on:
-      - api
-
-  waiter:
-    build:
-      context: waiter/
-      dockerfile: Dockerfile.dev
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./waiter:/app
-      - waiter_node_modules:/app/node_modules
-    environment:
-      VITE_API_TARGET: "http://api:8080"
-      VITE_HTTPS: "false"
-    depends_on:
-      - api
-
   reverse-proxy:
     volumes:
       - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  api_node_modules:
