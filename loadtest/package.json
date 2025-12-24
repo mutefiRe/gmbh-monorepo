@@ -1,0 +1,14 @@
+{
+  "name": "gmbh-loadtest",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Black-box load test for gmbh API",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "p-limit": "^6.2.0",
+    "undici": "^6.21.0"
+  }
+}

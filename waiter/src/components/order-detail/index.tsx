@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Armchair, ChevronLeft, ReceiptText, Send } from "lucide-react";
+import { Armchair, ChevronLeft, Send } from "lucide-react";
 import type { OrderItem, Item, Unit, Table, Area, Category } from "../../types/models";
 import { useCreateOrder, usePrintOrder, useSettings } from "../../types/queries";
 import { QuantityBlink } from "../../ui/quantity-blink";
@@ -156,7 +156,7 @@ export function OrderDetail({
     <div className="w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
       <div className="mb-2 shrink-0">
         <h2 className="text-xl font-bold text-slate-800">Bestellung</h2>
-        <p className="text-xs text-slate-500">Positionen prüfen, Tisch wählen und abschicken.</p>
+        <p className="text-xs text-slate-500">Artikel prüfen, Tisch wählen und abschicken.</p>
         {pendingMessage && (
           <div className="mt-2">
             <Notice message={pendingMessage} variant="warning" />
@@ -176,14 +176,11 @@ export function OrderDetail({
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
         <div className="px-3 py-2 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded border border-slate-200 shadow-sm">
-              <ReceiptText size={20} className="text-primary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-800">Positionen</h3>
-              <p className="text-[0.7rem] text-slate-500">{currentOrder.orderItems.length} Artikel</p>
-            </div>
+          <div>
+            <h3 className="font-semibold text-slate-800">Bestellübersicht</h3>
+            <p className="text-[0.7rem] text-slate-500">
+              {currentOrder.orderItems.reduce((sum, item) => sum + item.count, 0)} Artikel
+            </p>
           </div>
           <div className="text-right">
             <p className="text-[0.7rem] text-slate-500">Summe</p>
@@ -215,7 +212,7 @@ export function OrderDetail({
                           <span> {itemAmountString(item.amount)}{unit?.name}</span>
                         )}
                       </p>
-                      <p className="text-xs text-slate-500 truncate">{orderitem.extras || 'Ohne Extras'}</p>
+                      {orderitem.extras && <p className="text-xs text-slate-500 truncate">{orderitem.extras}</p>}
                     </div>
                   </div>
                   <span className="text-slate-600 font-medium">€ {(orderitem.price * orderitem.count).toFixed(2)}</span>
@@ -238,7 +235,7 @@ export function OrderDetail({
           })}
           {currentOrder.orderItems.length === 0 && (
             <div className="p-6 text-center text-slate-400">
-              Keine Positionen in dieser Bestellung.
+              Keine Artikel in dieser Bestellung.
             </div>
           )}
         </div>
@@ -292,6 +289,18 @@ export function OrderDetail({
             Zurück
           </span>
         </Link>
+        <button
+          className="rounded-md border border-red-200 bg-white px-4 py-2 text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+          disabled={isSubmitting || currentOrder.orderItems.length === 0}
+          onClick={() => {
+            if (confirm('Bestellung wirklich verwerfen? Alle Positionen gehen verloren.')) {
+              setCurrentOrder({ orderItems: [], tableId: null, customTableName: null, printId: "" });
+              setTabbedIndex(null);
+            }
+          }}
+        >
+          Bestellung verwerfen
+        </button>
         <button
           className="rounded-md bg-primary px-4 py-2 text-primary-contrast inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
           disabled={!hasValidTableSelection || isSubmitting}

@@ -162,15 +162,12 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
             <Plus size={16} />
           </button>
         }
-        open={modalOpen} onClose={() => setModalOpen(null)} title={item.name}>
+        open={modalOpen} onClose={() => setModalOpen(null)} title={itemCategory?.showAmount ? `${item.name} ${itemAmountString(item.amount)}${unit?.name || ''}` : item.name}>
         <div>
-          {itemCategory?.showAmount && (
-            <p>
-              Amount: {item.amount} {unit?.name}
-            </p>
-          )}
           {showItemPrice && (
-            <p>Price: € {item.price?.toFixed ? item.price.toFixed(2) : item.price}</p>
+            <p className="text-sm text-slate-600">
+              Preis: € {item.price?.toFixed ? item.price.toFixed(2) : item.price}
+            </p>
           )}
 
           {suggestedExtras.length > 0 && (
@@ -194,7 +191,7 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
           )}
           <input
             type="text"
-            placeholder="Extras"
+            placeholder="Bemerkung (optional)"
             value={extras}
             className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-200"
             autoFocus={false}

@@ -68,6 +68,7 @@ services:
     ports:
       - "9100:9100"
       - "9101:9101"
+    mem_limit: 128m
     environment:
       PRINT_PORT: "9100"
       UI_PORT: "9101"
@@ -86,6 +87,7 @@ services:
 
   dozzle:
     image: amir20/dozzle:v8.14
+    mem_limit: 128m
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:

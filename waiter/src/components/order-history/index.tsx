@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { useOrdersByUser, useTables, useAreas } from "../../types/queries";
+import { useOrders, useOrdersByUser, useTables, useAreas } from "../../types/queries";
 import { useAuth } from "../../auth-wrapper";
 import ProgressBar from "../common/ProgressBar";
 import { Plus } from "lucide-react";
@@ -15,7 +15,9 @@ export function OrderHistory() {
   const [page, setPage] = useState(0);
   const pageSize = 20;
 
-  const queryOrders = useOrdersByUser(auth.userId || "", page * pageSize, pageSize, { enabled: !!auth.userId });
+  const isAllOrders = filter === "all";
+  const queryOrders = useOrdersByUser(auth.userId || "", page * pageSize, pageSize, { enabled: !!auth.userId && !isAllOrders });
+  const queryAllOrders = useOrders(page * pageSize, pageSize, { enabled: isAllOrders });
   const queryTables = useTables();
   const queryAreas = useAreas();
   const connection = useConnectionStatus();
@@ -38,11 +40,16 @@ export function OrderHistory() {
     orderitems: Array<{ count: number; countPaid?: number; price: number }>;
   };
 
-  const orders: OrderRow[] = (queryOrders.data?.orders || []).map((order) => ({
+  const myOrders: OrderRow[] = (queryOrders.data?.orders || []).map((order) => ({
     ...order,
     orderitems: order.orderitems || []
   }));
-  const ordersLoadFailed = queryOrders.isError;
+  const allOrders: OrderRow[] = (queryAllOrders.data?.orders || []).map((order) => ({
+    ...order,
+    orderitems: order.orderitems || []
+  }));
+  const orders = isAllOrders ? allOrders : myOrders;
+  const ordersLoadFailed = isAllOrders ? queryAllOrders.isError : queryOrders.isError;
   const offlineRows: OrderRow[] = useMemo(() => {
     return offlineOrders.map((entry) => ({
       id: entry.id,
@@ -58,7 +65,7 @@ export function OrderHistory() {
     }));
   }, [offlineOrders]);
 
-  const total = queryOrders.data?.total ?? 0;
+  const total = (isAllOrders ? queryAllOrders.data?.total : queryOrders.data?.total) ?? 0;
   const tables = queryTables.data?.tables || [];
   const areas = queryAreas.data?.areas || [];
 
@@ -69,7 +76,9 @@ export function OrderHistory() {
   }));
   const showFullDate = uniqueDays.size > 1;
 
-  const isHistoryLoading = queryOrders.isLoading || queryTables.isLoading || queryAreas.isLoading;
+  const isHistoryLoading = (isAllOrders ? queryAllOrders.isLoading : queryOrders.isLoading)
+    || queryTables.isLoading
+    || queryAreas.isLoading;
 
   function renderTable(
     rows: OrderRow[],
@@ -194,7 +203,7 @@ export function OrderHistory() {
     ];
 
   // Filtered rows for each view
-  const openRows = orders.filter((order: { orderitems: Array<{ count: number; countPaid?: number }> }) => {
+  const openRows = myOrders.filter((order: { orderitems: Array<{ count: number; countPaid?: number }> }) => {
     let openCount = 0;
     order.orderitems.forEach((oi: { count: number; countPaid?: number }) => {
       openCount += oi.count - (oi.countPaid || 0);
@@ -206,37 +215,57 @@ export function OrderHistory() {
   const currentPage = Math.min(page + 1, totalPages);
   const noServerOrders = ordersLoadFailed && orders.length === 0;
   const offlineNoticeMessage = pendingOrdersMessage(offlineOrders.length, connection.canReachServer);
+  const showOfflineNotice = filter === "orders";
+  const headerTitle = filter === "all" ? "Alle Bestellungen" : "Meine Bestellungen";
 
   return (
     <div className="w-full flex flex-col items-center justify-start bg-gray-50 h-[calc(100dvh-56px)]">
       <div className="w-full max-w-screen-lg flex flex-col flex-1 p-4 h-full min-h-0">
-        <h2 className="text-xl font-bold mb-3 text-gray-800">Bestellverlauf</h2>
-        <div className="flex gap-3 mb-3">
+        <h2 className="text-xl font-bold mb-1 text-gray-800">{headerTitle}</h2>
+        <div className="flex flex-wrap gap-3 mb-3">
           <button
             className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${filter === "orders"
-                ? "bg-primary-600 text-white border-primary-600"
-                : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
+              ? "bg-primary-600 text-white border-primary-600"
+              : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
               }`}
-            onClick={() => setFilter("orders")}
+            onClick={() => {
+              setFilter("orders");
+              setPage(0);
+            }}
           >
-            Bestellungen
+            Meine
           </button>
           <button
             className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${filter === "tables"
-                ? "bg-primary-600 text-white border-primary-600"
-                : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
+              ? "bg-primary-600 text-white border-primary-600"
+              : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
               }`}
-            onClick={() => setFilter("tables")}
+            onClick={() => {
+              setFilter("tables");
+              setPage(0);
+            }}
           >
-            Offene Bestellungen
+            Meine (offen)
+          </button>
+          <button
+            className={`default-btn px-4 py-2 rounded-lg font-semibold border transition-colors ${filter === "all"
+              ? "bg-primary-600 text-white border-primary-600"
+              : "bg-white text-slate-600 border-slate-200 hover:bg-primary-50 hover:border-primary-300"
+              }`}
+            onClick={() => {
+              setFilter("all");
+              setPage(0);
+            }}
+          >
+            Alle
           </button>
         </div>
         <div className="mb-3 flex flex-wrap items-start justify-between gap-3 text-sm text-slate-500">
           <div className="space-y-2">
             {total === 0
-              ? (offlineOrders.length > 0 ? 'Keine gesendeten Bestellungen' : 'Keine Bestellungen')
+              ? (showOfflineNotice && offlineOrders.length > 0 ? 'Keine gesendeten Bestellungen' : 'Keine Bestellungen')
               : `Zeige ${page * pageSize + 1}-${page * pageSize + orders.length} von ${total}`}
-            {offlineOrders.length > 0 && page === 0 && offlineNoticeMessage && (
+            {showOfflineNotice && offlineOrders.length > 0 && page === 0 && offlineNoticeMessage && (
               <Notice
                 variant="warning"
                 message={offlineNoticeMessage}
@@ -344,6 +373,9 @@ export function OrderHistory() {
               )}
               {filter === "tables" && (
                 noServerOrders ? null : renderTable(openRows, columns)
+              )}
+              {filter === "all" && (
+                noServerOrders ? null : renderTable(orders, columns)
               )}
             </>
           )}

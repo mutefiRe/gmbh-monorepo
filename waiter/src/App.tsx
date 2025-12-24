@@ -104,7 +104,7 @@ function App() {
                     <ConnectionPill status={connection.status} pendingCount={pendingCount} />
                   </div>
                   <Link
-                    className={() => "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-primary-300 text-primary-700 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors"}
+                    className={() => "inline-flex items-center gap-2 px-[12px] py-[6px] rounded-lg border border-primary-300 text-primary-700 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors"}
                     href={onOrdersPage ? "/order/new" : "/orders"}
                   >
                     {onOrdersPage ? <Plus size={16} /> : <ReceiptText size={16} />}

@@ -171,6 +171,19 @@ app.use('/teapot', teapot);
 
 app.use('/error', error);
 
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ errors: { msg: 'not found' } });
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  const status = typeof err?.status === 'number' ? err.status : 500;
+  const message = err?.errors?.[0]?.message || err?.message || 'unexpected error';
+  res.status(status).json({ errors: { msg: message } });
+});
+
 
 
 

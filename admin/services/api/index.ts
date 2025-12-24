@@ -229,7 +229,7 @@ export const api = {
 
   // --- Printers ---
   getPrinters: async (): Promise<Printer[]> => {
-    return (await client<{ printers: Printer[] }>(API_BASE + 'printers')).printers;
+    return (await client<{ printers: Printer[] }>(`${API_BASE}printers?includeDetails=true&includeQueue=true`)).printers;
   },
   createPrinter: async (printer: Partial<Printer>): Promise<Printer> => {
     return (await client<{ printer: Printer }>(API_BASE + 'printers', { body: { printer: printer } as any })).printer;

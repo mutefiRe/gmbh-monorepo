@@ -87,7 +87,7 @@ export function OrderMain({
               onClick={() => {
                 navigate("/order/edit");
               }}
-              className="lg:hidden rounded-lg border border-primary-300 text-primary-700 px-3 py-1.5 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors active:scale-[0.99] inline-flex items-center gap-2"
+              className="lg:hidden rounded-lg border border-primary-300 text-primary-700 px-[12px] py-[6px] text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors active:scale-[0.99] inline-flex items-center gap-2"
             >
               Bestellung prüfen
               <ArrowRight size={16} />

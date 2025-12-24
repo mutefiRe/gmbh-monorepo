@@ -99,6 +99,13 @@ export function PayDetail({
     const id = oi.id ?? "";
     return sum + ((itemMarks[id] || 0) * oi.price);
   }, 0);
+  const allMarked = orderitems.every((orderitem) => {
+    const id = orderitem.id ?? "";
+    if (!id) return true;
+    const maxMarkable = orderitem.count - (orderitem.countPaid || 0);
+    if (maxMarkable <= 0) return true;
+    return (itemMarks[id] || 0) >= maxMarkable;
+  });
   const statusNotice = isOfflineOrder
     ? {
       variant: "warning" as const,
@@ -125,6 +132,19 @@ export function PayDetail({
   }
   function decrementMarked(id: string) {
     setItemMarks(prev => ({ ...prev, [id]: Math.max((prev[id] || 0) - 1, 0) }));
+  }
+  function markAllItems() {
+    const nextMarks: Record<string, number> = {};
+    orderitems.forEach((orderitem) => {
+      const id = orderitem.id ?? "";
+      if (!id) return;
+      const maxMarkable = orderitem.count - (orderitem.countPaid || 0);
+      nextMarks[id] = Math.max(0, maxMarkable);
+    });
+    setItemMarks(nextMarks);
+  }
+  function markItemAll(id: string, max: number) {
+    setItemMarks(prev => ({ ...prev, [id]: Math.max(0, max) }));
   }
   async function onReprint() {
     if (!order?.id) {
@@ -266,7 +286,25 @@ export function PayDetail({
               <table className="min-w-full text-sm">
                 <thead className="bg-slate-50 sticky top-0 z-10 text-slate-500">
                   <tr>
-                    <th className="px-2 py-2 sm:px-3 font-semibold text-left w-24">Markieren</th>
+                  <th className="px-2 py-2 sm:px-3 font-semibold text-left w-28">
+                    <label className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary-300"
+                        checked={allMarked}
+                        onChange={(event) => {
+                          event.stopPropagation();
+                          if (event.target.checked) {
+                            markAllItems();
+                          } else {
+                            setItemMarks({});
+                          }
+                        }}
+                        disabled={isPaying || orderitems.length === 0}
+                      />
+                      <span>Alle</span>
+                    </label>
+                  </th>
                     <th className="px-2 py-2 sm:px-4 font-semibold text-left">Artikel</th>
                     <th className="px-2 py-2 sm:px-4 font-semibold text-left">Bezahlt</th>
                     <th className="px-2 py-2 sm:px-4 font-semibold text-right">Summe</th>
@@ -299,6 +337,12 @@ export function PayDetail({
                       <tr
                         key={id}
                         className={`transition-colors ${isPaid ? 'bg-emerald-50' : 'bg-white'} ${marked > 0 ? 'bg-primary-50' : ''}`}
+                        onClick={(event) => {
+                          if (isPaid || isPaying) return;
+                          const target = event.target as HTMLElement | null;
+                          if (target?.closest('button')) return;
+                          incrementMarked(id, maxMarkable);
+                        }}
                       >
                         <td className="px-2 py-2 sm:px-3 text-center whitespace-nowrap">
                           {isPaid ? (
@@ -319,6 +363,13 @@ export function PayDetail({
                                 disabled={marked === maxMarkable || isPaying}
                               >
                                 +
+                              </button>
+                              <button
+                                className="h-8 px-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:border-slate-200 disabled:text-slate-400"
+                                onClick={() => markItemAll(id, maxMarkable)}
+                                disabled={marked === maxMarkable || isPaying}
+                              >
+                                ∞
                               </button>
                             </div>
                           )}

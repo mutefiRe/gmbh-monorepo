@@ -12,6 +12,7 @@ let lockSearch = false;
 router.get('/', async function (req: Request, res: Response) {
   try {
     const printers = await db.Printer.findAll();
+    const includeDetails = String(req.query.includeDetails || '').toLowerCase() === 'true';
     const statuses = await Promise.all(printers.map(async (printer: any) => {
       try {
         const status = await printerApi.status(printer.systemName);
@@ -29,12 +30,30 @@ router.get('/', async function (req: Request, res: Response) {
         return { key: printer.systemName, queue: null };
       }
     })) : [];
+    const details = includeDetails ? await Promise.resolve().then(async () => {
+      try {
+        const payload = await printerApi.discover();
+        return payload?.printers || [];
+      } catch (err) {
+        logger.warn({ err }, 'printer details discovery failed');
+        return [];
+      }
+    }) : [];
     const statusMap = new Map(statuses.map((s) => [s.key, s.online]));
     const queueMap = new Map(queues.map((q) => [q.key, q.queue]));
-    const printersWithStatus = printers.map((printer: any) => Object.assign({}, printer.toJSON(), {
-      reachable: statusMap.get(printer.systemName) || false,
-      queue: includeQueue ? queueMap.get(printer.systemName) : undefined
-    }));
+    const detailsMap = new Map(details.map((p: any) => [p.id, p]));
+    const printersWithStatus = printers.map((printer: any) => {
+      const detail = includeDetails ? detailsMap.get(printer.systemName) : undefined;
+      const mergedDetail = detail && typeof detail === 'object' ? { ...(detail as Record<string, unknown>) } : undefined;
+      if (mergedDetail && mergedDetail.id) {
+        delete mergedDetail.id;
+      }
+      return Object.assign({}, printer.toJSON(), {
+        reachable: statusMap.get(printer.systemName) || false,
+        queue: includeQueue ? queueMap.get(printer.systemName) : undefined,
+        discovered: includeDetails ? detailsMap.has(printer.systemName) : undefined
+      }, mergedDetail || {});
+    });
     res.send({ printers: printersWithStatus });
   } catch (error: any) {
     res.status(400).send({
@@ -141,7 +160,12 @@ router.delete('/:id', async function (req: Request, res: Response) {
     if (printer === null) {
       throw new Error('printer not found');
     }
-    await Promise.all([printer.destroy(), control.removePrinter(printer.systemName)]);
+    await printer.destroy();
+    try {
+      await control.removePrinter(printer.systemName);
+    } catch (err) {
+      logger.warn({ err }, 'failed to remove printer from cache');
+    }
     res.send({});
     io.sockets.emit("delete", { type: 'printer', id: req.params.id });
   } catch (error: any) {

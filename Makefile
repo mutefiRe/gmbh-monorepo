@@ -36,11 +36,13 @@ up-dev:
 up-dev-d:
 	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer printer-api dozzle
 
+# # this should not start printer-api, as on macOS you cannot mount usb devices into containers. Start manually if needed.
 up-dev-mac:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql reverse-proxy fake-printer printer-api dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql reverse-proxy fake-printer dozzle
 
+# this should not start printer-api, as on macOS you cannot mount usb devices into containers. Start manually if needed.
 up-dev-mac-d:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer printer-api dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer dozzle
 
 chaos-api:
 	COMPOSE_FILE= COMPOSE_PROJECT_NAME=gmbh_chaos MYSQL_DATABASE=gmbh_chaos GMBH_DB_NAME=gmbh_chaos $(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.chaos.yml up --build --abort-on-container-exit --exit-code-from chaos

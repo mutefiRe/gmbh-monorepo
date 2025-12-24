@@ -94,10 +94,11 @@ export const useItem = (id: string) => useQuery<Item>({ queryKey: ['item', id], 
 export const useOrganizations = () => useQuery<Organization[]>({ queryKey: ['organizations'], queryFn: () => apiFetch<Organization[]>('/api/organizations') });
 export const useOrganization = (id: string) => useQuery<Organization>({ queryKey: ['organization', id], queryFn: () => apiFetch<Organization>(`/api/organizations/${id}`) });
 
-export const useOrders = (skip = 0, limit?: number) =>
+export const useOrders = (skip = 0, limit?: number, options?: QueryOptions<{ orders: Order[]; count: number; total: number }>) =>
   useQuery<{ orders: Order[]; count: number; total: number }>({
     queryKey: ['orders', skip, limit],
-    queryFn: () => apiFetch<{ orders: Order[]; count: number; total: number }>(`/api/orders?skip=${skip}${typeof limit === 'number' ? `&limit=${limit}` : ''}`)
+    queryFn: () => apiFetch<{ orders: Order[]; count: number; total: number }>(`/api/orders?skip=${skip}${typeof limit === 'number' ? `&limit=${limit}` : ''}`),
+    ...options
   });
 
 export const useOrder = (id: string) => useQuery<{ order: Order }>({ queryKey: ['order', id], queryFn: () => apiFetch<{ order: Order }>(`/api/orders/${id}`) });

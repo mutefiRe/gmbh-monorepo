@@ -8,12 +8,15 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const apiTarget = env.VITE_API_TARGET || "http://localhost:8080";
   const basePath = env.VITE_BASE || process.env.VITE_BASE || "/admin/";
+  const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
+  const shouldRedirect = normalizedBase !== "/";
 
   return {
-    base: mode === 'production' ? basePath : '/',
+    base: normalizedBase,
     server: {
       port: 3000,
       http: true,
+      open: normalizedBase,
       proxy: {
         "/api": {
           target: apiTarget,
@@ -34,6 +37,28 @@ export default defineConfig(({ mode }) => {
       }
     },
     plugins: [
+      {
+        name: 'admin-base-redirect',
+        configureServer(server) {
+          if (!shouldRedirect) return;
+          server.middlewares.use((req, res, next) => {
+            const url = req.url || '';
+            if (url === '/' || url === '') {
+              res.statusCode = 302;
+              res.setHeader('Location', normalizedBase);
+              res.end();
+              return;
+            }
+            if (url === normalizedBase.slice(0, -1)) {
+              res.statusCode = 301;
+              res.setHeader('Location', normalizedBase);
+              res.end();
+              return;
+            }
+            next();
+          });
+        }
+      },
       react(),
       tailwindcss(),
       legacy({

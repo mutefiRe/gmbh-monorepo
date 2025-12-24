@@ -3,18 +3,19 @@ import { Router, type Request, type Response } from 'express';
 const router = Router();
 const updateApiUrl = process.env.UPDATE_API_URL?.replace(/\/$/, '');
 const updateApiToken = process.env.UPDATE_API_TOKEN;
-const updateEnabled = Boolean(updateApiUrl && updateApiToken);
+const updateEnabled = Boolean(updateApiUrl);
 
 async function proxyRequest(path: string, init: any = {}) {
   if (!updateApiUrl) {
     throw new Error('update api not configured');
   }
+  const headers = { ...(init.headers || {}) } as Record<string, string>;
+  if (updateApiToken) {
+    headers['x-update-token'] = updateApiToken;
+  }
   const response = await fetch(`${updateApiUrl}${path}`, {
     ...init,
-    headers: {
-      ...(init.headers || {}),
-      'x-update-token': updateApiToken || ''
-    }
+    headers
   });
   if (!response.ok) {
     const text = await response.text();

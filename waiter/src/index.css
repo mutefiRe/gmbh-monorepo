@@ -4,8 +4,31 @@
   isolation: isolate;
 }
 
+html,
+body {
+  -webkit-text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
 body {
     position: relative;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+button svg,
+a svg,
+button svg[width][height],
+a svg[width][height] {
+  width: 1.1em;
+  height: 1.1em;
+  flex: 0 0 auto;
 }
 
 @theme {
