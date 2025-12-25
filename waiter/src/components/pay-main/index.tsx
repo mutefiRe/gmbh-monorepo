@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Calculator, Printer } from "lucide-react";
+import { ArrowLeft, Calculator, HandCoins, Printer } from "lucide-react";
 import { useOrder, usePrintOrder, useUpdateOrder } from "../../types/queries";
 import type { Area, Category, Item, OrderItem, Table, Unit } from "../../types/models";
 import { itemAmountString } from "../../lib/itemAmountString";
@@ -13,6 +13,7 @@ import { offlineOrderPaymentMessage, pendingPaymentsMessage } from "../../lib/of
 import { useLocation } from "wouter";
 import { IconLabel } from "../../ui/icon-label";
 import { Modal } from "../../ui/modal";
+import { LoadingScreen } from "../../ui/loading-screen";
 
 type PayDetailProps = {
   orderId: string;
@@ -131,6 +132,13 @@ export function PayDetail({
           message: pendingPaymentsMessage(1, canReachServer) || "Ausstehende Zahlung wird gesendet."
         }
         : null;
+  const isForeignOrder = Boolean(order?.userId && auth.userId && order.userId !== auth.userId);
+  const foreignOrderNotice = isForeignOrder
+    ? {
+      variant: "warning" as const,
+      message: "Achtung: Diese Bestellung wurde von einem anderen Benutzer aufgenommen. Bitte nur abrechnen, wenn das so vereinbart ist."
+    }
+    : null;
   const table = tables.find(t => t.id === order?.tableId);
   const area = table ? areas.find(a => a.id === table.areaId) : undefined;
   const tableLabel = order?.tableId
@@ -237,14 +245,20 @@ export function PayDetail({
     await client.invalidateQueries({ queryKey: ['order', orderId] });
     setItemMarks({});
   }
+  if (orderQuery.isLoading && !offlineFallback) return <LoadingScreen />;
   if (orderQuery.isError && !offlineFallback) return <div>Fehler beim Laden der Bestellung.</div>;
   if (!order) return <div>Bestellung nicht gefunden.</div>;
 
   return (
-    <div className="w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
+    <div className="legacy-pay-grid w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
       <div className="mb-2 shrink-0">
         <h2 className="text-xl font-bold text-slate-800">Zahlung</h2>
         <p className="text-xs text-slate-500">Bestellung prüfen und bezahlte Positionen markieren.</p>
+        {foreignOrderNotice && (
+          <div className="mt-2">
+            <Notice message={foreignOrderNotice.message} variant={foreignOrderNotice.variant} />
+          </div>
+        )}
         {statusNotice && (
           <div className="mt-2">
             <Notice message={statusNotice.message} variant={statusNotice.variant} />
@@ -257,7 +271,7 @@ export function PayDetail({
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
+      <div className="legacy-pay-card bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
         <div className="px-3 py-2 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
           <div>
             <p className="text-sm font-semibold text-slate-800">Bestellung Nr. {order?.number || order?.id}</p>
@@ -291,30 +305,32 @@ export function PayDetail({
                 Alles bezahlt
               </div>
             )}
-            <div className="flex-1 overflow-y-auto">
+            <div className="legacy-pay-scroll flex-1 overflow-y-auto">
               <table className="min-w-full text-sm">
-                <thead className="bg-slate-50 sticky top-0 z-10 text-slate-500">
+                <thead className="legacy-sticky bg-slate-50 sticky top-0 z-10 text-slate-500">
                   <tr>
-                  <th className="px-2 py-2 sm:px-3 font-semibold text-left w-28">
-                    <label className="inline-flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary-300"
-                        checked={allMarked}
-                        onChange={(event) => {
-                          event.stopPropagation();
-                          if (event.target.checked) {
-                            markAllItems();
-                          } else {
-                            setItemMarks({});
-                          }
-                        }}
-                        disabled={isPaying || orderitems.length === 0}
-                      />
-                      <span>Alle</span>
-                    </label>
-                  </th>
-                    <th className="px-2 py-2 sm:px-4 font-semibold text-left">Artikel</th>
+                    <th className="px-2 py-2 sm:px-3 font-semibold text-left w-28">
+                      <label className="inline-flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary-300"
+                          checked={allMarked}
+                          onChange={(event) => {
+                            event.stopPropagation();
+                            if (event.target.checked) {
+                              markAllItems();
+                            } else {
+                              setItemMarks({});
+                            }
+                          }}
+                          disabled={isPaying || orderitems.length === 0}
+                        />
+                        <span>Alle</span>
+                      </label>
+                    </th>
+                    <th className="px-2 py-2 sm:px-4 font-semibold text-left">
+                      Artikel <span className="text-[11px] font-medium text-slate-400">(Tippen = +1)</span>
+                    </th>
                     <th className="px-2 py-2 sm:px-4 font-semibold text-left">Bezahlt</th>
                     <th className="px-2 py-2 sm:px-4 font-semibold text-right">Summe</th>
                   </tr>
@@ -367,18 +383,11 @@ export function PayDetail({
                               </button>
                               <span className="px-1 font-mono font-bold text-base text-slate-700">{marked}</span>
                               <button
-                                className="h-8 w-8 rounded-lg border border-primary-500 bg-primary text-primary-contrast hover:bg-primary-600 disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 disabled:border-slate-200"
-                                onClick={() => incrementMarked(id, maxMarkable)}
-                                disabled={marked === maxMarkable || isPaying}
-                              >
-                                +
-                              </button>
-                              <button
                                 className="h-8 px-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:border-slate-200 disabled:text-slate-400"
                                 onClick={() => markItemAll(id, maxMarkable)}
                                 disabled={marked === maxMarkable || isPaying}
                               >
-                                ∞
+                                Alle
                               </button>
                             </div>
                           )}
@@ -437,8 +446,8 @@ export function PayDetail({
           onClick={() => setLocation("/orders")}
           disabled={isPaying || isPrinting}
         >
-          <IconLabel icon={<span className="icon icon-return"></span>}>
-            Zurück zu den Bestellungen
+          <IconLabel icon={<ArrowLeft size={16} />}>
+            Bestellungen
           </IconLabel>
         </button>
         {!orderitems.every(oi => oi.countPaid && oi.countPaid >= oi.count) && (
@@ -447,7 +456,7 @@ export function PayDetail({
             onClick={onPaySelected}
             disabled={markedAmount === 0 || isPaying || isPrinting}
           >
-            <IconLabel icon={<span className="icon icon-pay"></span>}>
+            <IconLabel icon={<HandCoins size={16} />}>
               {isPaying ? 'Zahlung läuft...' : `Ausgewählte bezahlen (€ ${markedAmount.toFixed(2)})`}
             </IconLabel>
           </button>

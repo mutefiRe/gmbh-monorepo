@@ -116,6 +116,13 @@ export const api = {
       body: { setting: { activeEventId: eventId } } as any
     });
   },
+  getStatus: async (): Promise<{ status: string; api?: { ok: boolean }; printerApi?: { ok: boolean; error?: string }; activeWindowMinutes?: number; activeUsers?: Array<{ id: string; username: string; role?: string; lastSeen: number }> }> => {
+    return client(`${API_BASE}status`);
+  },
+  getStatusOrders: async (windowMinutes = 15, bucketSeconds = 60): Promise<{ windowMinutes: number; bucketSeconds: number; points: Array<{ ts: number; count: number }> }> => {
+    const params = new URLSearchParams({ windowMinutes: String(windowMinutes), bucketSeconds: String(bucketSeconds) });
+    return client(`${API_BASE}status/orders?${params.toString()}`);
+  },
   getUpdateStatus: async (): Promise<UpdateStatusResponse> => {
     return client<UpdateStatusResponse>(`${API_BASE}update`);
   },
@@ -256,6 +263,12 @@ export const api = {
   // --- Printers ---
   getPrinters: async (): Promise<Printer[]> => {
     return (await client<{ printers: Printer[] }>(`${API_BASE}printers?includeDetails=true&includeQueue=true`)).printers;
+  },
+  getPrintersStatus: async (): Promise<Printer[]> => {
+    return (await client<{ printers: Printer[] }>(`${API_BASE}printers?includeDetails=false&includeQueue=false`)).printers;
+  },
+  getPrintersQueueStatus: async (): Promise<Printer[]> => {
+    return (await client<{ printers: Printer[] }>(`${API_BASE}printers?includeDetails=false&includeQueue=true`)).printers;
   },
   createPrinter: async (printer: Partial<Printer>): Promise<Printer> => {
     return (await client<{ printer: Printer }>(API_BASE + 'printers', { body: { printer: printer } as any })).printer;

@@ -5,11 +5,11 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import {
   LayoutDashboard,
+  BarChart3,
   UtensilsCrossed,
   Users,
   Map,
   Receipt,
-  Settings,
   Menu,
   Bell,
   LogOut,
@@ -40,7 +40,8 @@ const NavItem = ({ to, icon: Icon, label, active }: { to: string, icon: any, lab
 
 const getPageTitle = (path: string) => {
   switch (path.split('/')?.[1]) {
-    case '': return 'Übersicht';
+    case '': return 'Systemstatus';
+    case 'statistics': return 'Statistik (experimentell)';
     case 'orders': return 'Bestellungen';
     case 'items': return 'Speisekarte';
     case 'categories': return 'Kategorien';
@@ -124,7 +125,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
 
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto py-4">
-          <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={location.pathname === '/'} />
+          <NavItem to="/" icon={LayoutDashboard} label="Systemstatus" active={location.pathname === '/'} />
+          <NavItem to="/statistics" icon={BarChart3} label="Statistik (experimentell)" active={location.pathname === '/statistics'} />
           <NavItem to="/orders" icon={Receipt} label="Bestellungen" active={location.pathname === '/orders'} />
           <div className="pt-4 pb-2">
             <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Verwaltung</p>
@@ -132,25 +134,22 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <NavItem to="/items" icon={Menu} label="Speisekarte" active={location.pathname === '/items'} />
           <NavItem to="/categories" icon={Layers} label="Kategorien" active={location.pathname === '/categories'} />
           <NavItem to="/areas" icon={Map} label="Bereiche & Tische" active={location.pathname === '/areas'} />
-          <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
           <NavItem to="/units" icon={Ruler} label="Einheiten" active={location.pathname === '/units'} />
+          <div className="pt-4 pb-2">
+            <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Globale Einstellungen</p>
+          </div>
+          <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
           <NavItem to="/printers" icon={Printer} label="Drucker" active={location.pathname === '/printers'} />
           <NavItem to="/events" icon={Calendar} label="Events" active={location.pathname === '/events'} />
-        </nav>
-
-        <div className="p-4 border-t border-slate-200 space-y-2">
-          <NavItem
-            to="/settings"
-            icon={Settings}
-            label="Einstellungen"
-            active={location.pathname === '/settings'}
-          />
           <NavItem
             to="/update"
             icon={ArrowUpCircle}
-            label="Updates"
+            label="Updates (experimentell)"
             active={location.pathname === '/update'}
           />
+        </nav>
+
+        <div className="p-4 border-t border-slate-200 space-y-2">
           <button
             onClick={logout}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors"
@@ -181,7 +180,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               </button>
             </div>
             <nav className="flex-1 px-4 space-y-1 overflow-y-auto py-4">
-              <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={location.pathname === '/'} />
+              <NavItem to="/" icon={LayoutDashboard} label="Systemstatus" active={location.pathname === '/'} />
+              <NavItem to="/statistics" icon={BarChart3} label="Statistik (experimentell)" active={location.pathname === '/statistics'} />
               <NavItem to="/orders" icon={Receipt} label="Bestellungen" active={location.pathname === '/orders'} />
               <div className="pt-4 pb-2">
                 <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Verwaltung</p>
@@ -189,24 +189,21 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <NavItem to="/items" icon={Menu} label="Speisekarte" active={location.pathname === '/items'} />
               <NavItem to="/categories" icon={Layers} label="Kategorien" active={location.pathname === '/categories'} />
               <NavItem to="/areas" icon={Map} label="Bereiche & Tische" active={location.pathname === '/areas'} />
-              <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
               <NavItem to="/units" icon={Ruler} label="Einheiten" active={location.pathname === '/units'} />
+              <div className="pt-4 pb-2">
+                <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Globale Einstellungen</p>
+              </div>
+              <NavItem to="/users" icon={Users} label="Benutzer" active={location.pathname === '/users'} />
               <NavItem to="/printers" icon={Printer} label="Drucker" active={location.pathname === '/printers'} />
               <NavItem to="/events" icon={Calendar} label="Events" active={location.pathname === '/events'} />
-            </nav>
-            <div className="p-4 border-t border-slate-200 space-y-2">
-              <NavItem
-                to="/settings"
-                icon={Settings}
-                label="Einstellungen"
-                active={location.pathname === '/settings'}
-              />
               <NavItem
                 to="/update"
                 icon={ArrowUpCircle}
-                label="Updates"
+                label="Updates (experimentell)"
                 active={location.pathname === '/update'}
               />
+            </nav>
+            <div className="p-4 border-t border-slate-200 space-y-2">
               <button
                 onClick={logout}
                 className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors"

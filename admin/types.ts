@@ -66,6 +66,7 @@ export interface Printer {
   id: string;
   name: string;
   systemName: string;
+  enabled?: boolean;
   reachable?: boolean;
   discovered?: boolean;
   transport?: string;

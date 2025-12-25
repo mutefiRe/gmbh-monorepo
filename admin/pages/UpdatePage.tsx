@@ -66,11 +66,15 @@ export function UpdatePage() {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={() => pullMutation.mutate({ serviceId: service.id })}
-            disabled={pullMutation.isLoading}
-            className="inline-flex items-center gap-2 rounded-full border border-primary-300 bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={() => {
+              const confirmed = window.confirm('Updates niemals während eines laufenden Events durchführen.\n\nSoll der Update-Pull jetzt wirklich gestartet werden?');
+              if (!confirmed) return;
+              pullMutation.mutate({ serviceId: service.id });
+            }}
+            disabled
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-500 cursor-not-allowed"
           >
-            Pull latest
+            Pull latest (deaktiviert)
           </button>
           <span className="text-xs text-slate-400">
             Zuletzt aktualisiert: {data?.registry}/{data?.repo}
@@ -100,6 +104,9 @@ export function UpdatePage() {
           Hier siehst du, welche Docker-Images gerade laufen und welche Versionen verfügbar sind.
           Die API wird nur unter <code className="bg-slate-100 px-2 py-0.5 rounded">UPDATE_API_URL</code> aktiviert.
         </p>
+      </div>
+      <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        Updates niemals während eines laufenden Events durchführen. Bitte nur im ruhenden Betrieb aktualisieren.
       </div>
       {isError && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">

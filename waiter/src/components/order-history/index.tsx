@@ -71,12 +71,20 @@ export function OrderHistory() {
   const tables = queryTables.data?.tables || [];
   const areas = queryAreas.data?.areas || [];
 
-  const uniqueDays = new Set(orders.flatMap((row) => {
-    if (!row.createdAt) return [];
-    const date = new Date(row.createdAt);
-    return [date.toISOString().slice(0, 10)]; // YYYY-MM-DD
-  }));
-  const showFullDate = uniqueDays.size > 1;
+  const isSameDay = (date: Date, compareTo: Date) =>
+    date.getFullYear() === compareTo.getFullYear()
+    && date.getMonth() === compareTo.getMonth()
+    && date.getDate() === compareTo.getDate();
+
+  const formatOrderTime = (value?: string) => {
+    if (!value) return "-";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "-";
+    const now = new Date();
+    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (isSameDay(date, now)) return time;
+    return `${date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })} ${time}`;
+  };
 
   const isHistoryLoading = (isAllOrders ? queryAllOrders.isLoading : queryOrders.isLoading)
     || queryTables.isLoading
@@ -93,9 +101,9 @@ export function OrderHistory() {
   ) {
     return (
       <div className="orders flex-1 flex flex-col min-h-0">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex-1 overflow-y-auto min-h-0">
-          <table className="min-w-full">
-            <thead className="bg-slate-50 sticky top-0 z-10">
+        <div className="legacy-orders-card legacy-orders-scroll bg-white rounded-xl shadow-sm border border-slate-200 flex-1 overflow-y-auto min-h-0">
+          <table className="min-w-full text-sm text-slate-700">
+            <thead className="legacy-sticky bg-slate-50 sticky top-0 z-10">
               <tr>
                 {columns.map((col, i) => (
                   <th key={i} className={col.className}>
@@ -105,8 +113,17 @@ export function OrderHistory() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, idx) => {
-                const rowClasses = idx % 2 === 0 ? "bg-white" : "bg-slate-50/60";
+              {rows.map((row) => {
+                let paidCount = 0;
+                let totalCount = 0;
+                row.orderitems.forEach((oi) => {
+                  paidCount += oi.countPaid || 0;
+                  totalCount += oi.count;
+                });
+                const isFullyPaid = totalCount > 0 && paidCount >= totalCount;
+                const rowClasses = isFullyPaid
+                  ? "bg-emerald-50/70"
+                  : "bg-rose-50";
                 return (
                   <tr
                     key={row.id}
@@ -147,21 +164,17 @@ export function OrderHistory() {
         label: "Nr.",
         className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-left",
         tdClassName: "px-4 py-3 text-left text-slate-700",
-        render: (order) => order.number || order.id,
+        render: (order) => (
+          <span className="font-semibold text-slate-800">
+            {order.number || order.id}
+          </span>
+        ),
       },
       {
         label: "Uhrzeit",
         className: "px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-left",
         tdClassName: "px-4 py-3 text-left text-slate-700",
-        render: (order) => {
-          if (!order.createdAt) return "-";
-          const date = new Date(order.createdAt);
-          if (showFullDate) {
-            return `${date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-          } else {
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          }
-        },
+        render: (order) => formatOrderTime(order.createdAt),
       },
       {
         label: "Tisch",
@@ -229,8 +242,8 @@ export function OrderHistory() {
   const headerTitle = filter === "all" ? "Alle Bestellungen" : "Meine Bestellungen";
 
   return (
-    <div className="w-full flex flex-col items-center justify-start bg-gray-50 h-[calc(100dvh-56px)]">
-      <div className="w-full max-w-screen-lg flex flex-col flex-1 p-4 h-full min-h-0">
+    <div className="legacy-orders-grid w-full flex flex-col items-center justify-start bg-gray-50 h-[calc(100dvh-56px)]">
+      <div className="legacy-orders-content w-full max-w-screen-lg flex flex-col flex-1 p-4 h-full min-h-0">
         <h2 className="text-xl font-bold mb-1 text-gray-800">{headerTitle}</h2>
         <div className="flex flex-wrap gap-3 mb-3">
           <button
@@ -341,9 +354,7 @@ export function OrderHistory() {
                             </div>
                           </td>
                           <td className="px-4 py-3 text-left text-slate-700">
-                            {row.createdAt
-                              ? new Date(row.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                              : "-"}
+                            {formatOrderTime(row.createdAt)}
                           </td>
                           <td className="px-4 py-3 text-left text-slate-700">
                             {tableLabel}
@@ -361,9 +372,9 @@ export function OrderHistory() {
           )}
           {isHistoryLoading ? (
             <div className="orders flex-1 flex flex-col min-h-0">
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex-1 overflow-y-auto min-h-0 animate-pulse">
-                <table className="min-w-full">
-                  <thead className="bg-slate-50 sticky top-0 z-10">
+              <div className="legacy-orders-card legacy-orders-scroll bg-white rounded-xl shadow-sm border border-slate-200 flex-1 overflow-y-auto min-h-0 animate-pulse">
+                <table className="min-w-full text-sm text-slate-700">
+                  <thead className="legacy-sticky bg-slate-50 sticky top-0 z-10">
                     <tr>
                       {columns.map((col, idx) => (
                         <th key={idx} className={col.className}>
@@ -409,7 +420,7 @@ export function OrderHistory() {
           )}
         </div>
       </div>
-      <div className="flex justify-end w-full max-w-screen-lg p-4">
+      <div className="legacy-orders-footer flex justify-end w-full max-w-screen-lg p-4">
         <Link
           href="/order/new"
           className={() => "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-primary-300 text-primary-700 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors"}

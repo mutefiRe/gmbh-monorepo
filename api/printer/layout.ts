@@ -34,11 +34,20 @@ class layout {
       printData.push(util.cpad(notice, 48), ENTER);
     }
     const hasParts = order.printTotal && order.printTotal > 1;
-    const leftLabel = hasParts ? `${t.nr} ${order.number} / ${order.printPart}` : '';
+    const orderNumber = order.number ? String(order.number) : '-';
+    const leftLabel = hasParts
+      ? `${t.nr} ${orderNumber} / ${order.printPart}`
+      : `${t.nr} ${orderNumber}`;
     printData.push(util.rpad(leftLabel, 24), util.lpad(util.formatDate(order.createdAt), 24), ENTER);
     printData.push(divider, ENTER);
 
-    printData.push(util.rpad(t.quantity, 7), ' ', util.rpad(t.item, 20), ' ', util.lpad(t.price, 9), ' ', util.lpad(t.sum, 9), ENTER);
+    printData.push(
+      util.rpad(t.quantity, 7),
+      util.rpad(t.item, 23),
+      util.lpad(t.price, 9),
+      util.lpad(t.sum, 9),
+      ENTER
+    );
     printData.push(divider, ENTER);
 
     order.orderitems.forEach((orderitem) => {
@@ -51,7 +60,11 @@ class layout {
         orderItemString = `${orderItemString} ${formatAmount(orderitem.item.amount)}${orderitem.item.unit.name}`;
       }
 
-      let line = util.rpad(`${orderitem.count} x`, 7) + ' ' + util.rpad(orderItemString, 20) + ' ' + util.lpad(price, 9) + ' ' + util.lpad(sum, 9) + '\n';
+      let line = util.rpad(`${orderitem.count} x`, 7)
+        + util.rpad(orderItemString, 23)
+        + util.lpad(price, 9)
+        + util.lpad(sum, 9)
+        + '\n';
 
       if (orderitem.extras) {
         const extrasLines = wrapText(orderitem.extras, 38);

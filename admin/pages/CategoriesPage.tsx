@@ -14,13 +14,16 @@ export const CategoriesPage: React.FC = () => {
   const { categories, addCategory, updateCategory, deleteCategory, printers, categoriesLoading, categoriesSaving } = context;
   const usedIcons = new Set(categories.map((category) => category.icon).filter(Boolean));
   const usedColors = new Set(categories.map((category) => category.color).filter(Boolean));
+  const activePrinters = printers.filter((printer) => printer.enabled !== false);
+  const inactivePrinters = printers.filter((printer) => printer.enabled === false);
   const iconDefault = CATEGORY_ICON_OPTIONS.find((option) => !usedIcons.has(option.value)) || CATEGORY_ICON_OPTIONS[0];
   const colorDefault = CATEGORY_COLOR_OPTIONS.find((color) => !usedColors.has(color.value)) || CATEGORY_COLOR_OPTIONS[0];
-  const printerDefault = printers[0]?.id;
+  const printerDefault = activePrinters[0]?.id;
   const newDefaults: Partial<Category> = {
     icon: iconDefault?.value,
     color: colorDefault?.value,
-    printerId: printerDefault
+    printerId: printerDefault,
+    showAmount: true
   };
 
   const renderCategoryCard = (category: Category) => (
@@ -88,7 +91,11 @@ export const CategoriesPage: React.FC = () => {
           { key: 'name', label: 'Name', type: 'text' },
           { key: 'icon', label: 'Icon', type: 'icon', options: CATEGORY_ICON_OPTIONS.map(option => ({ label: option.label, value: option.value, icon: <CategoryIcon name={option.value} size={22} /> })) },
           { key: 'color', label: 'Farbe', type: 'color', options: CATEGORY_COLOR_OPTIONS, optional: true },
-          { key: 'printerId', label: 'Kategorie-Drucker', type: 'select', options: [{ label: 'Kein Drucker (Standard)', value: '' }, ...printers.map(p => ({ label: p.name, value: p.id }))], optional: true },
+          { key: 'printerId', label: 'Kategorie-Drucker', type: 'select', options: [
+            { label: 'Kein Drucker (Standard)', value: '' },
+            ...activePrinters.map(p => ({ label: p.name, value: p.id })),
+            ...inactivePrinters.map(p => ({ label: `Inaktiv: ${p.name}`, value: p.id }))
+          ], optional: true },
           { key: 'showAmount', label: 'Einheit anzeigen', type: 'boolean', optional: true },
           { key: 'enabled', label: 'Aktiv', type: 'boolean' }
         ]}

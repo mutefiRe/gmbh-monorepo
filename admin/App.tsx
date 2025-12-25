@@ -3,6 +3,7 @@ import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryCache, QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
+import { StatisticsPage } from './pages/StatisticsPage';
 import { ItemsPage } from './pages/ItemsPage';
 import { UsersPage } from './pages/UsersPage';
 import { AreasPage } from './pages/AreasPage';
@@ -15,7 +16,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { api } from './services/api';
 import { Item, User, Area, Table, Category, Order, Unit, Printer } from './types';
 import { NotificationProvider, useNotification } from './components/NotificationProvider';
-import { SettingsPage } from './pages/SettingsPage';
 import { EventsPage } from './pages/EventsPage';
 import { UpdatePage } from './pages/UpdatePage';
 import { useRealtimeUpdates } from './hooks/useRealtimeUpdates';
@@ -360,6 +360,7 @@ const AuthenticatedApp = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/statistics" element={<StatisticsPage />} />
             <Route path="/items" element={<ItemsPage />} />
             <Route path="/items/:id" element={<ItemsPage />} />
             <Route path="/users/:id" element={<UsersPage />} />
@@ -375,7 +376,6 @@ const AuthenticatedApp = () => {
             <Route path="/printers/:id" element={<PrintersPage />} />
             <Route path="/printers" element={<PrintersPage />} />
             <Route path="/events" element={<EventsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/update" element={<UpdatePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

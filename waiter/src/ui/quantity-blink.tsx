@@ -1,7 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 
 // QuantityBlink: blinks when quantity changes, using the given color
-export function QuantityBlink({ quantity, color, blinkOnMount = false }: { quantity: number; color: string; blinkOnMount?: boolean }) {
+export function QuantityBlink({
+  quantity,
+  color,
+  blinkOnMount = false,
+  className,
+}: {
+  quantity: number;
+  color: string;
+  blinkOnMount?: boolean;
+  className?: string;
+}) {
   const [blink, setBlink] = useState(false);
   const prevQuantity = useRef(quantity);
   const mounted = useRef(false);
@@ -27,12 +37,14 @@ export function QuantityBlink({ quantity, color, blinkOnMount = false }: { quant
 
   return (
     <div
-      className={`font-semibold mr-1 transition-colors duration-150`}
+      className={`font-semibold mr-1 transition-colors duration-150 inline-flex items-center justify-center tabular-nums ${className ?? ""}`}
       style={{
         borderRadius: "4px",
         padding: "0 4px",
+        minWidth: "3ch",
         background: blink ? color : undefined,
         color: blink ? "#fff" : undefined,
+        textAlign: "right",
       }}
     >
       x{quantity}

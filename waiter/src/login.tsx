@@ -78,13 +78,13 @@ export function Login() {
               <Button type="submit" className="py-3.5 font-bold">
                 Login
               </Button>
-              <Button
+              {/* <Button
                 type="button"
                 variant="secondary"
                 onClick={() => setShowQR(true)}
               >
                 Oder mit QR-Code anmelden
-              </Button>
+              </Button> */}
               <div className="flex justify-center">
                 <ConnectionPill status={connection.status} compact />
               </div>

@@ -2,7 +2,7 @@ import { Redirect, Route, Switch } from "wouter";
 import OrderMain from "./components/order-main";
 import { OrderDetail } from "./components/order-detail";
 import { useAreas, useCategories, useItems, useTables, useUnits } from "./types/queries";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useFontScale } from "./hooks/useFontScale";
 import type { OrderItem } from "./types/models";
@@ -43,6 +43,10 @@ export function StateWrapper() {
   const tablesQuery = useTables({ enabled: canReachServer });
   const queryClient = useQueryClient();
   const [fontScale, setFontScale] = useFontScale();
+  const [productGridDensity, setProductGridDensity] = useLocalStorage<"standard" | "compact">(
+    "gmbh-product-grid-density",
+    "standard"
+  );
 
   const [currentOrder, setCurrentOrder] = useLocalStorage<CurrentOrder>(CURRENT_ORDER_KEY, { orderItems: [], tableId: null, customTableName: null, printId: "" });
   const [orderItems, setOrderItems] = useMemo(() => [currentOrder.orderItems, (orderItems: OrderItem[]) => {
@@ -169,11 +173,35 @@ export function StateWrapper() {
     tablesQuery.data
   ]);
 
+  const flushInFlight = useRef(false);
   useEffect(() => {
     if (!canReachServer) return;
     const scope = { userId: auth.userId ?? null, eventId: auth.eventId ?? null };
-    flushOfflineOrders(scope);
-    flushOfflinePayments(scope);
+    let cancelled = false;
+    const runFlush = async () => {
+      if (flushInFlight.current || cancelled) return;
+      flushInFlight.current = true;
+      try {
+        await flushOfflineOrders(scope);
+        await flushOfflinePayments(scope);
+      } finally {
+        flushInFlight.current = false;
+      }
+    };
+
+    runFlush();
+    const interval = window.setInterval(runFlush, 5000);
+    const handleQueueChange = () => runFlush();
+    window.addEventListener("gmbh-offline-orders-changed", handleQueueChange);
+    window.addEventListener("gmbh-offline-payments-changed", handleQueueChange);
+    window.addEventListener("storage", handleQueueChange);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      window.removeEventListener("gmbh-offline-orders-changed", handleQueueChange);
+      window.removeEventListener("gmbh-offline-payments-changed", handleQueueChange);
+      window.removeEventListener("storage", handleQueueChange);
+    };
   }, [auth.eventId, auth.userId, canReachServer]);
 
   if (isBootstrapping) {
@@ -203,6 +231,7 @@ export function StateWrapper() {
           canReachServer={canReachServer}
           pendingOrders={pendingOrders}
           pendingPayments={pendingPayments}
+          productGridDensity={productGridDensity}
         />
       </Route>
       <Route path="/order/edit" >
@@ -221,7 +250,12 @@ export function StateWrapper() {
         <div>Order Details Page</div>
       </Route>
       <Route path="/settings">
-        <Settings fontScale={fontScale} onFontScaleChange={setFontScale} />
+        <Settings
+          fontScale={fontScale}
+          onFontScaleChange={setFontScale}
+          productGridDensity={productGridDensity}
+          onProductGridDensityChange={setProductGridDensity}
+        />
       </Route>
       <Route path="/notifications">
         <Notifications />

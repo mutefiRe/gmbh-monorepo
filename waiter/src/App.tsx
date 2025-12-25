@@ -16,6 +16,7 @@ import { ConnectionPill } from "./ui/connection-pill";
 import { MenuLink } from "./ui/menu-link";
 import { useUnreadNotifications } from "./hooks/useUnreadNotifications";
 import { IconLabel } from "./ui/icon-label";
+import { ConnectionStatusProvider } from './context/ConnectionStatusContext';
 
 function AppContent() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -205,7 +206,9 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppContent />
+        <ConnectionStatusProvider>
+          <AppContent />
+        </ConnectionStatusProvider>
       </AuthProvider>
     </Router>
   );

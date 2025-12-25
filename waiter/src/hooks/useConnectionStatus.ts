@@ -37,16 +37,17 @@ export function useConnectionStatusCheck(): ConnectionState {
       if (!isOnline) {
         setIsServerReachable(false);
         prevReachableRef.current = false;
+        setIsChecking(false);
         return;
       }
-      setIsChecking(true);
+      setIsChecking(!prevReachableRef.current);
       const controller = new AbortController();
       const timeout = window.setTimeout(() => controller.abort(), PING_TIMEOUT_MS);
       try {
         const headers: HeadersInit = {
           "Content-Type": "application/json",
         };
-        if (auth.token) {
+        if (auth.token && auth.userId) {
           headers["x-access-token"] = auth.token;
         }
         if (auth.eventId) {

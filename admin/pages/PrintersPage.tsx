@@ -33,6 +33,7 @@ export const PrintersPage: React.FC = () => {
       ? `Queue: ${printer.queue.queued ?? 0}${printer.queue.capacity ? ` / ${printer.queue.capacity}` : ""}`
       : "Queue: -";
     const isDiscovered = printer.discovered !== false;
+    const isEnabled = printer.enabled !== false;
     return (
     <div className="flex items-center gap-4">
       <div className="w-12 h-12 rounded-full flex items-center justify-center bg-slate-100 text-slate-600">
@@ -47,6 +48,11 @@ export const PrintersPage: React.FC = () => {
           <span className="text-[0.65rem] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
             {transport}
           </span>
+          {!isEnabled && (
+            <span className="text-[0.65rem] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+              Inaktiv
+            </span>
+          )}
           {!isDiscovered && (
             <span className="text-[0.65rem] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
               Nicht gefunden
@@ -102,7 +108,8 @@ export const PrintersPage: React.FC = () => {
         dialogHint="System-Name entspricht dem CUPS/Netzwerk-Namen des Druckers."
         fields={[
           { key: 'name', label: 'Bezeichnung', type: 'text' },
-          { key: 'systemName', label: 'IP / System-Name', type: 'text', optional: true, readOnly: true }
+          { key: 'systemName', label: 'IP / System-Name', type: 'text', optional: true, readOnly: true },
+          { key: 'enabled', label: 'Aktiv', type: 'boolean' }
         ]}
       />
     </>
