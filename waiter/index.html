@@ -4,10 +4,79 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#2563eb" />
     <title>waiter</title>
+    <script>
+      (function () {
+        function run() {
+          try {
+            var supportsInset = window.CSS && CSS.supports && CSS.supports('inset: 0');
+            var hasFlexGap = supportsFlexGap();
+            if (!supportsInset || !hasFlexGap) {
+              document.documentElement.classList.add('legacy');
+            }
+          } catch (e) {
+            document.documentElement.classList.add('legacy');
+          }
+        }
+        function supportsFlexGap() {
+          try {
+            var flex = document.createElement('div');
+            flex.style.display = 'flex';
+            flex.style.flexDirection = 'column';
+            flex.style.rowGap = '1px';
+            flex.style.position = 'absolute';
+            flex.style.top = '-9999px';
+            flex.appendChild(document.createElement('div'));
+            flex.appendChild(document.createElement('div'));
+            flex.firstChild.style.height = '1px';
+            flex.lastChild.style.height = '1px';
+            if (!document.body) {
+              return false;
+            }
+            document.body.appendChild(flex);
+            var supported = flex.scrollHeight === 3;
+            document.body.removeChild(flex);
+            return supported;
+          } catch (e) {
+            return false;
+          }
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', run, { once: true });
+        } else {
+          run();
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root" className="root"></div>
+    <div id="boot-error" style="display:none; font-family: sans-serif; padding:16px; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; border-radius:12px; margin:16px;">
+      <strong>Fehler beim Laden</strong>
+      <pre id="boot-error-text" style="white-space: pre-wrap; font-size: 12px; margin: 8px 0 0;"></pre>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/registerSW.js"></script>
+    <script>
+      (function () {
+        function show(message) {
+          var box = document.getElementById('boot-error');
+          var text = document.getElementById('boot-error-text');
+          if (!box || !text) return;
+          text.textContent = message;
+          box.style.display = 'block';
+        }
+        window.addEventListener('error', function (event) {
+          var msg = event && event.message ? event.message : 'Unbekannter Fehler';
+          show(msg);
+        });
+        window.addEventListener('unhandledrejection', function (event) {
+          var reason = event && event.reason ? event.reason : 'Unbekannter Fehler';
+          show(String(reason));
+        });
+      })();
+    </script>
   </body>
 </html>

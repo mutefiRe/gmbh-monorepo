@@ -88,7 +88,7 @@ export const CategoriesPage: React.FC = () => {
           { key: 'name', label: 'Name', type: 'text' },
           { key: 'icon', label: 'Icon', type: 'icon', options: CATEGORY_ICON_OPTIONS.map(option => ({ label: option.label, value: option.value, icon: <CategoryIcon name={option.value} size={22} /> })) },
           { key: 'color', label: 'Farbe', type: 'color', options: CATEGORY_COLOR_OPTIONS, optional: true },
-          { key: 'printerId', label: 'Kategorie-Drucker', type: 'select', options: printers.map(p => ({ label: p.name, value: p.id })), optional: true },
+          { key: 'printerId', label: 'Kategorie-Drucker', type: 'select', options: [{ label: 'Kein Drucker (Standard)', value: '' }, ...printers.map(p => ({ label: p.name, value: p.id }))], optional: true },
           { key: 'showAmount', label: 'Einheit anzeigen', type: 'boolean', optional: true },
           { key: 'enabled', label: 'Aktiv', type: 'boolean' }
         ]}

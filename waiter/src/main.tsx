@@ -1,3 +1,7 @@
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
+import './legacy-fastclick'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

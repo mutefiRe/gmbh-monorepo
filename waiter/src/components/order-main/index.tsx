@@ -9,6 +9,7 @@ import type { CurrentOrder } from "../../types/state";
 import type { OrderItem } from "../../types/models";
 import { Notice } from "../../ui/notice";
 import { pendingOrdersMessage, pendingPaymentsMessage } from "../../lib/offlineMessages";
+import { IconLabel } from "../../ui/icon-label";
 
 interface OrderMainProps {
   categories: Category[];
@@ -45,7 +46,7 @@ export function OrderMain({
 
   return (<>
     {children}
-    <div className="grid grid-rows-[auto_1fr_auto] h-[calc(100dvh-60px)] w-full overflow-x-hidden bg-slate-50">
+    <div className="legacy-main-grid grid grid-rows-[auto_1fr_auto] h-[calc(100dvh-60px)] w-full overflow-x-hidden bg-slate-50">
       {pendingMessage && (
         <div className="px-3 pt-3">
           <Notice variant="warning" message={pendingMessage} />
@@ -68,7 +69,7 @@ export function OrderMain({
               setSelectedCategory={setSelectedCategory}
             />
           </div>
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="flex-1 overflow-x-hidden product-scroll legacy-items-scroll">
             <ProductList
               items={items}
               selectedCategory={selectedCategory}
@@ -89,11 +90,12 @@ export function OrderMain({
               }}
               className="lg:hidden rounded-lg border border-primary-300 text-primary-700 px-[12px] py-[6px] text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors active:scale-[0.99] inline-flex items-center gap-2"
             >
-              Bestellung prüfen
-              <ArrowRight size={16} />
+              <IconLabel icon={<ArrowRight size={16} />} position="right">
+                Bestellung prüfen
+              </IconLabel>
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="flex-1 overflow-x-hidden product-scroll legacy-preview-scroll">
             <PreviewList
               orderItems={currentOrder.orderItems}
               items={items}

@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useOrders, useOrdersByUser, useTables, useAreas } from "../../types/queries";
 import { useAuth } from "../../auth-wrapper";
@@ -8,9 +8,11 @@ import { getOfflineOrders, subscribeOfflineOrders } from "../../lib/offlineOrder
 import { Notice } from "../../ui/notice";
 import { pendingOrdersMessage } from "../../lib/offlineMessages";
 import { useConnectionStatus } from "../../context/ConnectionStatusContext";
+import { IconLabel } from "../../ui/icon-label";
 
 export function OrderHistory() {
   const auth = useAuth();
+  const [, setLocation] = useLocation();
   const [filter, setFilter] = useState("orders");
   const [page, setPage] = useState(0);
   const pageSize = 20;
@@ -106,17 +108,25 @@ export function OrderHistory() {
               {rows.map((row, idx) => {
                 const rowClasses = idx % 2 === 0 ? "bg-white" : "bg-slate-50/60";
                 return (
-                  <Link href={`/orders/${row.id}`} key={row.id} className="contents">
-                    <tr
-                      className={`transition-colors duration-150 hover:bg-primary-50 border-b border-slate-100 last:border-b-0 cursor-pointer ${rowClasses}`}
-                    >
-                      {columns.map((col, i) => (
-                        <td key={i} className={col.tdClassName || col.className}>
-                          {col.render(row)}
-                        </td>
-                      ))}
-                    </tr>
-                  </Link>
+                  <tr
+                    key={row.id}
+                    className={`transition-colors duration-150 hover:bg-primary-50 border-b border-slate-100 last:border-b-0 cursor-pointer ${rowClasses}`}
+                    role="link"
+                    tabIndex={0}
+                    onClick={() => setLocation(`/orders/${row.id}`)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        setLocation(`/orders/${row.id}`);
+                      }
+                    }}
+                  >
+                    {columns.map((col, i) => (
+                      <td key={i} className={col.tdClassName || col.className}>
+                        {col.render(row)}
+                      </td>
+                    ))}
+                  </tr>
                 );
               })}
             </tbody>
@@ -309,29 +319,39 @@ export function OrderHistory() {
                         : row.customTableName || "Ohne Tisch";
                       const rowClasses = idx % 2 === 0 ? "bg-amber-50/60" : "bg-amber-100/40";
                       return (
-                        <Link href={`/orders/${row.id}`} key={row.id} className="contents">
-                          <tr className={`transition-colors hover:bg-amber-100 border-b border-amber-100 last:border-b-0 cursor-pointer ${rowClasses}`}>
-                            <td className="px-4 py-3 text-left text-slate-700">
-                              <div className="flex items-center gap-2">
-                                <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-[0.65rem] font-semibold">
-                                  Ausstehend
-                                </span>
-                                <span>{row.number || row.id}</span>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 text-left text-slate-700">
-                              {row.createdAt
-                                ? new Date(row.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                                : "-"}
-                            </td>
-                            <td className="px-4 py-3 text-left text-slate-700">
-                              {tableLabel}
-                            </td>
-                            <td className="px-4 py-3 text-right text-slate-700">
-                              {row.orderitems.reduce((sum, item) => sum + item.count * item.price, 0).toFixed(2)} €
-                            </td>
-                          </tr>
-                        </Link>
+                        <tr
+                          key={row.id}
+                          className={`transition-colors hover:bg-amber-100 border-b border-amber-100 last:border-b-0 cursor-pointer ${rowClasses}`}
+                          role="link"
+                          tabIndex={0}
+                          onClick={() => setLocation(`/orders/${row.id}`)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault();
+                              setLocation(`/orders/${row.id}`);
+                            }
+                          }}
+                        >
+                          <td className="px-4 py-3 text-left text-slate-700">
+                            <div className="flex items-center gap-2">
+                              <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-[0.65rem] font-semibold">
+                                Ausstehend
+                              </span>
+                              <span>{row.number || row.id}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-left text-slate-700">
+                            {row.createdAt
+                              ? new Date(row.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                              : "-"}
+                          </td>
+                          <td className="px-4 py-3 text-left text-slate-700">
+                            {tableLabel}
+                          </td>
+                          <td className="px-4 py-3 text-right text-slate-700">
+                            {row.orderitems.reduce((sum, item) => sum + item.count * item.price, 0).toFixed(2)} €
+                          </td>
+                        </tr>
                       );
                     })}
                   </tbody>
@@ -394,8 +414,9 @@ export function OrderHistory() {
           href="/order/new"
           className={() => "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-primary-300 text-primary-700 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors"}
         >
-          <Plus size={16} />
-          Bestellung aufnehmen
+          <IconLabel icon={<Plus size={16} />}>
+            Bestellung aufnehmen
+          </IconLabel>
         </Link>
       </div>
     </div>

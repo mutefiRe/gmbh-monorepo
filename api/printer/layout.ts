@@ -2,7 +2,7 @@ const PAPER_FULL_CUT = [0x1d, 0x56, 0x00];
 const PAPER_PART_CUT = [0x1d, 0x56, 0x01];
 const CHAR_CODE = [27, 116, 6]; // West Europe
 
-const FEED = '\n\n\n\n\n\n\n';
+const FEED = '\n\n\n\n';
 const ENTER = '\n';
 
 const TXT_2HEIGHT = [0x1b, 0x21, 0x10];
@@ -23,13 +23,12 @@ class layout {
       headerLine += ` ${order.customTableName}`;
     } else if (order.table) {
       if (order.table.area?.short) {
-        headerLine += ` ${order.table.area.short} -`;
+        headerLine += ` ${order.table.area.short}`;
       }
       headerLine += ` ${order.table.name}`;
     }
 
     printData.push(TXT_2HEIGHT, util.cpad(headerLine, 48), TXT_NORMAL, ENTER);
-    printData.push(TXT_2HEIGHT, util.cpad(t.deliveryNoteTitle, 48), TXT_NORMAL, ENTER);
     if (order.printCount && order.printCount > 0) {
       const notice = `ACHTUNG: ${order.printCount}. NACHDRUCK`;
       printData.push(util.cpad(notice, 48), ENTER);
@@ -67,8 +66,12 @@ class layout {
 
     const totalSum = order.orderitems.reduce((acc, orderitem) => acc + orderitem.count * orderitem.item.price, 0);
 
+    const userLine = order.user && order.user.username
+      ? `Aufgenommen von: ${order.user.username}`
+      : '';
+
     printData.push(divider, ENTER);
-    printData.push(util.lpad(t.totalSum, 28), util.lpad(`${totalSum.toFixed(2)}`, 20), ENTER);
+    printData.push(util.rpad(userLine, 28), util.lpad(`${totalSum.toFixed(2)}`, 20), ENTER);
     printData.push(FEED, PAPER_PART_CUT);
     return printData.reduce((a, b) => a.concat(b));
   }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Armchair, ChevronLeft, Send } from "lucide-react";
+import { Armchair, ChevronLeft, GalleryHorizontal, Send } from "lucide-react";
 import type { OrderItem, Item, Unit, Table, Area, Category } from "../../types/models";
 import { useCreateOrder, usePrintOrder, useSettings } from "../../types/queries";
 import { QuantityBlink } from "../../ui/quantity-blink";
@@ -15,6 +15,7 @@ import { useAuth } from "../../auth-wrapper";
 import { Notice } from "../../ui/notice";
 import { pendingOrdersMessage, pendingPaymentsMessage } from "../../lib/offlineMessages";
 import { useOfflineOrderQueue } from "../../hooks/useOfflineOrderQueue";
+import { IconLabel } from "../../ui/icon-label";
 
 type OrderDetailProps = {
   currentOrder: CurrentOrder;
@@ -118,6 +119,12 @@ export function OrderDetail({
       const orderID = data.order.id;
 
 
+      recordExtrasForItems(
+        currentOrder.orderItems.map(orderitem => ({
+          itemId: String(orderitem.itemId),
+          extras: orderitem.extras ?? null,
+        }))
+      );
       // Trigger print after order is created
       await printMutation.mutateAsync({
         print: {
@@ -125,12 +132,6 @@ export function OrderDetail({
           printId: currentOrder.printId || "",
         }
       });
-      recordExtrasForItems(
-        currentOrder.orderItems.map(orderitem => ({
-          itemId: String(orderitem.itemId),
-          extras: orderitem.extras ?? null,
-        }))
-      );
       setCurrentOrder({ orderItems: [], tableId: null, customTableName: null, printId: "" });
       navigate(`/orders/${orderID}`);
     } catch (error) {
@@ -153,9 +154,8 @@ export function OrderDetail({
 
   const currentTableArea = table ? areas.find(a => a.id === table.areaId) : undefined;
   return (
-    <div className="w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
+    <div className="legacy-detail-grid w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
       <div className="mb-2 shrink-0">
-        <h2 className="text-xl font-bold text-slate-800">Bestellung</h2>
         <p className="text-xs text-slate-500">Artikel prüfen, Tisch wählen und abschicken.</p>
         {pendingMessage && (
           <div className="mt-2">
@@ -174,7 +174,7 @@ export function OrderDetail({
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
+      <div className="legacy-detail-card bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
         <div className="px-3 py-2 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
           <div>
             <h3 className="font-semibold text-slate-800">Bestellübersicht</h3>
@@ -188,7 +188,7 @@ export function OrderDetail({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-100 legacy-detail-scroll">
           {currentOrder.orderItems.map((orderitem, idx) => {
             const item = items.find(i => i.id === orderitem.itemId);
             const unit = item ? item.unitId ? units.find(u => u.id === item.unitId) : undefined : undefined;
@@ -247,20 +247,18 @@ export function OrderDetail({
             className="rounded-md border border-primary-300 bg-primary-50 px-4 py-2 text-primary-700"
             onClick={() => setShowTableModal(true)}
           >
-            <span className="inline-flex items-center gap-2">
-              <Armchair size={16} />
+            <IconLabel icon={<Armchair size={16} />}>
               Tisch: {currentTableArea?.short}{table.name}
-            </span>
+            </IconLabel>
           </button>
         ) : customTableName ? (
           <button
             className="rounded-md border border-primary-300 bg-primary-50 px-4 py-2 text-primary-700"
             onClick={() => setShowTableModal(true)}
           >
-            <span className="inline-flex items-center gap-2">
-              <Armchair size={16} />
+            <IconLabel icon={<Armchair size={16} />}>
               Tisch: {customTableName}
-            </span>
+            </IconLabel>
           </button>
         ) : (
           <button
@@ -269,10 +267,9 @@ export function OrderDetail({
               setShowTableModal(true);
             }}
           >
-            <span className="inline-flex items-center gap-2">
-              <Armchair size={16} />
+            <IconLabel icon={<GalleryHorizontal size={16} />}>
               Tisch auswählen
-            </span>
+            </IconLabel>
           </button>
         )}
         <p className="font-semibold text-slate-700">Summe: € {openAmount(currentOrder.orderItems).toFixed(2)}</p>
@@ -284,10 +281,9 @@ export function OrderDetail({
           href="/order"
           title="Zurück"
         >
-          <span className="inline-flex items-center gap-2">
-            <ChevronLeft size={16} />
+          <IconLabel icon={<ChevronLeft size={16} />}>
             Zurück
-          </span>
+          </IconLabel>
         </Link>
         <button
           className="rounded-md border border-red-200 bg-white px-4 py-2 text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
@@ -299,7 +295,7 @@ export function OrderDetail({
             }
           }}
         >
-          Bestellung verwerfen
+          Verwerfen
         </button>
         <button
           className="rounded-md bg-primary px-4 py-2 text-primary-contrast inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
@@ -308,8 +304,9 @@ export function OrderDetail({
             saveOrder();
           }}
         >
-          {isSubmitting ? 'Wird gesendet...' : 'Bestellung abschicken'}
-          <Send size={16} />
+          <IconLabel icon={<Send size={16} />} position="right">
+            {isSubmitting ? 'Wird gesendet...' : 'Abschicken'}
+          </IconLabel>
         </button>
       </div>
 

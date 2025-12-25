@@ -1,3 +1,6 @@
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';

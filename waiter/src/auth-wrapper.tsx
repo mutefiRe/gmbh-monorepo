@@ -2,6 +2,7 @@ import { createContext, useContext, type ReactNode } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useUser } from "./types/queries";
 import { LoadingScreen } from "./ui/loading-screen";
+import type { User } from "./types/models";
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -12,7 +13,7 @@ type AuthContextType = {
   userId: string | null | undefined;
   eventId: string | null | undefined;
   token: string;
-  user: ReturnType<typeof useUser>;
+  user?: User;
   setToken: (token: string) => void;
   logout: () => void;
 }
@@ -41,12 +42,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setJwt("");
   }
 
-  const auth = {
+  console.log(user?.data?.user);
+
+
+  const auth: AuthContextType = {
     isLoading: user.isLoading,
     userId: userId,
     eventId: eventId,
     token: jwt,
-    user,
+    user: user?.data?.user,
     setToken: setJwt,
     logout,
   }

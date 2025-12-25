@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .root {
   isolation: isolate;
@@ -31,7 +33,197 @@ a svg[width][height] {
   flex: 0 0 auto;
 }
 
-@theme {
+.product-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.icon-label {
+  display: inline-flex;
+  align-items: center;
+}
+
+.icon-label__icon {
+  display: inline-flex;
+  margin-right: 0.5rem;
+}
+
+.icon-label.icon-right .icon-label__icon {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.legacy .legacy-main-grid {
+  height: 100vh;
+}
+
+.legacy .legacy-items-scroll {
+  max-height: calc(100vh - 220px);
+}
+
+.legacy .legacy-preview-scroll {
+  max-height: 32vh;
+}
+
+.legacy .legacy-detail-grid {
+  height: auto;
+  min-height: 0;
+  padding-bottom: 0;
+}
+
+.legacy .legacy-detail-grid > :last-child {
+  margin-bottom: 0;
+}
+
+.legacy .legacy-detail-card {
+  flex: 0 0 auto;
+  height: calc(100vh - 420px);
+}
+
+.legacy .legacy-detail-scroll {
+  height: 100%;
+  overflow-y: auto;
+  flex: 0 0 auto;
+}
+
+.legacy .flex.gap-1 > * + * {
+  margin-left: 0.25rem;
+}
+
+.legacy .inline-flex.gap-1 > * + * {
+  margin-left: 0.25rem;
+}
+
+.legacy .flex.gap-1\.5 > * + * {
+  margin-left: 0.375rem;
+}
+
+.legacy .inline-flex.gap-1\.5 > * + * {
+  margin-left: 0.375rem;
+}
+
+.legacy .flex.gap-2 > * + * {
+  margin-left: 0.5rem;
+}
+
+.legacy .inline-flex.gap-2 > * + * {
+  margin-left: 0.5rem;
+}
+
+.legacy .flex.gap-3 > * + * {
+  margin-left: 0.75rem;
+}
+
+.legacy .inline-flex.gap-3 > * + * {
+  margin-left: 0.75rem;
+}
+
+.legacy .flex.gap-4 > * + * {
+  margin-left: 1rem;
+}
+
+.legacy .inline-flex.gap-4 > * + * {
+  margin-left: 1rem;
+}
+
+.legacy .inline-flex:not([class*="gap-"]) > * + * {
+  margin-left: 0.5rem;
+}
+
+.legacy .flex.flex-col.gap-1 > * + * {
+  margin-left: 0;
+  margin-top: 0.25rem;
+}
+
+.legacy .flex.flex-col.gap-1\.5 > * + * {
+  margin-left: 0;
+  margin-top: 0.375rem;
+}
+
+.legacy .flex.flex-col.gap-2 > * + * {
+  margin-left: 0;
+  margin-top: 0.5rem;
+}
+
+.legacy .flex.flex-col.gap-3 > * + * {
+  margin-left: 0;
+  margin-top: 0.75rem;
+}
+
+.legacy .flex.flex-col.gap-4 > * + * {
+  margin-left: 0;
+  margin-top: 1rem;
+}
+
+.legacy .flex.flex-wrap.gap-1 {
+  margin-left: -0.25rem;
+  margin-top: -0.25rem;
+}
+
+.legacy .flex.flex-wrap.gap-1 > * {
+  margin-left: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.legacy .flex.flex-wrap.gap-1\.5 {
+  margin-left: -0.375rem;
+  margin-top: -0.375rem;
+}
+
+.legacy .flex.flex-wrap.gap-1\.5 > * {
+  margin-left: 0.375rem;
+  margin-top: 0.375rem;
+}
+
+.legacy .flex.flex-wrap.gap-2 {
+  margin-left: -0.5rem;
+  margin-top: -0.5rem;
+}
+
+.legacy .flex.flex-wrap.gap-2 > * {
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.legacy .flex.flex-wrap.gap-3 {
+  margin-left: -0.75rem;
+  margin-top: -0.75rem;
+}
+
+.legacy .flex.flex-wrap.gap-3 > * {
+  margin-left: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.legacy .flex.flex-wrap.gap-4 {
+  margin-left: -1rem;
+  margin-top: -1rem;
+}
+
+.legacy .flex.flex-wrap.gap-4 > * {
+  margin-left: 1rem;
+  margin-top: 1rem;
+}
+
+/* Fallbacks for browsers without `inset` shorthand (e.g., Chrome 81). */
+.legacy .inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.legacy .inset-x-0 {
+  left: 0;
+  right: 0;
+}
+
+.legacy .inset-y-0 {
+  top: 0;
+  bottom: 0;
+}
+
+:root {
   --color-primary-50: #e6f7f5;
   --color-primary-100: #d9f3ef;
   --color-primary-200: #b6e5dd;

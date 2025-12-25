@@ -32,7 +32,6 @@ services:
       PRINTER_API_URL: ${PRINTER_API_URL:-http://printer-api:8761}
       UPDATE_API_URL: http://update-api:3000
       UPDATE_API_TOKEN: ${UPDATE_API_TOKEN:-"update-token-123"}
-      LOG_LEVEL: debug
     depends_on:
       mysql:
         condition: service_healthy
@@ -67,7 +66,7 @@ services:
   printer-api:
     image: ${PROD_PRINTER_API_IMAGE:-${DOCKER_REGISTRY:-docker.io}/${DOCKER_REPO:-mutefire}/gmbh-printer-api:latest}
     environment:
-      EXTRA_PRINTER_HOSTS: ${EXTRA_PRINTER_HOSTS:-localhost,host.docker.internal}
+      EXTRA_PRINTER_HOSTS: ${EXTRA_PRINTER_HOSTS:-192.168.100.200,192.168.100.201,192.168.100.202,192.168.100.203,192.168.100.204,192.168.100.205}
       ENABLE_USB: "true"
       ENABLE_NETWORK: "true"
       SCAN_MAX_HOSTS: 20

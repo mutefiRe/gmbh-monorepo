@@ -11,6 +11,7 @@ import { Modal } from "../../../ui/modal";
 import { getCategoryColor } from "../../../lib/colors";
 import { itemAmountString } from "../../../lib/itemAmountString";
 import { useExtrasHistory } from "../../../hooks/useExtrasHistory";
+import { IconLabel } from "../../../ui/icon-label";
 
 type ProductListProps = {
   items: Item[];
@@ -43,8 +44,8 @@ export function ProductList({
   const settings = { showItemPrice: true }; // Replace with actual settings
 
   return (
-    <div className="w-full h-full">
-      <div className="overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-2 p-2">
+    <div className="w-full h-full product-scroll">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-2">
 
         {filteredItems.map(item => (
           <ProductItem
@@ -80,17 +81,21 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
   const [count, setCount] = useState<number>(1);
   const { getSuggestions } = useExtrasHistory();
   const suggestedExtras = getSuggestions(String(item.id));
+  const isDisabled = item.enabled === false;
 
 
   const { longPressProps } = useLongPress({
     threshold: 500,
     onLongPress: () => {
-      setModalOpen(item.id);
+      if (!isDisabled) {
+        setModalOpen(item.id);
+      }
     }
   })
 
   const { pressProps } = usePress({
     onPress: () => {
+      if (isDisabled) return;
       addItemToOrder({
         itemId: item.id,
         extras: extras,
@@ -131,11 +136,11 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
     }
     : {};
 
-  let fontSize = "1rem";
+  let fontSize = "1.1rem";
   if (item.name.length > 20) {
-    fontSize = "0.7rem";
+    fontSize = "0.9rem";
   } else if (item.name.length > 15) {
-    fontSize = "0.8rem";
+    fontSize = "1rem";
   }
 
   return (
@@ -158,8 +163,9 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
               event?.preventDefault();
               event.stopPropagation();
             }}>
-            Hinzufügen
-            <Plus size={16} />
+            <IconLabel icon={<Plus size={16} />} position="right">
+              Hinzufügen
+            </IconLabel>
           </button>
         }
         open={modalOpen} onClose={() => setModalOpen(null)} title={itemCategory?.showAmount ? `${item.name} ${itemAmountString(item.amount)}${unit?.name || ''}` : item.name}>
@@ -237,8 +243,9 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
         </div>
       </Modal>
       <button
-        className="relative min-w-[100px] pb-2 pt-2 min-h-[100px] overflow-hidden transition-all duration-200 flex flex-col items-center justify-center rounded-lg border border-slate-200 border-l-4 bg-white shadow-sm hover:shadow-md hover:bg-slate-50 active:shadow-sm active:scale-95"
+        className={`relative min-w-[100px] pb-2 pt-2 min-h-[100px] overflow-hidden transition-all duration-200 flex flex-col items-center justify-center rounded-lg border border-slate-200 border-l-4 bg-white shadow-sm ${isDisabled ? 'opacity-50 cursor-not-allowed bg-slate-100 border-slate-200' : 'hover:shadow-md hover:bg-slate-50 active:shadow-sm active:scale-95'}`}
         style={style}
+        disabled={isDisabled}
         {...mergeProps(longPressProps, pressProps)}
       >
         {countInOrder > 0 && (
@@ -261,7 +268,7 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
           </div>
         )}
         <div className="text-center text-[0.95rem] flex flex-col items-center justify-center h-full text-slate-800">
-          <strong style={{ fontSize }}>{item.name}</strong>
+          <strong style={{ fontSize }} className={isDisabled ? "line-through text-slate-500" : ""}>{item.name}</strong>
           {itemCategory?.showAmount && (
             <span className="text-xs text-slate-500">
               {itemAmountString(item.amount)}{unit?.name}

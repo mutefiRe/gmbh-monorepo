@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Printer } from "lucide-react";
+import { Calculator, Printer } from "lucide-react";
 import { useOrder, usePrintOrder, useUpdateOrder } from "../../types/queries";
 import type { Area, Category, Item, OrderItem, Table, Unit } from "../../types/models";
 import { itemAmountString } from "../../lib/itemAmountString";
@@ -10,6 +10,9 @@ import { useAuth } from "../../auth-wrapper";
 import { Notice } from "../../ui/notice";
 import { getOfflineOrderById, subscribeOfflineOrders, updateOfflineOrderCounts } from "../../lib/offlineOrders";
 import { offlineOrderPaymentMessage, pendingPaymentsMessage } from "../../lib/offlineMessages";
+import { useLocation } from "wouter";
+import { IconLabel } from "../../ui/icon-label";
+import { Modal } from "../../ui/modal";
 
 type PayDetailProps = {
   orderId: string;
@@ -36,6 +39,9 @@ export function PayDetail({
   const connection = useConnectionStatus();
   const canReachServer = connection.canReachServer;
   const auth = useAuth();
+  const [, setLocation] = useLocation();
+  const [showCalculator, setShowCalculator] = useState(false);
+  const [receivedAmount, setReceivedAmount] = useState("");
   const [offlineOrder, setOfflineOrder] = useState(() =>
     getOfflineOrderById(orderId, { userId: auth.userId ?? null, eventId: auth.eventId ?? null })
   );
@@ -99,6 +105,9 @@ export function PayDetail({
     const id = oi.id ?? "";
     return sum + ((itemMarks[id] || 0) * oi.price);
   }, 0);
+  const parsedReceived = Number(receivedAmount.replace(",", "."));
+  const receivedValue = Number.isFinite(parsedReceived) ? parsedReceived : 0;
+  const changeValue = receivedValue - markedAmount;
   const allMarked = orderitems.every((orderitem) => {
     const id = orderitem.id ?? "";
     if (!id) return true;
@@ -411,18 +420,26 @@ export function PayDetail({
         <div className="text-sm text-slate-600">
           Auswahl: <span className="font-semibold text-slate-800">€ {markedAmount.toFixed(2)}</span>
         </div>
+        <button
+          type="button"
+          className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-slate-700 text-sm hover:bg-slate-50"
+          onClick={() => setShowCalculator(true)}
+        >
+          <IconLabel icon={<Calculator size={16} />}>
+            Rechner
+          </IconLabel>
+        </button>
       </div>
 
       <div className="flex gap-2 shrink-0 justify-between items-center">
         <button
           className="rounded-md border border-slate-200 bg-white px-4 py-2 text-slate-700"
-          onClick={() => window.history.back()}
+          onClick={() => setLocation("/orders")}
           disabled={isPaying || isPrinting}
         >
-          <span className="inline-flex items-center gap-2">
-            <span className="icon icon-return"></span>
+          <IconLabel icon={<span className="icon icon-return"></span>}>
             Zurück zu den Bestellungen
-          </span>
+          </IconLabel>
         </button>
         {!orderitems.every(oi => oi.countPaid && oi.countPaid >= oi.count) && (
           <button
@@ -430,11 +447,56 @@ export function PayDetail({
             onClick={onPaySelected}
             disabled={markedAmount === 0 || isPaying || isPrinting}
           >
-            <span className="icon icon-pay"></span>
-            {isPaying ? 'Zahlung läuft...' : `Ausgewählte bezahlen (€ ${markedAmount.toFixed(2)})`}
+            <IconLabel icon={<span className="icon icon-pay"></span>}>
+              {isPaying ? 'Zahlung läuft...' : `Ausgewählte bezahlen (€ ${markedAmount.toFixed(2)})`}
+            </IconLabel>
           </button>
         )}
       </div>
+      <Modal
+        open={showCalculator}
+        onClose={() => setShowCalculator(false)}
+        title="Rechner"
+        showCloseAction={false}
+        actions={(
+          <button
+            type="button"
+            className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
+            onClick={() => setShowCalculator(false)}
+          >
+            Schließen
+          </button>
+        )}
+        contentClassName="max-w-md"
+      >
+        <div className="space-y-4 text-slate-700">
+          <div className="text-sm">
+            Auswahlbetrag: <span className="font-semibold">€ {markedAmount.toFixed(2)}</span>
+          </div>
+          <label className="text-sm font-semibold text-slate-600">
+            Erhalten
+            <input
+              type="text"
+              inputMode="decimal"
+              value={receivedAmount}
+              onChange={(event) => setReceivedAmount(event.target.value)}
+              placeholder="z.B. 20,00"
+              className="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-200"
+            />
+          </label>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+            {Number.isFinite(parsedReceived) ? (
+              changeValue >= 0 ? (
+                <span>Rückgeld: <span className="font-semibold">€ {changeValue.toFixed(2)}</span></span>
+              ) : (
+                <span>Noch offen: <span className="font-semibold">€ {Math.abs(changeValue).toFixed(2)}</span></span>
+              )
+            ) : (
+              <span>Betrag eingeben, um das Rückgeld zu sehen.</span>
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

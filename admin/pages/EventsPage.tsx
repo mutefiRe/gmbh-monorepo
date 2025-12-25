@@ -284,7 +284,7 @@ export function EventsPage() {
                     <input
                       type="text"
                       value={edit.name}
-                      onChange={(event) => setEventEdit(event.id, { name: event.target.value })}
+                      onChange={(e) => setEventEdit(event.id, { name: e.target.value })}
                       disabled={disabled}
                       className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40 disabled:bg-slate-100"
                     />
@@ -294,7 +294,7 @@ export function EventsPage() {
                     <input
                       type="date"
                       value={edit.beginDate}
-                      onChange={(event) => setEventEdit(event.id, { beginDate: event.target.value })}
+                      onChange={(e) => setEventEdit(event.id, { beginDate: e.target.value })}
                       disabled={disabled}
                       className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40 disabled:bg-slate-100"
                     />
@@ -304,7 +304,7 @@ export function EventsPage() {
                     <input
                       type="date"
                       value={edit.endDate}
-                      onChange={(event) => setEventEdit(event.id, { endDate: event.target.value })}
+                      onChange={(e) => setEventEdit(event.id, { endDate: e.target.value })}
                       disabled={disabled}
                       className="mt-1 h-10 rounded-lg border border-slate-200 px-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/40 disabled:bg-slate-100"
                     />

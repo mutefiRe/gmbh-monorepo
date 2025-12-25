@@ -1,30 +1,29 @@
-import { fetch } from 'undici';
+import { fetch, Agent } from 'undici';
 import pLimit from 'p-limit';
-import { randomUUID } from 'node:crypto';
-
 const BASE_URL = (process.env.BASE_URL || '').replace(/\/$/, '');
 const ADMIN_USER = process.env.ADMIN_USER || '';
 const ADMIN_PASS = process.env.ADMIN_PASS || '';
 const EVENT_ID = process.env.EVENT_ID || '';
-const SEED = (process.env.SEED || 'true').toLowerCase() !== 'false';
-
 const WAITERS = Number(process.env.WAITERS || 5);
-const AREAS = Number(process.env.AREAS || 2);
-const TABLES_PER_AREA = Number(process.env.TABLES_PER_AREA || 8);
-const UNITS = Number(process.env.UNITS || 6);
-const CATEGORIES = Number(process.env.CATEGORIES || 6);
-const ITEMS = Number(process.env.ITEMS || 25);
-const ORDERS_PER_WAITER = Number(process.env.ORDERS_PER_WAITER || 20);
+const WAITERS_PASSWORD = process.env.WAITERS_PASSWORD || 'gehmal25';
+const WAITERS_LIST = process.env.WAITERS_LIST || '';
+const MIN_ORDERS = Number(process.env.MIN_ORDERS || 100);
 const CONCURRENCY = Number(process.env.CONCURRENCY || 10);
-const DURATION_SECONDS = Number(process.env.DURATION_SECONDS || 60);
+const DURATION_SECONDS = Number(process.env.DURATION_SECONDS || 30);
 const RATE_PER_SEC = Number(process.env.RATE_PER_SEC || 5);
 const CUSTOM_TABLE_RATE = Number(process.env.CUSTOM_TABLE_RATE || 0.2);
 const EXTRAS_RATE = Number(process.env.EXTRAS_RATE || 0.35);
+const PRINT_RATE = Number(process.env.PRINT_RATE || 0);
+const INSECURE_TLS = ['1', 'true', 'yes'].includes((process.env.INSECURE_TLS || '').toLowerCase());
 
 if (!BASE_URL || !ADMIN_USER || !ADMIN_PASS) {
   console.error('Missing required env: BASE_URL, ADMIN_USER, ADMIN_PASS');
   process.exit(1);
 }
+
+const httpsDispatcher = INSECURE_TLS && BASE_URL.startsWith('https://')
+  ? new Agent({ connect: { rejectUnauthorized: false } })
+  : undefined;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -36,10 +35,6 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function formatName(prefix) {
-  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
-}
-
 async function request(path, { method = 'GET', body, token, eventId } = {}) {
   const headers = { 'content-type': 'application/json' };
   if (token) headers['x-access-token'] = token;
@@ -48,7 +43,8 @@ async function request(path, { method = 'GET', body, token, eventId } = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined
+    body: body ? JSON.stringify(body) : undefined,
+    dispatcher: httpsDispatcher
   });
 
   const text = await res.text();
@@ -79,47 +75,6 @@ async function resolveEventId(token) {
   return res.data?.activeEventId;
 }
 
-async function createArea(token, eventId, name, short) {
-  const res = await request('/api/areas', { method: 'POST', token, eventId, body: { area: { name, short, enabled: true } } });
-  return res.data?.area;
-}
-
-async function createTable(token, eventId, name, areaId) {
-  const res = await request('/api/tables', { method: 'POST', token, eventId, body: { table: { name, areaId, enabled: true } } });
-  return res.data?.table;
-}
-
-async function createUnit(token, eventId, name) {
-  const res = await request('/api/units', { method: 'POST', token, eventId, body: { unit: { name, enabled: true } } });
-  return res.data?.unit;
-}
-
-async function createCategory(token, eventId, name) {
-  const res = await request('/api/categories', { method: 'POST', token, eventId, body: { category: { name, enabled: true, icon: 'utensils', color: '#e2e8f0' } } });
-  return res.data?.category;
-}
-
-async function createItem(token, eventId, name, categoryId, unitId) {
-  const price = Number((Math.random() * 8 + 1).toFixed(2));
-  const res = await request('/api/items', {
-    method: 'POST',
-    token,
-    eventId,
-    body: { item: { name, categoryId, unitId, price, amount: 1, enabled: true } }
-  });
-  return res.data?.item;
-}
-
-async function createUser(token, eventId, username, password) {
-  const res = await request('/api/users', {
-    method: 'POST',
-    token,
-    eventId,
-    body: { user: { username, firstname: 'Waiter', lastname: username.slice(-4), password, role: 'waiter' } }
-  });
-  return res.data?.user;
-}
-
 async function waiterLogin(username, password) {
   const res = await request('/authenticate', { method: 'POST', body: { username, password } });
   if (!res.ok) {
@@ -128,34 +83,65 @@ async function waiterLogin(username, password) {
   return res.data?.token;
 }
 
+function parseWaiterList(raw) {
+  if (!raw) return [];
+  return raw
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const [username, password] = entry.split(':');
+      return { username, password: password || WAITERS_PASSWORD };
+    });
+}
+
 function buildOrderPayload(items, tables) {
   const useCustomTable = Math.random() < CUSTOM_TABLE_RATE || tables.length === 0;
-  const tableId = useCustomTable ? null : pick(tables).id;
-  const customTableName = useCustomTable ? `Steh-${randomInt(1, 99)}` : null;
+  const tableId = useCustomTable ? undefined : pick(tables).id;
+  const customTableName = useCustomTable ? `Steh-${randomInt(1, 99)}` : undefined;
 
   const lineCount = randomInt(1, 6);
   const orderitems = Array.from({ length: lineCount }).map(() => {
     const item = pick(items);
-    const extras = Math.random() < EXTRAS_RATE ? `Extra ${randomInt(1, 5)}` : null;
-    return {
+    const extras = Math.random() < EXTRAS_RATE ? `Extra ${randomInt(1, 5)}` : undefined;
+    const orderitem = {
       itemId: item.id,
       count: randomInt(1, 4),
-      price: Number(item.price),
-      extras
+      price: Number(item.price)
     };
+    if (extras) {
+      orderitem.extras = extras;
+    }
+    return orderitem;
   });
 
+  const order = {
+    orderitems
+  };
+  if (tableId) {
+    order.tableId = tableId;
+  }
+  if (customTableName) {
+    order.customTableName = customTableName;
+  }
   return {
     order: {
-      tableId,
-      customTableName,
-      orderitems
+      ...order
     }
   };
 }
 
 async function createOrder(token, eventId, payload) {
   return request('/api/orders', { method: 'POST', token, eventId, body: payload });
+}
+
+async function triggerPrint(token, eventId, orderId) {
+  return request('/api/prints', {
+    method: 'POST',
+    token,
+    eventId,
+    body: { print: { orderId, isBill: false } }
+  });
 }
 
 async function main() {
@@ -170,65 +156,18 @@ async function main() {
 
   console.log(`Active event: ${eventId}`);
 
-  const seed = {
-    areas: [],
-    tables: [],
-    units: [],
-    categories: [],
-    items: [],
-    users: []
-  };
-
-  if (SEED) {
-    console.log('Seeding data...');
-
-    for (let i = 0; i < AREAS; i += 1) {
-      const area = await createArea(adminToken, eventId, formatName(`Bereich-${i + 1}`), `B${i + 1}`);
-      if (area) seed.areas.push(area);
+  const explicitWaiters = parseWaiterList(WAITERS_LIST);
+  let waiterAccounts = explicitWaiters;
+  if (waiterAccounts.length === 0) {
+    const usersRes = await request('/api/users', { token: adminToken, eventId });
+    if (!usersRes.ok) {
+      throw new Error(`User list failed: ${usersRes.status} ${JSON.stringify(usersRes.data)}`);
     }
-
-    for (const area of seed.areas) {
-      for (let i = 0; i < TABLES_PER_AREA; i += 1) {
-        const table = await createTable(adminToken, eventId, String(i + 1), area.id);
-        if (table) seed.tables.push(table);
-      }
-    }
-
-    for (let i = 0; i < UNITS; i += 1) {
-      const unit = await createUnit(adminToken, eventId, `U${i + 1}`);
-      if (unit) seed.units.push(unit);
-    }
-
-    for (let i = 0; i < CATEGORIES; i += 1) {
-      const category = await createCategory(adminToken, eventId, formatName(`Kategorie-${i + 1}`));
-      if (category) seed.categories.push(category);
-    }
-
-    for (let i = 0; i < ITEMS; i += 1) {
-      const item = await createItem(
-        adminToken,
-        eventId,
-        formatName(`Item-${i + 1}`),
-        pick(seed.categories).id,
-        pick(seed.units).id
-      );
-      if (item) seed.items.push(item);
-    }
-
-    for (let i = 0; i < WAITERS; i += 1) {
-      const username = formatName(`waiter-${i + 1}`);
-      const password = `pw-${randomUUID().slice(0, 8)}`;
-      const user = await createUser(adminToken, eventId, username, password);
-      if (user) seed.users.push({ ...user, password });
-    }
+    waiterAccounts = (usersRes.data?.users || [])
+      .filter((user) => user.role === 'waiter')
+      .slice(0, WAITERS)
+      .map((user) => ({ username: user.username, password: WAITERS_PASSWORD }));
   }
-
-  const waiterAccounts = seed.users.length > 0
-    ? seed.users
-    : Array.from({ length: WAITERS }).map((_, idx) => ({
-        username: `waiter-${idx + 1}`,
-        password: 'gehmal25'
-      }));
 
   const waiterTokens = [];
   for (const waiter of waiterAccounts) {
@@ -244,8 +183,17 @@ async function main() {
     throw new Error('No waiter tokens available');
   }
 
-  const items = seed.items.length > 0 ? seed.items : (await request('/api/items', { token: adminToken, eventId })).data?.items || [];
-  const tables = seed.tables.length > 0 ? seed.tables : (await request('/api/tables', { token: adminToken, eventId })).data?.tables || [];
+  const itemsRes = await request('/api/items', { token: adminToken, eventId });
+  if (!itemsRes.ok) {
+    throw new Error(`Items fetch failed: ${itemsRes.status} ${JSON.stringify(itemsRes.data)}`);
+  }
+  const items = itemsRes.data?.items || [];
+  if (items.length === 0) {
+    throw new Error('No items available to order');
+  }
+
+  const tablesRes = await request('/api/tables', { token: adminToken, eventId });
+  const tables = tablesRes.ok ? (tablesRes.data?.tables || []) : [];
 
   console.log(`Waiters: ${waiterTokens.length}, Items: ${items.length}, Tables: ${tables.length}`);
 
@@ -263,21 +211,31 @@ async function main() {
         if (!res.ok) {
           orderErrors += 1;
           console.warn(`Order failed ${res.status}`, res.data?.errors || res.data);
-        } else {
-          orderCount += 1;
+          return;
+        }
+        orderCount += 1;
+        const orderId = res.data?.order?.id || res.data?.orderId;
+        if (orderId && PRINT_RATE > 0 && Math.random() < PRINT_RATE) {
+          const printRes = await triggerPrint(waiter.token, eventId, orderId);
+          if (!printRes.ok) {
+            console.warn(`Print failed ${printRes.status}`, printRes.data?.errors || printRes.data);
+          }
         }
       }));
     }
     await Promise.all(tasks);
   };
 
-  console.log(`Sending ${ORDERS_PER_WAITER} orders per waiter...`);
-  await createOrderBatch(ORDERS_PER_WAITER * waiterTokens.length);
-
-  console.log(`Sustained load for ${DURATION_SECONDS}s at ~${RATE_PER_SEC}/s...`);
+  console.log(`Sustained load for ${DURATION_SECONDS}s at ~${RATE_PER_SEC}/s (min ${MIN_ORDERS} orders)...`);
   const end = Date.now() + DURATION_SECONDS * 1000;
-  while (Date.now() < end) {
+  let lastLog = Date.now();
+  while (Date.now() < end || orderCount < MIN_ORDERS) {
     await createOrderBatch(RATE_PER_SEC);
+    const now = Date.now();
+    if (now - lastLog >= 5000) {
+      console.log(`Progress: ${orderCount} orders sent (${orderErrors} errors)`);
+      lastLog = now;
+    }
     await sleep(1000);
   }
 

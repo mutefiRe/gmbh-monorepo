@@ -93,6 +93,14 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
           }
         }
       });
+    fields
+      .filter((field) => field.type === 'select')
+      .forEach((field) => {
+        const rawValue = payload[field.key];
+        if (field.optional && (rawValue === '' || rawValue === undefined)) {
+          payload[field.key] = null as any;
+        }
+      });
 
     if ('id' in payload && payload.id) {
       // @ts-ignore - We know it's a T
