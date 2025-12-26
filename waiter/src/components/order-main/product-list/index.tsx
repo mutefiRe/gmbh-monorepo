@@ -191,7 +191,7 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
             </label>
             <input
               type="text"
-              placeholder="z. B. ohne Zwiebel"
+              placeholder="z. B. lauwarm, ohne eis, ohne ketchup"
               value={extras}
               className="w-full rounded-lg border border-primary-200 bg-primary-50/40 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-200"
               autoFocus={false}

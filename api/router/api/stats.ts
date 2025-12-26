@@ -13,8 +13,8 @@ function formatDateKey(date: Date): string {
 async function getTotalRevenue(eventId: string | undefined) {
   const dialect = db.sequelize.options.dialect;
   const revenueQuery: Record<string, string> = {
-    mysql: 'SELECT SUM(orderitems.price * orderitems.countPaid) AS revenue FROM gmbh.orderitems INNER JOIN gmbh.orders ON orderitems.orderId = orders.id WHERE orderitems.countPaid <> 0 AND orders.eventId = :eventId',
-    postgres: 'SELECT SUM(orderitems.price * "countPaid") AS revenue FROM orderitems INNER JOIN orders ON orderitems."orderId" = orders.id WHERE orderitems."countPaid" <> 0 AND orders."eventId" = :eventId'
+    mysql: 'SELECT SUM(orderitems.price * orderitems.count) AS revenue FROM orderitems INNER JOIN orders ON orderitems.orderId = orders.id WHERE orders.eventId = :eventId',
+    postgres: 'SELECT SUM(orderitems.price * orderitems."count") AS revenue FROM orderitems INNER JOIN orders ON orderitems."orderId" = orders.id WHERE orders."eventId" = :eventId'
   };
 
   const [revenueRow] = await db.sequelize.query(revenueQuery[dialect], {
@@ -46,7 +46,7 @@ async function getSalesByDay(eventId: string | undefined) {
   ordersForSales.forEach((order: any) => {
     const dateKey = formatDateKey(new Date(order.createdAt));
     const items = order.orderitems || [];
-    const orderTotal = items.reduce((sum: number, oi: any) => sum + Number(oi.price) * oi.countPaid, 0);
+    const orderTotal = items.reduce((sum: number, oi: any) => sum + Number(oi.price) * oi.count, 0);
     if (salesMap.has(dateKey)) {
       salesMap.set(dateKey, (salesMap.get(dateKey) || 0) + orderTotal);
     }
@@ -76,8 +76,8 @@ async function getSalesByHalfHour(eventId: string | undefined, range: SalesRange
   const dialect = db.sequelize.options.dialect;
   const rangeQuery: Record<string, string> = {
     mysql: `SELECT MIN(orders.createdAt) AS earliest, MAX(orders.createdAt) AS latest
-            FROM gmbh.orderitems
-            INNER JOIN gmbh.orders ON gmbh.orderitems.orderId = gmbh.orders.id
+            FROM orderitems
+            INNER JOIN orders ON orderitems.orderId = orders.id
             WHERE orders.eventId = :eventId`,
     postgres: `SELECT MIN(orders."createdAt") AS earliest, MAX(orders."createdAt") AS latest
               FROM orderitems
@@ -113,8 +113,8 @@ async function getSalesByHalfHour(eventId: string | undefined, range: SalesRange
     mysql: `SELECT FLOOR(UNIX_TIMESTAMP(orders.createdAt) / :bucketSeconds) * :bucketSeconds AS bucket,
             SUM(orderitems.price * orderitems.count) AS total,
             SUM(orderitems.price * IFNULL(orderitems.countPaid, 0)) AS paid
-            FROM gmbh.orderitems
-            INNER JOIN gmbh.orders ON gmbh.orderitems.orderId = gmbh.orders.id
+            FROM orderitems
+            INNER JOIN orders ON orderitems.orderId = orders.id
             WHERE orders.eventId = :eventId AND orders.createdAt BETWEEN :start AND :end
             GROUP BY bucket
             ORDER BY bucket`,
@@ -191,9 +191,9 @@ async function getTopItems(eventId: string | undefined, limit = 15) {
     mysql: `SELECT items.name AS name,
             SUM(orderitems.count) AS amount,
             SUM(orderitems.price * orderitems.count) AS revenue
-            FROM gmbh.orderitems
-            INNER JOIN gmbh.items ON gmbh.orderitems.itemId = gmbh.items.id
-            INNER JOIN gmbh.orders ON gmbh.orderitems.orderId = gmbh.orders.id
+            FROM orderitems
+            INNER JOIN items ON orderitems.itemId = items.id
+            INNER JOIN orders ON orderitems.orderId = orders.id
             WHERE orders.eventId = :eventId
             GROUP BY items.id
             ORDER BY amount DESC

@@ -24,7 +24,7 @@ services:
       NODE_ENV: production
       GMBH_DB_USER: gmbh
       GMBH_DB_PASSWORD: gmbh
-      GMBH_DB_NAME: ${GMBH_DB_NAME:-gmbh}
+      GMBH_DB_NAME: gmbh
       GMBH_DB_HOST: mysql
       GMBH_DB_PORT: "3306"
       GMBH_DB_DIALECT: mysql

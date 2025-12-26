@@ -13,7 +13,6 @@ const orderitems = require('./api/orderitems');
 const settings = require('./api/settings');
 const printers = require('./api/printers');
 const prints = require('./api/prints');
-const statistics = require('./api/statistics');
 const stats = require('./api/stats');
 const events = require('./api/events');
 const notifications = require('./api/notifications');
@@ -88,7 +87,6 @@ router.use("/orders", eventScope, eventReadOnly, orders);
 router.use("/orderitems", eventScope, eventReadOnly, orderitems);
 router.use("/settings", settings);
 router.use("/prints", eventScope, eventReadOnly, prints);
-router.use("/statistics", eventScope, eventReadOnly, statistics);
 router.use("/stats", eventScope, eventReadOnly, stats);
 router.use("/update", requireRole('admin'), updateRouter);
 

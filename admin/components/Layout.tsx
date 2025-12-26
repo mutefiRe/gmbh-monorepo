@@ -183,6 +183,34 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <NavItem to="/" icon={LayoutDashboard} label="Systemstatus" active={location.pathname === '/'} />
               <NavItem to="/statistics" icon={BarChart3} label="Statistik (experimentell)" active={location.pathname === '/statistics'} />
               <NavItem to="/orders" icon={Receipt} label="Bestellungen" active={location.pathname === '/orders'} />
+              {events.length > 0 && (
+                <div className="px-4 pt-3 pb-2">
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Event</p>
+                  <div className="flex flex-col gap-2">
+                    <select
+                      value={selectedEventId || ''}
+                      onChange={handleEventChange}
+                      className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+                    >
+                      {events.map((event) => (
+                        <option key={event.id} value={event.id}>
+                          {event.name}{event.id === activeEventId ? ' (aktiv)' : ''}
+                        </option>
+                      ))}
+                    </select>
+                    {selectedEvent && (
+                      <span
+                        className={`self-start rounded-full px-2.5 py-1 text-xs font-semibold ${selectedIsActive
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-slate-100 text-slate-500'
+                          }`}
+                      >
+                        {selectedIsActive ? 'Aktiv' : 'Inaktiv'}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
               <div className="pt-4 pb-2">
                 <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Verwaltung</p>
               </div>
