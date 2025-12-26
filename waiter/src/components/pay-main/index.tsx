@@ -106,6 +106,10 @@ export function PayDetail({
     const id = oi.id ?? "";
     return sum + ((itemMarks[id] || 0) * oi.price);
   }, 0);
+  const markedCount = orderitems.reduce((sum, oi) => {
+    const id = oi.id ?? "";
+    return sum + (itemMarks[id] || 0);
+  }, 0);
   const parsedReceived = Number(receivedAmount.replace(",", "."));
   const receivedValue = Number.isFinite(parsedReceived) ? parsedReceived : 0;
   const changeValue = receivedValue - markedAmount;
@@ -454,7 +458,7 @@ export function PayDetail({
           <button
             className="rounded-md bg-primary px-4 py-2 text-primary-contrast inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
             onClick={onPaySelected}
-            disabled={markedAmount === 0 || isPaying || isPrinting}
+            disabled={markedCount === 0 || isPaying || isPrinting}
           >
             <IconLabel icon={<HandCoins size={16} />}>
               {isPaying ? 'Zahlung läuft...' : `Ausgewählte bezahlen (€ ${markedAmount.toFixed(2)})`}
