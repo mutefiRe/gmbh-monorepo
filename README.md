@@ -177,6 +177,15 @@ Run each service in its folder:
 - Build the UIs before packaging: run `npm --prefix waiter run build` and `npm --prefix admin run build` so the generated `dist` folders exist for the production bundle.
 - Copy the `prod/` folder together with the built `admin/dist` and `waiter/dist` into a production host. Inside `prod/` run `make up` (or `./Makefile` targets) to use the standalone compose stack that already wires nginx, certs, fake printer, Dozzle, update API, etc.
 - The `prod/` compose mounts the baked UI assets (`../admin/dist`, `../waiter/dist`), uses pinned Docker images, and brings up nginx with the same configuration as the dev proxy but pointing to the production services.
+- Single-image transfer (example: API):
+  ```sh
+  IMAGE=gmbh-api CONTEXT=api TAG=latest REMOTE=gmbh@192.168.100.100 make transfer-image
+  ```
+  On the target host:
+  ```sh
+  docker load -i /tmp/gmbh-api_latest.tar
+  docker tag gmbh-api:latest gmbh-api:latest
+  ```
 
 ## Makefile targets
 

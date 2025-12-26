@@ -90,3 +90,7 @@ endif
 .PHONY: release-images
 release-images:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 DOCKER_REGISTRY=$(RELEASE_REGISTRY) DOCKER_REPO=$(RELEASE_REPO) FORCE_LATEST=$(FORCE_LATEST) RELEASE_SERVICE=$(RELEASE_SERVICE) node scripts/release-images.js --tag "$(RELEASE_TAG)"
+
+.PHONY: transfer-image
+transfer-image:
+	IMAGE=$(IMAGE) CONTEXT=$(CONTEXT) DOCKERFILE=$(DOCKERFILE) TAG=$(TAG) REMOTE=$(REMOTE) REMOTE_PATH=$(REMOTE_PATH) bash scripts/transfer-image.sh
