@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dialog } from './Dialog';
 import { Edit2, Trash2, X, Check } from 'lucide-react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -50,8 +50,15 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
   const params = useParams();
   const navigate = useNavigate();
   const isModalOpen = editingItem !== null;
+  const dirtyRef = useRef(false);
+  const editKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
+    const nextKey = params.id ? String(params.id) : null;
+    const keyChanged = editKeyRef.current !== nextKey;
+    if (!keyChanged && dirtyRef.current) {
+      return;
+    }
     let item: Partial<T> | null = null;
     if (params.id === 'new') {
       item = { ...(newDefaults || {}) } as Partial<T>;
@@ -66,6 +73,8 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
       item = data.find(d => String(d.id) === params.id) || null;
     }
     setEditingItem(item);
+    editKeyRef.current = nextKey;
+    dirtyRef.current = false;
   }, [params.id, data]);
 
   const handleSave = (e: React.FormEvent) => {
@@ -115,10 +124,13 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
   const closeModal = () => {
     navigate('..', { relative: 'path' });
     setEditingItem(null);
+    dirtyRef.current = false;
+    editKeyRef.current = null;
   };
 
   const handleFieldChange = (key: keyof T, value: any) => {
     if (editingItem) {
+      dirtyRef.current = true;
       setEditingItem({ ...editingItem, [key]: value });
     }
   };
