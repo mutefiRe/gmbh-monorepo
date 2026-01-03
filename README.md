@@ -81,7 +81,7 @@ sequenceDiagram
 
 ### API design
 
-- OpenAPI-first: endpoints are defined in `api/openapi/openapi.yaml`.
+- OpenAPI-first: endpoints are defined in `packages/api/openapi/openapi.yaml`.
 - Validation is handled by `express-openapi-validator`.
 - API is CommonJS (for compatibility); UI projects are ESM.
 - Structured logging with request logs only on debug, errors always logged.
@@ -106,11 +106,11 @@ sequenceDiagram
 
 ## Subprojects
 
-- API: `api/README.md`
-- Admin UI: `admin/README.md`
-- Waiter UI: `waiter/README.md`
-- Printer API: `printer-api/README.md`
-- Fake printer: `fake-printer/README.md`
+- API: `packages/api/README.md`
+- Admin UI: `packages/admin/README.md`
+- Waiter UI: `packages/waiter/README.md`
+- Printer API: `packages/printer-api/README.md`
+- Fake printer: `packages/fake-printer/README.md`
 - Nginx config: `nginx/README.md`
 - CUPS config: `cups/README.md`
 
@@ -136,11 +136,11 @@ Reset data volumes (destructive):
 
 Run each service in its folder:
 
-- API: `npm --prefix api install` then `npm --prefix api run dev`
-- Admin: `npm --prefix admin install` then `npm --prefix admin run dev`
-- Waiter: `npm --prefix waiter install` then `npm --prefix waiter run dev`
-- Printer API: `make -C printer-api run`
-- Fake printer: `npm --prefix fake-printer install` then `npm --prefix fake-printer run dev`
+- API: `npm --prefix packages/api install` then `npm --prefix packages/api run dev`
+- Admin: `npm --prefix packages/admin install` then `npm --prefix packages/admin run dev`
+- Waiter: `npm --prefix packages/waiter install` then `npm --prefix packages/waiter run dev`
+- Printer API: `make -C packages/printer-api run`
+- Fake printer: `npm --prefix packages/fake-printer install` then `npm --prefix packages/fake-printer run dev`
 
 ## Default credentials
 
@@ -168,18 +168,18 @@ Run each service in its folder:
 ## Docker Compose structure
 
 - `docker-compose.yml` defines the full stack with build contexts so a plain `docker compose up` builds and runs all services (API, admin, waiter, nginx, printers, and utilities).
-- `docker-compose.dev.yml` only overrides the API command and mounts MySQL init scripts, while nginx proxies to the host dev servers for admin/waiter. Use `make up-dev`/`make up-dev-d` and run `npm --prefix admin run dev` + `npm --prefix waiter run dev` locally.
+- `docker-compose.dev.yml` only overrides the API command and mounts MySQL init scripts, while nginx proxies to the host dev servers for admin/waiter. Use `make up-dev`/`make up-dev-d` and run `npm --prefix packages/admin run dev` + `npm --prefix packages/waiter run dev` locally.
 - The chaos/test targets explicitly layer their overrides on top of `docker-compose.yml` to avoid pulling in the dev overrides.
 - Production stays isolated in `prod/` with its own `docker-compose.yml` and Makefile, so you can copy `prod/` to a server and run `make up` there without the rest of the repo.
 
 ## Production
 
-- Build the UIs before packaging: run `npm --prefix waiter run build` and `npm --prefix admin run build` so the generated `dist` folders exist for the production bundle.
-- Copy the `prod/` folder together with the built `admin/dist` and `waiter/dist` into a production host. Inside `prod/` run `make up` (or `./Makefile` targets) to use the standalone compose stack that already wires nginx, certs, fake printer, Dozzle, update API, etc.
-- The `prod/` compose mounts the baked UI assets (`../admin/dist`, `../waiter/dist`), uses pinned Docker images, and brings up nginx with the same configuration as the dev proxy but pointing to the production services.
+- Build the UIs before packaging: run `npm --prefix packages/waiter run build` and `npm --prefix packages/admin run build` so the generated `dist` folders exist for the production bundle.
+- Copy the `prod/` folder together with the built `packages/admin/dist` and `packages/waiter/dist` into a production host. Inside `prod/` run `make up` (or `./Makefile` targets) to use the standalone compose stack that already wires nginx, certs, fake printer, Dozzle, update API, etc.
+- The `prod/` compose mounts the baked UI assets (`../packages/admin/dist`, `../packages/waiter/dist`), uses pinned Docker images, and brings up nginx with the same configuration as the dev proxy but pointing to the production services.
 - Single-image transfer (example: API):
   ```sh
-  IMAGE=gmbh-api CONTEXT=api TAG=latest REMOTE=gmbh@192.168.100.100 make transfer-image
+  IMAGE=gmbh-api CONTEXT=packages/api TAG=latest REMOTE=gmbh@192.168.100.100 make transfer-image
   ```
   On the target host:
   ```sh

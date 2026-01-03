@@ -12,7 +12,7 @@ services:
       - mysql_data:/var/lib/mysql
 
   api:
-    build: api/
+    build: packages/api/
     ports:
       - "8080:8080"
     environment:
@@ -34,7 +34,7 @@ services:
 
   admin:
     build:
-      context: admin/
+      context: packages/admin/
       args:
         VITE_API_TARGET: "http://api:8080"
         VITE_BASE: "/admin/"
@@ -43,7 +43,7 @@ services:
 
   waiter:
     build:
-      context: waiter/
+      context: packages/waiter/
       args:
         VITE_API_TARGET: "http://api:8080"
     depends_on:
@@ -64,7 +64,7 @@ services:
       - dozzle
 
   fake-printer:
-    build: fake-printer/
+    build: packages/fake-printer/
     ports:
       - "9100:9100"
       - "9101:9101"
@@ -75,11 +75,11 @@ services:
       HOST: "0.0.0.0"
 
   printer-api:
-    build: printer-api/
+    build: packages/printer-api/
     ports:
       - "8761:8761"
     env_file:
-      - printer-api/.env
+      - packages/printer-api/.env
     environment:
       EXTRA_PRINTER_HOSTS: "fake-printer,localhost,host.docker.internal"
     depends_on:

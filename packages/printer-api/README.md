@@ -6,8 +6,8 @@ Stateless discovery + print + status API for ESC/POS printers. Design goal: run 
 
 ## API docs
 
-- OpenAPI spec: `api/spec/openapi.yaml`
-- Generated server/types: `api/gen/openapi.gen.go`
+- OpenAPI spec: `packages/printer-api/api/spec/openapi.yaml`
+- Generated server/types: `packages/printer-api/api/gen/openapi.gen.go`
 - Swagger UI: `http://localhost:8761/docs`
 - Raw spec: `http://localhost:8761/openapi.yaml`
 - Metrics (Prometheus text): `http://localhost:8761/metrics`

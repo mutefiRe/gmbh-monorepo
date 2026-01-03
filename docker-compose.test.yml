@@ -2,7 +2,7 @@ services:
   api:
     image: local/gmbh-api-test
     build:
-      context: ./api
+      context: ./packages/api
       dockerfile: Dockerfile
     environment:
       NODE_ENV: test

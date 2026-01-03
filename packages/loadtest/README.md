@@ -31,18 +31,18 @@ Optional:
 ## Run with Node
 
 ```bash
-npm --prefix loadtest install
+npm --prefix packages/loadtest install
 BASE_URL=http://192.168.1.10:8080 \
 ADMIN_USER=admin \
 ADMIN_PASS=bierh0len! \
-npm --prefix loadtest run start
+npm --prefix packages/loadtest run start
 ```
 
 ## Run with Docker
 
 Build:
 ```bash
-docker build -t gmbh-loadtest ./loadtest
+docker build -t gmbh-loadtest ./packages/loadtest
 ```
 
 Run (same network, direct IP):
@@ -76,7 +76,7 @@ If you hit a self-signed certificate:
 ```bash
 INSECURE_TLS=1 BASE_URL=https://192.168.1.10 \
 ADMIN_USER=admin ADMIN_PASS=bierh0len! \
-npm --prefix loadtest run start
+npm --prefix packages/loadtest run start
 ```
 
 ## Run with Docker Compose (official image)
@@ -86,7 +86,7 @@ BASE_URL=http://192.168.1.10:8080 \
 ADMIN_USER=admin \
 ADMIN_PASS=bierh0len! \
 WAITERS_LIST=t1:geh1,t2:geh2,t3:geh3,t4:geh4,t5:geh5,t6:geh6,t7:geh7,t8:geh8 \
-docker compose -f loadtest/docker-compose.yml up --abort-on-container-exit
+docker compose -f packages/loadtest/docker-compose.yml up --abort-on-container-exit
 ```
 
 ## Notes

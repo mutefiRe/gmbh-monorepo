@@ -34,7 +34,7 @@ npm run migrate
 ## OpenAPI / Swagger
 - Swagger UI: `http://localhost:8080/docs`
 - JSON spec: `http://localhost:8080/openapi.json`
-- Source: `openapi/openapi.yaml`
+- Source: `packages/api/openapi/openapi.yaml`
 
 ## Printing
 This service proxies printing via the Go printer API.

@@ -10,7 +10,7 @@ function readPackageVersion(packagePath) {
 }
 
 function readPrinterVersion() {
-  const versionFile = path.join(__dirname, "..", "printer-api", "version", "version.go");
+  const versionFile = path.join(__dirname, "..", "packages", "printer-api", "version", "version.go");
   const content = fs.readFileSync(versionFile, "utf-8");
   const match = content.match(/Version\s*=\s*"([^"]+)"/);
   if (!match) {
@@ -25,8 +25,8 @@ function getVersions() {
     admin: readPackageVersion(path.join(__dirname, "..", "admin", "package.json")),
     waiter: readPackageVersion(path.join(__dirname, "..", "waiter", "package.json")),
     printerApi: readPrinterVersion(),
-    fakePrinter: readPackageVersion(path.join(__dirname, "..", "fake-printer", "package.json")),
-    updateApi: readPackageVersion(path.join(__dirname, "..", "update-api", "package.json"))
+    fakePrinter: readPackageVersion(path.join(__dirname, "..", "packages", "fake-printer", "package.json")),
+    updateApi: readPackageVersion(path.join(__dirname, "..", "packages", "update-api", "package.json"))
   };
 }
 

@@ -4,7 +4,7 @@ services:
   api:
     command: sh -c "npm install && NODE_ENV=development npm run dev"
     volumes:
-      - ./api:/app/api
+      - ./packages/api:/app/api
       - api_node_modules:/app/api/node_modules
     environment:
       NODE_ENV: development

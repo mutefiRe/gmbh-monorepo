@@ -35,12 +35,12 @@ const branch =
 const canPushLatest = forceLatest || releaseTag !== "latest" || branch === "main";
 
 const services = [
-  { name: "api", versionKey: "api", image: "gmbh-api", context: "api", dockerfile: "api/Dockerfile" },
-  { name: "printer-api", versionKey: "printerApi", image: "gmbh-printer-api", context: "printer-api", dockerfile: "printer-api/Dockerfile" },
-  { name: "fake-printer", versionKey: "fakePrinter", image: "gmbh-fake-printer", context: "fake-printer", dockerfile: "fake-printer/Dockerfile" },
-  { name: "admin", versionKey: "admin", image: "gmbh-admin", context: "admin", dockerfile: "admin/Dockerfile" },
-  { name: "waiter", versionKey: "waiter", image: "gmbh-waiter", context: "waiter", dockerfile: "waiter/Dockerfile" },
-  { name: "update-api", versionKey: "updateApi", image: "gmbh-update-api", context: "update-api", dockerfile: "update-api/Dockerfile" }
+  { name: "api", versionKey: "api", image: "gmbh-api", context: "packages/api", dockerfile: "packages/api/Dockerfile" },
+  { name: "printer-api", versionKey: "printerApi", image: "gmbh-printer-api", context: "packages/printer-api", dockerfile: "packages/printer-api/Dockerfile" },
+  { name: "fake-printer", versionKey: "fakePrinter", image: "gmbh-fake-printer", context: "packages/fake-printer", dockerfile: "packages/fake-printer/Dockerfile" },
+  { name: "admin", versionKey: "admin", image: "gmbh-admin", context: "packages/admin", dockerfile: "packages/admin/Dockerfile" },
+  { name: "waiter", versionKey: "waiter", image: "gmbh-waiter", context: "packages/waiter", dockerfile: "packages/waiter/Dockerfile" },
+  { name: "update-api", versionKey: "updateApi", image: "gmbh-update-api", context: "packages/update-api", dockerfile: "packages/update-api/Dockerfile" }
 ];
 
 const selectedServices = releaseService
