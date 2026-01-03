@@ -1,5 +1,9 @@
 services:
   api:
+    image: local/gmbh-api-test
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     environment:
       NODE_ENV: test
       GMBH_DB_NAME: ${GMBH_DB_NAME:-gmbh_test}
@@ -8,6 +12,12 @@ services:
     command: ["npm", "test"]
 
   mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-gmbh_test}
+      MYSQL_USER: gmbh
+      MYSQL_PASSWORD: gmbh
+      MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
       - mysql_test_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
