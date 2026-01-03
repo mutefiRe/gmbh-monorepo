@@ -8,7 +8,7 @@ require (
 	github.com/google/gousb v2.1.0+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/oapi-codegen/oapi-codegen/v2 v2.5.1
-	github.com/oapi-codegen/runtime v1.1.1
+	github.com/oapi-codegen/runtime v1.1.2
 	go.uber.org/zap v1.27.0
 )
 
