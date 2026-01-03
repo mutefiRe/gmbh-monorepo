@@ -1,8 +1,9 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryCache, QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
+import { StatisticsPage } from './pages/StatisticsPage';
 import { ItemsPage } from './pages/ItemsPage';
 import { UsersPage } from './pages/UsersPage';
 import { AreasPage } from './pages/AreasPage';
@@ -15,20 +16,9 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { api } from './services/api';
 import { Item, User, Area, Table, Category, Order, Unit, Printer } from './types';
 import { NotificationProvider, useNotification } from './components/NotificationProvider';
-import { SettingsPage } from './pages/SettingsPage';
 import { EventsPage } from './pages/EventsPage';
 import { UpdatePage } from './pages/UpdatePage';
 import { useRealtimeUpdates } from './hooks/useRealtimeUpdates';
-
-// Create Query Client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
-    },
-  },
-});
 
 type AppContextType = {
   items: Item[];
@@ -42,6 +32,8 @@ type AppContextType = {
   updateUser: (user: User) => void;
   addUser: (user: Partial<User>) => void;
   deleteUser: (id: number) => void;
+  usersLoading: boolean;
+  usersSaving: boolean;
 
   areas: Area[];
   setAreas: (areas: Area[]) => void;
@@ -66,6 +58,8 @@ type AppContextType = {
   deletePrinter: (id: number) => void;
   scanPrinters: () => void;
   isScanningPrinters: boolean;
+  printersLoading: boolean;
+  printersSaving: boolean;
 
   categories: Category[];
   addCategory: (category: Partial<Category>) => void;
@@ -292,10 +286,12 @@ const AuthenticatedApp = () => {
   });
 
   const itemsSaving = createItemMutation.isPending || updateItemMutation.isPending || deleteItemMutation.isPending;
+  const usersSaving = createUserMutation.isPending || updateUserMutation.isPending || deleteUserMutation.isPending;
   const categoriesSaving = createCategoryMutation.isPending || updateCategoryMutation.isPending || deleteCategoryMutation.isPending;
   const areasSaving = createAreaMutation.isPending || updateAreaMutation.isPending || deleteAreaMutation.isPending;
   const tablesSaving = createTableMutation.isPending || updateTableMutation.isPending || deleteTableMutation.isPending;
   const unitsSaving = createUnitMutation.isPending || updateUnitMutation.isPending || deleteUnitMutation.isPending;
+  const printersSaving = createPrinterMutation.isPending || updatePrinterMutation.isPending || deletePrinterMutation.isPending;
 
   if (!isAuthenticated) {
     return <LoginPage />;
@@ -315,6 +311,8 @@ const AuthenticatedApp = () => {
       updateUser: (u) => updateUserMutation.mutate(u),
       addUser: (u) => createUserMutation.mutate(u),
       deleteUser: (id) => deleteUserMutation.mutate(id),
+      usersLoading,
+      usersSaving,
 
       areas,
       updateArea: (a) => updateAreaMutation.mutate(a),
@@ -337,6 +335,8 @@ const AuthenticatedApp = () => {
       deletePrinter: (id) => deletePrinterMutation.mutate(id),
       scanPrinters: () => scanPrintersMutation.mutate(),
       isScanningPrinters: scanPrintersMutation.isPending,
+      printersLoading,
+      printersSaving,
 
       categories,
       addCategory: (c) => createCategoryMutation.mutate(c),
@@ -360,11 +360,11 @@ const AuthenticatedApp = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/statistics" element={<StatisticsPage />} />
             <Route path="/items" element={<ItemsPage />} />
             <Route path="/items/:id" element={<ItemsPage />} />
             <Route path="/users/:id" element={<UsersPage />} />
             <Route path="/users" element={<UsersPage />} />
-            <Route path="/areas/new" element={<AreasPage />} />
             <Route path="/areas/:id/tables" element={<AreasPage />} />
             <Route path="/areas/:id" element={<AreasPage />} />
             <Route path="/areas" element={<AreasPage />} />
@@ -373,9 +373,9 @@ const AuthenticatedApp = () => {
             <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/units/:id" element={<UnitsPage />} />
             <Route path="/units" element={<UnitsPage />} />
+            <Route path="/printers/:id" element={<PrintersPage />} />
             <Route path="/printers" element={<PrintersPage />} />
             <Route path="/events" element={<EventsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/update" element={<UpdatePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
@@ -388,11 +388,11 @@ const AuthenticatedApp = () => {
 const App = () => {
   return (
     <NotificationProvider>
-      <QueryClientProvider client={queryClient}>
+      <QueryProvider>
         <AuthProvider>
           <AuthenticatedApp />
         </AuthProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     </NotificationProvider >
   );
 };
@@ -406,3 +406,41 @@ export function useAppContext(): AppContextType {
   }
   return context;
 }
+
+const QueryProvider = ({ children }: { children: React.ReactNode }) => {
+  const { notify } = useNotification();
+  const notifyRef = React.useRef(notify);
+  const lastErrorsRef = React.useRef<Map<string, number>>(new Map());
+
+  React.useEffect(() => {
+    notifyRef.current = notify;
+  }, [notify]);
+
+  const [queryClient] = React.useState(() => new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        const key = JSON.stringify(query.queryKey ?? []);
+        const now = Date.now();
+        const last = lastErrorsRef.current.get(key) ?? 0;
+        if (now - last < 5000) {
+          return;
+        }
+        lastErrorsRef.current.set(key, now);
+        const message = error instanceof Error ? error.message : 'Unbekannter Fehler';
+        notifyRef.current(`Laden fehlgeschlagen: ${message}`, 'error');
+      }
+    }),
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        retry: 1,
+      },
+    },
+  }));
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
+  );
+};

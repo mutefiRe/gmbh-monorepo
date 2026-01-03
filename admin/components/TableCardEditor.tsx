@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Edit2, Plus, Trash2, X, Check } from 'lucide-react';
+import { Edit2, Trash2, X, Check } from 'lucide-react';
 import { PrimaryButton } from './PrimaryButton';
 import { CategoryIcon } from '../lib/categoryIcons';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -28,6 +28,7 @@ interface TableCardEditorProps<T> {
     inline?: boolean;
   }[];
   dialogHint?: React.ReactNode;
+  headerActions?: React.ReactNode;
 
 }
 
@@ -42,7 +43,8 @@ export function TableCardEditor<T extends { id: any }>({
   onEdit,
   onDelete,
   fields,
-  dialogHint
+  dialogHint,
+  headerActions
 }: TableCardEditorProps<T> & { categories?: { id: any; name: string; icon?: string }[] }) {
 
   // Filter and sorting state
@@ -58,6 +60,13 @@ export function TableCardEditor<T extends { id: any }>({
     let item: Partial<T> | null = null;
     if (params.id === 'new') {
       item = {} as Partial<T>;
+      fields
+        .filter((field) => field.type === 'boolean' && field.key === 'enabled')
+        .forEach((field) => {
+          if (item && item[field.key] === undefined) {
+            item[field.key] = true as T[keyof T];
+          }
+        });
     } else if (params.id) {
       item = data.find(d => String(d.id) === params.id) || null;
     }
@@ -68,16 +77,34 @@ export function TableCardEditor<T extends { id: any }>({
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingItem && 'id' in editingItem && editingItem.id) {
-      onEdit(editingItem as T);
-    } else if (editingItem) {
-      onAdd(editingItem);
+    if (!editingItem) return;
+
+    const payload = { ...editingItem } as Partial<T>;
+    fields
+      .filter((field) => field.type === 'number')
+      .forEach((field) => {
+        const rawValue = payload[field.key];
+        if (rawValue === '' || rawValue === null || rawValue === undefined) {
+          delete payload[field.key];
+          return;
+        }
+        if (typeof rawValue === 'string') {
+          const normalized = rawValue.replace(',', '.');
+          const parsed = Number(normalized);
+          if (Number.isNaN(parsed)) {
+            delete payload[field.key];
+          } else {
+            payload[field.key] = parsed as any;
+          }
+        }
+      });
+
+    if ('id' in payload && payload.id) {
+      onEdit(payload as T);
+    } else {
+      onAdd(payload);
     }
     closeModal();
-  };
-
-  const openAddModal = () => {
-    navigate('/items/new');
   };
 
   const openEditModal = (item: T) => {
@@ -168,17 +195,9 @@ export function TableCardEditor<T extends { id: any }>({
             <p className="text-sm text-slate-500 mt-1">{description}</p>
           )}
         </div>
-        <button
-          onClick={openAddModal}
-          disabled={isLoading || isSaving}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors shadow-sm font-semibold active:scale-95 ${isLoading || isSaving
-            ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-            : 'bg-primary-600 text-white hover:bg-primary-700'
-            }`}
-        >
-          <Plus size={20} />
-          {isSaving ? 'Speichert...' : 'Hinzufügen'}
-        </button>
+        <div className="flex items-center gap-3">
+          {headerActions}
+        </div>
       </div>
       <div className="flex items-center gap-2 mb-2">
         <input
@@ -354,10 +373,11 @@ export function TableCardEditor<T extends { id: any }>({
                             </select>
                           ) : (
                             <input
-                              type={field.type}
+                              type={field.type === 'number' ? 'text' : field.type}
+                              inputMode={field.type === 'number' ? 'decimal' : undefined}
                               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
-                              value={editingItem?.[field.key] as string || ''}
-                              onChange={(e) => handleFieldChange(field.key, field.type === 'number' ? Number(e.target.value) : e.target.value)}
+                              value={(editingItem?.[field.key] as string | number | undefined) ?? ''}
+                              onChange={(e) => handleFieldChange(field.key, e.target.value)}
                               placeholder={`${field.label} eingeben`}
                             />
                           )}

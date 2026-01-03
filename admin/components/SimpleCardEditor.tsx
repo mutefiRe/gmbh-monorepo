@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dialog } from './Dialog';
-import { Edit2, Plus, Trash2, X, Check } from 'lucide-react';
+import { Edit2, Trash2, X, Check } from 'lucide-react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { PrimaryButton } from './PrimaryButton';
 
@@ -10,12 +10,13 @@ interface SimpleCardEditorProps<T> {
   description?: React.ReactNode;
   isLoading?: boolean;
   isSaving?: boolean;
+  newDefaults?: Partial<T>;
   renderCard: (item: T) => React.ReactNode;
   onAdd: (item: Partial<T>) => void;
   onEdit: (item: T) => void;
   onDelete: (id: any) => void;
-  fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select' | 'emoji' | 'icon' | 'color' | 'password'; options?: { label: string; value: any; icon?: React.ReactNode }[], optional?: boolean }[];
-  customActions?: React.ReactNode;
+  fields: { key: keyof T; label: string; type: 'text' | 'number' | 'boolean' | 'select' | 'emoji' | 'icon' | 'color' | 'password'; options?: { label: string; value: any; icon?: React.ReactNode }[], optional?: boolean; readOnly?: boolean }[];
+  headerActions?: React.ReactNode;
   gridClassName?: string; // Allows customizing the grid layout
   dialogHint?: React.ReactNode;
 }
@@ -40,7 +41,8 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
   onEdit,
   onDelete,
   fields,
-  customActions,
+  newDefaults,
+  headerActions,
   gridClassName,
   dialogHint
 }: SimpleCardEditorProps<T>) => {
@@ -48,25 +50,72 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
   const params = useParams();
   const navigate = useNavigate();
   const isModalOpen = editingItem !== null;
-  const isBusy = isLoading || isSaving;
+  const dirtyRef = useRef(false);
+  const editKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
+    const nextKey = params.id ? String(params.id) : null;
+    const keyChanged = editKeyRef.current !== nextKey;
+    if (!keyChanged && dirtyRef.current) {
+      return;
+    }
     let item: Partial<T> | null = null;
     if (params.id === 'new') {
-      item = {} as Partial<T>;
+      item = { ...(newDefaults || {}) } as Partial<T>;
+      fields
+        .filter((field) => field.type === 'boolean' && field.key === 'enabled')
+        .forEach((field) => {
+          if (item && item[field.key] === undefined) {
+            item[field.key] = true as T[keyof T];
+          }
+        });
     } else if (params.id) {
       item = data.find(d => String(d.id) === params.id) || null;
     }
     setEditingItem(item);
+    editKeyRef.current = nextKey;
+    dirtyRef.current = false;
   }, [params.id, data]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingItem && 'id' in editingItem && editingItem.id) {
+    if (!editingItem) {
+      return;
+    }
+
+    const payload = { ...editingItem } as Partial<T>;
+    fields
+      .filter((field) => field.type === 'number')
+      .forEach((field) => {
+        const rawValue = payload[field.key];
+        if (rawValue === '' || rawValue === null || rawValue === undefined) {
+          delete payload[field.key];
+          return;
+        }
+        if (typeof rawValue === 'string') {
+          const normalized = rawValue.replace(',', '.');
+          const parsed = Number(normalized);
+          if (Number.isNaN(parsed)) {
+            delete payload[field.key];
+          } else {
+            payload[field.key] = parsed as any;
+          }
+        }
+      });
+    fields
+      .filter((field) => field.type === 'select')
+      .forEach((field) => {
+        const rawValue = payload[field.key];
+        if (field.optional && (rawValue === '' || rawValue === undefined)) {
+          payload[field.key] = null as any;
+        }
+      });
+
+    if ('id' in payload && payload.id) {
       // @ts-ignore - We know it's a T
-      onEdit(editingItem as T);
-    } else if (editingItem) {
-      onAdd(editingItem);
+      onEdit(payload as T);
+    } else {
+      onAdd(payload);
     }
     closeModal();
   };
@@ -75,10 +124,13 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
   const closeModal = () => {
     navigate('..', { relative: 'path' });
     setEditingItem(null);
+    dirtyRef.current = false;
+    editKeyRef.current = null;
   };
 
   const handleFieldChange = (key: keyof T, value: any) => {
     if (editingItem) {
+      dirtyRef.current = true;
       setEditingItem({ ...editingItem, [key]: value });
     }
   };
@@ -105,23 +157,7 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
           )}
         </div>
         <div className="flex items-center gap-3">
-          {customActions}
-          <Link
-            to={'new'}
-            component="button"
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors shadow-sm font-semibold active:scale-95 ${isBusy
-              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-              : 'bg-primary-600 text-white hover:bg-primary-700'
-              }`}
-            onClick={(event) => {
-              if (isBusy) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <Plus size={20} />
-            {isSaving ? 'Speichert...' : 'Hinzufügen'}
-          </Link>
+          {headerActions}
         </div>
       </div>
 
@@ -204,7 +240,7 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
             }
             className="max-w-lg"
           >
-            <form id="simple-card-editor-form" onSubmit={handleSave} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+            <form id="simple-card-editor-form" onSubmit={handleSave} className="p-6 space-y-4">
               {dialogHint && (
                 <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                   {dialogHint}
@@ -216,18 +252,21 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
                   case 'text':
                     fieldComponent = <input
                       type="text"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
+                      className={`w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900 ${field.readOnly ? 'bg-slate-100 text-slate-500' : ''}`}
                       value={editingItem?.[field.key] as string || ''}
                       onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      readOnly={field.readOnly}
                       placeholder={`${field.label} eingeben`}
                     />;
                     break;
                   case 'number':
                     fieldComponent = <input
-                      type="number"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
-                      value={editingItem?.[field.key] as number || ''}
-                      onChange={(e) => handleFieldChange(field.key, Number(e.target.value))}
+                      type="text"
+                      inputMode="decimal"
+                      className={`w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900 ${field.readOnly ? 'bg-slate-100 text-slate-500' : ''}`}
+                      value={(editingItem?.[field.key] as number | string | undefined) ?? ''}
+                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      readOnly={field.readOnly}
                       placeholder={`${field.label} eingeben`}
                     />;
                     break;
@@ -245,9 +284,10 @@ export const SimpleCardEditor = <T extends { id: any; name?: string }>({
                     break;
                   case 'select':
                     fieldComponent = <select
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900 disabled:bg-slate-100 disabled:text-slate-500"
                       value={editingItem?.[field.key] as string}
                       onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      disabled={field.readOnly}
                     >
                       <option value="">Bitte wählen</option>
                       {field.options?.map(opt => (

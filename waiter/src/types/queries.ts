@@ -94,10 +94,11 @@ export const useItem = (id: string) => useQuery<Item>({ queryKey: ['item', id], 
 export const useOrganizations = () => useQuery<Organization[]>({ queryKey: ['organizations'], queryFn: () => apiFetch<Organization[]>('/api/organizations') });
 export const useOrganization = (id: string) => useQuery<Organization>({ queryKey: ['organization', id], queryFn: () => apiFetch<Organization>(`/api/organizations/${id}`) });
 
-export const useOrders = (skip = 0, limit?: number) =>
+export const useOrders = (skip = 0, limit?: number, options?: QueryOptions<{ orders: Order[]; count: number; total: number }>) =>
   useQuery<{ orders: Order[]; count: number; total: number }>({
     queryKey: ['orders', skip, limit],
-    queryFn: () => apiFetch<{ orders: Order[]; count: number; total: number }>(`/api/orders?skip=${skip}${typeof limit === 'number' ? `&limit=${limit}` : ''}`)
+    queryFn: () => apiFetch<{ orders: Order[]; count: number; total: number }>(`/api/orders?skip=${skip}${typeof limit === 'number' ? `&limit=${limit}` : ''}`),
+    ...options
   });
 
 export const useOrder = (id: string) => useQuery<{ order: Order }>({ queryKey: ['order', id], queryFn: () => apiFetch<{ order: Order }>(`/api/orders/${id}`) });
@@ -141,11 +142,11 @@ export const useUnits = (options?: QueryOptions<{ units: Unit[] }>) =>
 export const useUnit = (id: string) => useQuery<Unit>({ queryKey: ['unit', id], queryFn: () => apiFetch<Unit>(`/api/units/${id}`) });
 
 export const useUsers = () => useQuery<User[]>({ queryKey: ['users'], queryFn: () => apiFetch<User[]>('/api/users') });
-export const useUser = (id: string, options?: QueryOptions<User>) => useQuery<User>({
+export const useUser = (id: string, options?: QueryOptions<{ user: User }>) => useQuery<{ user: User }>({
   queryKey: ['user', id],
   queryFn: async () => {
     try {
-      return await apiFetch<User>(`/api/users/${id}`);
+      return await apiFetch<{ user: User }>(`/api/users/${id}`);
     } catch (err: any) {
       // Only handle 400 for the current user
       if (err instanceof Error && err.message && typeof window !== 'undefined') {

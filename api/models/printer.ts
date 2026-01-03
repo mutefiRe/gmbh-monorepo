@@ -2,7 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   const Printer = sequelize.define("printer", {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
     systemName: { type: DataTypes.STRING, allowNull: false, unique: true },
-    name: { type: DataTypes.STRING, allowNull: true, unique: false }
+    name: { type: DataTypes.STRING, allowNull: true, unique: false },
+    enabled: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
   });
 
   Printer.associate = models => {

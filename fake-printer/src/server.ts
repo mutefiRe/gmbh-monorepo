@@ -15,6 +15,7 @@ type Segment = {
   text: string;
   bold: boolean;
   align: Align;
+  size: { width: number; height: number };
 };
 
 type Line = {
@@ -43,6 +44,7 @@ function parseEscPos(data: Buffer): Pick<Receipt, "hex" | "text" | "lines" | "co
   const commands: string[] = [];
   let align: Align = "left";
   let bold = false;
+  let size = { width: 1, height: 1 };
 
   let currentLine: Line = { segments: [] };
   let segment: Segment | null = null;
@@ -55,7 +57,7 @@ function parseEscPos(data: Buffer): Pick<Receipt, "hex" | "text" | "lines" | "co
   };
 
   const startSegment = () => {
-    segment = { text: "", bold, align };
+    segment = { text: "", bold, align, size };
   };
 
   const pushLine = (allowEmpty = true) => {
@@ -66,12 +68,17 @@ function parseEscPos(data: Buffer): Pick<Receipt, "hex" | "text" | "lines" | "co
     currentLine = { segments: [] };
   };
 
-  const setStyle = (nextAlign: Align, nextBold: boolean) => {
-    if (segment && (segment.bold !== nextBold || segment.align !== nextAlign)) {
+  const setStyle = (nextAlign: Align, nextBold: boolean, nextSize: { width: number; height: number }) => {
+    if (
+      segment &&
+      (segment.bold !== nextBold || segment.align !== nextAlign ||
+        segment.size.width !== nextSize.width || segment.size.height !== nextSize.height)
+    ) {
       pushSegment();
     }
     align = nextAlign;
     bold = nextBold;
+    size = nextSize;
   };
 
   for (let i = 0; i < data.length; i += 1) {
@@ -81,7 +88,7 @@ function parseEscPos(data: Buffer): Pick<Receipt, "hex" | "text" | "lines" | "co
       const next = data[i + 1];
       if (next === 0x40) {
         commands.push("init");
-        setStyle("left", false);
+        setStyle("left", false, { width: 1, height: 1 });
         i += 1;
         continue;
       }
@@ -89,7 +96,7 @@ function parseEscPos(data: Buffer): Pick<Receipt, "hex" | "text" | "lines" | "co
         const mode = data[i + 2];
         const nextAlign: Align = mode === 1 ? "center" : mode === 2 ? "right" : "left";
         commands.push(`align:${nextAlign}`);
-        setStyle(nextAlign, bold);
+        setStyle(nextAlign, bold, size);
         i += 2;
         continue;
       }
@@ -97,7 +104,24 @@ function parseEscPos(data: Buffer): Pick<Receipt, "hex" | "text" | "lines" | "co
         const mode = data[i + 2];
         const nextBold = mode === 1;
         commands.push(`bold:${nextBold ? "on" : "off"}`);
-        setStyle(align, nextBold);
+        setStyle(align, nextBold, size);
+        i += 2;
+        continue;
+      }
+      if (next === 0x74 && i + 2 < data.length) {
+        const table = data[i + 2];
+        commands.push(`charset:${table}`);
+        i += 2;
+        continue;
+      }
+      if (next === 0x21 && i + 2 < data.length) {
+        const mode = data[i + 2];
+        const nextSize = {
+          width: (mode & 0x20) === 0x20 ? 2 : 1,
+          height: (mode & 0x10) === 0x10 ? 2 : 1,
+        };
+        commands.push(`size:${nextSize.width}x${nextSize.height}`);
+        setStyle(align, bold, nextSize);
         i += 2;
         continue;
       }
@@ -124,6 +148,21 @@ function parseEscPos(data: Buffer): Pick<Receipt, "hex" | "text" | "lines" | "co
       const next = data[i + 1];
       if (next === 0x56 && i + 2 < data.length) {
         commands.push("cut");
+        i += 2;
+        continue;
+      }
+      if (next === 0x21 && i + 2 < data.length) {
+        const mode = data[i + 2];
+        const nextSize = {
+          width: (mode & 0x0f) + 1,
+          height: ((mode >> 4) & 0x0f) + 1,
+        };
+        const clamped = {
+          width: Math.min(nextSize.width, 4),
+          height: Math.min(nextSize.height, 4),
+        };
+        commands.push(`size:${clamped.width}x${clamped.height}`);
+        setStyle(align, bold, clamped);
         i += 2;
         continue;
       }
@@ -187,6 +226,22 @@ function createReceipt(data: Buffer, remote?: string): Receipt {
     commands: parsed.commands,
     remote,
   };
+}
+
+function isStatusProbe(data: Buffer): boolean {
+  if (data.length === 0 || data.length % 3 !== 0) {
+    return false;
+  }
+  for (let i = 0; i < data.length; i += 3) {
+    if (data[i] !== 0x10 || data[i + 1] !== 0x04) {
+      return false;
+    }
+    const code = data[i + 2];
+    if (code < 1 || code > 4) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function sendJson(res: http.ServerResponse, status: number, body: unknown) {
@@ -377,6 +432,8 @@ const html = `<!doctype html>
       font-size: 0.92rem;
       line-height: 1.35;
       border: 1px dashed rgba(15, 23, 42, 0.12);
+      user-select: text;
+      cursor: text;
     }
 
     .line {
@@ -401,7 +458,9 @@ const html = `<!doctype html>
     }
 
     .segment {
+      display: inline-block;
       white-space: pre;
+      user-select: text;
     }
 
     details {
@@ -462,15 +521,41 @@ const html = `<!doctype html>
     function renderLine(line) {
       const div = document.createElement('div');
       div.className = 'line';
+      div.style.userSelect = 'text';
+      div.style.cursor = 'text';
       const align = line.segments[0]?.align;
+      const maxHeight = line.segments.reduce((max, segment) => {
+        const height = segment.size?.height || 1;
+        return height > max ? height : max;
+      }, 1);
+      if (maxHeight !== 1) {
+        div.style.fontSize = (0.92 * maxHeight) + 'rem';
+        div.style.lineHeight = (1.35 * maxHeight) + '';
+      }
       if (align === 'center') div.classList.add('center');
       if (align === 'right') div.classList.add('right');
-      line.segments.forEach((segment) => {
+      if (align === 'center' || align === 'right') {
+        const combined = line.segments.map((segment) => segment.text).join('');
+        const trimmed = combined.trim();
         const span = document.createElement('span');
-        span.className = 'segment' + (segment.bold ? ' bold' : '');
-        span.textContent = segment.text;
+        span.className = 'segment';
+        span.textContent = trimmed || ' ';
         div.appendChild(span);
-      });
+      } else {
+        const segments = line.segments.map((segment) => ({
+          text: segment.text,
+          bold: segment.bold
+        }));
+        segments.forEach((segment) => {
+          if (segment.text.length === 0) {
+            return;
+          }
+          const span = document.createElement('span');
+          span.className = 'segment' + (segment.bold ? ' bold' : '');
+          span.textContent = segment.text;
+          div.appendChild(span);
+        });
+      }
       if (line.segments.length === 0) {
         const span = document.createElement('span');
         span.textContent = ' ';
@@ -527,7 +612,7 @@ const html = `<!doctype html>
     }
 
     async function loadQueue() {
-      const res = await fetch('/queue');
+      const res = await fetch('queue');
       const data = await res.json();
       data.receipts.forEach((receipt) => renderReceipt(receipt, false));
       if (data.receipts.length === 0) {
@@ -537,7 +622,7 @@ const html = `<!doctype html>
 
     loadQueue();
 
-    const events = new EventSource('/events');
+    const events = new EventSource('events');
     events.addEventListener('receipt', (event) => {
       const payload = JSON.parse(event.data);
       renderReceipt(payload.receipt, true);
@@ -611,7 +696,7 @@ function startPrintServer() {
       if (closed) return;
       closed = true;
       const data = Buffer.concat(chunks);
-      if (data.length === 0) return;
+      if (data.length === 0 || isStatusProbe(data)) return;
       const receipt = createReceipt(data, remote);
       console.log(JSON.stringify({ event: "print", receipt }));
       enqueueReceipt(receipt);

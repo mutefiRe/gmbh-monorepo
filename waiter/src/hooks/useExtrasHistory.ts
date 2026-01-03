@@ -1,36 +1,30 @@
+import { useEffect } from "react";
 import { useLocalStorage } from "./useLocalStorage";
+import { EXTRAS_HISTORY_EVENT, EXTRAS_HISTORY_KEY, getExtrasHistory, recordExtrasHistory } from "../lib/extrasHistory";
 
 type ExtrasHistory = Record<string, string[]>;
-
-const EXTRAS_HISTORY_KEY = "waiter_item_extras_history";
-
-function normalizeExtras(value: string | null | undefined) {
-  const trimmed = value?.trim();
-  return trimmed ? trimmed : null;
-}
 
 export function useExtrasHistory() {
   const [extrasHistory, setExtrasHistory] = useLocalStorage<ExtrasHistory>(EXTRAS_HISTORY_KEY, {});
 
   function recordExtrasForItems(items: Array<{ itemId: string; extras?: string | null }>) {
-    setExtrasHistory(prev => {
-      const next: ExtrasHistory = { ...prev };
-      for (const item of items) {
-        const extras = normalizeExtras(item.extras);
-        if (!extras) {
-          continue;
-        }
-        const key = String(item.itemId);
-        const existing = next[key] || [];
-        next[key] = [extras, ...existing.filter(entry => entry !== extras)].slice(0, 5);
-      }
-      return next;
-    });
+    recordExtrasHistory(items);
+    setExtrasHistory(getExtrasHistory({}));
   }
 
   function getSuggestions(itemId: string) {
     return extrasHistory[String(itemId)] || [];
   }
+
+  useEffect(() => {
+    const handler = () => setExtrasHistory(getExtrasHistory({}));
+    window.addEventListener(EXTRAS_HISTORY_EVENT, handler);
+    window.addEventListener("storage", handler);
+    return () => {
+      window.removeEventListener(EXTRAS_HISTORY_EVENT, handler);
+      window.removeEventListener("storage", handler);
+    };
+  }, [setExtrasHistory]);
 
   return { extrasHistory, getSuggestions, recordExtrasForItems };
 }

@@ -1,16 +1,15 @@
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, SlidersHorizontal } from "lucide-react";
 import type { Category, Item, OrderItem, Unit } from "../../../types/models";
 
-import { useLongPress, usePress } from '@react-aria/interactions'
-import { mergeProps } from '@react-aria/utils';
 
 
 import { Modal } from "../../../ui/modal";
 import { getCategoryColor } from "../../../lib/colors";
 import { itemAmountString } from "../../../lib/itemAmountString";
 import { useExtrasHistory } from "../../../hooks/useExtrasHistory";
+import { IconLabel } from "../../../ui/icon-label";
 
 type ProductListProps = {
   items: Item[];
@@ -19,6 +18,7 @@ type ProductListProps = {
   addItemToOrder: (item: OrderItem) => void;
   units: Unit[];
   orderItems: OrderItem[];
+  gridDensity?: "standard" | "compact";
 };
 
 export function ProductList({
@@ -27,7 +27,8 @@ export function ProductList({
   categories,
   addItemToOrder,
   units,
-  orderItems
+  orderItems,
+  gridDensity = "standard"
 }: ProductListProps) {
 
   const [modalItemId, setModalItemId] = useState<null | string>(null);
@@ -41,10 +42,13 @@ export function ProductList({
 
   // In ProductList:
   const settings = { showItemPrice: true }; // Replace with actual settings
+  const gridClassName = gridDensity === "compact"
+    ? "grid-cols-2 min-[480px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+    : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
 
   return (
-    <div className="w-full h-full">
-      <div className="overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-2 p-2">
+    <div className="w-full h-full min-h-0 product-scroll flex flex-col">
+      <div className={`grid ${gridClassName} gap-2 p-2 flex-1 content-start`}>
 
         {filteredItems.map(item => (
           <ProductItem
@@ -80,27 +84,20 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
   const [count, setCount] = useState<number>(1);
   const { getSuggestions } = useExtrasHistory();
   const suggestedExtras = getSuggestions(String(item.id));
+  const isDisabled = item.enabled === false;
 
 
-  const { longPressProps } = useLongPress({
-    threshold: 500,
-    onLongPress: () => {
-      setModalOpen(item.id);
-    }
-  })
-
-  const { pressProps } = usePress({
-    onPress: () => {
-      addItemToOrder({
-        itemId: item.id,
-        extras: extras,
-        count: 1,
-        countPaid: 0,
-        countFree: 0,
-        price: item.price
-      });
-    }
-  })
+  const handleClick = () => {
+    if (isDisabled) return;
+    addItemToOrder({
+      itemId: item.id,
+      extras: extras,
+      count: 1,
+      countPaid: 0,
+      countFree: 0,
+      price: item.price
+    });
+  };
 
 
   const itemCategory = categories.find(cat => cat.id === item.categoryId);
@@ -133,9 +130,9 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
 
   let fontSize = "1rem";
   if (item.name.length > 20) {
-    fontSize = "0.7rem";
+    fontSize = "0.85rem";
   } else if (item.name.length > 15) {
-    fontSize = "0.8rem";
+    fontSize = "0.9rem";
   }
 
   return (
@@ -158,21 +155,17 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
               event?.preventDefault();
               event.stopPropagation();
             }}>
-            Hinzufügen
-            <Plus size={16} />
+            <IconLabel icon={<Plus size={16} />} position="right">
+              Hinzufügen
+            </IconLabel>
           </button>
         }
-        open={modalOpen} onClose={() => setModalOpen(null)} title={item.name}>
+        open={modalOpen}
+        onClose={() => setModalOpen(null)}
+        title={itemCategory?.showAmount ? `${item.name} ${itemAmountString(item.amount)}${unit?.name || ''}` : item.name}
+        subtitle={showItemPrice ? `Preis: € ${item.price?.toFixed ? item.price.toFixed(2) : item.price}` : undefined}
+      >
         <div>
-          {itemCategory?.showAmount && (
-            <p>
-              Amount: {item.amount} {unit?.name}
-            </p>
-          )}
-          {showItemPrice && (
-            <p>Price: € {item.price?.toFixed ? item.price.toFixed(2) : item.price}</p>
-          )}
-
           {suggestedExtras.length > 0 && (
             <div className="mb-4">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
@@ -192,27 +185,42 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
               </div>
             </div>
           )}
-          <input
-            type="text"
-            placeholder="Extras"
-            value={extras}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-200"
-            autoFocus={false}
-            onChange={(e) => {
-              setExtras(e.target.value);
-            }}
-          />
+          <div className="mb-3">
+            <label className="block text-xs font-semibold text-slate-600 mb-1">
+              Bemerkung
+            </label>
+            <input
+              type="text"
+              placeholder="z. B. lauwarm, ohne eis, ohne ketchup"
+              value={extras}
+              className="w-full rounded-lg border border-primary-200 bg-primary-50/40 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-200"
+              autoFocus={false}
+              onChange={(e) => {
+                setExtras(e.target.value);
+              }}
+            />
+          </div>
           <div className="mt-4 text-sm font-semibold text-slate-700">Wie viele möchtest du hinzufügen?</div>
           <div className="flex items-center gap-2 mt-2">
             <button
               type="button"
-              className="h-9 w-9 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+              className="h-9 w-12 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold"
+              onClick={(e) => {
+                setCount(Math.max(1, count - 5));
+                e.stopPropagation();
+              }}
+            >
+              -5
+            </button>
+            <button
+              type="button"
+              className="h-9 w-10 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold"
               onClick={(e) => {
                 setCount(Math.max(1, count - 1));
                 e.stopPropagation();
               }}
             >
-              -
+              -1
             </button>
             <input
               type="number"
@@ -226,13 +234,23 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
             />
             <button
               type="button"
-              className="h-9 w-9 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
+              className="h-9 w-10 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold"
               onClick={(e) => {
                 setCount(count + 1);
                 e.stopPropagation();
               }}
             >
-              +
+              +1
+            </button>
+            <button
+              type="button"
+              className="h-9 w-12 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold"
+              onClick={(e) => {
+                setCount(count + 5);
+                e.stopPropagation();
+              }}
+            >
+              +5
             </button>
           </div>
 
@@ -240,9 +258,10 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
         </div>
       </Modal>
       <button
-        className="relative min-w-[100px] pb-2 pt-2 min-h-[100px] overflow-hidden transition-all duration-200 flex flex-col items-center justify-center rounded-lg border border-slate-200 border-l-4 bg-white shadow-sm hover:shadow-md hover:bg-slate-50 active:shadow-sm active:scale-95"
+        className={`relative min-w-[100px] pb-2 pt-2 min-h-[100px] overflow-hidden transition-all duration-200 flex flex-col items-center justify-center rounded-lg border border-slate-200 border-l-4 bg-white shadow-sm ${isDisabled ? 'opacity-50 cursor-not-allowed bg-slate-100 border-slate-200' : 'hover:shadow-md hover:bg-slate-50 active:shadow-sm active:scale-95'}`}
         style={style}
-        {...mergeProps(longPressProps, pressProps)}
+        disabled={isDisabled}
+        onClick={handleClick}
       >
         {countInOrder > 0 && (
           <div className="absolute left-2 top-2 flex flex-col gap-1">
@@ -264,18 +283,36 @@ function ProductItem({ item, showItemPrice, addItemToOrder, setModalOpen, modalO
           </div>
         )}
         <div className="text-center text-[0.95rem] flex flex-col items-center justify-center h-full text-slate-800">
-          <strong style={{ fontSize }}>{item.name}</strong>
-          {itemCategory?.showAmount && (
-            <span className="text-xs text-slate-500">
-              {itemAmountString(item.amount)}{unit?.name}
-            </span>
-          )}
+          <strong
+            style={{ fontSize }}
+            className={`${isDisabled ? "line-through text-slate-500" : ""} whitespace-normal break-words`}
+          >
+            {item.name}
+            {itemCategory?.showAmount && (
+              <span className="text-[0.8rem] text-slate-500 ml-1">
+                {itemAmountString(item.amount)}{unit?.name}
+              </span>
+            )}
+          </strong>
           {showItemPrice && (
             <span className="text-xs font-medium text-slate-600">
               € {item.price?.toFixed ? item.price.toFixed(2) : item.price}
             </span>
           )}
         </div>
+        <button
+          type="button"
+          className="absolute bottom-1.5 right-1.5 h-8 w-8 rounded-full border border-slate-200/70 bg-white/70 text-slate-700 hover:bg-white/90 flex items-center justify-center"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!isDisabled) {
+              setModalOpen(item.id);
+            }
+          }}
+        >
+          <SlidersHorizontal size={16} />
+        </button>
       </button>
     </>
 

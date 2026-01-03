@@ -40,7 +40,7 @@ export function CategoryIcon({
   size?: number;
   style?: React.CSSProperties;
 }) {
-  if (name && /\p{Extended_Pictographic}/u.test(name)) {
+  if (name && hasEmoji(name)) {
     return (
       <span className={className} style={{ fontSize: size, lineHeight: 1, ...style }}>
         {name}
@@ -50,4 +50,12 @@ export function CategoryIcon({
   const option = CATEGORY_ICON_OPTIONS.find((item) => item.value === name);
   const Icon = option?.Icon || UtensilsCrossed;
   return <Icon size={size} className={className} style={style} />;
+}
+
+function hasEmoji(value: string) {
+  try {
+    return /\p{Extended_Pictographic}/u.test(value);
+  } catch {
+    return /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(value);
+  }
 }

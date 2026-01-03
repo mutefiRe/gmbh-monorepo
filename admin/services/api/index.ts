@@ -116,6 +116,13 @@ export const api = {
       body: { setting: { activeEventId: eventId } } as any
     });
   },
+  getStatus: async (): Promise<{ status: string; api?: { ok: boolean }; printerApi?: { ok: boolean; error?: string }; activeWindowMinutes?: number; activeUsers?: Array<{ id: string; username: string; role?: string; lastSeen: number }> }> => {
+    return client(`${API_BASE}status`);
+  },
+  getStatusOrders: async (windowMinutes = 15, bucketSeconds = 60): Promise<{ windowMinutes: number; bucketSeconds: number; points: Array<{ ts: number; count: number }> }> => {
+    const params = new URLSearchParams({ windowMinutes: String(windowMinutes), bucketSeconds: String(bucketSeconds) });
+    return client(`${API_BASE}status/orders?${params.toString()}`);
+  },
   getUpdateStatus: async (): Promise<UpdateStatusResponse> => {
     return client<UpdateStatusResponse>(`${API_BASE}update`);
   },
@@ -181,13 +188,39 @@ export const api = {
     return (await client<{ tables: Table[] }>(API_BASE + 'tables')).tables;
   },
   createTable: async (table: Partial<Table>): Promise<Table> => {
-    return (await client<{ table: Table }>(API_BASE + 'tables', { body: { table: table } as any })).table;
+    const payload = { ...table } as any;
+    if (payload.x === null || payload.x === undefined || payload.x === '') delete payload.x;
+    if (payload.y === null || payload.y === undefined || payload.y === '') delete payload.y;
+    if (typeof payload.x === 'string') {
+      const parsed = Number(payload.x);
+      if (Number.isNaN(parsed)) delete payload.x;
+      else payload.x = parsed;
+    }
+    if (typeof payload.y === 'string') {
+      const parsed = Number(payload.y);
+      if (Number.isNaN(parsed)) delete payload.y;
+      else payload.y = parsed;
+    }
+    return (await client<{ table: Table }>(API_BASE + 'tables', { body: { table: payload } as any })).table;
   },
   deleteTable: async (id: number): Promise<void> => {
     return client(`${API_BASE}tables/${id}`, { method: 'DELETE' });
   },
   updateTable: async (table: Table): Promise<Table> => {
-    return (await client<{ table: Table }>(`${API_BASE}tables/${table.id}`, { method: 'PUT', body: { table: table } as any })).table;
+    const payload = { ...table } as any;
+    if (payload.x === null || payload.x === undefined || payload.x === '') delete payload.x;
+    if (payload.y === null || payload.y === undefined || payload.y === '') delete payload.y;
+    if (typeof payload.x === 'string') {
+      const parsed = Number(payload.x);
+      if (Number.isNaN(parsed)) delete payload.x;
+      else payload.x = parsed;
+    }
+    if (typeof payload.y === 'string') {
+      const parsed = Number(payload.y);
+      if (Number.isNaN(parsed)) delete payload.y;
+      else payload.y = parsed;
+    }
+    return (await client<{ table: Table }>(`${API_BASE}tables/${table.id}`, { method: 'PUT', body: { table: payload } as any })).table;
   },
 
   // --- Orders ---
@@ -229,7 +262,13 @@ export const api = {
 
   // --- Printers ---
   getPrinters: async (): Promise<Printer[]> => {
-    return (await client<{ printers: Printer[] }>(API_BASE + 'printers')).printers;
+    return (await client<{ printers: Printer[] }>(`${API_BASE}printers?includeDetails=true&includeQueue=true`)).printers;
+  },
+  getPrintersStatus: async (): Promise<Printer[]> => {
+    return (await client<{ printers: Printer[] }>(`${API_BASE}printers?includeDetails=false&includeQueue=false`)).printers;
+  },
+  getPrintersQueueStatus: async (): Promise<Printer[]> => {
+    return (await client<{ printers: Printer[] }>(`${API_BASE}printers?includeDetails=false&includeQueue=true`)).printers;
   },
   createPrinter: async (printer: Partial<Printer>): Promise<Printer> => {
     return (await client<{ printer: Printer }>(API_BASE + 'printers', { body: { printer: printer } as any })).printer;

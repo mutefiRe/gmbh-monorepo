@@ -2,13 +2,26 @@ const error = 'Does not make any sense. Update your layout.';
 
 class util {
   formatDate(date) {
-    const time = new Date(date);
-    const hour = this._leftZero(time.getHours());
-    const minutes = this._leftZero(time.getMinutes());
-    const day = this._leftZero(time.getDate());
-    const month = this._leftZero(time.getMonth() + 1);
-
-    return `${hour}:${minutes} ${day}.${month}`;
+    try {
+      const formatter = new Intl.DateTimeFormat('de-DE', {
+        timeZone: 'Europe/Vienna',
+        hour: '2-digit',
+        minute: '2-digit',
+        day: '2-digit',
+        month: '2-digit',
+        hour12: false
+      });
+      const parts = formatter.formatToParts(new Date(date));
+      const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+      return `${values.hour}:${values.minute} ${values.day}.${values.month}`;
+    } catch (error) {
+      const time = new Date(date);
+      const hour = this._leftZero(time.getHours());
+      const minutes = this._leftZero(time.getMinutes());
+      const day = this._leftZero(time.getDate());
+      const month = this._leftZero(time.getMonth() + 1);
+      return `${hour}:${minutes} ${day}.${month}`;
+    }
   }
 
   rpad(str, amount) {

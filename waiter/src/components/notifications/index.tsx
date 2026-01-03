@@ -49,20 +49,23 @@ export function Notifications() {
   );
   const { markSeen, lastSeen } = useUnreadNotifications(auth.eventId, true);
   const initialLastSeenRef = useRef<number | null>(null);
+  const markSeenRef = useRef(markSeen);
   const { data, isLoading, isError } = useNotifications(page * PAGE_SIZE, PAGE_SIZE);
   const notifications = data?.notifications || [];
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   useEffect(() => {
-    if (initialLastSeenRef.current === null) {
-      const stored = localStorage.getItem(storageKey);
-      initialLastSeenRef.current = stored ? Number(stored) : lastSeen;
-    }
+    markSeenRef.current = markSeen;
+  }, [markSeen]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(storageKey);
+    initialLastSeenRef.current = stored ? Number(stored) : 0;
     return () => {
-      markSeen();
+      markSeenRef.current();
     };
-  }, [lastSeen, markSeen, storageKey]);
+  }, [storageKey]);
 
   if (isLoading) {
     return (

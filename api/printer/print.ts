@@ -20,9 +20,10 @@ class Print {
     });
 
     const jobs = [];
-    printers.forEach((orderitems, printer) => {
-      const orderPrinter = order;
-      orderPrinter.orderitems = orderitems;
+    const entries = Array.from(printers.entries());
+    const totalParts = entries.length;
+    entries.forEach(([printer, orderitems], index) => {
+      const orderPrinter = { ...order, orderitems, printPart: index + 1, printTotal: totalParts };
       jobs.push(this.printJob(printer, layout.deliveryNote(orderPrinter)));
     });
     return Promise.all(jobs);
@@ -38,7 +39,7 @@ class Print {
   }
 
   bill(order, printer) {
-    return this.printJob(printer, layout.bill(order));
+    throw new Error('bill printing is disabled');
   }
 
   test(printer) {

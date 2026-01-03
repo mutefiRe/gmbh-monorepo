@@ -36,17 +36,19 @@ up-dev:
 up-dev-d:
 	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer printer-api dozzle
 
+# # this should not start printer-api, as on macOS you cannot mount usb devices into containers. Start manually if needed.
 up-dev-mac:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql reverse-proxy fake-printer printer-api dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build api mysql reverse-proxy fake-printer dozzle
 
+# this should not start printer-api, as on macOS you cannot mount usb devices into containers. Start manually if needed.
 up-dev-mac-d:
-	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer printer-api dozzle
+	$(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api mysql reverse-proxy fake-printer dozzle
 
 chaos-api:
 	COMPOSE_FILE= COMPOSE_PROJECT_NAME=gmbh_chaos MYSQL_DATABASE=gmbh_chaos GMBH_DB_NAME=gmbh_chaos $(PRINTER_API_URL_ENV) docker compose -f docker-compose.yml -f docker-compose.chaos.yml up --build --abort-on-container-exit --exit-code-from chaos
 
 certs:
-	CERT_HOSTS="${CERT_HOSTS:-gmbh,gmbh.local,localhost}" CERT_IPS="${CERT_IPS:-127.0.0.1}" CERT_CN="${CERT_CN:-gmbh.local}" bash nginx/certs/scripts/generate_certs.sh
+	CERT_HOSTS="${CERT_HOSTS:-gmbh,gmbh.local,localhost}" CERT_IPS="${CERT_IPS:-127.0.0.1,192.168.100.100}" CERT_CN="${CERT_CN:-192.168.100.100}" bash nginx/certs/scripts/generate_certs.sh
 
 test-api:
 	$(PRINTER_API_URL_ENV) GMBH_DB_TEST=gmbh_test GMBH_DB_HOST=localhost GMBH_DB_PORT=3306 npm --prefix api test
@@ -88,3 +90,7 @@ endif
 .PHONY: release-images
 release-images:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 DOCKER_REGISTRY=$(RELEASE_REGISTRY) DOCKER_REPO=$(RELEASE_REPO) FORCE_LATEST=$(FORCE_LATEST) RELEASE_SERVICE=$(RELEASE_SERVICE) node scripts/release-images.js --tag "$(RELEASE_TAG)"
+
+.PHONY: transfer-image
+transfer-image:
+	IMAGE=$(IMAGE) CONTEXT=$(CONTEXT) DOCKERFILE=$(DOCKERFILE) TAG=$(TAG) REMOTE=$(REMOTE) REMOTE_PATH=$(REMOTE_PATH) bash scripts/transfer-image.sh

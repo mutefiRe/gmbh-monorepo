@@ -1,0 +1,23 @@
+services:
+  loadtest:
+    image: node:24-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["node", "src/index.js"]
+    environment:
+      BASE_URL: ${BASE_URL}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASS: ${ADMIN_PASS}
+      EVENT_ID: ${EVENT_ID}
+      INSECURE_TLS: ${INSECURE_TLS}
+      WAITERS: ${WAITERS}
+      WAITERS_PASSWORD: ${WAITERS_PASSWORD}
+      WAITERS_LIST: ${WAITERS_LIST}
+      MIN_ORDERS: ${MIN_ORDERS}
+      CONCURRENCY: ${CONCURRENCY}
+      DURATION_SECONDS: ${DURATION_SECONDS}
+      RATE_PER_SEC: ${RATE_PER_SEC}
+      PRINT_RATE: ${PRINT_RATE}
+      CUSTOM_TABLE_RATE: ${CUSTOM_TABLE_RATE}
+      EXTRAS_RATE: ${EXTRAS_RATE}

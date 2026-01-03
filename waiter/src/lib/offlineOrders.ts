@@ -1,4 +1,5 @@
 import { apiFetch } from "../types/queries";
+import { recordExtrasHistory } from "./extrasHistory";
 
 export type OfflineOrderPayload = {
   id: string;
@@ -151,7 +152,24 @@ export async function flushOfflineOrders(scope?: QueueScope) {
         method: "POST",
         body: JSON.stringify({ order: entry.order })
       });
-      void created;
+      const orderId = created?.order?.id;
+      if (orderId) {
+        await apiFetch("/api/prints", {
+          method: "POST",
+          body: JSON.stringify({
+            print: {
+              orderId,
+              printId: entry.printId || ""
+            }
+          })
+        });
+      }
+      recordExtrasHistory(
+        entry.order.orderitems.map((item) => ({
+          itemId: item.itemId,
+          extras: item.extras ?? null
+        }))
+      );
     } catch (error) {
       remaining.push(...queue.slice(index));
       break;

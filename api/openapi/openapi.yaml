@@ -79,6 +79,85 @@ paths:
                 properties:
                   status:
                     type: string
+  /api/status:
+    get:
+      tags:
+        - Health
+      summary: System status
+      responses:
+        '200':
+          description: Status response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  api:
+                    type: object
+                    properties:
+                      ok:
+                        type: boolean
+                  printerApi:
+                    type: object
+                    properties:
+                      ok:
+                        type: boolean
+                      error:
+                        type: string
+                  activeWindowMinutes:
+                    type: number
+                  activeUsers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        username:
+                          type: string
+                        role:
+                          type: string
+                        lastSeen:
+                          type: number
+  /api/status/orders:
+    get:
+      tags:
+        - Health
+      summary: Recent order heartbeat
+      parameters:
+        - in: query
+          name: windowMinutes
+          schema:
+            type: number
+          description: Minutes back to include (default 15)
+        - in: query
+          name: bucketSeconds
+          schema:
+            type: number
+          description: Bucket size in seconds (default 60)
+      responses:
+        '200':
+          description: Heartbeat buckets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  windowMinutes:
+                    type: number
+                  bucketSeconds:
+                    type: number
+                  points:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ts:
+                          type: number
+                        count:
+                          type: number
   /api/notifications:
     get:
       tags:
@@ -1302,96 +1381,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /api/statistics/sales:
-    get:
-      tags:
-        - Statistics
-      summary: Total sales
-      responses:
-        '200':
-          description: Sales value
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SalesValue'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /api/statistics/sales-today:
-    get:
-      tags:
-        - Statistics
-      summary: Sales today
-      responses:
-        '200':
-          description: Sales value
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SalesValue'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /api/statistics/top-selling-products:
-    get:
-      tags:
-        - Statistics
-      summary: Top selling products
-      responses:
-        '200':
-          description: Chart data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChartResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /api/statistics/most-sold-products:
-    get:
-      tags:
-        - Statistics
-      summary: Most sold products
-      responses:
-        '200':
-          description: Chart data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChartResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /api/statistics/sales-hour:
-    get:
-      tags:
-        - Statistics
-      summary: Sales per hour
-      responses:
-        '200':
-          description: Chart data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChartResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /api/stats/summary:
     get:
       tags:
@@ -1678,6 +1667,11 @@ paths:
       parameters:
         - in: query
           name: includeQueue
+          schema:
+            type: boolean
+          required: false
+        - in: query
+          name: includeDetails
           schema:
             type: boolean
           required: false
@@ -2453,6 +2447,9 @@ components:
         name:
           type: string
           nullable: true
+        enabled:
+          type: boolean
+          default: true
         reachable:
           type: boolean
         queue:
@@ -2611,8 +2608,6 @@ components:
       properties:
         tag:
           type: string
-      required:
-        - tag
     UpdatePullResponse:
       type: object
       properties:

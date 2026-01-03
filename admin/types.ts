@@ -32,6 +32,7 @@ export interface Category {
   description?: string;
   icon?: string;
   color?: string;
+  showAmount?: boolean;
   printerId?: string | null;
 }
 
@@ -40,10 +41,39 @@ export interface Unit {
   name: string;
 }
 
+export interface PrinterNetwork {
+  ip: string;
+  port: number;
+  mac?: string;
+}
+
+export interface PrinterUSB {
+  vid: number;
+  pid: number;
+  serial?: string;
+  manufacturer?: string;
+  product?: string;
+}
+
+export interface PrinterQueue {
+  supported?: boolean;
+  queued?: number;
+  capacity?: number;
+  active?: boolean;
+}
+
 export interface Printer {
   id: string;
   name: string;
   systemName: string;
+  enabled?: boolean;
+  reachable?: boolean;
+  discovered?: boolean;
+  transport?: string;
+  network?: PrinterNetwork;
+  usb?: PrinterUSB;
+  labels?: Record<string, string>;
+  queue?: PrinterQueue | null;
 }
 
 export interface Event {

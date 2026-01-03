@@ -245,69 +245,6 @@ describe('layout deliveryNote test', () => {
   });
 });
 
-describe('layout bill test', () => {
-  it('should format bill', () => {
-    const items = [{
-      "id": 9,
-      "extras": null,
-      "count": 3,
-      "item": {
-        "id": 33,
-        "name": "Fanta",
-        "amount": 1,
-        "price": 2.5,
-        "unit": {
-          "name": "l"
-        },
-        "category": {
-          "name": "Speisen",
-          "showAmount": false
-        }
-      }
-    },{
-      "id": 10,
-      "extras": null,
-      "count": 1,
-      "createdAt": "date",
-      "item": {
-        "id": 13,
-        "name": "Fanta",
-        "price": 3.5,
-        "amount": 1,
-        "unit": {
-          "name": "l"
-        },
-        "category": {
-          "name": "Alkoholfreies",
-          "showAmount": true
-        }
-      }
-    }];
-    order.orderitems = items;
-    const result = layout.bill(order)
-      .filter((item) => {
-        if(typeof item !== 'string') {
-          return false;
-        }
-        return true;
-      });
-    assert.deepEqual(result, [
-      'T3/Terrasse', '\n',
-      'RECHNUNG', '\n',
-      'Nr. 3', 'date', '\n',
-      '\n',
-      'Menge',' ','Artikel', ' ', 'Preis',' ', 'Summe','\n',
-      '3 x',  ' ','Fanta',   ' ', '2.50', ' ', '7.50', '\n',
-      '1 x',  ' ','Fanta 1l',' ', '3.50', ' ', '3.50', '\n',
-      '\n',
-      'Gesamtsumme:', '11.00', '\n',
-      '\n',
-      'Es bediente Sie Vor Nach',
-      '\n\n\n\n\n\n\n'
-    ]);
-  });
-});
-
 describe('should format tokenCoin', () => {
   it('should format 2 token coin', () => {
     const item = {

@@ -5,6 +5,7 @@ import { AppContext } from '../App';
 import { Clock, Receipt, User } from 'lucide-react';
 import { itemAmountString } from '@/lib/utils';
 import { api } from '../services/api';
+import { LoadingNotice } from '../components/LoadingNotice';
 
 export const OrdersPage: React.FC = () => {
   const context = useContext(AppContext);
@@ -57,6 +58,7 @@ export const OrdersPage: React.FC = () => {
         <h1 className="text-2xl font-bold text-slate-800">Aktuelle Bestellungen</h1>
         <p className="text-slate-500">Übersicht über aktive Bestellungen und Status.</p>
       </div>
+      <LoadingNotice active={isLoading} label="Bestellungen werden geladen…" />
       <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
         Tipp: Mit der Pagination kannst du ältere Bestellungen schnell durchsehen.
       </div>

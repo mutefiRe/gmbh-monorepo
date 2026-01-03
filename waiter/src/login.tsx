@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Redirect } from "wouter";
 import { useAuth } from "./auth-wrapper";
 import { useAuthenticateUser } from "./types/queries";
-import { useConnectionStatus } from "./hooks/useConnectionStatus";
+import { useConnectionStatus } from "./context/ConnectionStatusContext";
 import { ConnectionPill } from "./ui/connection-pill";
 import { Button } from "./ui/button";
 import { Notice } from "./ui/notice";
@@ -78,13 +78,13 @@ export function Login() {
               <Button type="submit" className="py-3.5 font-bold">
                 Login
               </Button>
-              <Button
+              {/* <Button
                 type="button"
                 variant="secondary"
                 onClick={() => setShowQR(true)}
               >
                 Oder mit QR-Code anmelden
-              </Button>
+              </Button> */}
               <div className="flex justify-center">
                 <ConnectionPill status={connection.status} compact />
               </div>

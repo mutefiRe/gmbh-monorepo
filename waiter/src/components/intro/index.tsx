@@ -9,12 +9,12 @@ export function Intro() {
         <div className="space-y-4 text-sm text-slate-700">
           <div>
             <p className="font-semibold text-slate-800">1. Bestellung aufnehmen</p>
-            <p>Kategorie wählen, Artikel antippen. Langdruck öffnet Extras und Menge.</p>
+            <p>Kategorie wählen, Artikel antippen. Das Slider‑Icon öffnet Bemerkungen und Menge.</p>
             <p>Hinweis: Tap im Vorschau‑Bereich markiert einen Artikel für -1/Löschen.</p>
           </div>
           <div>
             <p className="font-semibold text-slate-800">2. Vorschau prüfen</p>
-            <p>In der Vorschau siehst du Mengen und Extras. Antippen zeigt -1/Löschen.</p>
+            <p>In der Vorschau siehst du Mengen und eine Bemerkung. Antippen zeigt -1/Löschen.</p>
             <p>Du kannst mehrere Positionen schnell korrigieren, ohne die Ansicht zu verlassen.</p>
           </div>
           <div>
@@ -25,16 +25,19 @@ export function Intro() {
           <div>
             <p className="font-semibold text-slate-800">4. Bezahlen</p>
             <p>Unter „Letzte Bestellungen“ eine Bestellung öffnen und Positionen markieren.</p>
-            <p>Mit „Ausgewählte bezahlen“ wird nur der markierte Teil bezahlt.</p>
+            <p>Tippen auf eine Zeile = +1 markieren. Mit „Ausgewählte bezahlen“ wird nur der markierte Teil bezahlt.</p>
           </div>
         </div>
 
         <div className="border-t border-slate-100 pt-4 space-y-4 text-sm text-slate-700">
           <div>
             <p className="font-semibold text-slate-800">Workflow Tipps</p>
-            <p>Extras werden nach erfolgreichem Abschicken gespeichert und als Vorschläge angezeigt.</p>
-            <p>Farben an Kategorien helfen beim schnellen Erkennen von Artikelgruppen.</p>
-            <p>Einstellungen findest du im Menü oben links (Zoom/Anzeige).</p>
+            <ul className="mt-2 space-y-2 text-sm text-slate-600 list-disc pl-4">
+              <li>Bemerkung wird nach erfolgreichem Abschicken gespeichert und als Vorschläge angezeigt.</li>
+              <li>Farben an Kategorien helfen beim schnellen Erkennen von Artikelgruppen.</li>
+              <li>Einstellungen findest du im Menü oben links (Zoom/Anzeige).</li>
+              <li>Offline‑Hinweis: Offline werden Bestellungen gespeichert und später gesendet.</li>
+            </ul>
             <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900">
               Wir bieten keine Rechnungen an, da das System keine Registrierkasse ist.
             </div>

@@ -35,30 +35,32 @@ export function PreviewList({ orderItems, items, categories, onChangeCount }: Pr
               return (
                 <li
                   key={itemKey}
-                  className="px-2.5 py-1.5 sm:px-3 sm:py-2 relative cursor-pointer"
+                  className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 relative cursor-pointer"
                   onClick={() => {
                     if (!canEdit) return;
                     setActiveKey(prev => (prev === itemKey ? null : itemKey));
                   }}
                 >
-                  <div className={`flex items-start gap-2 rounded-lg px-1.5 py-1 ${activeKey === itemKey ? "bg-primary-50 ring-1 ring-primary-200" : ""}`}>
+                  <div className={`flex items-start gap-2 rounded-md px-1.5 py-1 ${activeKey === itemKey ? "bg-primary-50 ring-1 ring-primary-200" : ""}`}>
                     <div className="flex items-center gap-1.5">
                       <span className="h-5 w-1 rounded-full" style={{ backgroundColor: color }} />
-                      <QuantityBlink quantity={quantity} color={color} />
+                      <div className="w-[3.25ch] flex justify-end">
+                        <QuantityBlink quantity={quantity} color={color} className="text-sm self-start" />
+                      </div>
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-slate-800 truncate">{item.name}</p>
                       {orderItem.extras && (
-                        <p className="text-[0.7rem] text-slate-500 truncate">Extras: {orderItem.extras}</p>
+                        <p className="text-xs text-slate-500 truncate">Bemerkung: {orderItem.extras}</p>
                       )}
                     </div>
                   </div>
                   {canEdit && activeKey === itemKey && (
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-white border border-slate-200 rounded-xl shadow-lg flex items-center gap-2 p-2 z-10">
-                    <OrderItemActions
-                      onDecrement={() => onChangeCount?.(orderItem, (orderItem.count ?? 1) - 1)}
-                      onDelete={() => onChangeCount?.(orderItem, 0)}
-                    />
+                      <OrderItemActions
+                        onDecrement={() => onChangeCount?.(orderItem, (orderItem.count ?? 1) - 1)}
+                        onDelete={() => onChangeCount?.(orderItem, 0)}
+                      />
                     </div>
                   )}
                 </li>
@@ -73,7 +75,7 @@ export function PreviewList({ orderItems, items, categories, onChangeCount }: Pr
           onClick={() => {
             navigate("/order/edit");
           }}
-          className="rounded-lg border border-primary-300 text-primary-700 px-4 py-2 text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors active:scale-[0.99]"
+          className="rounded-lg border border-primary-300 text-primary-700 px-[12px] py-[6px] text-sm font-semibold hover:bg-primary-50 hover:border-primary-400 transition-colors active:scale-[0.99]"
         >
           Bestellung prüfen
         </button>

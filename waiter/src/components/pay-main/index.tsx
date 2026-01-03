@@ -1,15 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { Printer } from "lucide-react";
+import { ArrowLeft, Calculator, HandCoins, Printer } from "lucide-react";
 import { useOrder, usePrintOrder, useUpdateOrder } from "../../types/queries";
 import type { Area, Category, Item, OrderItem, Table, Unit } from "../../types/models";
 import { itemAmountString } from "../../lib/itemAmountString";
 import { useQueryClient } from "@tanstack/react-query";
-import { useConnectionStatus } from "../../hooks/useConnectionStatus";
+import { useConnectionStatus } from "../../context/ConnectionStatusContext";
 import { enqueueOfflinePayment, hasPendingPayment } from "../../lib/offlinePayments";
 import { useAuth } from "../../auth-wrapper";
 import { Notice } from "../../ui/notice";
 import { getOfflineOrderById, subscribeOfflineOrders, updateOfflineOrderCounts } from "../../lib/offlineOrders";
 import { offlineOrderPaymentMessage, pendingPaymentsMessage } from "../../lib/offlineMessages";
+import { useLocation } from "wouter";
+import { IconLabel } from "../../ui/icon-label";
+import { Modal } from "../../ui/modal";
+import { LoadingScreen } from "../../ui/loading-screen";
 
 type PayDetailProps = {
   orderId: string;
@@ -36,6 +40,9 @@ export function PayDetail({
   const connection = useConnectionStatus();
   const canReachServer = connection.canReachServer;
   const auth = useAuth();
+  const [, setLocation] = useLocation();
+  const [showCalculator, setShowCalculator] = useState(false);
+  const [receivedAmount, setReceivedAmount] = useState("");
   const [offlineOrder, setOfflineOrder] = useState(() =>
     getOfflineOrderById(orderId, { userId: auth.userId ?? null, eventId: auth.eventId ?? null })
   );
@@ -99,22 +106,43 @@ export function PayDetail({
     const id = oi.id ?? "";
     return sum + ((itemMarks[id] || 0) * oi.price);
   }, 0);
+  const markedCount = orderitems.reduce((sum, oi) => {
+    const id = oi.id ?? "";
+    return sum + (itemMarks[id] || 0);
+  }, 0);
+  const parsedReceived = Number(receivedAmount.replace(",", "."));
+  const receivedValue = Number.isFinite(parsedReceived) ? parsedReceived : 0;
+  const changeValue = receivedValue - markedAmount;
+  const allMarked = orderitems.every((orderitem) => {
+    const id = orderitem.id ?? "";
+    if (!id) return true;
+    const maxMarkable = orderitem.count - (orderitem.countPaid || 0);
+    if (maxMarkable <= 0) return true;
+    return (itemMarks[id] || 0) >= maxMarkable;
+  });
   const statusNotice = isOfflineOrder
     ? {
-        variant: "warning" as const,
-        message: offlineOrderPaymentMessage()
-      }
+      variant: "warning" as const,
+      message: offlineOrderPaymentMessage()
+    }
     : !canReachServer
       ? {
-          variant: "warning" as const,
-          message: "Offline: Zahlung wird gespeichert. Drucken ist erst nach der Verbindung möglich."
-        }
+        variant: "warning" as const,
+        message: "Offline: Zahlung wird gespeichert. Drucken ist erst nach der Verbindung möglich."
+      }
       : pendingPayment
         ? {
-            variant: "warning" as const,
-            message: pendingPaymentsMessage(1, canReachServer) || "Ausstehende Zahlung wird gesendet."
-          }
+          variant: "warning" as const,
+          message: pendingPaymentsMessage(1, canReachServer) || "Ausstehende Zahlung wird gesendet."
+        }
         : null;
+  const isForeignOrder = Boolean(order?.userId && auth.userId && order.userId !== auth.userId);
+  const foreignOrderNotice = isForeignOrder
+    ? {
+      variant: "warning" as const,
+      message: "Achtung: Diese Bestellung wurde von einem anderen Benutzer aufgenommen. Bitte nur abrechnen, wenn das so vereinbart ist."
+    }
+    : null;
   const table = tables.find(t => t.id === order?.tableId);
   const area = table ? areas.find(a => a.id === table.areaId) : undefined;
   const tableLabel = order?.tableId
@@ -125,6 +153,19 @@ export function PayDetail({
   }
   function decrementMarked(id: string) {
     setItemMarks(prev => ({ ...prev, [id]: Math.max((prev[id] || 0) - 1, 0) }));
+  }
+  function markAllItems() {
+    const nextMarks: Record<string, number> = {};
+    orderitems.forEach((orderitem) => {
+      const id = orderitem.id ?? "";
+      if (!id) return;
+      const maxMarkable = orderitem.count - (orderitem.countPaid || 0);
+      nextMarks[id] = Math.max(0, maxMarkable);
+    });
+    setItemMarks(nextMarks);
+  }
+  function markItemAll(id: string, max: number) {
+    setItemMarks(prev => ({ ...prev, [id]: Math.max(0, max) }));
   }
   async function onReprint() {
     if (!order?.id) {
@@ -208,14 +249,20 @@ export function PayDetail({
     await client.invalidateQueries({ queryKey: ['order', orderId] });
     setItemMarks({});
   }
+  if (orderQuery.isLoading && !offlineFallback) return <LoadingScreen />;
   if (orderQuery.isError && !offlineFallback) return <div>Fehler beim Laden der Bestellung.</div>;
   if (!order) return <div>Bestellung nicht gefunden.</div>;
 
   return (
-    <div className="w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
+    <div className="legacy-pay-grid w-full max-w-screen-lg mx-auto px-3 pb-3 pt-1 h-[calc(100dvh-56px)] flex flex-col min-h-0">
       <div className="mb-2 shrink-0">
         <h2 className="text-xl font-bold text-slate-800">Zahlung</h2>
         <p className="text-xs text-slate-500">Bestellung prüfen und bezahlte Positionen markieren.</p>
+        {foreignOrderNotice && (
+          <div className="mt-2">
+            <Notice message={foreignOrderNotice.message} variant={foreignOrderNotice.variant} />
+          </div>
+        )}
         {statusNotice && (
           <div className="mt-2">
             <Notice message={statusNotice.message} variant={statusNotice.variant} />
@@ -228,7 +275,7 @@ export function PayDetail({
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
+      <div className="legacy-pay-card bg-white rounded-xl shadow-sm border border-slate-200 mb-4 overflow-hidden flex flex-col min-h-0 flex-1">
         <div className="px-3 py-2 border-b border-slate-100 bg-slate-50 flex items-center justify-between shrink-0">
           <div>
             <p className="text-sm font-semibold text-slate-800">Bestellung Nr. {order?.number || order?.id}</p>
@@ -262,12 +309,32 @@ export function PayDetail({
                 Alles bezahlt
               </div>
             )}
-            <div className="flex-1 overflow-y-auto">
+            <div className="legacy-pay-scroll flex-1 overflow-y-auto">
               <table className="min-w-full text-sm">
-                <thead className="bg-slate-50 sticky top-0 z-10 text-slate-500">
+                <thead className="legacy-sticky bg-slate-50 sticky top-0 z-10 text-slate-500">
                   <tr>
-                    <th className="px-2 py-2 sm:px-3 font-semibold text-left w-24">Markieren</th>
-                    <th className="px-2 py-2 sm:px-4 font-semibold text-left">Artikel</th>
+                    <th className="px-2 py-2 sm:px-3 font-semibold text-left w-28">
+                      <label className="inline-flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary-300"
+                          checked={allMarked}
+                          onChange={(event) => {
+                            event.stopPropagation();
+                            if (event.target.checked) {
+                              markAllItems();
+                            } else {
+                              setItemMarks({});
+                            }
+                          }}
+                          disabled={isPaying || orderitems.length === 0}
+                        />
+                        <span>Alle</span>
+                      </label>
+                    </th>
+                    <th className="px-2 py-2 sm:px-4 font-semibold text-left">
+                      Artikel <span className="text-[11px] font-medium text-slate-400">(Tippen = +1)</span>
+                    </th>
                     <th className="px-2 py-2 sm:px-4 font-semibold text-left">Bezahlt</th>
                     <th className="px-2 py-2 sm:px-4 font-semibold text-right">Summe</th>
                   </tr>
@@ -299,6 +366,12 @@ export function PayDetail({
                       <tr
                         key={id}
                         className={`transition-colors ${isPaid ? 'bg-emerald-50' : 'bg-white'} ${marked > 0 ? 'bg-primary-50' : ''}`}
+                        onClick={(event) => {
+                          if (isPaid || isPaying) return;
+                          const target = event.target as HTMLElement | null;
+                          if (target?.closest('button')) return;
+                          incrementMarked(id, maxMarkable);
+                        }}
                       >
                         <td className="px-2 py-2 sm:px-3 text-center whitespace-nowrap">
                           {isPaid ? (
@@ -314,11 +387,11 @@ export function PayDetail({
                               </button>
                               <span className="px-1 font-mono font-bold text-base text-slate-700">{marked}</span>
                               <button
-                                className="h-8 w-8 rounded-lg border border-primary-500 bg-primary text-primary-contrast hover:bg-primary-600 disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 disabled:border-slate-200"
-                                onClick={() => incrementMarked(id, maxMarkable)}
+                                className="h-8 px-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:border-slate-200 disabled:text-slate-400"
+                                onClick={() => markItemAll(id, maxMarkable)}
                                 disabled={marked === maxMarkable || isPaying}
                               >
-                                +
+                                Alle
                               </button>
                             </div>
                           )}
@@ -360,30 +433,83 @@ export function PayDetail({
         <div className="text-sm text-slate-600">
           Auswahl: <span className="font-semibold text-slate-800">€ {markedAmount.toFixed(2)}</span>
         </div>
+        <button
+          type="button"
+          className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-slate-700 text-sm hover:bg-slate-50"
+          onClick={() => setShowCalculator(true)}
+        >
+          <IconLabel icon={<Calculator size={16} />}>
+            Rechner
+          </IconLabel>
+        </button>
       </div>
 
       <div className="flex gap-2 shrink-0 justify-between items-center">
         <button
           className="rounded-md border border-slate-200 bg-white px-4 py-2 text-slate-700"
-          onClick={() => window.history.back()}
+          onClick={() => setLocation("/orders")}
           disabled={isPaying || isPrinting}
         >
-          <span className="inline-flex items-center gap-2">
-            <span className="icon icon-return"></span>
-            Zurück zu den Bestellungen
-          </span>
+          <IconLabel icon={<ArrowLeft size={16} />}>
+            Bestellungen
+          </IconLabel>
         </button>
         {!orderitems.every(oi => oi.countPaid && oi.countPaid >= oi.count) && (
           <button
             className="rounded-md bg-primary px-4 py-2 text-primary-contrast inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
             onClick={onPaySelected}
-            disabled={markedAmount === 0 || isPaying || isPrinting}
+            disabled={markedCount === 0 || isPaying || isPrinting}
           >
-            <span className="icon icon-pay"></span>
-            {isPaying ? 'Zahlung läuft...' : `Ausgewählte bezahlen (€ ${markedAmount.toFixed(2)})`}
+            <IconLabel icon={<HandCoins size={16} />}>
+              {isPaying ? 'Zahlung läuft...' : `Ausgewählte bezahlen (€ ${markedAmount.toFixed(2)})`}
+            </IconLabel>
           </button>
         )}
       </div>
+      <Modal
+        open={showCalculator}
+        onClose={() => setShowCalculator(false)}
+        title="Rechner"
+        showCloseAction={false}
+        actions={(
+          <button
+            type="button"
+            className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
+            onClick={() => setShowCalculator(false)}
+          >
+            Schließen
+          </button>
+        )}
+        contentClassName="max-w-md"
+      >
+        <div className="space-y-4 text-slate-700">
+          <div className="text-sm">
+            Auswahlbetrag: <span className="font-semibold">€ {markedAmount.toFixed(2)}</span>
+          </div>
+          <label className="text-sm font-semibold text-slate-600">
+            Erhalten
+            <input
+              type="text"
+              inputMode="decimal"
+              value={receivedAmount}
+              onChange={(event) => setReceivedAmount(event.target.value)}
+              placeholder="z.B. 20,00"
+              className="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-200"
+            />
+          </label>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+            {Number.isFinite(parsedReceived) ? (
+              changeValue >= 0 ? (
+                <span>Rückgeld: <span className="font-semibold">€ {changeValue.toFixed(2)}</span></span>
+              ) : (
+                <span>Noch offen: <span className="font-semibold">€ {Math.abs(changeValue).toFixed(2)}</span></span>
+              )
+            ) : (
+              <span>Betrag eingeben, um das Rückgeld zu sehen.</span>
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

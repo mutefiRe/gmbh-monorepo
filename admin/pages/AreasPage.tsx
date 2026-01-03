@@ -3,8 +3,9 @@ import { useParams, useNavigate, useMatch, Link } from 'react-router-dom';
 import { TableManager } from '../components/TableManager';
 import { AppContext } from '../App';
 import { SimpleCardEditor } from '../components/SimpleCardEditor';
+import { LoadingNotice } from '../components/LoadingNotice';
 import { Area } from '../types';
-import { MapPin, Settings2 } from 'lucide-react';
+import { MapPin, Plus, Settings2 } from 'lucide-react';
 import { api } from '@/services/api';
 
 export const AreasPage: React.FC = () => {
@@ -88,29 +89,53 @@ export const AreasPage: React.FC = () => {
     );
   }
 
-  return (
-    <SimpleCardEditor<Area>
-      gridClassName='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6'
-      title="Tischpläne"
-      description="Bereiche strukturieren die Tische und erscheinen in Bestellungen."
-      isLoading={areasLoading || tablesLoading}
-      isSaving={areasSaving}
-      data={areas}
-      // You may need to update renderCard to use TableManager via routing if not already done
-      renderCard={renderAreaCard}
-      onAdd={addArea}
-      onEdit={updateArea}
-      onDelete={id => {
-        if (confirm('Bereich und alle Tische löschen?')) {
-          deleteArea(id);
+  const isBusy = areasLoading || areasSaving || tablesLoading;
+  const addButton = (
+    <Link
+      to={'/areas/new'}
+      component="button"
+      className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors shadow-sm font-semibold active:scale-95 ${isBusy
+        ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+        : 'bg-primary-600 text-white hover:bg-primary-700'
+        }`}
+      onClick={(event) => {
+        if (isBusy) {
+          event.preventDefault();
         }
       }}
-      dialogHint="Kürzel wird in der Kasse vor dem Tischnamen angezeigt."
-      fields={[
-        { key: 'name', label: 'Name', type: 'text' },
-        { key: 'short', label: 'Kürzel', type: 'text' },
-        { key: 'enabled', label: 'Aktiv', type: 'boolean' }
-      ]}
-    />
+    >
+      <Plus size={20} />
+      {areasSaving ? 'Speichert...' : 'Hinzufügen'}
+    </Link>
+  );
+
+  return (
+    <>
+      <LoadingNotice active={areasLoading || tablesLoading} />
+      <SimpleCardEditor<Area>
+        gridClassName='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6'
+        title="Tischpläne"
+        description="Bereiche strukturieren die Tische und erscheinen in Bestellungen."
+        isLoading={areasLoading || tablesLoading}
+        isSaving={areasSaving}
+        data={areas}
+        // You may need to update renderCard to use TableManager via routing if not already done
+        renderCard={renderAreaCard}
+        onAdd={addArea}
+        onEdit={updateArea}
+        onDelete={id => {
+          if (confirm('Bereich und alle Tische löschen?')) {
+            deleteArea(id);
+          }
+        }}
+        headerActions={addButton}
+        dialogHint="Kürzel wird in der Kasse vor dem Tischnamen angezeigt."
+        fields={[
+          { key: 'name', label: 'Name', type: 'text' },
+          { key: 'short', label: 'Kürzel', type: 'text' },
+          { key: 'enabled', label: 'Aktiv', type: 'boolean' }
+        ]}
+      />
+    </>
   );
 };
